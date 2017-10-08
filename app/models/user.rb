@@ -166,10 +166,18 @@ class User < ActiveRecord::Base
   end
 
   def can_accept_payments?(skip_check_managed_acct_status = false)
+    return true if self.is_platform?
     cred = get_stripe_cred
     return true if cred[:type] == 'managed' && skip_check_managed_acct_status
     return true if cred[:type] == 'managed' && cred[:cred].charges_enabled?
     return true if cred[:type] == 'standalone'
+    false
+  end
+
+  def can_accept_subscriptions?
+    return true if self.is_platform?
+    cred = get_stripe_cred
+    return true if cred[:type] == 'managed' && cred[:cred].charges_enabled?
     false
   end
 

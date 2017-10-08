@@ -272,16 +272,25 @@ class MessageParser
     false
   end
 
+  def merchant_supports_subscriptions?
+    return true if @merchant.can_accept_subscriptions?
+    send_response("Sorry we currently can't accept subscriptions via text. A member of our team will contact you shortly to assist you.")
+    # EmailingService.missed_payment
+    false
+  end
+
   def process_payment
 #=begin
     #if not_repeating_payment?
       if @tag.present? && @tag.recurring_payment_tag?
-        res = handle_subscription_through_text
-        if res.first
-          send_response(@tag.response, get_tag_images)
-          # send email here or through subscription instance
-        else
-          send_response(res.second || subscription_error_text)
+        if merchant_supports_subscriptions?
+          res = handle_subscription_through_text
+          if res.first
+            send_response(@tag.response, get_tag_images)
+            # send email here or through subscription instance
+          else
+            send_response(res.second || subscription_error_text)
+          end
         end
       else     # tested   
         @new_txn = Transaction.new        

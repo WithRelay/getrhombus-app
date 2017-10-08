@@ -5,11 +5,11 @@ class WebhooksController < ApplicationController
   def stripe_events
     begin
       # Verify the event by fetching it from Stripe
-      event = Stripe::Event.retrieve(params[:id])
-      if params[:id] == event[:id]
+      #event = Stripe::Event.retrieve(params[:id])
+      #if params[:id] == event[:id]
         type = (request.original_fullpath.include? 'platform') ? 'platform' : 'connect'
         StripeEvent.process_event(params, type)
-      end
+      #end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller stripe_events" })
     end

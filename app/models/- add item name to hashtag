@@ -1,18 +1,21 @@
 Taiwo
 
+- how will using the master account affect us (- unify team and dashboard email issue really)    ---- should be fine
+- messaging lists (check endpoint in create customer and you now save mc_id in user list), reminders (shells created) - Done...not sure what reminders is
+- should create shared user on platform and managed account and standaone acct?? ---- done
+- merge platform_customer_id with managed account customer id?? -- no ---- done
+- pass a with token param into add_token  for cases where we need to make a new token - done a different way
+- app fee for subscriptions - platform fee     - Done
+  - what of when user sends text for subscriptions...check for managed account - done
+
+
+
 - review where merchant customer, contacts, referrers are created
 - see create_subscription/transaction 
   - should i check when they send a message and are a user...no cos it leaves out dashboard charges
       but dashboard charges means the person is already your customer...so no point doing merchant customer when payment is done. it should be merchant_customer or merchant_contact when message is received.
   - add a customer - done, sign up - done, referrer link (include messenger) - done, csv - done
 - workflow for sign in, sign up and places like payment/subscription, contact and customer
-
-
-- app fee for subscriptions - platform fee
-  - what of when user sends text for subscriptions...check for managed account
-  - pass a with token param into add_token  for cases where we need to make a new token
-- should create shared user on platform and managed account and standaone acct??
-- merge platform_customer_id with managed account customer id??
 
 
 - <redacted_phone_number> ms nikky
