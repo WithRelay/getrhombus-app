@@ -22,7 +22,7 @@ module TransactionsHelper
   def transactions_change
     tday_txns_count = @all_transactions[0].length
     yday_txns_count = @all_transactions[1].length
-    percent_change = (tday_txns_count - yday_txns_count).to_f/yday_txns_count * 100 if yday_txns_count > 0
+    percent_change = ((tday_txns_count - yday_txns_count).to_f/yday_txns_count) * 100 if yday_txns_count > 0
     display_change(percent_change.round) if percent_change.present?
   end
 
@@ -32,7 +32,7 @@ module TransactionsHelper
   end
 
   def transactions_total_amount_change
-    percent_change = (@todays_txns_amount - @yday_txns_amount).to_f/@yday_txns_amount * 100 if @yday_txns_amount > 0
+    percent_change = ((@todays_txns_amount - @yday_txns_amount).to_f/(@yday_txns_amount)) * 100 if @yday_txns_amount > 0
     display_change(percent_change.round) if percent_change.present?
   end
 
@@ -45,7 +45,7 @@ module TransactionsHelper
   def transactions_net_sales_change
     @yday_net_sale = 0
     @all_transactions[1].each{ |arr| @yday_net_sale += (arr[0] - (arr[1].to_f + arr[2].to_f)) }
-    percent_change = (@tday_net_sale - @yday_net_sale).to_f/@yday_net_sale * 100 if @yday_net_sale > 0
+    percent_change = ((@tday_net_sale - @yday_net_sale).to_f/(@yday_net_sale)) * 100 if @yday_net_sale > 0
     display_change(percent_change.round) if percent_change.present?
   end
 
