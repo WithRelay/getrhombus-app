@@ -20,7 +20,7 @@
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count">$<%= number_with_delimiter("#{Toolbox::Decimal.to_int_or_2dp(transactions_net_sales)}", delimiter: ',' %></h1>
+            <h1 class="total-customer-count">$<%= number_with_delimiter("#{Toolbox::Decimal.to_int_or_2dp(transactions_net_sales)}", delimiter: ',') %></h1>
             <h4 class="count-description"> &nbsp; Net Sales</h4>
             <h4 class="count-description transaction-count"><%= transactions_net_sales_change %></h4>
           </div>
