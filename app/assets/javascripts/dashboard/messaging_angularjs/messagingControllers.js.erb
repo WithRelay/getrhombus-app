@@ -441,7 +441,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         },
         onLoad: function() {
           $('#conversation-chargeForm').find('input:first').focus();
-          //$scope.is_conversation_selected('Please select a conversation with a customer to continue');
+          $scope.is_conversation_selected('Please select a conversation with a customer to continue');
         }
       });
     };
@@ -576,8 +576,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     // Transactions
     $scope.disableChargeButton = function(chargeForm) {
-      //return !$scope.is_conversation_selected('', true) || $scope.selected_conversation.uid_type != 'user' || chargeForm.$invalid || $scope.disable_secondary_btns;
-      return  chargeForm.$invalid;
+      return !$scope.is_conversation_selected('', true) || $scope.selected_conversation.uid_type != 'user' || chargeForm.$invalid || $scope.disable_secondary_btns;
     };
 
     // function to submit the form after all validation has occurred

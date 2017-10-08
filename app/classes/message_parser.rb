@@ -280,8 +280,7 @@ class MessageParser
   end
 
   def process_payment
-#=begin
-    #if not_repeating_payment?
+    if not_repeating_payment?
       if @tag.present? && @tag.recurring_payment_tag?
         if merchant_supports_subscriptions?
           res = handle_subscription_through_text
@@ -299,8 +298,7 @@ class MessageParser
           send_payment_responses
         end
       end
-    #end
-#=end
+    end
   end
 
   def get_first_name

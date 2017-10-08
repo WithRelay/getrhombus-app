@@ -41,7 +41,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
           capture = ['1', 'true', true].include?(params[:transaction][:capture]) ? true : false
           re = txn.process_dashboard_txn(amount, current_user, customer, params[:transaction][:notes], tag, capture, 'dashboard-txn')
           if re.first
-            render json: { response: "Charge created", transaction: txn.as_json(only: [:created_at, :txn_number, :notes], methods: [:relative_time, :txn_amount]) }
+            render json: { response: "Transaction processed", transaction: txn.as_json(only: [:created_at, :txn_number, :notes], methods: [:relative_time, :txn_amount]) }
           else
             render json: { response: re.second }, status: 500
           end

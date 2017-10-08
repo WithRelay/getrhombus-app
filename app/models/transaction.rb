@@ -62,7 +62,7 @@ class Transaction < ActiveRecord::Base
       if @stripe_res # tested
         update_transaction_data
         puts '0sssssssssssssssssssssss'
-        return [true, "Charge created"]
+        return [true, "Transaction processed"]
       else
         # This should only run for text based payments. Dashboard payments is handled differently.
         if @source == 'text'

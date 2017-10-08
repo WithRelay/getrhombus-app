@@ -6,7 +6,7 @@ Taiwo
 - merge platform_customer_id with managed account customer id?? -- no ---- done
 - pass a with token param into add_token  for cases where we need to make a new token - done a different way
 - app fee for subscriptions - platform fee     - Done
-  - what of when user sends text for subscriptions...check for managed account - done
+  - what of when user sends text for subscriptions...check for managed account - Done
 
 
 
