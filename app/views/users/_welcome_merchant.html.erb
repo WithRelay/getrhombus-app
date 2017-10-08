@@ -81,7 +81,7 @@
                 <div class="message-graph-header-text">Weekly Transactions</div>
               </div>
               <div class="w-col w-col-6">
-                <div class="conversation-to-date-text">$<%= @dashboard_transactions[:this_week_tranc] %> Transactions this Week</div>
+                <div class="conversation-to-date-text">$<%= number_with_delimiter(@dashboard_transactions[:this_week_tranc], delimiter: ',') %> Transactions this Week</div>
               </div>
             </div>
           </div>
@@ -111,13 +111,13 @@
         </div>
         <div class="w-col w-col-3">
           <div class="customer-contacts-3 welcome-dash-content-container">
-            <h1 class="new-contacts">$<%= @dashboard_overall_section[:total_transactions] %></h1>
+            <h1 class="new-contacts">$<%= number_with_delimiter(@dashboard_overall_section[:total_transactions], delimiter: ',') %></h1>
             <h4 class="count-description">Transactions to Date</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
           <div class="column-4 overview welcome-dash-content-container">
-            <h1 class="total-customer-count">$<%= @dashboard_overall_section[:transactions_today] %></h1>
+            <h1 class="total-customer-count">$<%= number_with_delimiter(@dashboard_overall_section[:transactions_today], delimiter: ',') %></h1>
             <h4 class="count-description"> &nbsp; Transactions Today</h4>
             <h4 class="count-description transaction-count"> &nbsp; <%= @dashboard_overall_section[:transactions_today_count] %> Transactions</h4>
           </div>
