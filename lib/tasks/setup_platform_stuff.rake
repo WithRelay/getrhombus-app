@@ -42,4 +42,17 @@ namespace :platform do
     TransactionFee.create(provider: 'stripe');
   end
 
+  #4
+  # we use this on Stripe's website or anywhere else necessary
+  desc "Stripe referrer info"
+  task :setup_stripe_referrer => :environment do
+    uid = Transactionable::generate_uid
+    ref = Referrer.create(
+      referrer_email: '<redacted_email>',
+      referrer_name: 'Stripe',
+      referrer_uid: uid,
+      link: UrlShortenerService.shorten_link("#{Rails.application.secrets.app['url']}?referrer_uid=#{uid}")
+    )
+  end
+
 end

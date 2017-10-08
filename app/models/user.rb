@@ -3,12 +3,13 @@ class User < ActiveRecord::Base
   extend UserProfile
   include CSVHandler
   include AddTokenToUser
-  include Transactionable
   include SegmentQueries
 
   attr_accessor :phone, :msg_id, :captured_amt, :referrer
   attr_accessor :channel, :referrer_uid, :tos_acceptance, :customer_source
   attr_accessor :area_code, :card_token, :page_specific_id
+
+  delegate :url_helpers, to: 'Rails.application.routes' 
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
@@ -193,11 +194,11 @@ class User < ActiveRecord::Base
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
     EmailingService.hosted_sms_progress_notice(self, number.try(:second)) if self.hosted_sms.present?
     return false unless number
-    self.relay_uid = generate_uid
+    self.relay_uid = Transactionable::generate_uid
     self.rhombus_number = number[0]
     self.rn_friendly_name = number[1]
     if self.relay_uid.present?
-      self.short_url = UrlShortenerService.shorten_link("#{Rails.application.secrets.app["url"]}?referrer_uid=#{self.relay_uid}")
+      self.short_url = UrlShortenerService.shorten_link("#{url_helpers.new_user_registration_url}?referrer_uid=#{self.relay_uid}")
     end
     
     #welcome_text = "Howdy! Wondering how to get started? Add or import your customers and contacts to start messaging them immediately. If you have any questions, message us here and a member of our team will be happy to help."

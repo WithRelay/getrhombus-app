@@ -1,8 +1,6 @@
 class MessageParser
 
-  ## TEST captured link for sign in
-
-  include Transactionable
+  delegate :url_helpers, to: 'Rails.application.routes' 
 
   # Message/FbMessage object must exist when calling this method
   # from can be user fb cred or phone number
@@ -58,11 +56,11 @@ class MessageParser
 
         # test for active accounts, they are now active by default.
         if @merchant.fraudulent?                     # tested
-          send_response("This #{Rails.application.secrets.app['url']} account cannot receive payments.")
+          send_response("This #{Rails.application.secrets.app['name']} account cannot receive payments.")
         elsif @merchant.inactive?                    # tested
           puts 'merchant isnt active'
           # EmailingService.email_merchant_the_message
-          send_response("This #{Rails.application.secrets.app['url']} phone number is currently unavailable. Please contact us via this email address #{@merchant.email}.")
+          send_response("This #{Rails.application.secrets.app['name']} phone number is currently unavailable. Please contact us via this email address #{@merchant.email}.")
         elsif merchant_supports_payment?
           puts 'merchant supports payment'
           process_payment
@@ -72,10 +70,8 @@ class MessageParser
       elsif @customer.blank?            
         is_signup = is_signup?
         if is_signup                # tested
-          merchant_name = @merchant.org_name.present? ? @merchant.org_name : Rails.application.secrets.app['name']
           merchant_name_prompt = merchant.org_name.present? ? "to " + merchant.org_name : "through #{Rails.application.secrets.app['name']}"
-          url = Rails.application.secrets.app["url"]
-          short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
+          short_link = UrlShortenerService.shorten_link("#{url_helpers.new_user_registration_url}?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           send_response("Hi there! You're really close to sending a payment #{merchant_name_prompt} via text. Follow the link to get set up: #{short_link}")
         elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
           first_name_str = (@merchant.first_name.present?) ? "my name is #{@merchant.first_name}, " : ''
@@ -88,11 +84,11 @@ class MessageParser
         if re[:valid]
           send_response("You are all set up, just text the amount and description to complete your payment. Ex: $20 for #pizza.")
         else
-          # change url
-          if re[:type] == 'no_source'
-            send_response("To complete your payment by text, please sign in here to add your card information: https://www.getrhombus.com/signin")
+          url = sign_in_link(false)
+          if re[:type] == 'no_source'            
+            send_response("To complete your payment by text, please sign in here to add your card information: #{url}")
           elsif re[:type] == 'expired_source'
-            send_response("You are all set up but your payment card has expired. Please sign in here to update your card information: https://www.withrelay.com/signin")
+            send_response("You are all set up but your payment card has expired. Please sign in here to update your card information: #{url}")
           end
         end     
       else # tested
@@ -219,12 +215,11 @@ class MessageParser
       puts 'has valid card object'
       puts re.inspect
       if !re[:valid]                            #tested
-        puts 'no card on file or card has expired'
         if @amt_ary[1] == "cant_override_tag_amt"
           cant_override_tag_amt_message
         else
           # notify user and send sign in link with payment capture
-          send_response("Sorry we couldn't process your payment because: #{re[:text]}. Please follow this link xyz.com to add a card to your profile.")
+          send_response("Sorry we couldn't process your payment because: #{re[:text]}. Please follow this link #{sign_in_link} to add a card to your profile.")
         end
       elsif @amt_ary[1] == "cant_override_tag_amt"            # tested
         puts 'user but cant override_tag_amt'
@@ -240,7 +235,8 @@ class MessageParser
         cant_override_tag_amt_message
       else                                                    # tested
         puts 'no user and can override_tag_amt or charge tag default'
-        send_response("Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.")          
+        url = UrlShortenerService.shorten_link(url_helpers.new_user_registration_url + "?captured_amt=#{@amt_ary[0]}&num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}&msg_id=#{@received_msg.id}&channel=#{@channel}")
+        send_response("Sorry we couldn't process your payment. Please follow this link #{url} to create an account and add a card to your profile.")          
       end
     end
     []
@@ -332,12 +328,6 @@ class MessageParser
     true
   end
 
-  def send_sign_up_link
-    short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{@received_msg.from}
-                                      &referrer_uid=#{@merchant.relay_uid}&referrer=#{@merchant.org_name}&msg_id=#{@received_msg.id}")
-    send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
-  end  
-
   # tested
   def send_response(msg, media = [])
     Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, @uid_type, @uid, msg, @channel, media)
@@ -352,7 +342,7 @@ class MessageParser
           customer_plan = merchant_plan.dup
           customer_plan.amount = @original_amt
           customer_plan.customer_id = @customer.id
-          customer_plan.name = generate_resource_name("Plan")
+          customer_plan.name = Transactionable::generate_resource_name("Plan")
           if customer_plan.create_plan({ team: @merchant })
             create_text_subscription(customer_plan.id)
           else
@@ -381,8 +371,8 @@ class MessageParser
           [true]
         else
           subscription.destroy          
-          if res.second == 'card_error' 
-            res_text = "Hi#{get_first_name}, your subscription to #{@tag.tag} failed because: #{res.third}. Please sign in here to update your card information: https://www.withrelay.com/signin"
+          if res.second == 'card_error'
+            res_text = "Hi#{get_first_name}, your subscription to #{@tag.tag} failed because: #{res.third}. Please sign in here to update your card information: #{sign_in_link}"
           end
           [false, res_text] 
         end
@@ -393,6 +383,16 @@ class MessageParser
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In create_text_subscription" })
       [false]
     end
+  end
+
+  def sign_in_link(with_params = true)
+    url = url_helpers.new_user_session_url
+    url = url + "?captured_amt=#{@amt_ary[0]}&msg_id=#{@received_msg.id}&channel=#{@channel}" if with_params
+    UrlShortenerService.shorten_link(url) 
+  end
+
+  def merchant_name
+    @merchant.org_name.present? ? @merchant.org_name : Rails.application.secrets.app['name']
   end
 
 end

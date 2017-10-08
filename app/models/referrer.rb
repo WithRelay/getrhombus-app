@@ -1,6 +1,4 @@
-# Referrer
 class Referrer < ActiveRecord::Base
-  include Transactionable
   belongs_to :referrer, class_name: 'User', foreign_key: :relay_uid
   belongs_to :referee, class_name: 'User', foreign_key: :id
   attr_accessor :phone
@@ -10,17 +8,4 @@ class Referrer < ActiveRecord::Base
     create(referrer_uid: referrer, referee_id: referee) unless ref
   end
 
-  # we use this on Stripe's website or anywhere else necessary
-  def self.create_stripe_default
-    ref = create(
-      referrer_email: '<redacted_email>',
-      referrer_name: 'Stripe',
-      uid: generate_uid
-    )
-
-    url = Rails.application.secrets.app["url"]
-    ref.update_attribute(
-      :link, "#{url}?referrer_uid=#{ref.uid}"
-    )
-  end
 end
