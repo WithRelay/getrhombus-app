@@ -38,13 +38,13 @@ module TransactionsHelper
 
   def transactions_net_sales
     @tday_net_sale = 0
-    @all_transactions[0].each{ |arr| @tday_net_sale += (arr[0].to_f - (arr[1].to_f + arr[2].to_f)) }
+    @all_transactions[0].each{ |arr| @tday_net_sale += (arr[0].to_f - (arr[1].to_f/100 + arr[2].to_f/100)) }
     @tday_net_sale
   end
 
   def transactions_net_sales_change
     @yday_net_sale = 0
-    @all_transactions[1].each{ |arr| @yday_net_sale += (arr[0] - (arr[1].to_f + arr[2].to_f)) }
+    @all_transactions[1].each{ |arr| @yday_net_sale += (arr[0] - (arr[1].to_f/100 + arr[2].to_f/100)) }
     percent_change = ((@tday_net_sale - @yday_net_sale).to_f/(@yday_net_sale)) * 100 if @yday_net_sale > 0
     display_change(percent_change.round) if percent_change.present?
   end

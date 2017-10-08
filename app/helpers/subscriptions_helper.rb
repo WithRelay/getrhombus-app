@@ -116,7 +116,7 @@ module SubscriptionsHelper
   def subscriptions_total_amount_change
     @yday_txns_amount = 0
     @saas_invoices[1].each{|arr| @yday_txns_amount += arr[0] }
-    percent_change = (@tday_txns_amount - @yday_txns_amount).to_f/@yday_txns_amount * 100 if @yday_txns_amount > 0
+    percent_change = ((@tday_txns_amount - @yday_txns_amount).to_f/(@yday_txns_amount)) * 100 if @yday_txns_amount > 0
     display_change(percent_change.round) if percent_change.present?
   end
 
@@ -129,15 +129,15 @@ module SubscriptionsHelper
   def subscription_net_sales_change
     @yday_net_sale = 0
     @saas_invoices[1].each{|arr| @yday_net_sale += (arr[0] - arr[1])}
-    percent_change = (@tday_net_sale - @yday_net_sale).to_f/@yday_net_sale * 100 if @yday_net_sale > 0
+    percent_change = ((@tday_net_sale - @yday_net_sale).to_f/(@yday_net_sale)) * 100 if @yday_net_sale > 0
     display_change(percent_change.round) if percent_change.present?
   end
 
   def display_change(percent_change)
     if percent_change > 0
-      " &nbsp; Up #{percent_change}%\ from yesterday"
+      " &nbsp; Up #{Toolbox::Decimal.to_int_or_2dp(percent_change)}%\ from yesterday"
     elsif percent_change < 0
-      " &nbsp; Down #{percent_change}%\ from yesterday"
+      " &nbsp; Down #{Toolbox::Decimal.to_int_or_2dp(percent_change)}%\ from yesterday"
     else
       ""
     end
