@@ -55,7 +55,7 @@
       </div>
       <div class="transaction-column w-col w-col-2">
         <div class="transaction-cell w-clearfix">
-          <div class="table-text tran-amount"><%= number_to_currency("#{Toolbox::Decimal.to_int_or_2dp(transaction.amount)}") %></div>
+          <div class="table-text tran-amount">$<%= number_with_delimiter("#{Toolbox::Decimal.to_int_or_2dp(transaction.amount)}", delimiter: ',') %></div>
         </div>
       </div>
       <div class="transaction-column w-col w-col-2">
