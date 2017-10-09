@@ -20,7 +20,7 @@ class Refund < ActiveRecord::Base
         params[:charge_id] = txn.txn_uri
         params[:reason] = 'requested_by_customer' unless STRIPE_REFUND_REASONS.include? params[:reason]
 
-        re = PaymentService.refund_charge(params, merchant.get_stripe_cred[:cred], is_platform)
+        re = PaymentService.refund_charge(params, merchant)
         puts re.inspect
 
         if re.first

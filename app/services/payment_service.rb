@@ -146,9 +146,9 @@ class PaymentService
     end
 
     # return array with txn status, error object, notify customer/merchant
-    def capture_charge(charge_id)
+    def capture_charge(charge_id, merchant)
       begin
-        charge_ary = retrieve_charge(charge_id)  
+        charge_ary = retrieve_charge(charge_id, merchant)  
         return charge_ary unless charge_ary.first
         [charge_ary.first.capture]
       rescue Stripe::StripeError => e
@@ -159,14 +159,16 @@ class PaymentService
     end
 
     # returns array with refund status, error object
-    def refund_charge(hash, cred, is_platform)
+    def refund_charge(hash, merchant)
       begin
-        if is_platform
-          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason])
+        cred = merchant.get_stripe_cred
+        if merchant.is_platform? || cred[:type] == 'managed'
+          # are the last two attrs ok for platform charges?
+          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], refund_application_fee: true, reverse_transfer: true)
         else
           re = Stripe::Refund.create({ charge: hash[:charge_id], reason: hash[:reason], 
                                        refund_application_fee: true, reverse_transfer: true }, 
-                                       { stripe_account: cred.account_id })
+                                       { stripe_account: cred[:cred].account_id })
         end
         [re]
       rescue Stripe::StripeError => e
@@ -341,9 +343,14 @@ class PaymentService
       end
     end
     
-    def retrieve_charge(charge_id)
+    def retrieve_charge(charge_id, merchant)
       begin
-        re = Stripe::Charge.retrieve(charge_id)
+        cred = merchant.get_stripe_cred
+        if merchant.is_platform? || cred[:type] == 'managed'
+          re = Stripe::Charge.retrieve(charge_id)
+        else
+          re = Stripe::Charge.retrieve(charge_id, { stripe_account: cred[:cred].account_id })
+        end
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email

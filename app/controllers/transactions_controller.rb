@@ -4,7 +4,6 @@ class TransactionsController < ApplicationController
   include AdditionalUserActions
 
   before_action :set_notifications, except: [:index, :capture, :download_csv]
-  before_action :set_transaction, only: [:capture]
   respond_to :html
 
   load_and_authorize_resource  
@@ -51,7 +50,8 @@ class TransactionsController < ApplicationController
   end
 
   def capture
-    re = @transaction.capture_uncaptured_txn
+    transaction = Transaction.includes(:team, :user).find(params[:id])
+    re = transaction.capture_uncaptured_txn
     flash[ re.first ? :notice : :error ] = re.second
     redirect_to user_transactions_path(captured: 'false')
   end
@@ -72,10 +72,6 @@ class TransactionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_transaction
-      @transaction = Transaction.find(params[:id])
-    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def transaction_params

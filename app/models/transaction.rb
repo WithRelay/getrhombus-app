@@ -198,7 +198,7 @@ class Transaction < ActiveRecord::Base
   def capture_uncaptured_txn
     begin
       @channel, @merchant, @customer = "Message", self.team, self.user
-      payment_ary = PaymentService.capture_charge(self.txn_uri)
+      payment_ary = PaymentService.capture_charge(self.txn_uri, @merchant)
       if payment_ary[0]
         self.update_column(:captured, true)
         send_payment_responses("Hi" + customer_first_name + ", the preauthorized transaction of #{txn_amount} (#{self.currency}) has been charged to your account by #{@merchant.org_name}.")
