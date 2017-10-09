@@ -40,7 +40,7 @@ class Transaction < ActiveRecord::Base
                                                                                           .where(user_id: user_id, team_id: team_id).sum(:amount)) }
 
   def process_payment(amt, merchant, customer, msg, hashtag, channel, source = 'text', capture = true)
-    #begin
+    begin
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) unless [:capture].include?(arg) }
 
       # taxes # tested
@@ -72,11 +72,11 @@ class Transaction < ActiveRecord::Base
         end
         [false, @stripe_res_ary[2]]
       end
-    #rescue StandardError => err
-      #ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From process_payment in transaction.rb"})
+    rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From process_payment in transaction.rb"})
       #send_payment_failure_email(err, false)  # should go out only for text payments
       [false, "Something went wrong"]
-    #end
+    end
   end
 
   # tested
@@ -151,7 +151,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def handle_captured_txn
-    #begin
+    begin
       if @stripe_res
         if @source == 'dashboard-txn'
           send_payment_responses("Hi" + customer_first_name + ", a payment of #{txn_amount} (#{self.currency}) was charged to your account by #{@merchant.org_name}.")
@@ -166,16 +166,15 @@ class Transaction < ActiveRecord::Base
         else
           [false, 'Sorry, we were unable to complete this transaction. Please try again later.']
         end
-        # notify platform...
       end
-    #rescue StandardError => err
-      #ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From handled_captured_txn in transaction.rb"})
-     # [false, "Sorry, we were unable to complete this transaction. Please try again later."]
-    #end
+    rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From handled_captured_txn in transaction.rb"})
+      [false, "Sorry, we were unable to complete this transaction. Please try again later."]
+    end
   end
 
   def handle_uncaptured_txn
-    #begin
+    begin
       if @stripe_res
         send_response("Hi" + customer_first_name + ", #{txn_amount} (#{self.currency}) has been authorized by #{@merchant.org_name} for #{@hashtag.name}.")
         [true, 'Transaction is authorized']
@@ -186,12 +185,11 @@ class Transaction < ActiveRecord::Base
         else
           [false, "Sorry we were unable to authorize transaction. Please try again later."]
         end
-        # notify platform...
       end
-    #rescue StandardError => err
-      #ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From handle_uncaptured_txn in transaction.rb"})
-     # [false, "We were unable to authorize transaction. Please try again later."]
-    #end
+    rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From handle_uncaptured_txn in transaction.rb"})
+      [false, "We were unable to authorize transaction. Please try again later."]
+    end
   end
 
   # https://support.stripe.com/questions/does-stripe-support-authorize-and-capture

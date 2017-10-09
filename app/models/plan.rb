@@ -32,7 +32,7 @@ class Plan < ActiveRecord::Base
         # save so validations run before calling Stripe
         self.statement_descriptor = descriptor
         self.merchant_id = team.id
-        self.currency = team.currency
+        self.currency = team.currency || 'usd'
         return false if !self.save
 
         hash[:interval] = self.interval

@@ -218,7 +218,7 @@ $(document).on('ready page:load', function() {
   datePicker.datePicker();
 
   $('#bank-currency-select').change(function() {
-    $("#bank-currency").val(this.value);
+    $("#bank-currency, #profile-currency").val(this.value);
     build_account_details(this.value, $("#managed-acct-country").val());
   });
 

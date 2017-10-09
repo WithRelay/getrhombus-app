@@ -30,6 +30,7 @@
         <label class="form-label label-margin">Tell us about your business</label>
         <%= f.text_area :description, class: 'text-area w-input your-product form-control', id: 'About-your-business', placeholder: 'Tell us about your business. What do you sell, when do you charge your customers?' %>
         <div class="messageContainer w-col-12"></div>
+        <%= f.hidden_field :currency, id: 'profile-currency' %>
       </div>
 
       <div class="flex-underline form-section-divider"></div>
