@@ -651,10 +651,10 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:amount_less_fees]},
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "transaction_link", "content" => "https://www.withrelay.com/transaction_link"},
-                                  { "name" => "help_link", "content" => "https://www.withrelay.com/help_link"},
-                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}"},
-                                  { "name" => "refer_link", "content" => "https://www.withrelay.com/refer_link"}
+                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:user]) },
+                                  { "name" => "help_link", "content" => url_helpers.root_url },
+                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}" },
+                                  { "name" => "refer_link", "content" => url_helpers.root_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
@@ -964,7 +964,7 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "dashboard_link", "content" => "https://www.withrelay.com/dashboard_link"},
+                                  { "name" => "dashboard_link", "content" => url_helpers.new_user_session_url },
                                   { "name" => "peoples_list", "content" => options[:peoples_list]}
                                ],
          "merge_language" => "handlebars",
