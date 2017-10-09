@@ -19,6 +19,10 @@ $(document).ready(function () {
 
       $.ajax({
         url: "/homepage_referrer",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        type: 'POST',
         data: hash
       }).done(function() { console.log('done') });
     };

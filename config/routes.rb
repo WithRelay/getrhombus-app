@@ -2,9 +2,9 @@ Rails.application.routes.draw  do
   default_url_options host: Rails.application.secrets.app["url"]
 
   root 'static_pages#home'
-  get "homepage_referrer" => 'referrers#homepage_referrer'
-  #get "relay-docs/:slug" => "knowledge_bases#show"
-  #get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  post "homepage_referrer" => 'referrers#homepage_referrer'
+  # get "relay-docs/:slug" => "knowledge_bases#show"
+  # get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
   get 'verify-hosted-sms-order' => 'users#verify_hosted_sms_order'
 
   StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }

@@ -32,6 +32,9 @@ module DashboardData
     }
 	end
 
+  # Exclude refunded transactions, include subscriptions since these queries are read only
+  # Otherwise you will need to exclude subscriptions which aren't easily refundable
+  # and include only captured transactions and account reload txns are included by default..right
 	def dashboard_transactions
 		all_txns = all_transactions
     chart_data, recent_transactions = {}, {}
@@ -41,7 +44,7 @@ module DashboardData
 		if has_bank_account?
 			chart_data = all_txns.where('transactions.created_at >= ?', 7.days.ago.utc).group('date(transactions.created_at)').sum(:amount)
 			recent_transactions = Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
-																		    .where(team_id: merchant_id).order(created_at: :desc).last(6)			
+																		    .where(team_id: merchant_id).order(created_at: :desc).limit(6)			
 		end
 
 		{
@@ -50,18 +53,6 @@ module DashboardData
 			tranc_chart_data: chart_data
 		}
 	end
-
-  # Exclude refunded transactions, include subscriptions since these queries are read only
-  # Otherwise you will need to exclude subscriptions which aren't easily refundable
-  # and include only captured transactions and account reload txns are included by default..right
-	# def chart_and_transactions
-  # 	#data for chart, includes both fb_msg and sms
-  #   {
-  #     last6_transactions: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
-  #                                   .where(team_id: merchant_id).order(created_at: :desc).last(6),
-  #     msg_data_for_chart: message_volume(30)
-	#   }
-	# end
 
 	def dashboard_analytics_section
     data = conversations_handling_time
