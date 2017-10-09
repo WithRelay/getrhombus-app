@@ -514,7 +514,7 @@ class EmailingService
                                   { name: "current_balance", content: Toolbox::Decimal.to_int_or_2dp(user.account_balance) },
                                   { name: "recharge_account_link", content: url_helpers.user_sms_usage_url(user) },
                                   { name: "set_auto_recharge_link", content: url_helpers.user_sms_usage_url(user) },
-                                  { name: "help_center_link", content: url_helpers.relay_docs_url }
+                                  { name: "help_center_link", content: url_helpers.root_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -615,11 +615,11 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "pdf_download_link", "content" => "https://www.withrelay.com/pdf_download_link"},
-                                  { "name" => "history_link", "content" => "https://www.withrelay.com/history_link"},
-                                  { "name" => "help_center_link", "content" => "https://www.withrelay.com/help_center_link"},
+                                  { "name" => "pdf_download_link", "content" => url_helpers.root_url },
+                                  { "name" => "history_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_link", "content" => "mailto:#{User.platform_email}"},
-                                  { "name" => "refer_business_link", "content" => "https://www.withrelay.com/refer_business_link"}
+                                  { "name" => "refer_business_link", "content" => url_helpers.root_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
