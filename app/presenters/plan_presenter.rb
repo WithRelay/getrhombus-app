@@ -5,7 +5,8 @@ class PlanPresenter < BasePresenter
   end
 
   def format_plan_name
-    @model.name + (@model.customer_id.present? ? " (customer initiated)" : '')
+    tag = @model.hashtag_tag
+    @model.name + (tag.present? ? " (#{tag})" : '')
   end
 
 end

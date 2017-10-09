@@ -30,7 +30,7 @@ class TransactionsController < ApplicationController
       @transactions = Transaction.includes(:user, :hashtag).where(where_str).only_captured_transactions()
                                   .exclude_refunded_transactions()
                                   .exclude_subscriptions()
-                                  .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
+                                  .paginate(page: params[:page], per_page: 1)
                                   .order(created_at: :desc)
     end
 

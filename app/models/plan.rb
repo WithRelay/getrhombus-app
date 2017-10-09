@@ -6,6 +6,8 @@ class Plan < ActiveRecord::Base
   belongs_to :customer, class_name: "User"
   belongs_to :hashtag, -> { where tag_type: 3 }
 
+  delegate :tag, to: :hashtag, prefix: :hashtag, allow_nil: true
+
   validates_presence_of :name, :interval, :interval_count, :amount
   validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
   validates_numericality_of :amount, :interval_count, greater_than_or_equal_to: 0, only_integer: true

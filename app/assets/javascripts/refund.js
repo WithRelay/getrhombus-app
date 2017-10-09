@@ -1,35 +1,36 @@
   $(document).ready(function () {
 
-	var txn_num = '', is_conv_page = false, parent_row,
-      btn_html = '';
+	var txn_num = '', is_conv_page = false, must_check_txn = false,
+      parent_row, btn_html = '';
    
   // transactions page checkbox
-  $('.transaction-checkbox').click(function() {
+  $("#objlists")
+  .on('click', '.transaction-checkbox', function() {
     if ($(this).is(':checked')) {
       
       is_conv_page = false;
+      must_check_txn = true;
       
       parent_row = $(this).closest('.transactions-table-row');
       var amount = parent_row.find('.tran-amount').text();
       var last4 = parent_row.find('.tran-last-four').text();
       txn_num = this.dataset.txnNumber;
-      
+            
       $('#tran-amount').text(amount);
       $('#last_four').text(last4);      
     };
-  });
+  })
+  .on('click', '.customer-profile-refund-btn', function() {  // customer profile page refund
+    is_conv_page = false;
+    must_check_txn = false;
 
-  // customer profile page refund
-  $('.customer-profile-refund-btn').click(function() {
-      is_conv_page = false;
-
-      parent_row = $(this).closest('.customer-profile-trasaction-table');
-      var amount = parent_row.find('.tran-amount').text();
-      var last4 = this.dataset.txnLast4;
-      txn_num = this.dataset.txnNumber;
-      
-      $('#tran-amount').text(amount);
-      $('#last_four').text(last4);      
+    parent_row = $(this).closest('.customer-profile-trasaction-table');
+    var amount = parent_row.find('.tran-amount').text();
+    var last4 = this.dataset.txnLast4;
+    txn_num = this.dataset.txnNumber;
+    
+    $('#tran-amount').text(amount);
+    $('#last_four').text(last4);      
   });
 
   // for conversations page
@@ -40,6 +41,7 @@
 
     txn_num = e.currentTarget.dataset.txnNumber;
     is_conv_page = true;
+    must_check_txn = false;
 
     if (granny_sibling.is('#refundBox')) {
       (granny_sibling.is(':hidden')) ? granny_sibling.show() : granny_sibling.hide();
@@ -52,7 +54,7 @@
   $(document).on('click', '#refund-submit', function(e) {
     e.preventDefault();
 
-    if (!CheckedItem.get()) {
+    if (must_check_txn && !CheckedItem.get()) {
       FlashHandler.setFlashMessage('Please select a transaction to refund.', 'error');
       return;
     }
@@ -91,7 +93,7 @@
         (is_conv_page) ? refund_btn.value = "Refund" : refund_btn.innerHTML = btn_html;        
       });
     } else {
-      FlashHandler.setFlashMessage('This transaction has no transaction number.', 'error');
+      FlashHandler.setFlashMessage("We're unable to refund this transaction at the moment.", 'error');
     }
   });
 
