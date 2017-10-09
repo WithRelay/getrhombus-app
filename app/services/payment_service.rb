@@ -188,10 +188,6 @@ class PaymentService
         if platform
           re = Stripe::Subscription.create(hash)
         else
-          # is this where we create merchant-customer relationship?
-          tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: cred.account_id })
-          customer = Stripe::Customer.create({ source: tkn.id }, { stripe_account: cred.account_id })
-          hash[:customer] = customer.id
           re = Stripe::Subscription.create(hash, { stripe_account: cred.account_id })
         end
 
@@ -199,14 +195,21 @@ class PaymentService
       rescue Stripe::CardError => exception
         ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
         # Since it's a decline, Stripe::CardError will be caught
-        [false, e, e.json_body[:error][:message]]
+        [false, exception, exception.json_body[:error][:message]]
       rescue Stripe::StripeError => exception
         ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
-        [false, e]
+        [false, exception]
       rescue StandardError => exception
         ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
-        [false, e]
+        [false, exception]
       end
+    end
+
+    def x
+      cred = User.second.get_stripe_cred[:cred]
+      puts cred.inspect
+      c = "cus_BXYzCdh0UtfKB7"
+      tkn = Stripe::Token.create({ customer: c }, { stripe_account: cred.account_id })
     end
 
     def cancel_subscription(subscription_id, cred, platform, at_period_end)

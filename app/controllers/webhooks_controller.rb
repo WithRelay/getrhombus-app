@@ -8,7 +8,7 @@ class WebhooksController < ApplicationController
       #event = Stripe::Event.retrieve(params[:id])
       #if params[:id] == event[:id]
         type = (request.original_fullpath.include? 'platform') ? 'platform' : 'connect'
-        StripeEvent.process_event(params, type)
+        StripeEvent.new.process_event(params, type)
       #end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller stripe_events" })
@@ -18,19 +18,19 @@ class WebhooksController < ApplicationController
 
   # set timezone for this request since we do duplicate payment check??
   def twilio_events
-    TwilioEvent.process_event(params, @merchant)
+    TwilioEvent.new.process_event(params, @merchant)
     render nothing: true
   end
 
   def nexmo_events
-    NexmoEvent.process_event(params, @merchant)
+    NexmoEvent.new.process_event(params, @merchant)
     render nothing: true
   end
 
   def facebook_events
     res = {}
     begin
-      res = FacebookEvent.process_event(params, current_page, @merchant)
+      res = FacebookEvent.new.process_event(params, current_page, @merchant)
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller facebook_events" })
     end

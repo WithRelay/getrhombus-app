@@ -31,9 +31,9 @@ class FbCred < ActiveRecord::Base
       gender = user_data['gender']
       link_response = link_page_specific_user(url)
       welcome_text = "Welcome #{full_name} to Relay-Message Commerce platform"
-      @fb_cred = FbCred.find_or_initialize_by(page_specific_id: new_user_id)
+      fb_cred = FbCred.find_or_initialize_by(page_specific_id: new_user_id)
       if link_response.present?
-        @fb_cred.update(
+        fb_cred.update(
           name: full_name, gender: gender,
           email: link_response[:email],
           time_zone: timezone, profile_pic_url: url,
@@ -43,13 +43,13 @@ class FbCred < ActiveRecord::Base
         )
       else
         send_auth_link(page_access_token, new_user_id, welcome_text)
-        @fb_cred.update(
+        fb_cred.update(
           name: full_name,time_zone: timezone,
           gender: gender, profile_pic_url: url,
           fb_page_id: fb_page.id
         )
       end
-      @fb_cred if @fb_cred.save
+      fb_cred if fb_cred.save
     rescue StandardError => err
     end
   end
