@@ -57,11 +57,11 @@ class MessageParser
 
         # test for active accounts, they are now active by default.
         if @merchant.fraudulent?                     # tested
-          send_response("This #{Rails.application.secrets.app['name']} account cannot receive payments.")
+          send_response("This #{app_name} account cannot receive payments.")
         elsif @merchant.inactive?                    # tested
           puts 'merchant isnt active'
           # EmailingService.email_merchant_the_message
-          send_response("This #{Rails.application.secrets.app['name']} phone number is currently unavailable. Please contact us via this email address #{@merchant.email}.")
+          send_response("This #{app_name} phone number is currently unavailable. Please contact us via this email address #{@merchant.email}.")
         elsif merchant_supports_payment?
           puts 'merchant supports payment'
           process_payment
@@ -71,7 +71,7 @@ class MessageParser
       elsif @customer.blank?            
         is_signup = is_signup?
         if is_signup                # tested
-          merchant_name_prompt = merchant.org_name.present? ? "to " + merchant.org_name : "through #{Rails.application.secrets.app['name']}"
+          merchant_name_prompt = merchant.org_name.present? ? "to " + merchant.org_name : "through #{app_name}"
           short_link = UrlShortenerService.shorten_link("#{url_helpers.new_user_registration_url}?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           send_response("Hi there! You're really close to sending a payment #{merchant_name_prompt} via text. Follow the link to get set up: #{short_link}")
         elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
@@ -393,7 +393,11 @@ class MessageParser
   end
 
   def merchant_name
-    @merchant.org_name.present? ? @merchant.org_name : Rails.application.secrets.app['name']
+    @merchant.org_name.present? ? @merchant.org_name : app_name
+  end
+
+  def app_name
+    Rails.application.secrets.app['name']
   end
 
 end
