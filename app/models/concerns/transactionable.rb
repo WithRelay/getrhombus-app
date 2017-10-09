@@ -21,10 +21,10 @@ module Transactionable
     random_token
   end
 
-  def generate_resource_name(model)
+  def generate_resource_name(model, str=nil)
     random_token = nil
     loop do
-      random_token = model + "-" + Toolbox::StringGen.generate_random_string(6)
+      random_token = (str || model) + "-" + Toolbox::StringGen.generate_random_string(6)
       break unless model.constantize.unscoped.exists?(name: random_token)
     end
     random_token

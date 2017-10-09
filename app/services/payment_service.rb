@@ -205,13 +205,6 @@ class PaymentService
       end
     end
 
-    def x
-      cred = User.second.get_stripe_cred[:cred]
-      puts cred.inspect
-      c = "cus_BXYzCdh0UtfKB7"
-      tkn = Stripe::Token.create({ customer: c }, { stripe_account: cred.account_id })
-    end
-
     def cancel_subscription(subscription_id, cred, platform, at_period_end)
       begin
         res = if platform

@@ -20,25 +20,40 @@ class HashtagsController < ApplicationController
   def create
     @hashtag = Hashtag.new(hashtag_params)
     @hashtag.user_id = current_user.id
-    if @hashtag.save
-      if @hashtag.create_plan_for_recurring_tag(current_user)
-        redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }
+    unless plan_name_exists?
+      if @hashtag.save
+        if @hashtag.create_plan_for_recurring_tag(current_user)
+          redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }
+        else
+          flash[:error] = "We're unable to create the hashtag and associated recurring plan."
+          @hashtag.destroy
+          render :new
+        end
       else
-        flash[:error] = "We're unable to create a plan for this recurring hashtag."
-        @hashtag.destroy
-        render :new
+        flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't create the hashtag."
+        respond_with(@hashtag)
       end
     else
-      flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't create the hashtag"
+      flash[:error] = "A recurring plan with this tag name already exists."
       respond_with(@hashtag)
     end
   end
 
   def update
-    if @hashtag.update(hashtag_params)
-      redirect_to user_hashtags_path, flash: { notice: "Hashtag Updated!" }
+    unless plan_name_exists?
+      if @hashtag.update_plan_for_recurring_tag(hashtag_params[:name])
+        if @hashtag.update(hashtag_params)
+          redirect_to user_hashtags_path, flash: { notice: "Hashtag Updated!" }
+        else
+          flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't update the hashtag"
+          respond_with(@hashtag)
+        end
+      else
+        flash[:error] = "A recurring plan with this tag name already exists."
+        respond_with(@hashtag)
+      end
     else
-      flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't update the hashtag"
+      flash[:error] = "A recurring plan with this tag name already exists."
       respond_with(@hashtag)
     end
   end
@@ -53,10 +68,6 @@ class HashtagsController < ApplicationController
   end
 
   def destroy
-    flash[:error] = "We cannot delete the hashtag"
-    redirect_to user_hashtags_path
-    return
-
     unless @hashtag.is_mentioned?
       re = @hashtag.delete_plan_for_recurring_tag(current_user)
       if re.first
@@ -79,6 +90,11 @@ class HashtagsController < ApplicationController
 
     def set_hashtag
       @hashtag = Hashtag.find(params[:id])
+    end
+
+    def plan_name_exists?
+      return false unless @hashtag.recurring_payment_tag?
+      Plan.exist?(['merchant_id = ? and lower(name) = ?', current_user.id, "#{@hashtag.tag}"])
     end
 
     def hashtag_params

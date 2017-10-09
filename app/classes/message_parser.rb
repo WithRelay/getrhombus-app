@@ -344,7 +344,7 @@ class MessageParser
           customer_plan = merchant_plan.dup
           customer_plan.amount = @original_amt
           customer_plan.customer_id = @customer.id
-          customer_plan.name = generate_resource_name("Plan")
+          customer_plan.name = generate_resource_name("Plan", merchant_plan.hashtag_tag)
           if customer_plan.create_plan({ team: @merchant })
             create_text_subscription(customer_plan.id)
           else
