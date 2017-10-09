@@ -341,7 +341,7 @@ class MessageParser
       if merchant_plan.present?                                 
         # if can override amount and amt isnt the same, create plan and create subscription
         if @tag.allow_customers_to_override_amount? && @original_amt != @tag_amt      
-          customer_plan = @merchant_plan.dup
+          customer_plan = merchant_plan.dup
           customer_plan.amount = @original_amt
           customer_plan.customer_id = @customer.id
           customer_plan.name = generate_resource_name("Plan")
