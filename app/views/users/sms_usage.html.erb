@@ -13,7 +13,7 @@
         </p>
         <% if current_user.hosted_sms.status == 'received' || current_user.hosted_sms.status == 'pending-verification' %>
           <div>
-            <a class="button w-button verification-link-button" href= <%= user_verify_hosted_sms_order_url %> >Verification Link</a>
+            <a class="button w-button verification-link-button" href= <%= verify_hosted_sms_order_url %> >Verification Link</a>
           </div>
         <% end %>
       </div>
