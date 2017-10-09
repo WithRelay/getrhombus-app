@@ -95,16 +95,18 @@ module SegmentQueries
 
   def last_payment_made(data)
     str = " select distinct(mc.customer_id), mc.merchant_id, mc.id, mc.created_at, mc.updated_at from merchant_customers mc 
-            inner join transactions t on t.user_id = mc.customer_id "
+            inner join transactions t on t.user_id = mc.customer_id 
+            left join refunds as r on t.id = r.transaction_id "
 
     if data["additional_val"].present?  # amount for now
-      str += " #{get_amount_filter(data["additional_filter"], data["additional_val"])} and "
+      str += " #{get_amount_filter(data['additional_filter'], data['additional_val'])} and "
     else
       str += " where "
     end
 
-    str += " mc.merchant_id = #{data["merchant_id"]} and 
-             t.created_at #{get_base_filter(data["base_filter"])} '#{data["time"]}' and t.team_id = #{data["merchant_id"]} "
+    str += " mc.merchant_id = #{data['merchant_id']} and 
+             t.created_at #{get_base_filter(data['base_filter'])} '#{data["time"]}' and t.team_id = #{data['merchant_id']} 
+             and r.transaction_id is null "
   end
 
   private
@@ -117,8 +119,8 @@ module SegmentQueries
                 from merchant_customers mc 
                 inner join conversations c on mc.customer_id = c.uid and c.uid_type = 'user' and mc.merchant_id = c.merchant_id
                 inner join conversation_refs cr on c.id = cr.conversation_id    
-                where mc.merchant_id = #{data["merchant_id"]} and mc.customer_id is not null
-                and cr.source = #{source} and cr.created_at #{get_base_filter(data["base_filter"])} '#{data["time"]}' 
+                where mc.merchant_id = #{data['merchant_id']} and mc.customer_id is not null
+                and cr.source = #{source} and cr.created_at #{get_base_filter(data['base_filter'])} '#{data["time"]}' 
               ) uids "
 
     str += data["additional_val"].present? ? transactions_substring(data) : " order by uids.message_time "
@@ -127,8 +129,11 @@ module SegmentQueries
 
   def transactions_substring(data)
     return "" if data["additional_val"].blank?
-    " inner join transactions t on uids.id = t.user_id and t.team_id = #{data["merchant_id"]}
-      #{get_amount_filter(data["additional_filter"], data["additional_val"])} order by t.created_at "
+    " inner join transactions t on uids.id = t.user_id and t.team_id = #{data['merchant_id']}
+      left join refunds as r on t.id = r.transaction_id
+      #{get_amount_filter(data['additional_filter'], data['additional_val'])} 
+      and r.transaction_id is null 
+      order by t.created_at "
   end
 
   def contact_message_string(data, source)
@@ -153,7 +158,9 @@ module SegmentQueries
     # note contacts will never have amount for transactions
     if data["additional_val"].present?
       str += " inner join transactions t on mc.customer_id = t.user_id and t.team_id = #{data["merchant_id"]} 
-                #{get_amount_filter(data["additional_filter"], data["additional_val"])} and "
+                left join refunds as r on t.id = r.transaction_id
+                #{get_amount_filter(data["additional_filter"], data["additional_val"])}
+                and r.transaction_id is null and "
     else
       str += " where " + (user_type == "contact" ? " mc.is_customer = false and " : "")
     end
