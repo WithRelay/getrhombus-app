@@ -21,7 +21,7 @@ class Subscription < ActiveRecord::Base
       is_platform = team.is_platform?
       cred = team.get_stripe_cred
 
-      if is_platform || (team.is_merchant? && cred[:cred][:type] == 'managed')
+      if is_platform || (team.is_merchant? && cred[:type] == 'managed')
 
         unless is_platform
           fee_schedule = cred[:cred].transaction_fee
