@@ -13,6 +13,9 @@ class Plan < ActiveRecord::Base
 
   enum status: { inactive: 0, active: 1 }
 
+  INTERVAL = { "week_1" => "Weekly", 'week_2' => "Bi-weekly", "month_1" => "Monthly", 
+               'month_3' => "Every 3 months", 'month_6' => 'Every 6 months', 'year_1' => 'Yearly' }.freeze
+
   def create_plan(hash)
     begin
       res = []
@@ -106,6 +109,10 @@ class Plan < ActiveRecord::Base
 
   def has_subscription?
     self.subscriptions.exists?
+  end
+
+  def interval_name
+    INTERVAL["#{self.interval.downcase}_#{self.interval_count}"]
   end
 
   private

@@ -281,12 +281,7 @@ class MessageParser
       if @tag.present? && @tag.recurring_payment_tag?
         if merchant_supports_subscriptions?
           res = handle_subscription_through_text
-          if res.first
-            send_response(@tag.response, get_tag_images)
-            # send email here or through subscription instance
-          else
-            send_response(res.second || subscription_error_text)
-          end
+          res.first ? send_subscription_responses : send_response(res.second || subscription_error_text)
         end
       else     # tested   
         @new_txn = Transaction.new        
@@ -317,7 +312,13 @@ class MessageParser
     @new_txn.send_payment_responses(msg_to_send)
     send_response(@tag.response, get_tag_images) if @tag.present?
   end
-  
+
+  def send_subscription_responses
+    msg_to_send = "Thanks#{get_first_name}, you've been subscribed to a $#{@subscription.plan_amount} #{@subscription.plan_interval_name.try(:downcase)} plan for #{@tag.name}."
+    @subscription.send_payment_responses(msg_to_send, @channel)
+    send_response(@tag.response, get_tag_images) if @tag.present?
+  end
+    
   # tested  
   def not_repeating_payment?
     # if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
@@ -340,7 +341,7 @@ class MessageParser
       if merchant_plan.present?                                 
         # if can override amount and amt isnt the same, create plan and create subscription
         if @tag.allow_customers_to_override_amount? && @original_amt != @tag_amt      
-          customer_plan = merchant_plan.dup
+          customer_plan = @merchant_plan.dup
           customer_plan.amount = @original_amt
           customer_plan.customer_id = @customer.id
           customer_plan.name = generate_resource_name("Plan")
@@ -366,12 +367,12 @@ class MessageParser
     begin
       merchant_customer = MerchantCustomer.find_by(merchant_id: @merchant.id, customer_id: @customer.id)
       if merchant_customer.present?
-        subscription = Subscription.new(plan_id: plan_id, merchant_customer_id: merchant_customer.id, quantity: 1)
-        res = subscription.create_subscription({ team: @merchant })
+        @subscription = Subscription.new(plan_id: plan_id, merchant_customer_id: merchant_customer.id, quantity: 1)
+        res = @subscription.create_subscription({ team: @merchant })
         if res.first
           [true]
         else
-          subscription.destroy          
+          @subscription.destroy          
           if res.second == 'card_error'
             res_text = "Hi#{get_first_name}, your subscription to #{@tag.tag} failed because: #{res.third}. Please sign in here to update your card information: #{sign_in_link}"
           end

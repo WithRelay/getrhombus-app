@@ -1,7 +1,6 @@
 class HashtagPresenter < BasePresenter
 	
 	TAG_TYPES = { non_payment_tag: 'Non-payment', one_time_payment_tag: 'One-time payment', recurring_payment_tag: 'Recurring payment'}.freeze
-	INTERVAL = { "week_1" => "Weekly", 'week_2' => "Bi-weekly", "month_1" => "Monthly", 'month_3' => "Every 3 months", 'month_6' => 'Every 6 months', 'year_1' => 'Yearly' }.freeze
 
 	def format_tag_type
 		TAG_TYPES[:"#{@model.tag_type}"]
@@ -31,7 +30,7 @@ class HashtagPresenter < BasePresenter
 		if @model.persisted? && @model.recurring_payment_tag?
 			opt = Hash.new
 			str = @model.interval + "_" + @model.interval_count.to_s
-			opt[INTERVAL[str]] = str
+			opt[Plan::INTERVAL[str]] = str
 			return opt
 		end
 

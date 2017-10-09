@@ -49,9 +49,7 @@ class BasePresenter < SimpleDelegator
   end
 
   def get_plan_intervals
-    { "Weekly" => "week_1", "Bi-weekly" => 'week_2',
-      "Monthly" => "month_1", "Every 3 months" => 'month_3',
-      'Every 6 months' => 'month_6', 'Yearly' => 'year_1' }
+    Plan::INTERVAL.invert
   end
 
   def average_transaction

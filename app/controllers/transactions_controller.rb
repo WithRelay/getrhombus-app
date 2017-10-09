@@ -41,11 +41,11 @@ class TransactionsController < ApplicationController
 
   def process_captured_payment
     channel = session.delete(:channel); message = session.delete(:msg_id)    
-    if channel.present? && message.present? && ["Message", "FbMessage"].include?(channel)
+    if message.present? && ["Message", "FbMessage"].include?(channel) 
       message = channel.constantize.find_by(id: message)
       merchant = User.find_by(id: message.try(:user_id_to))
       if message && message.transaction_id.blank? && merchant 
-        MessageParser.new.process_message(merchant, current_user, current_user.id, 'User', message, channel)
+        MessageParser.new.process_message(merchant, current_user, current_user.id, 'user', message, channel)
       end      
     end
   end

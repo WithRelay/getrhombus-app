@@ -129,6 +129,9 @@ class Transaction < ActiveRecord::Base
     )
   end
 
+  def send_merchant_receipt
+  end
+
   def send_payment_failure_email(err, to_merchant)
     EmailingService.charge_failure_notification(
       to: @merchant.email,
