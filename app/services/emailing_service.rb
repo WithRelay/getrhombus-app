@@ -61,7 +61,8 @@ class EmailingService
         template_content = []
         message = { "subject" => "Status: Complete your phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
-                                  { "name" => "virtual_number", "content" => rhombus_number }
+                                  { "name" => "virtual_number", "content" => rhombus_number },
+                                  { "name" => "verify_hosted_sms_order_link", "content" => url_helpers.verify_hosted_sms_order_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -511,9 +512,9 @@ class EmailingService
         message = { "subject" => "Low account balance",
          "global_merge_vars" => [ { name: "first_name", content: user.first_name || 'there' },
                                   { name: "current_balance", content: Toolbox::Decimal.to_int_or_2dp(user.account_balance) },
-                                  { name: "recharge_account_link", content: 'https://www.withrelay.com/recharge_account_link'},
-                                  { name: "set_auto_recharge_link", content: 'https://www.withrelay.com/set_auto_recharge_link'},
-                                  { name: "help_center_link", content: 'https://www.withrelay.com/relay-docs'}
+                                  { name: "recharge_account_link", content: url_helpers.user_sms_usage_url(user) },
+                                  { name: "set_auto_recharge_link", content: url_helpers.user_sms_usage_url(user) },
+                                  { name: "help_center_link", content: url_helpers.root_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -614,11 +615,11 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "pdf_download_link", "content" => "https://www.withrelay.com/pdf_download_link"},
-                                  { "name" => "history_link", "content" => "https://www.withrelay.com/history_link"},
-                                  { "name" => "help_center_link", "content" => "https://www.withrelay.com/help_center_link"},
+                                  { "name" => "pdf_download_link", "content" => url_helpers.root_url },
+                                  { "name" => "history_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_link", "content" => "mailto:#{User.platform_email}"},
-                                  { "name" => "refer_business_link", "content" => "https://www.withrelay.com/refer_business_link"}
+                                  { "name" => "refer_business_link", "content" => url_helpers.root_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
@@ -650,10 +651,10 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:amount_less_fees]},
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "transaction_link", "content" => "https://www.withrelay.com/transaction_link"},
-                                  { "name" => "help_link", "content" => "https://www.withrelay.com/help_link"},
-                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}"},
-                                  { "name" => "refer_link", "content" => "https://www.withrelay.com/refer_link"}
+                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:user]) },
+                                  { "name" => "help_link", "content" => url_helpers.root_url },
+                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}" },
+                                  { "name" => "refer_link", "content" => url_helpers.root_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
@@ -963,7 +964,7 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "dashboard_link", "content" => "https://www.withrelay.com/dashboard_link"},
+                                  { "name" => "dashboard_link", "content" => url_helpers.new_user_session_url },
                                   { "name" => "peoples_list", "content" => options[:peoples_list]}
                                ],
          "merge_language" => "handlebars",
