@@ -61,7 +61,8 @@ class EmailingService
         template_content = []
         message = { "subject" => "Status: Complete your phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
-                                  { "name" => "virtual_number", "content" => rhombus_number }
+                                  { "name" => "virtual_number", "content" => rhombus_number },
+                                  { "name" => "verify_hosted_sms_order_link", "content" => url_helpers.verify_hosted_sms_order_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
