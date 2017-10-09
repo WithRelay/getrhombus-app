@@ -23,7 +23,8 @@ $(document).ready(function () {
     $('#txn_start_date').val(picker.startDate.format('YYYY-MM-DD'));
     $('#txn_end_date').val(picker.endDate.format('YYYY-MM-DD'));
     $('#txn_history_form').submit();
-  });
+  })
+  .val('').attr("placeholder", "Export transactions");
 
 
   $('#Subscription-Date-Range-Picker').daterangepicker({
@@ -50,5 +51,6 @@ $(document).ready(function () {
     $('#subs_txn_start_date').val(picker.startDate.format('YYYY-MM-DD'));
     $('#subs_txn_end_date').val(picker.endDate.format('YYYY-MM-DD'));
     $('#subs_txn_history_form').submit();
-  });
+  })
+  .val('').attr("placeholder", "Export subscriptions");
 });
