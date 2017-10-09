@@ -131,7 +131,7 @@ class StripeEvent
       if team
         # retrieve charge details
         # test that charge is true
-        charge = PaymentService.retrieve_charge(@hash[:charge], team.get_stripe_cred[:cred], team.is_platform?) if @hash[:charge]
+        charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge]
         charge = charge.try(:first)
         
         # a transaction should not already exist but we need to check if it does so we don't send out emails again

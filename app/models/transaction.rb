@@ -196,30 +196,20 @@ class Transaction < ActiveRecord::Base
 
   # https://support.stripe.com/questions/does-stripe-support-authorize-and-capture
   def capture_uncaptured_txn
-    #begin
-      @channel = "Message"
-      @merchant = self.team 
-      @customer = self.user
-      payment_ary = PaymentService.capture_charge(self.txn_uri, @merchant.get_stripe_cred[:cred], team.is_platform?)
-      puts payment_ary.inspect
+    begin
+      @channel, @merchant, @customer = "Message", self.team, self.user
+      payment_ary = PaymentService.capture_charge(self.txn_uri)
       if payment_ary[0]
-        ###### will capture change transaction status and date???
         self.update_column(:captured, true)
         send_payment_responses("Hi" + customer_first_name + ", the preauthorized transaction of #{txn_amount} (#{self.currency}) has been charged to your account by #{@merchant.org_name}.")
         [true, "The preauthorized transaction has been processed."]
       else
-        if @stripe_res_ary[3]
-          send_response("Hi" + customer_first_name + ", a charge of #{txn_amount} (#{self.currency}) by #{@merchant.org_name} failed because: #{@stripe_res_ary.third}")
-          [false, 'Sorry, we were unable to complete this transaction because: ' + @stripe_res_ary.third]
-        else
-          [false, 'Sorry, we were unable to complete this transaction. Please try again later.']
-        end
-        # notify platform only.
+        [false, payment_ary[2]]
       end
-    #rescue StandardError => err
-      #ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From capture_uncaptured_txn in transaction.rb"})
-     # [false, "Sorry, we were unable to complete this transaction. Please try again later."]
-    #end
+    rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From capture_uncaptured_txn in transaction.rb"})
+      [false, "Sorry, we were unable to complete this transaction. Please try again later."]
+    end
   end
 
   # tested

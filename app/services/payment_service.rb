@@ -146,15 +146,15 @@ class PaymentService
     end
 
     # return array with txn status, error object, notify customer/merchant
-    def capture_charge(charge_id, cred, is_platform)
+    def capture_charge(charge_id)
       begin
-        charge_ary = retrieve_charge(charge_id, cred, is_platform)  
+        charge_ary = retrieve_charge(charge_id)  
         return charge_ary unless charge_ary.first
         [charge_ary.first.capture]
       rescue Stripe::StripeError => e
         [false, e.json_body[:error], "Stripe is unable to process charge. Note that authorized txns over 7 days can no longer be processed."]
       rescue StandardError => e
-        [false, e, "Something went wrong"]
+        [false, e, "Sorry, we were unable to complete this transaction. Please try again later."]
       end
     end
 
@@ -341,13 +341,9 @@ class PaymentService
       end
     end
     
-    def retrieve_charge(charge_id, cred, is_platform)
+    def retrieve_charge(charge_id)
       begin
-        if is_platform
-          re = Stripe::Charge.retrieve(charge_id)
-        else
-          re = Stripe::Charge.retrieve(charge_id, { stripe_account: cred.account_id })
-        end
+        re = Stripe::Charge.retrieve(charge_id)
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
