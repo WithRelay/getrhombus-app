@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   attr_accessor :channel, :referrer_uid, :tos_acceptance, :customer_source
   attr_accessor :area_code, :card_token, :page_specific_id
 
-  delegate :url_helpers, to: 'Rails.application.routes' 
+  delegate :url_helpers, to: 'Rails.application.routes'
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
@@ -201,7 +201,7 @@ class User < ActiveRecord::Base
     if self.relay_uid.present?
       self.short_url = UrlShortenerService.shorten_link("#{url_helpers.new_user_registration_url}?referrer_uid=#{self.relay_uid}")
     end
-    
+
     #welcome_text = "Howdy! Wondering how to get started? Add or import your customers and contacts to start messaging them immediately. If you have any questions, message us here and a member of our team will be happy to help."
     #Conversation.find_or_create_conversation_for_message_and_send_publish(User.get_platform_acct_obj, self, 'user', self.id, welcome_text)
     deduct_from_account_balance(NUMBER_PRICE)
@@ -232,6 +232,10 @@ class User < ActiveRecord::Base
     self.decrement!(:account_balance, amt.to_f)
   end
 
+  def friendly_relay_number
+    rn_friendly_name || rhombus_number
+  end
+
   private
 
   # Some users sign up with Rhombus numbers
@@ -258,9 +262,9 @@ class User < ActiveRecord::Base
   def do_signup_stuff
     begin
       if !self.is_platform? && self.customer_source.try(:[], :method) != "added"
-        MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self) 
+        MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self)
       end
-      
+
       if self.is_merchant?
         Alert.find_or_create_by(user_id: self.id) { |alert| alert.emails = [self.email] }
         AwayMessage.find_or_create_by(user_id: self.id, response: "We're away at the moment and will get back to you when we return :).")
@@ -277,7 +281,7 @@ class User < ActiveRecord::Base
         ])
         GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
       end
-      
+
       WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
       GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
       GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
