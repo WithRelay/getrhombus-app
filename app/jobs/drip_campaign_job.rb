@@ -67,4 +67,16 @@ class DripCampaignJob
 
   end
 
+  def self.active
+    Transaction.where(team_id: )
+
+
+    #Offer to Help (7 Days after signup, IF Zero Account Activity)
+
+
+    #no new conversations
+    #no transactions
+    #no customer added
+  end
+
 end

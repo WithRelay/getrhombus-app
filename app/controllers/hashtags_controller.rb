@@ -94,7 +94,7 @@ class HashtagsController < ApplicationController
 
     def plan_name_exists?
       return false unless @hashtag.recurring_payment_tag?
-      Plan.exist?(['merchant_id = ? and lower(name) = ?', current_user.id, "#{@hashtag.tag}"])
+      Plan.exists?(['merchant_id = ? and lower(name) = ?', current_user.id, "#{@hashtag.tag}"])
     end
 
     def hashtag_params

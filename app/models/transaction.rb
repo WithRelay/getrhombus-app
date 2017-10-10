@@ -61,13 +61,18 @@ class Transaction < ActiveRecord::Base
       # handle response
       if @stripe_res # tested
         update_transaction_data
-        puts '0sssssssssssssssssssssss'
         return [true, "Transaction processed"]
       else
         # This should only run for text based payments. Dashboard payments is handled differently.
         if @source == 'text'
           # if it is a card decline, we text only customers. Merchant might not have textable number on file.
-          send_response("Your payment to #{merchant.org_name} failed because: #{@stripe_res_ary[2]}") if @stripe_res_ary[3] && customer.is_customer?
+          if customer.is_customer? 
+            if @stripe_res_ary[3]
+              send_response("We're sorry your payment to #{merchant.org_name} failed because: #{@stripe_res_ary[2]}") 
+            else
+              send_response("We're sorry your payment to #{merchant.org_name} failed. Please try again later.")
+            end            
+          end
           # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
         end
         [false, @stripe_res_ary[2]]

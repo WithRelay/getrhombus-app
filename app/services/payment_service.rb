@@ -80,7 +80,7 @@ class PaymentService
     end
     
     def charge(amount_with_taxes, amt_less_fees, merchant, customer, msg, capture)
-      #begin
+      begin
         stripe_cred = merchant.get_stripe_cred
         currency = merchant.currency ? merchant.currency : "usd"
 
@@ -115,7 +115,7 @@ class PaymentService
               metadata: { "message" => msg },
               customer: merchant_customer.platform_stripe_customer_id,
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
-   ########!! statement_descriptor: '', # should already be on our stripe account, can still set this here...get from Edwin
+              #statement_descriptor: '', # should already be on our stripe account, can still set this here...get from Edwin
             })
           end
         elsif stripe_cred[:type] == 'managed'         
@@ -130,19 +130,22 @@ class PaymentService
               account: stripe_cred[:cred].account_id,
             }, 
             description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
- ########!! statement_descriptor: '', # we will set this here...get from Edwin
+            statement_descriptor: merchant.org_name,
           })
         end
 
         [re]
-      #rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
-       # [false, e, e.json_body[:error][:message], true]
-      # Stripe::InvalidRequestError (Amount must convert to at least 50 cents. 2.08 kr converts to approximately $0.26.)
-      #rescue Stripe::StripeError => e
-       # [false, e.json_body[:error], "Stripe error"]
-      #rescue StandardError => e
-       # [false, e, "Something went wrong"]
-      #end
+      rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
+        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService charge" })
+        [false, e, e.json_body[:error][:message], true]
+        #Stripe::InvalidRequestError (Amount must convert to at least 50 cents. 2.08 kr converts to approximately $0.26.)
+      rescue Stripe::StripeError => e
+        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService charge" })
+        [false, e.json_body[:error], "Stripe error"]
+      rescue StandardError => e
+        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService charge" })
+        [false, e, "Something went wrong"]
+      end
     end
 
     # return array with txn status, error object, notify customer/merchant

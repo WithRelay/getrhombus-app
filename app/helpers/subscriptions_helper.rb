@@ -91,44 +91,44 @@ module SubscriptionsHelper
     Invoice.where(team_id: current_user.id, paid: true)
   end
 
-  def saas_invoices
+  def subscription_invoices
     today_invoices = Invoice.where(team_id: current_user.id, paid: true)
       .where("date >= ?", Time.current.beginning_of_day.to_i).pluck(:total, :application_fee)
     yesterday_invoices = Invoice.where(team_id: current_user.id, paid: true)
     .where("date < ? && date >= ?", (Time.current.beginning_of_day).to_i, (Time.current.beginning_of_day - 1.days).to_i).pluck(:total, :application_fee)
-    @saas_invoices = [today_invoices, yesterday_invoices]
-    @saas_invoices
+    @subscription_invoices = [today_invoices, yesterday_invoices]
+    @subscription_invoices
   end
 
   def subscriptions_change
-    tday_txns_count = @saas_invoices[0].count
-    yday_txns_count = @saas_invoices[1].count
+    tday_txns_count = @subscription_invoices[0].count
+    yday_txns_count = @subscription_invoices[1].count
     percent_change = (tday_txns_count - yday_txns_count).to_f/yday_txns_count * 100 if yday_txns_count > 0
     display_change( percent_change.round ) if percent_change.present?
   end
 
   def subscriptions_total_amount
     @tday_txns_amount = 0
-    @saas_invoices[0].each{|arr| @tday_txns_amount += arr[0] }
+    @subscription_invoices[0].each{|arr| @tday_txns_amount += arr[0] }
     @tday_txns_amount/100
   end
 
   def subscriptions_total_amount_change
     @yday_txns_amount = 0
-    @saas_invoices[1].each{|arr| @yday_txns_amount += arr[0] }
+    @subscription_invoices[1].each{|arr| @yday_txns_amount += arr[0] }
     percent_change = ((@tday_txns_amount - @yday_txns_amount).to_f/(@yday_txns_amount)) * 100 if @yday_txns_amount > 0
     display_change(percent_change.round) if percent_change.present?
   end
 
   def subscriptions_net_sales
     @tday_net_sale = 0
-    @saas_invoices[0].each{|arr| @tday_net_sale += (arr[0] - arr[1])}
+    @subscription_invoices[0].each{|arr| @tday_net_sale += (arr[0] - arr[1])}
     @tday_net_sale/100
   end
 
   def subscription_net_sales_change
     @yday_net_sale = 0
-    @saas_invoices[1].each{|arr| @yday_net_sale += (arr[0] - arr[1])}
+    @subscription_invoices[1].each{|arr| @yday_net_sale += (arr[0] - arr[1])}
     percent_change = ((@tday_net_sale - @yday_net_sale).to_f/(@yday_net_sale)) * 100 if @yday_net_sale > 0
     display_change(percent_change.round) if percent_change.present?
   end
