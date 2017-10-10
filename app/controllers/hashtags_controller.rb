@@ -49,7 +49,7 @@ class HashtagsController < ApplicationController
           respond_with(@hashtag)
         end
       else
-        flash[:error] = "A recurring plan with this tag name already exists."
+        flash[:error] = "We're unable to update the hashtag and associated recurring plan."
         respond_with(@hashtag)
       end
     else
