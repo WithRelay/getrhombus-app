@@ -126,6 +126,10 @@ class Subscription < ActiveRecord::Base
     self.plan_amount * self.quantity
   end
 
+  def txn_amount
+    "#{Transaction.big_decimal_2dp(self.amount_with_taxes)}"
+  end
+
   def amount_with_taxes
     TransactionFee.amount_with_taxes(total_amount, self.tax_percent)
   end
