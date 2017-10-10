@@ -127,7 +127,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def txn_amount
-    "#{Transaction.big_decimal_2dp(self.amount_with_taxes)}"
+    Toolbox::Decimal.cents_to_int_or_2dp(self.amount_with_taxes)
   end
 
   def amount_with_taxes
