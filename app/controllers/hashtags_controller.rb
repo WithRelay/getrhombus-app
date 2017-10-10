@@ -18,9 +18,11 @@ class HashtagsController < ApplicationController
   end
 
   def create
-    @hashtag = Hashtag.new(hashtag_params)
+    tag_params = hashtag_params
+    @hashtag = Hashtag.new(tag_params)
     @hashtag.user_id = current_user.id
-    unless plan_name_exists?
+
+    unless @hashtag.plan_name_exists?(current_user)
       if @hashtag.save
         if @hashtag.create_plan_for_recurring_tag(current_user)
           redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }
@@ -40,9 +42,10 @@ class HashtagsController < ApplicationController
   end
 
   def update
-    unless plan_name_exists?
-      if @hashtag.update_plan_for_recurring_tag(hashtag_params[:name])
-        if @hashtag.update(hashtag_params)
+    tag_params = hashtag_params
+    unless @hashtag.plan_name_exists?(current_user, tag_params[:tag])
+      if @hashtag.update_plan_for_recurring_tag(tag_params[:tag])
+        if @hashtag.update(tag_params)
           redirect_to user_hashtags_path, flash: { notice: "Hashtag Updated!" }
         else
           flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't update the hashtag"
@@ -90,11 +93,6 @@ class HashtagsController < ApplicationController
 
     def set_hashtag
       @hashtag = Hashtag.find(params[:id])
-    end
-
-    def plan_name_exists?
-      return false unless @hashtag.recurring_payment_tag?
-      Plan.exists?(['merchant_id = ? and lower(name) = ?', current_user.id, "#{@hashtag.tag}"])
     end
 
     def hashtag_params

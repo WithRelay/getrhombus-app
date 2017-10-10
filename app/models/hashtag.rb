@@ -41,6 +41,11 @@ class Hashtag < ActiveRecord::Base
     plan.update_plan({ name: new_tag }, self.user)
   end
 
+  def plan_name_exists?(merchant, new_tag = self.tag)
+    return false if !self.recurring_payment_tag? || (self.persisted? && self.tag.downcase == new_tag.downcase)
+    Plan.exists?(['merchant_id = ? and lower(name) = ?', merchant.id, "#{new_tag}"])    
+  end
+
   # caching needed for this
   def mentions_count
     # because hashtag_id will exist in a transaction that was created by a text message. so avoid duplicates
