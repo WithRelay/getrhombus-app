@@ -637,6 +637,41 @@ class EmailingService
       end
     end
 
+    def sms_credit_receipt(options = {})
+      begin
+        template_name = 'sms-credit-receipt-template'
+        template_content = []
+        message = { "subject" => "Thank you for using Relay!",
+         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] || 'there' },
+                                  { "name" => "transaction_id", "content" => options[:transaction_id] },
+                                  { "name" => "transaction_date", "content" => options[:transaction_date] },#February 23, 2017 | 1:30pm
+                                  { "name" => "status", "content" => options[:status] },
+                                  { "name" => "payment_method", "content" => options[:payment_method] },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "previous_balance", "content" => options[:previous_balance] },
+                                  { "name" => "current_balance", "content" => options[:current_balance] },
+                                  { "name" => "billing_history_link", "content" => url_helper.user_billing_information_link(options[:user]) },
+                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "email_us_link", "content" => EMAIL_US_LINK,
+                                  { "name" => "refer_a_business_link", "content" => url_helpers.user_refer_business_url(options[:user]) },
+                                  { "name" => "auto_recharge_link", content: url_helpers.user_sms_usage_url(options[:user]) },
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => options[:user_email] } ],
+         "bcc_address"=> User.platform_email,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
     def customer_transaction_detail(options={})
       begin
         template_name = 'transaction-notification-template'
