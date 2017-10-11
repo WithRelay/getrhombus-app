@@ -741,11 +741,11 @@ class EmailingService
       begin
         template_name = 'referrer-email-template'
         template_content = []
-        message = { 'subject' => 'Claim your referral bonus',
+        message = { 'subject' => 'You Were Referred to Relay',
          'global_merge_vars'=> [  { 'name' => 'referred_first_name', 'content' => referred_first_name },
                                   { 'name' => 'referrer_first_name', 'content' => referrer_first_name },
                                   { 'name' => 'relay_link', 'content' => url_helpers.root_url },
-                                  { 'name' => 'learn_more_link', 'content' => url_helpers.root_url },
+                                  { 'name' => 'learn_more_link', 'content' => sign_up_link },
                                   { 'name' => 'claim_referral_bonus_link', 'content' => url_helpers.root_url }
                                ],
          'merge_language' => 'handlebars',
