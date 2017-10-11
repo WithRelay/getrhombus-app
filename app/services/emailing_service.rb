@@ -4,9 +4,14 @@ class EmailingService
 
   # Note there are a number of global settings for these emails in the mandrill account
   FROM_EMAIL = { edwin: '<redacted_email>', taiwo: '<redacted_email>' }
+  CALENDLY_LINK = 'https://calendly.com/relay/30min/01-23-2017?back=1'
+  EMAIL_US_LINK = "mailto:#{Rails.application.secrets.team_email}"
 
   class << self
     delegate :url_helpers, to: 'Rails.application.routes'
+
+    def sign_in_link; url_helpers.new_user_session_url end
+    def sign_up_link; url_helpers.new_user_registration_url end
 
     def send_completed_notice(user)
       begin
@@ -14,7 +19,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "Your phone number is activated",
          "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' },
-                                  { 'name' => 'signin_link', 'content' => url_helpers.new_user_session_url },
+                                  { 'name' => 'signin_link', 'content' => sign_in_link },
                                   { 'name' => 'howto_add_customers_link', 'content' => url_helpers.root_url },
                                   { 'name' => 'howto_accepts_payment_link', 'content' => url_helpers.root_url },
                                   { 'name' => 'howto_send_group_messages_link', 'content' => url_helpers.root_url }
@@ -81,15 +86,16 @@ class EmailingService
       begin
         template_name = 'hosted-sms-failed'
         template_content = []
-        message = { "subject" => "Status: Relay phone number activation",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
-                                  { "name" => "virtual_number", "content" => user.rn_friendly_name }
+        message = { 'subject' => 'Status: Relay phone number activation',
+         'global_merge_vars'=> [  { 'name' => 'first_name', 'content' => user.first_name || 'there' },
+                                  { 'name' => 'virtual_number', 'content' => user.friendly_relay_number },
+                                  { 'name' => 'signin_link', 'content' => sign_in_link }
                                ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => User.platform_email
+         'merge_language' => 'handlebars',
+         'to'=> [ { 'email' => user.email } ],
+         'bcc_address'=> User.platform_email,
+         'from_name' => 'Edwin from Relay',
+         'from_email' => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -248,7 +254,9 @@ class EmailingService
         template_content = []
         message = { "subject" => "Welcome to Relay",
          "merge_language" => "handlebars",
-         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { 'name' => 'calendly_link', 'content' => CALENDLY_LINK }
+                               ],
          "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => user.email } ],
          "from_name" => "Edwin from Relay",
@@ -268,7 +276,9 @@ class EmailingService
         template_name = "proactive-support-email"
         template_content = []
         message = { "subject" => "Get the most out of Relay",
-         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { 'name' => 'calendly_link', 'content' => CALENDLY_LINK }
+                               ],
          "merge_language" => "handlebars",
          "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => user.email } ],
@@ -289,7 +299,9 @@ class EmailingService
         template_name = 'schedule-demo-email'
         template_content = []
         message = { "subject" => "Schedule a live walk-through of Relay",
-         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { 'name' => 'calendly_link', 'content' => CALENDLY_LINK }
+                               ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
@@ -313,7 +325,9 @@ class EmailingService
         template_name = 'free-trial-expiration-notice'
         template_content = []
         message = { "subject" => "#{user.first_name || 'Hey there'}, your Relay trial ends in 3 days",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { "name" => "calendly_link", "content" => CALENDLY_LINK }
+                               ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
@@ -354,13 +368,15 @@ class EmailingService
       begin
         template_name = 'one-month-follow-up'
         template_content = []
-        message = { "subject" => "It’s been a month",
-         "merge_language" => "handlebars",
-         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
-         "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+        message = { 'subject' => 'It’s been a month',
+         'merge_language' => 'handlebars',
+         'global_merge_vars'=> [  { 'name' => 'first_name', 'content' => user.first_name || 'there' },
+                                  { 'name' => 'calendly_link', 'content' => CALENDLY_LINK }
+                               ],
+         'to'=> [ { 'email' => user.email } ],
+         'bcc_address'=> User.platform_email,
+         'from_name' => 'Edwin from Relay',
+         'from_email' => FROM_EMAIL[:edwin]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -376,7 +392,9 @@ class EmailingService
         template_name = 'three-month-follow-up'
         template_content = []
         message = { "subject" => "It’s been a 3 months",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { 'name' => 'calendly_link', 'content' => CALENDLY_LINK }
+                               ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
@@ -396,13 +414,15 @@ class EmailingService
       begin
         template_name = 'offer-to-help'
         template_content = []
-        message = { "subject" => "Checking in",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+        message = { 'subject' => 'Checking in',
+         'global_merge_vars'=> [  { 'name' => 'first_name', 'content' => user.first_name || 'there' },
+                                  { 'name' => 'calendly_link', 'content' => CALENDLY_LINK }
+                               ],
+         'merge_language' => 'handlebars',
+         'to'=> [ { 'email' => user.email } ],
+         'bcc_address'=> User.platform_email,
+         'from_name' => 'Edwin from Relay',
+         'from_email' => FROM_EMAIL[:edwin]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -418,7 +438,9 @@ class EmailingService
         template_name = 'exit-survey'
         template_content = []
         message = { "subject" => "Cancellation",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' },
+                                 { "name" => "calendly_link", "content" => CALENDLY_LINK }
+                               ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
@@ -493,7 +515,8 @@ class EmailingService
                                   { name: "current_balance", content: Toolbox::Decimal.to_int_or_2dp(user.account_balance) },
                                   { name: "recharge_account_link", content: url_helpers.user_sms_usage_url(user) },
                                   { name: "set_auto_recharge_link", content: url_helpers.user_sms_usage_url(user) },
-                                  { name: "help_center_link", content: url_helpers.root_url }
+                                  { name: "help_center_link", content: url_helpers.root_url },
+                                  { name: "email_us_link", content: EMAIL_US_LINK }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -529,7 +552,7 @@ class EmailingService
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:user]) },
-                                  { "name" => "relay_link", "content" => url_helpers.new_user_registration_url }
+                                  { "name" => "relay_link", "content" => sign_up_link }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
@@ -595,10 +618,45 @@ class EmailingService
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "pdf_download_link", "content" => url_helpers.root_url },
-                                  { "name" => "history_link", "content" => url_helpers.root_url },
+                                  { "name" => "billing_history_link", "content" => url_helper.user_billing_information_link(options[:user]) },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_link", "content" => "mailto:#{User.platform_email}"},
-                                  { "name" => "refer_business_link", "content" => url_helpers.root_url }
+                                  { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:user]) }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => options[:user_email] } ],
+         "bcc_address"=> User.platform_email,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def sms_credit_receipt(options = {})
+      begin
+        template_name = 'sms-credit-receipt-template'
+        template_content = []
+        message = { "subject" => "Thank you for using Relay!",
+         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] || 'there' },
+                                  { "name" => "transaction_id", "content" => options[:transaction_id] },
+                                  { "name" => "transaction_date", "content" => options[:transaction_date] },#February 23, 2017 | 1:30pm
+                                  { "name" => "status", "content" => options[:status] },
+                                  { "name" => "payment_method", "content" => options[:payment_method] },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "previous_balance", "content" => options[:previous_balance] },
+                                  { "name" => "current_balance", "content" => options[:current_balance] },
+                                  { "name" => "billing_history_link", "content" => url_helper.user_billing_information_link(options[:user]) },
+                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "email_us_link", "content" => EMAIL_US_LINK },
+                                  { "name" => "refer_a_business_link", "content" => url_helpers.user_refer_business_url(options[:user]) },
+                                  { "name" => "auto_recharge_link", content: url_helpers.user_sms_usage_url(options[:user]) },
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
@@ -633,7 +691,7 @@ class EmailingService
                                   { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:user]) },
                                   { "name" => "help_link", "content" => url_helpers.root_url },
                                   { "name" => "email_link", "content" => "mailto:#{User.platform_email}" },
-                                  { "name" => "refer_link", "content" => url_helpers.root_url }
+                                  { "name" => "refer_link", "content" => url_helpers.user_refer_business_url(options[:user]) }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
@@ -649,20 +707,28 @@ class EmailingService
       end
     end
 
-    def unread_message_notification(to, customer_name, time)
+    # send data for new message
+    def unread_message_notification(to, customer_name, time, options = {})
       begin
-        template_name = 'new-unread-message-notification'
+        template_name = 'unread-messages-notification'
         template_content = []
-        message = { "subject" => "You have a new unread message",
-         "global_merge_vars"=> [  { "name" => "name", "content" => customer_name },
-                                  { "name" => "time", "content" => time },
-                                  { "name" => "sign_in_url", "content" => url_helpers.new_user_session_url }
+        message = { 'subject' => 'You have a new unread message',
+         'global_merge_vars'=> [  { 'name' => 'name', 'content' => customer_name },
+                                  { 'name' => 'time', 'content' => time },
+                                  { 'name' => 'sender_name', 'content' => options[:sender_name] },
+                                  { 'name' => 'sender_email', 'content' => options[:email] },
+                                  { 'name' => 'message', 'content' => options[:message] },
+                                  { 'name' => 'message_time', 'content' => options[:message_time] },
+                                  { 'name' => 'sender_profile_url', 'content' => options[:sender_profile_url] },
+                                  { 'name' => 'sign_in_url', 'content' => sign_in_link },
+                                  { 'name' => 'notification_setting_link', 'content' => url_helpers.user_notifications_link(options[:user]) },
+                                  { 'name' => 'conversation_dashboard_link', 'content' => url_helpers.user_conversations_link(options[:user]) }
                                ],
-         "merge_language" => "handlebars",
-         "to"=> to,
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         'merge_language' => 'handlebars',
+         'to'=> to,
+         'bcc_address'=> User.platform_email,
+         'from_name' => 'Edwin from Relay',
+         'from_email' => FROM_EMAIL[:edwin]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -677,7 +743,8 @@ class EmailingService
         template_name = 'incomplete-sign-up'
         template_content = []
         message = { "subject" => "Incomplete account setup",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { "name" => "calendly_link", "content" => CALENDLY_LINK }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -698,7 +765,9 @@ class EmailingService
         template_name = 'auto-reload-failure'
         template_content = []
         message = { "subject" => "Auto-reload Failure",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { "name" => "signin_link", "content" => sign_in_link },
+                                  { "name" => "calendly_link", "content" => CALENDLY_LINK }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -720,7 +789,9 @@ class EmailingService
         template_name = 'customer-sign-up'
         template_content = []
         message = { "subject" => "Welcome to Relay",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(user) },
+                                  { "name" => "signup_link", "content" => sign_up_link }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -742,8 +813,8 @@ class EmailingService
         template_content = []
         message = { "subject" => "Welcome to Relay",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
-                                  {"name" => "business_name", "content" => merchant.org_name},
-                                  {"name" => "relay_number", "content" => merchant.rhombus_number}
+                                  { "name" => "business_name", "content" => merchant.org_name },
+                                  { "name" => "relay_number", "content" => merchant.friendly_relay_number }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -766,7 +837,8 @@ class EmailingService
         message = { "subject" => "Best way to reach us",
           "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' },
                                   { "name" => "business_name", "content" => merchant.org_name },
-                                  { "name" => "relay_number", "content" => merchant.rhombus_number },
+                                  { "name" => "signin_link", "content" => sign_in_link },
+                                  { "name" => "relay_number", "content" => merchant.friendly_relay_number },
                                   { "name" => "customer_email", "content" => user.email },
                                   { "name" => "temp_password", "content" => temp_password }
                                ],
@@ -943,7 +1015,7 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "dashboard_link", "content" => url_helpers.new_user_session_url },
+                                  { "name" => "dashboard_link", "content" => sign_in_link },
                                   { "name" => "peoples_list", "content" => options[:peoples_list]}
                                ],
          "merge_language" => "handlebars",
