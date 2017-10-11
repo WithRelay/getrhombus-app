@@ -20,14 +20,7 @@ Bhishma
 	- when switching managed page, add that any messenger campaign will now use this page
 
 Taiwo (review)
-- review upgrading/downgrading subscription 
-- subscription (see other fields like tax_percent...save first...compare to plan.rb), subscription controller and stripe customer creation places
-- on subscription - check if user already belongs to merchant??? is this when they text?
-	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
-
-
-- let parse_text return cents i guess and just divide by 100 to show
 
 
 
@@ -73,9 +66,6 @@ https://davidwalsh.name/combining-js-arrays
 107eeb3
 a65a463
 6329033
-
-
-#<<redacted_twilio_debug_dump>
 
 
 

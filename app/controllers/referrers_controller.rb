@@ -1,6 +1,8 @@
 # Referrers Controller
 class ReferrersController < ApplicationController
   include DashboardNotification
+  include Transactionable
+  
   before_action :set_notifications, only: [:new]
   before_action :set_referrer, only: %i[show edit update destroy]
 
@@ -55,7 +57,10 @@ class ReferrersController < ApplicationController
   def referrer_params
     params.require(:referrer).permit(:referrer_email, :email, :phone_number, :country, :referrer_name, :org_name,
                                         :ip, :city, :region, :postal, :referrer_uid).tap do |r|
-      r[:referrer_uid] = current_user.relay_uid if action_name == 'create'
+      if action_name == 'create'
+        current_user.update_column(relay_uid: generate_uid) if current_user.relay_uid.blank?
+        r[:referrer_uid] = current_user.relay_uid
+      end
     end
   end
 

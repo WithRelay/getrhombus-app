@@ -314,7 +314,7 @@ class MessageParser
   end
 
   def send_subscription_responses
-    msg_to_send = "Thanks#{get_first_name}, you've been subscribed to a $#{@subscription.plan_amount} #{@subscription.plan_interval_name.try(:downcase)} plan for #{@tag.name}."
+    msg_to_send = "Thanks#{get_first_name}, you've been subscribed to a $#{@subscription.txn_amount} #{@subscription.plan_interval_name.try(:downcase)} plan for #{@tag.name}."
     @subscription.send_payment_responses(msg_to_send, @channel)
     send_response(@tag.response, get_tag_images) if @tag.present?
   end

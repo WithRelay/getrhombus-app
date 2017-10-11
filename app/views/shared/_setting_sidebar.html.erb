@@ -45,7 +45,7 @@
     <% end %>
 
     <%= link_to user_refer_business_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-      <div class="left-nav-tab">Free subscriptions</div>
+      <div class="left-nav-tab">Refer Business</div>
     <% end %>
 
     <%= link_to user_away_message_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
@@ -66,6 +66,10 @@
 
     <%= link_to user_billing_information_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Billing Information</div>
+    <% end %>
+
+    <%= link_to user_refer_business_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+      <div class="left-nav-tab">Refer a Business</div>
     <% end %>
 
   <% end %>

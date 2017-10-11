@@ -1,11 +1,13 @@
 <div class="manage-segments-row w-row">
   <div class="w-clearfix w-col w-col-4" id='segment-name-edit-show'>
     <div class="editable-field-text settings-row-text shrink-text" id="segment-<%= segment.id %>"><%= segment.name %></div>
-    <div class='w-hidden editable-field-icon'>
-      <input class="editable open text-field w-input segment-name" name="segment-name" type="text" value="<%= segment.name %>" data-segment-id="<%= segment.id %>">
-      <a class="cancel-edit save-editable-field" href="#"><strong></strong></a>
-    </div>
-    <a class="edit-field save-editable-field" href="#"></a>
+    <% if segment.merchant? && segment.segment["base_query"] != "plan_segment" %>
+      <div class='w-hidden editable-field-icon'>
+        <input class="editable open text-field w-input segment-name" name="segment-name" type="text" value="<%= segment.name %>" data-segment-id="<%= segment.id %>">
+        <a class="cancel-edit save-editable-field" href="#"><strong></strong></a>
+      </div>
+      <a class="edit-field save-editable-field" href="#"></a>
+    <% end %>
   </div>
   <div class="w-col w-col-2">
     <div class="settings-row-text"><%= segment_created_as(segment) %></div>

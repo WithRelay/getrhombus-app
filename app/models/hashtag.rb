@@ -35,10 +35,15 @@ class Hashtag < ActiveRecord::Base
   end
 
   def update_plan_for_recurring_tag(new_tag)
-    return true if !self.recurring_payment_tag? || self.tag.downcase == new_tag.downcase
+    return true if !self.recurring_payment_tag? || (self.tag.downcase == new_tag.downcase)
     plan = self.merchant_plan
     return true unless plan
     plan.update_plan({ name: new_tag }, self.user)
+  end
+
+  def plan_name_exists?(merchant, new_tag = self.tag)
+    return false if !self.recurring_payment_tag? || (self.persisted? && self.tag.downcase == new_tag.downcase)
+    Plan.exists?(['merchant_id = ? and lower(name) = ?', merchant.id, "#{new_tag}"])    
   end
 
   # caching needed for this

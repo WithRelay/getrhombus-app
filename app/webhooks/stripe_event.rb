@@ -15,9 +15,8 @@ class StripeEvent
     user = @data.merchant_customer.customer
     trial_days_left = ((@hash[:trial_end] - Time.current.utc.to_i) / 1.days.to_f).ceil
 
-    # Free Trial Expiration Notice (11 days after sign-up), Free Trial Expiration (14 days after sign-up)
+    # Free Trial Expiration Notice (11 days after sign-up)
     EmailingService.free_trial_expiration_notice(user) if trial_days_left == 3
-    EmailingService.free_trial_expiration(user) if trial_days_left == 1
     update_subscription_data
   end
 
