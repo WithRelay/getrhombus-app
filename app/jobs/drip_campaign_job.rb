@@ -17,7 +17,7 @@ class DripCampaignJob
       elsif diff_in_days == 5
         EmailingService.customer_import_campaigns(user)
       elsif diff_in_days == 7
-        EmailingService.offer_to_help(user)
+        EmailingService.offer_to_help(user) unless user.is_active_merchant?
       # Connect Facebook Messenger (9 days after sign-up)
       elsif diff_in_days == 9
         EmailingService.connect_facebook_messenger(user)
@@ -60,23 +60,11 @@ class DripCampaignJob
         EmailingService.three_month_followup(user)
       # First-time Message Auto-response (100 days)
       elsif diff_in_days == 100
-        EmailingService.first_time_message_auto_response(user)
+        EmailingService.first_time_mesasge_auto_response(user)
       end
 
     end
 
-  end
-
-  def self.active
-    Transaction.where(team_id: )
-
-
-    #Offer to Help (7 Days after signup, IF Zero Account Activity)
-
-
-    #no new conversations
-    #no transactions
-    #no customer added
   end
 
 end

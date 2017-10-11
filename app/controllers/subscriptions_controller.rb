@@ -1,12 +1,10 @@
 class SubscriptionsController < ApplicationController
   include DashboardNotification
   before_action :set_notifications, only: [:index]
-  before_action :set_subscription, only: [:show, :edit]
 
   respond_to :html, :js
 
   def index
-    Rails.logger.debug "DEBUG: yesssssssss"
     @plan = Plan.new
     @subscriptions = Subscription.includes(merchant_customer: [:customer]).includes(:plan, :coupon)
                                   .where.not(status: 'canceled')
@@ -17,7 +15,7 @@ class SubscriptionsController < ApplicationController
     @subscriptions.present? ? render_requested_format(@subscriptions) : render(:empty_subscription)
   end
 
-   # generate user csv data
+  # generate user csv data
   def download_csv
     render :template => "static_pages/to_404.html" and return if !current_user
     t = Transaction.new
@@ -32,13 +30,12 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  private
-
-    def set_subscription
-      @subscription = Subscription.find(params[:id])
-    end
-
 end
+
+
+
+
+
 
 
 

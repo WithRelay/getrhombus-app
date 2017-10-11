@@ -215,7 +215,7 @@ class User < ActiveRecord::Base
 
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
-    platform_merchant ? platform_merchant.subscriptions.last : nil
+    platform_merchant.try(:subscriptions).try(:last)
   end
 
   def get_page_access_token
@@ -230,6 +230,14 @@ class User < ActiveRecord::Base
 
   def deduct_from_account_balance(amt)
     self.decrement!(:account_balance, amt.to_f)
+  end
+
+  def is_active_merchant?
+    count = Transaction.where(team_id: self.id).count 
+            + MerchantCustomer.where(merchant_id: self.id).count
+            + Message.where("user_id = ? or user_id_to = ?", self.id, self.id).count 
+            + FbMessage.where("user_id = ? or user_id_to = ?", self.id, self.id).count
+    count > 0
   end
 
   private
@@ -276,6 +284,7 @@ class User < ActiveRecord::Base
           { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type }
         ])
         GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
+        IncompleteSignupJob.set(wait: INCOMPLETE_SIGNUP_EMAIL_DELAY.seconds).perform_later(self)
       end
       
       WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
