@@ -713,8 +713,7 @@ class EmailingService
         template_name = 'unread-messages-notification'
         template_content = []
         message = { 'subject' => 'You have a new unread message',
-         'global_merge_vars'=> [  { 'name' => 'name', 'content' => customer_name },
-                                  { 'name' => 'time', 'content' => time },
+         'global_merge_vars'=> [  { 'name' => 'customer_first_name', 'content' => customer_name },
                                   { 'name' => 'sender_name', 'content' => options[:sender_name] },
                                   { 'name' => 'sender_email', 'content' => options[:email] },
                                   { 'name' => 'message', 'content' => options[:message] },
@@ -723,6 +722,31 @@ class EmailingService
                                   { 'name' => 'sign_in_url', 'content' => sign_in_link },
                                   { 'name' => 'notification_setting_link', 'content' => url_helpers.user_notifications_link(options[:user]) },
                                   { 'name' => 'conversation_dashboard_link', 'content' => url_helpers.user_conversations_link(options[:user]) }
+                               ],
+         'merge_language' => 'handlebars',
+         'to'=> to,
+         'bcc_address'=> User.platform_email,
+         'from_name' => 'Edwin from Relay',
+         'from_email' => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def referral_bonus_email(referred_first_name, referrer_first_name)
+      begin
+        template_name = 'referrer-email-template'
+        template_content = []
+        message = { 'subject' => 'You have a new unread message',
+         'global_merge_vars'=> [  { 'name' => 'referred_first_name', 'content' => referred_first_name },
+                                  { 'name' => 'referrer_first_name', 'content' => referrer_first_name },
+                                  { 'name' => 'relay_link', 'content' => url_helpers.root_url },
+                                  { 'name' => 'learn_more_link', 'content' => url_helpers.root_url },
+                                  { 'name' => 'claim_referral_bonus_link', 'content' => url_helpers.root_url }
                                ],
          'merge_language' => 'handlebars',
          'to'=> to,
