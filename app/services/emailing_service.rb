@@ -737,7 +737,7 @@ class EmailingService
       end
     end
 
-    def referral_bonus_email(referred_first_name, referrer_first_name)
+    def referral_bonus_email(email, referred_first_name, referrer_first_name)
       begin
         template_name = 'referrer-email-template'
         template_content = []
@@ -749,7 +749,7 @@ class EmailingService
                                   { 'name' => 'claim_referral_bonus_link', 'content' => url_helpers.root_url }
                                ],
          'merge_language' => 'handlebars',
-         'to'=> to,
+         "to"=> [ { "email" => email } ],
          'bcc_address'=> User.platform_email,
          'from_name' => 'Edwin from Relay',
          'from_email' => FROM_EMAIL[:edwin]
