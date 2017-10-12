@@ -56,6 +56,18 @@ module UserProfile
     { type: 'color', value: cus.user_color }
   end
 
+  def profile_url_for_email(cus)
+    default_path = ActionController::Base.helpers.image_path("Relay Hashtag.png")
+    default_path = default_path[1..-1] if default_path[0] == "/"
+    default_path = Rails.application.routes.url_helpers.root_url + default_path
+    return default_path if cus.nil?
+    user_fb_cred = cus.fb_creds
+    return user_fb_cred.first.profile_pic_url if user_fb_cred.present? && user_fb_cred.first.profile_pic_url.present?
+    contact_email = FullContactData.find_by_email(cus.email)
+    return contact_email.photo_url if contact_email && contact_email.photo_url.present?      
+    return default_path
+  end
+
   # 8 data points
   def get_user_snapshot(uid, uid_type, merchant_id, uid_obj=nil)
     data = {}

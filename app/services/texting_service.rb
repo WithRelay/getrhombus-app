@@ -9,7 +9,6 @@ class TextingService
 
   TWILIO_API_KEY = Rails.application.secrets.twilio["key"]
   TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
-  TWILIO_API_PHONE = Rails.application.secrets.twilio["phone"]
   TWILIO_RHOMBUS_APP_SID = Rails.application.secrets.twilio["rhombus_app_sid"]
 
   class << self

@@ -455,29 +455,6 @@ class EmailingService
       end
     end
 
-    # prior to v1.5. Remove after v1.5 launch
-    def send_unread_message_alert(options = {})
-      begin
-        template_name = 'unread-messages'
-        template_content = []
-        message = { "subject"=>"Unread Message Notification",
-         "global_merge_vars"=> [{ "name" => "customer_first_name", "content" => options[:customer_first_name] },
-                                { "name" => "unread_count", "content" => options[:unread_count] },
-                                { "name" => "pluralize_msg", "content" => options[:pluralize_msg] } ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:to] } ],
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Rhombus",
-         "from_email" => User.platform_email
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
     def customer_import_campaigns(user); end
 
     def connect_facebook_messenger(user); end
@@ -874,20 +851,20 @@ class EmailingService
     end
 
     # send data for new message
-    def unread_message_notification(to, customer_name, time, options = {})
+    def unread_message_notification(to, options = {})
       begin
         template_name = 'unread-messages-notification'
         template_content = []
         message = { 'subject' => 'You have a new unread message',
-         'global_merge_vars'=> [  { 'name' => 'customer_first_name', 'content' => customer_name },
+         'global_merge_vars'=> [  { 'name' => 'customer_first_name', 'content' => options[:merchant].first_name || 'there' },
                                   { 'name' => 'sender_name', 'content' => options[:sender_name] },
-                                  { 'name' => 'sender_email', 'content' => options[:email] },
+                                  { 'name' => 'sender_email', 'content' => options[:sender_email] },
                                   { 'name' => 'message', 'content' => options[:message] },
                                   { 'name' => 'message_time', 'content' => options[:message_time] },
                                   { 'name' => 'sender_profile_url', 'content' => options[:sender_profile_url] },
                                   { 'name' => 'sign_in_url', 'content' => sign_in_link },
-                                  { 'name' => 'notification_setting_link', 'content' => url_helpers.user_notifications_link(options[:user]) },
-                                  { 'name' => 'conversation_dashboard_link', 'content' => url_helpers.user_conversations_link(options[:user]) }
+                                  { 'name' => 'notification_setting_link', 'content' => url_helpers.user_notifications_link(options[:merchant]) },
+                                  { 'name' => 'conversation_dashboard_link', 'content' => url_helpers.user_conversations_link(options[:merchant]) }
                                ],
          'merge_language' => 'handlebars',
          'to'=> to,

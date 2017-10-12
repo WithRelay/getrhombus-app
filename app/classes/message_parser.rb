@@ -362,7 +362,8 @@ class MessageParser
         end
         [false, res_text]       
       else
-        # email team
+        ExceptionNotifier.notify_exception(nil, env: Rails.env, data: { message: "In create_text_subscription. no merchant_customer relationship",
+                                                                        merchant: @merchant, customer: @customer })
       end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In create_text_subscription" })

@@ -10,13 +10,20 @@ class RealtimeStreamService
       if send_alert && $redis_merchant_status.get(merchant_id) != 'online'
         alert_obj = conversation.merchant.alert
         if alert_obj.try(:send_alert)
+          options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %l:%M%P"), 
+                      message: msg.text, sender_profile_url: User.profile_url_for_email(customer) }          
 
+          if customer.present?        
+            options[:sender_name] = customer.full_name 
+            options[:sender_email] = customer.email
+          else
+            options[:sender_email] = ''
+            options[:sender_name] = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from)
+          end
+          
           # email alerts
-          customer = customer.full_name if customer.present?        
-          (customer = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from) if customer.blank?
-          time = msg.created_at.strftime("%A, %l:%M%P")
           to = alert_obj.emails.map { |e| { "email" => e } }
-          EmailingService.unread_message_notification(to, customer, time)
+          EmailingService.unread_message_notification(to, options)
 
           # sms alerts
           to = alert_obj.sms_numbers
