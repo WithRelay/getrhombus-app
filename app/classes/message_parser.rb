@@ -272,9 +272,11 @@ class MessageParser
 
   def process_payment
     if not_repeating_payment?
-      if @tag.present? && @tag.recurring_payment_tag? && merchant_supports_subscriptions? && no_existing_subscription_for_tag?
-        res = handle_subscription_through_text
-        res.first ? send_subscription_responses : send_response(res.second || subscription_error_text)
+      if @tag.present? && @tag.recurring_payment_tag? 
+        if merchant_supports_subscriptions? && no_existing_subscription_for_tag?
+          res = handle_subscription_through_text
+          res.first ? send_subscription_responses : send_response(res.second || subscription_error_text)
+        end
       else     # tested   
         @new_txn = Transaction.new        
         if @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, true).first
