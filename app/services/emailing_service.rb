@@ -884,7 +884,7 @@ class EmailingService
       begin
         template_name = 'referrer-email-template'
         template_content = []
-        message = { 'subject' => 'You Were Referred to Relay',
+        message = { 'subject' => 'You were Referred to Relay',
          'global_merge_vars'=> [  { 'name' => 'referred_first_name', 'content' => referred_first_name },
                                   { 'name' => 'referrer_first_name', 'content' => referrer_first_name },
                                   { 'name' => 'relay_link', 'content' => url_helpers.root_url },
