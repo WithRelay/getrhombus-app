@@ -32,7 +32,7 @@ class MessageParser
         return
       end
 
-      @tag = Hashtag.where('user_id = ? and lower(tag) = ? and status = 1', @merchant.id, @tag.downcase).first if @tag.present?
+      @tag = Hashtag.includes(:merchant_plan).where('user_id = ? and lower(tag) = ? and status = 1', @merchant.id, @tag.downcase).first if @tag.present?
 
       @is_valid_payment_intent = @amt_ary[0] && @amt_ary[1].present?
       if @is_valid_payment_intent && !is_amount_under_limit?    #tested
@@ -64,7 +64,7 @@ class MessageParser
           send_response("This #{app_name} phone number is currently unavailable. Please contact us via this email address #{@merchant.email}.")
         elsif merchant_supports_payment?
           puts 'merchant supports payment'
-          process_payment
+          process_payment unless is_platform?
         end
        
         #send_deprecation_warning if is_old_format
@@ -137,19 +137,13 @@ class MessageParser
   end
 
   # tested
-  def is_number?(var)
-    Float(var) rescue nil
-  end
+  def is_number?(var); Float(var) rescue nil end
 
   # tested
-  def to_cents(var)
-    Toolbox::Decimal.to_cents(var)
-  end
+  def to_cents(var); Toolbox::Decimal.to_cents(var) end
 
   # tested
-  def to_int_or_2dp(var)
-    Toolbox::Decimal.to_int_or_2dp(var)
-  end
+  def to_int_or_2dp(var); Toolbox::Decimal.to_int_or_2dp(var) end
 
   # tested
   # scan for hashtag and + sign and amt.
@@ -278,11 +272,9 @@ class MessageParser
 
   def process_payment
     if not_repeating_payment?
-      if @tag.present? && @tag.recurring_payment_tag?
-        if merchant_supports_subscriptions?
-          res = handle_subscription_through_text
-          res.first ? send_subscription_responses : send_response(res.second || subscription_error_text)
-        end
+      if @tag.present? && @tag.recurring_payment_tag? && merchant_supports_subscriptions? && no_existing_subscription_for_tag?
+        res = handle_subscription_through_text
+        res.first ? send_subscription_responses : send_response(res.second || subscription_error_text)
       else     # tested   
         @new_txn = Transaction.new        
         if @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, true).first
@@ -293,17 +285,13 @@ class MessageParser
     end
   end
 
-  def get_first_name
-    @customer.first_name.present? ? " " + @customer.first_name : ''
-  end
+  def get_first_name; (@customer.first_name.present? ? " " + @customer.first_name : '') end
 
   def subscription_error_text
     "Hi#{get_first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
   end
 
-  def get_tag_images
-    @tag.images
-  end
+  def get_tag_images; @tag.images end
 
   # tested
   def send_payment_responses
@@ -337,14 +325,13 @@ class MessageParser
 
   def handle_subscription_through_text
     begin
-      merchant_plan = @tag.merchant_plan
-      if merchant_plan.present?                                 
+      if @merchant_plan.present?                                 
         # if can override amount and amt isnt the same, create plan and create subscription
         if @tag.allow_customers_to_override_amount? && @original_amt != @tag_amt      
-          customer_plan = merchant_plan.dup
+          customer_plan = @merchant_plan.dup
           customer_plan.amount = @original_amt
           customer_plan.customer_id = @customer.id
-          customer_plan.name = generate_resource_name("Plan", merchant_plan.hashtag_tag)
+          customer_plan.name = generate_resource_name("Plan", @merchant_plan.hashtag_tag)
           if customer_plan.create_plan({ team: @merchant })
             create_text_subscription(customer_plan.id)
           else
@@ -352,7 +339,7 @@ class MessageParser
             [false]
           end  
         else   # else find the existing plan for tag and create subscription                                                   
-          create_text_subscription(merchant_plan.id)
+          create_text_subscription(@merchant_plan.id)
         end
       else
         [false, "Hi#{get_first_name}, #{@tag.tag} is no longer available for subscription."]        
@@ -365,19 +352,15 @@ class MessageParser
 
   def create_text_subscription(plan_id)
     begin
-      merchant_customer = MerchantCustomer.find_by(merchant_id: @merchant.id, customer_id: @customer.id)
-      if merchant_customer.present?
-        @subscription = Subscription.new(plan_id: plan_id, merchant_customer_id: merchant_customer.id, quantity: 1)
-        res = @subscription.create_subscription({ team: @merchant })
-        if res.first
-          [true]
-        else
-          @subscription.destroy          
-          if res.second == 'card_error'
-            res_text = "Hi#{get_first_name}, your subscription to #{@tag.tag} failed because: #{res.third}. Please sign in here to update your card information: #{sign_in_link}"
-          end
-          [false, res_text] 
+      if @merchant_customer.present?
+        @subscription = Subscription.new(plan_id: plan_id, merchant_customer_id: @merchant_customer.id, quantity: 1)
+        res = @subscription.create_subscription({ team: @merchant })        
+        return [true] if res.first        
+        @subscription.destroy          
+        if res.third == 'card_error'
+          res_text = "Hi#{get_first_name}, your subscription to #{@tag.tag} failed because: #{res.third}. Please sign in here to update your card information: #{sign_in_link}"
         end
+        [false, res_text]       
       else
         # email team
       end
@@ -387,18 +370,32 @@ class MessageParser
     end
   end
 
+  def no_existing_subscription_for_tag?
+    @merchant_plan = @tag.merchant_plan
+    @merchant_customer = MerchantCustomer.find_by(merchant_id: @merchant.id, customer_id: @customer.id)
+    customer_plans = Subscription.joins(:plan)
+                                 .where("subscriptions.merchant_customer_id = ? and plans.hashtag_id = ?", @merchant_customer.id, @tag.id)
+                                 .where("subscriptions.status = ?", 'active')
+                                 .count
+    return true if customer_plans == 0
+    send_response("Hi#{get_first_name}, you already have an active subscription to #{@tag.tag}.")
+    false
+  end
+
   def sign_in_link(with_params = true)
     url = url_helpers.new_user_session_url
-    url = url + "?captured_amt=#{@amt_ary[0]}&msg_id=#{@received_msg.id}&channel=#{@channel}" if with_params
+    url += "?captured_amt=#{@amt_ary[0]}&msg_id=#{@received_msg.id}&channel=#{@channel}" if with_params
     UrlShortenerService.shorten_link(url) 
   end
 
-  def merchant_name
-    @merchant.org_name.present? ? @merchant.org_name : app_name
-  end
+  def merchant_name; (@merchant.org_name.present? ? @merchant.org_name : app_name) end
 
-  def app_name
-    Rails.application.secrets.app['name']
+  def app_name; Rails.application.secrets.app['name'] end
+
+  def is_platform?
+    return false if @merchant.is_merchant? && !@merchant.is_platform?
+    send_response("Thanks for messaging us here at #{app_name}. This number does not accept payments, please check the business number you're trying to text a payment to and try again.")
+    true
   end
 
 end

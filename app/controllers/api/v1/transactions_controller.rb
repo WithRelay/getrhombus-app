@@ -21,7 +21,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
         re = Refund.new.refund_card_txn(current_user, params)
         render json: { response: re.second }, status: (re.first ? 200 : 500)
       else
-        render json: { response: "Cannot Perform this action." }, status: 500
+        render json: { response: "Cannot perform this action." }, status: 500
       end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In V1::TransactionsController refund" } )

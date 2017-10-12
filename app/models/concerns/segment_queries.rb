@@ -60,9 +60,11 @@ module SegmentQueries
   end
 
   # Creates a segment for a plan
+  # order of subscriptions not guaranteed with group by
   def plan_segment(data)
-    "select mc.* from merchant_customers mc inner join subscriptions s on mc.id = s.merchant_customer_id where mc.merchant_id = #{data["merchant_id"]}
-      and s.plan_id = #{data["plan_id"]}"
+    "select mc.* from merchant_customers mc inner join subscriptions s on mc.id = s.merchant_customer_id \
+      where mc.merchant_id = #{data["merchant_id"]} \
+      and s.plan_id = #{data["plan_id"]} group by s.merchant_customer_id"
   end
 
   def plan_segment_data(plan_id)
@@ -93,8 +95,9 @@ module SegmentQueries
     customer_or_contact_created(data, 'contact')
   end
 
+  # order of transactions not guaranteed with group by
   def last_payment_made(data)
-    str = " select distinct(mc.customer_id), mc.merchant_id, mc.id, mc.created_at, mc.updated_at from merchant_customers mc 
+    str = " select mc.customer_id, mc.merchant_id, mc.id, mc.created_at, mc.updated_at from merchant_customers mc 
             inner join transactions t on t.user_id = mc.customer_id 
             left join refunds as r on t.id = r.transaction_id "
 
@@ -106,7 +109,7 @@ module SegmentQueries
 
     str += " mc.merchant_id = #{data['merchant_id']} and 
              t.created_at #{get_base_filter(data['base_filter'])} '#{data["time"]}' and t.team_id = #{data['merchant_id']} 
-             and r.transaction_id is null "
+             and r.transaction_id is null group by t.user_id "
   end
 
   private
@@ -148,15 +151,16 @@ module SegmentQueries
       ) ids group by concat(uid,uid_type) "
   end
 
+  # order of transactions not guaranteed with group by
   def customer_or_contact_created(data, user_type)    
     if user_type == 'contact'
       str = " select * from merchant_contacts mc "
     else
-      str = " select distinct(mc.customer_id), mc.id, mc.merchant_id, mc.created_at, mc.updated_at from merchant_customers mc "
+      str = " select mc.customer_id, mc.id, mc.merchant_id, mc.created_at, mc.updated_at from merchant_customers mc "
     end
 
     # note contacts will never have amount for transactions
-    if data["additional_val"].present?
+    if data["additional_val"].present? && user_type == 'customer'
       str += " inner join transactions t on mc.customer_id = t.user_id and t.team_id = #{data["merchant_id"]} 
                 left join refunds as r on t.id = r.transaction_id
                 #{get_amount_filter(data["additional_filter"], data["additional_val"])}
@@ -166,6 +170,8 @@ module SegmentQueries
     end
 
     str += " mc.merchant_id = #{data["merchant_id"]} and mc.created_at #{get_base_filter(data["base_filter"])} '#{data["time"]}' "
+
+    str += " group by mc.customer_id " if user_type == 'customer'
   end
 
   def get_base_filter(filter_type)
