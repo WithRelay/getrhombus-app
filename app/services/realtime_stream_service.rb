@@ -11,13 +11,12 @@ class RealtimeStreamService
         alert_obj = conversation.merchant.alert
         if alert_obj.try(:send_alert)
           options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %l:%M%P"), 
-                      message: msg.text, sender_profile_url: User.profile_url_for_email(customer) }          
+                      message: msg.text, sender_profile_url: User.profile_url_for_email(customer), sender_email: '' }          
 
           if customer.present?        
             options[:sender_name] = customer.full_name 
             options[:sender_email] = customer.email
           else
-            options[:sender_email] = ''
             options[:sender_name] = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from
           end
           
@@ -29,7 +28,7 @@ class RealtimeStreamService
           to = alert_obj.sms_numbers
           if alert_obj.include_sms && to.present?
             team = User.get_platform_acct_obj
-            msg_to_send = "You have a new unread message from #{customer} on your #{Rails.application.secrets.app['name']} dashboard."
+            msg_to_send = "You have a new unread message from #{options[:sender_name]} on your #{Rails.application.secrets.app['name']} dashboard."
             to.each do |pn|
               pn = pn.gsub('+', '')
               customer = User.find_by(phone_number: pn)

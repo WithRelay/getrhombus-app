@@ -692,7 +692,7 @@ class EmailingService
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "view_profile_link", "content" => url_helpers.user_merchant_customer_url(options[:merchant], options[:customer]) },
-                                  { "name" => "message_customer_link", "content" => url_helpers.user_conversations_link(options[:merchant]) }
+                                  { "name" => "message_customer_link", "content" => url_helpers.user_conversations_url(options[:merchant]) }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
@@ -863,8 +863,8 @@ class EmailingService
                                   { 'name' => 'message_time', 'content' => options[:message_time] },
                                   { 'name' => 'sender_profile_url', 'content' => options[:sender_profile_url] },
                                   { 'name' => 'sign_in_url', 'content' => sign_in_link },
-                                  { 'name' => 'notification_setting_link', 'content' => url_helpers.user_notifications_link(options[:merchant]) },
-                                  { 'name' => 'conversation_dashboard_link', 'content' => url_helpers.user_conversations_link(options[:merchant]) }
+                                  { 'name' => 'notification_setting_link', 'content' => url_helpers.user_notifications_url(options[:merchant]) },
+                                  { 'name' => 'conversation_dashboard_link', 'content' => url_helpers.user_conversations_url(options[:merchant]) }
                                ],
          'merge_language' => 'handlebars',
          'to'=> to,
