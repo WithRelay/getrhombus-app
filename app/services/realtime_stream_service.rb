@@ -18,7 +18,7 @@ class RealtimeStreamService
             options[:sender_email] = customer.email
           else
             options[:sender_email] = ''
-            options[:sender_name] = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from)
+            options[:sender_name] = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from
           end
           
           # email alerts
