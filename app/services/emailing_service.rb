@@ -731,6 +731,42 @@ class EmailingService
       end
     end
 
+    def new_merchant_customer_subscription(options = {})
+      begin
+        template_name = 'new-merchant-customer-subscription'
+        template_content = []
+        message = { "subject" => "You have a new #{amount} subscription",
+         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] },
+                                  { "name" => "customer_name", "content" => options[:customer_name] },
+                                  { "name" => "transaction_id", "content" => options[:transaction_id] },
+                                  { "name" => "plan_name", "content" => options[:plan_name] },
+                                  { "name" => "frequency", "content" => options[:frequency] },
+                                  { "name" => "transaction_date", "content" => options[:transaction_date] },
+                                  { "name" => "payment_method", "content" => options[:payment_method] },
+                                  { "name" => "description", "content" => options[:description] },
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "less_transaction_fees", "content" => options[:less_transaction_fees] },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "email_us_link", "content" => EMAIL_US_LINK },
+                                  { "name" => "transaction_details_link", "content" => url_helpers.user_transactions_url(options[:merchant]) },
+                                  { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:merchant]) }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => options[:user_email] } ],
+         "bcc_address"=> User.platform_email,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
     def subscription_receipt(options = {})
       begin
         template_name = 'subscription-receipt-template'
