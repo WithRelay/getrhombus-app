@@ -8,24 +8,22 @@ class StripeEvent
   end
 
   def subscription_trial_will_end
-    @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
+    @data = Subscription.includes(merchant_customer: [:customer]).find_by(stripe_subscription_id: @hash[:id])
     return unless @data
 
     # Email merchant of time left
-    user = @data.merchant_customer.customer
     trial_days_left = ((@hash[:trial_end] - Time.current.utc.to_i) / 1.days.to_f).ceil
-
     # Free Trial Expiration Notice (11 days after sign-up)
-    EmailingService.free_trial_expiration_notice(user) if trial_days_left == 3
+    EmailingService.free_trial_expiration_notice(@data.customer) if trial_days_left == 3
     update_subscription_data
   end
 
   def customer_subscription_deleted
-    @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
+    @data = Subscription.includes(merchant_customer: [:customer, :merchant], plan: []).find_by(stripe_subscription_id: @hash[:id])
     return unless @data
 
-    user = @data.merchant_customer.customer
-    TextingService.release_number(user.rhombus_number) if user.is_merchant? && !user.active? && user.rhombus_number.present?
+    user = @data.customer
+    TextingService.release_number(user.rhombus_number) if user.is_merchant? && user.rhombus_number.present?
     update_subscription_data
 
     # Email about cancellation
@@ -40,15 +38,15 @@ class StripeEvent
 
   def cancelled_subscription_options(subscription)
     merchant = subscription.merchant
-    customer = subscription.customer
-    cancelled_at =  DateTime.strptime(subscription.canceled_at.to_s,'%s').in_time_zone(merchant.time_zone)
-    { merchant: merchant,
-      customer: customer,
+    cancelled_at =  DateTime.strptime(subscription.canceled_at.to_s, '%s').in_time_zone(merchant.time_zone)
+    { 
+      merchant: merchant,
+      customer: subscription.customer,
       plan_name: subscription.plan_name,
       currency: subscription.plan_currency,
       currency_symbol: '$',
       cancellation_date: cancelled_at.strftime('%B %d,%Y | %I:%M%P'),
-      amount: '%.2f' % (subscription.plan_amount.to_f / 100)
+      amount: subscription.txn_amount
     }
   end
 
@@ -58,7 +56,7 @@ class StripeEvent
   # It also notifies us of changes from trial to active
   # You generally don't want to notify merchants or users in this method
   def customer_subscription_updated
-    @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
+    @data = Subscription.includes(merchant_customer: [:merchant, :customer], plan: []).find_by(stripe_subscription_id: @hash[:id])
     return unless @data
     update_subscription_data
     # Email admin about update

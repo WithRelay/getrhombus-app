@@ -39,14 +39,16 @@ class RealtimeStreamService
 
       # will not subscribing and publishing cause all the messages to be republish upon subscribe in view???
       # it will cause duplicate errors in angular
-      #$pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id)  
+      # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id)  
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
                       message: { type: 'new-message', conversation: conversation.conversation_hash,
                                  message: Conversation.message_hash(conversation, msg, conv_ref) })
 
-      notifications({ profile_pic: profile_pic, customer_name: customer_name, message: msg.text[0..15] + "...",
-                      type: conv_ref.textable_type == 'Message' ? 'new_message_sms' : 'new_message_messenger' },
-                      merchant_id)
+      if conv_ref.source == "customer"
+        notifications({ profile_pic: profile_pic, customer_name: customer_name, message: msg.text[0..15] + "...",
+                        type: conv_ref.textable_type == 'Message' ? 'new_message_sms' : 'new_message_messenger' },
+                        merchant_id)
+      end
 
       #Rails.logger.debug "DEBUG: and we are in RealtimeStreamService messages method"
     end
