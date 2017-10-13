@@ -67,7 +67,7 @@ class EmailingService
         message = { "subject" => "Status: Complete your phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
                                   { "name" => "virtual_number", "content" => rhombus_number },
-                                  { "name" => "verification_link", "content" => url_helpers.verify_hosted_sms_order_url }
+                                  { "name" => "verification_link", "content" => url_helpers.user_verify_hosted_sms_order_url(user) }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],

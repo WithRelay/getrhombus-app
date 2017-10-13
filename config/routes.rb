@@ -5,7 +5,6 @@ Rails.application.routes.draw  do
   post "homepage_referrer" => 'referrers#homepage_referrer'
   # get "relay-docs/:slug" => "knowledge_bases#show"
   # get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
-  get 'verify-hosted-sms-order' => 'users#verify_hosted_sms_order'
 
   StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
 
@@ -58,6 +57,7 @@ Rails.application.routes.draw  do
       end
       get 'sms-usage'
       get 'add-rhombus-number'
+      get 'verify-hosted-sms-order' => 'users#verify_hosted_sms_order'
       post 'verify_hosted_sms'
       get 'add-subscription'
       get 'add-profile-info'
@@ -122,12 +122,12 @@ Rails.application.routes.draw  do
     resources :lists, only: [:create, :index, :update] do
       get 'check_list_name', on: :collection
     end
-    
+
     resources :hashtags, only: [:index] do
       get 'check_hashtag_name', on: :collection
       delete 'images/:image_id' => "hashtags#image_delete", on: :member
     end
-    
+
     resources :campaigns, only: [] do
       member do
         patch 'change_status'
