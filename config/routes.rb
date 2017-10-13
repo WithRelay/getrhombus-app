@@ -172,6 +172,9 @@ Rails.application.routes.draw  do
     #resources :knowledge_bases, param: :url, only: [:index] do
       #get 'rating', on: :member
     #end'
+
+    resources :intelligence_data
+
   end
 
   ## catch all other to 404
