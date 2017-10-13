@@ -12,16 +12,15 @@ setTimeout(function retry() {
 
 $(document).ready(function() {
 
-  // subcribe to messaging channel
+  // subcribe to notifications channel
   function subscribe_to_notifications() {
     var merchant_data = UserDetails.object();
     // merchant and up only
     if (!jQuery.isEmptyObject( merchant_data )) {
-      
       // Initialize PubNub with SSL
       var pubnub = new PubNub({
-        publish_key: merchant_data.pubnub_publish_key,
-        subscribe_key: merchant_data.pubnub_subscribe_key,
+        publishKey: merchant_data.pubnub_publish_key,
+        subscribeKey: merchant_data.pubnub_subscribe_key,
         ssl: true
       });
 
@@ -33,19 +32,24 @@ $(document).ready(function() {
 
       // Subscribe to merchant channel
       pubnub.subscribe({
-        channel: 'notifications_<%= Rails.env %>_' + merchant_data.id.toString(),
+        channels: ['notifications_<%= Rails.env %>_' + merchant_data.id.toString()]
       });
     };
   };
 
   subscribe_to_notifications();
 
+  // type: campaign_sent, new_payment, new_message_sms, new_message_messenger
   function process_notification(data) {
-    console.log(data)
+    console.log(data);
     if (data.type == 'campaign_sent') {
       FlashHandler.schedule_jobs('all sent', 2000)
-    } else if (data.type == 'xyz') {
-
-    }
+    } else if (data.type == 'new_payment') {
+      FlashHandler.payment_notification(data.profile_pic, data.amount, data.customer_name)
+    } else if (data.type == 'new_message_sms') {
+      FlashHandler.incoming_sms(data.profile_pic, data.customer_name, data.message)
+    } else if (data.type == 'new_message_messenger') {
+      FlashHandler.incoming_facebook_message(data.profile_pic, data.customer_name, data.message)
+    };
   };
 });

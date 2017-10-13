@@ -5,22 +5,19 @@ class RealtimeStreamService
     # might need to redo how conv_ref is sent
     # Sends a message to the given merchant's channel, provided user and merchant numbers
     def messages(conversation, conv_ref, customer, msg, send_alert = false)
+
       merchant_id = conversation.merchant_id.to_s
+      customer_name = customer.present? ? customer.full_name : ((conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from)
+      profile_pic = User.profile_url_only(customer)
 
       if send_alert && $redis_merchant_status.get(merchant_id) != 'online'
         alert_obj = conversation.merchant.alert
         if alert_obj.try(:send_alert)
           options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %l:%M%P"), 
-                      message: msg.text, sender_profile_url: User.profile_url_for_email(customer), sender_email: '' }          
+                      message: msg.text, sender_profile_url: profile_pic, customer_name: customer_name }          
 
-          if customer.present?        
-            options[:sender_name] = customer.full_name 
-            options[:sender_email] = customer.email
-          else
-            options[:sender_name] = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from
-          end
-          
           # email alerts
+          options[:sender_email] = customer.try(:email) || ""
           to = alert_obj.emails.map { |e| { "email" => e } }
           EmailingService.unread_message_notification(to, options)
 
@@ -44,9 +41,13 @@ class RealtimeStreamService
       # it will cause duplicate errors in angular
       #$pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id)  
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
-                      message: { type: 'new-message',
-                                 message: Conversation.message_hash(conversation, msg, conv_ref),
-                                 conversation: conversation.conversation_hash })
+                      message: { type: 'new-message', conversation: conversation.conversation_hash,
+                                 message: Conversation.message_hash(conversation, msg, conv_ref) })
+
+      notifications({ profile_pic: profile_pic, customer_name: customer_name, message: msg.text[0..15] + "...",
+                      type: conv_ref.textable_type == 'Message' ? 'new_message_sms' : 'new_message_messenger' },
+                      merchant_id)
+
       #Rails.logger.debug "DEBUG: and we are in RealtimeStreamService messages method"
     end
 
@@ -66,20 +67,7 @@ class RealtimeStreamService
     # type: campaign_sent, new_payment, new_message_sms, new_message_messenger
     # payload is a hash with the data needed in the client. must include one of the types above
     def notifications(payload, merchant_id)
-      #$pubnub.subscribe(channel: 'notifications_' + Rails.env + '_' + merchant_id.to_s)
       $pubnub.publish(channel: 'notifications_' + Rails.env + '_' + merchant_id.to_s, message: payload)
-    end
-
-    ### this isnt being used???????????????
-    def campaign_notification
-      Time.zone = current_user.time_zone
-      campaign_recipients = CampaignRecipient.where("CAST(created_at as DATE) = ?",
-                           Time.current.in_time_zone.strftime("%Y-%m-%d"))
-      campaign_recipients.each do |list|
-        list.campaign.campaign_lists.count
-        campaign_time = list.campaign.date_time.strftime("%I:%M")
-        { campaign_sent: "Your campaign scheduled for #{campaign_time} was sent"}
-      end
     end
 
   end

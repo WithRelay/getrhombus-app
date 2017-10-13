@@ -20,7 +20,7 @@ var FlashHandler = new function() {
 
   function browserNotification(notification_title, notification_message, notification_icon){
     if (!Notification) {
-      alert('Desktop notifications not available in your browser. Try Chrome.');
+      //alert('Desktop notifications not available in your browser. Try Chrome.');
       return;
     }
 
@@ -125,7 +125,7 @@ var FlashHandler = new function() {
     } else {
       $('body').append('<a class="browser-notification-link-block payment w-clearfix w-inline-block" href="#">\
         <img class="browser-notification customer-profile-picture pic" height="40" src="'+profile_pic+'" width="40">\
-        <div class="payment-notification-amount">$'+amount+'</div>\
+        <div class="payment-notification-amount">'+amount+'</div>\
         <div class="payment-sender-name shrink-text">'+customer_name+'.</div>\
       </a>')
       setCloseTimeout(5000, '.browser-notification-link-block');

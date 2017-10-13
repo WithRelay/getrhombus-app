@@ -275,13 +275,19 @@ class MessageParser
       if @tag.present? && @tag.recurring_payment_tag? 
         if merchant_supports_subscriptions? && no_existing_subscription_for_tag?
           res = handle_subscription_through_text
-          res.first ? send_subscription_responses : send_response(res.second || subscription_error_text)
+          if res.first 
+            send_subscription_responses 
+            publish_message
+          else
+            send_response(res.second || subscription_error_text)
+          end
         end
       else     # tested   
         @new_txn = Transaction.new        
         if @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, true).first
           @received_msg.update_column(:transaction_id, @new_txn.id)
           send_payment_responses
+          publish_message
         end
       end
     end
@@ -399,6 +405,14 @@ class MessageParser
     return false if @merchant.is_merchant? && !@merchant.is_platform?
     send_response("Thanks for messaging us here at #{app_name}. This number does not accept payments, please check the business number you're trying to text a payment to and try again.")
     true
+  end
+
+  def publish_message
+    RealtimeStreamService.notifications({ type: 'new_payment',
+                                          customer_name: "#{@customer.full_name}",
+                                          profile_pic: User.profile_url_only(@customer), 
+                                          amount: "$#{Toolbox::Decimal.cents_to_int_or_2dp(@amt_ary[0])}" },
+                                          @merchant.id)
   end
 
 end

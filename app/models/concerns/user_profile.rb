@@ -56,7 +56,7 @@ module UserProfile
     { type: 'color', value: cus.user_color }
   end
 
-  def profile_url_for_email(cus)
+  def profile_url_only(cus)
     default_path = ActionController::Base.helpers.image_path("Relay Hashtag.png")
     default_path = default_path[1..-1] if default_path[0] == "/"
     default_path = Rails.application.routes.url_helpers.root_url + default_path
