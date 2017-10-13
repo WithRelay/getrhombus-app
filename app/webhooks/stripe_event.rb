@@ -47,7 +47,7 @@ class StripeEvent
       plan_name: subscription.plan_name,
       currency: subscription.plan_currency,
       currency_symbol: '$',
-      cancellation_date: cancelled_at.strftime('%B %d,%Y|%I:%M%P'),
+      cancellation_date: cancelled_at.strftime('%B %d,%Y | %I:%M%P'),
       amount: '%.2f' % (subscription.plan_amount.to_f / 100)
     }
   end
