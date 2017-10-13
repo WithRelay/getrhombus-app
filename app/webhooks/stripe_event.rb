@@ -29,12 +29,29 @@ class StripeEvent
     update_subscription_data
 
     # Email about cancellation
-    EmailingService.customer_subscription_deleted(user)
+    options = cancelled_subscription_options(@data)
+    EmailingService.cancelled_subscription(options)
+    EmailingService.subscription_cancelled(options)
 
     # LEAVE THIS FOR LATER
     # subscribe merchant (rhombus platform saas customer) to next plan if present
     # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
   end
+
+  def cancelled_subscription_options(subscription)
+    merchant = subscription.merchant
+    customer = subscription.customer
+    cancelled_at =  DateTime.strptime(subscription.canceled_at.to_s,'%s').in_time_zone(merchant.time_zone)
+    { merchant: merchant,
+      customer: customer,
+      plan_name: subscription.plan_name,
+      currency: subscription.plan_currency,
+      currency_symbol: '$',
+      cancellation_date: cancelled_at.strftime('%B %d,%Y | %I:%M%P'),
+      amount: '%.2f' % (subscription.plan_amount.to_f / 100)
+    }
+  end
+
 
   # At the moment, Subscription only changes if a coupon is added.
   # Else to change a subscription, cancel and create a new one
@@ -106,7 +123,7 @@ class StripeEvent
     if @merchant_customer
       @data.team_id = @merchant_customer.merchant_id
       @data.customer_id = @merchant_customer.customer_id
-      
+
       # update coupon_id
       if @hash[:discount].present?
         coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
@@ -129,7 +146,7 @@ class StripeEvent
       # test that charge is true
       charge = PaymentService.retrieve_charge(@hash[:charge], team) if @hash[:charge]
       charge = charge.try(:first)
-      
+
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       txn = Transaction.where(txn_uri: charge.id).first_or_initialize if charge
 
@@ -141,7 +158,7 @@ class StripeEvent
 
           # update subscription_id
           if sbtn && txn
-            sbtn_fees = sbtn.get_fees            
+            sbtn_fees = sbtn.get_fees
             app_fee = txn.app_fee.present? ? txn.app_fee : sbtn_fees[:app_fee]
             stripe_fee = txn.stripe_fee.present? ? txn.stripe_fee : sbtn_fees[:stripe_fee]
             description = txn.description.present? ? txn.description : sbtn.description
@@ -150,11 +167,11 @@ class StripeEvent
             # dashboard@ is only admin controls
 
             txn.update(
-              amount: txn.amt_in_decimal(l[:amount]), 
+              amount: txn.amt_in_decimal(l[:amount]),
               app_fee: app_fee, stripe_fee: stripe_fee,
-              amount_with_taxes: txn.amt_in_decimal(@hash[:total]), 
+              amount_with_taxes: txn.amt_in_decimal(@hash[:total]),
               txn_number: txn.txn_number || txn.generate_txn_number,
-              description: description,              
+              description: description,
               team_id: @data.team_id, user_id: @data.customer_id,
               hashtag_id: sbtn.plan.hashtag_id, txn_available_at: @hash[:date],
               tax_percent: @hash[:tax_percent],
@@ -168,7 +185,7 @@ class StripeEvent
 
             @data.update(transaction_id: txn.id, subscription_id: sbtn.id)
             # Notify customer (could be merchant)
-            #EmailingService.invoice_payment_succeeded(@merchant_customer.customer)            
+            #EmailingService.invoice_payment_succeeded(@merchant_customer.customer)
           end
         end
       end
@@ -178,7 +195,7 @@ class StripeEvent
   def invoice_payment_failed
     # find invoice and update...invoice should already exist but if it doesn't, create a new one
     @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-    setup_invoice_data      
+    setup_invoice_data
     # notify customer
     EmailingService.invoice_payment_failed(@merchant_customer.customer, @merchant_customer.merchant) if @merchant_customer
   end
@@ -241,7 +258,7 @@ class StripeEvent
       user_params = response_user_params.merge(bank_account_details)
       managed_account_user.update(user_params)
     rescue => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeEvent account_updated", 
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeEvent account_updated",
                                                                             merchant: managed_account_user, data: @hash })
     end
   end
