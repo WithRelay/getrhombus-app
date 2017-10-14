@@ -184,40 +184,6 @@ class EmailingService
       end
     end
 
-    def send_payment_notification(options = {})
-      begin
-        template_name = 'payment-notification-merchants'
-        template_content = []
-        message = { "subject"=>"You received a payment with Rhombus",
-         "global_merge_vars"=> [ { "name" => "card_name", "content" => options[:card_name] },
-                                 { "name" => "last_four", "content" => options[:last4] },
-                                 { "name" => "card_type", "content" => options[:card_type] },
-
-                                 { "name" => "customer_email", "content" => options[:customer_email] },
-                                 { "name" => "customer_phone", "content" => options[:customer_phone] },
-                                 { "name" => 'text_message', "content" => options[:text] },
-
-                                 { "name" => "transaction_number", "content" => options[:transaction_number] },
-                                 { "name" => "stripe_txn_number", "content" => options[:stripe_txn_number] },
-                                 { "name" => 'transaction_date', "content" => options[:transaction_date] },
-
-                                 { "name" => 'amount_less_fees', "content" => options[:amount_less_fees] },
-                                 { "name" => 'amount_with_taxes', "content" => options[:amount_with_taxes] },
-                                 { "name" => 'rhombus_number', "content" => options[:rhombus_number] },
-                                 { "name" => "currency", "content" => options[:currency] } ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:to] } ],
-         "from_name" => "Rhombus",
-         "from_email" => User.platform_email
-        }
-        async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
     def charge_failure_notification(options = {})
       begin
         recipient = (options[:to_merchant]) ? options[:to] : User.platform_email
@@ -509,30 +475,67 @@ class EmailingService
       end
     end
 
+    # transaction notification to merchant
+    def customer_transaction_detail(options={})
+      begin
+        template_name = 'transaction-notification-template'
+        template_content = []
+        message = { "subject" => "#{options[:customer].first_name} sent you #{options[:amount]}",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:merchant].first_name || 'there' },
+                                  { "name" => "customer_name", "content" => options[:customer].first_name },
+                                  { "name" => "transaction_id", "content" => options[:transaction_id] },
+                                  { "name" => "date", "content" => options[:created_at] },
+                                  { "name" => "status", "content" => options[:status] },
+                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options[:last4]} (Expiry #{options[:exp_month]}/#{options[:exp_year]})" },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => "discription", "content" => options[:discription]},
+                                  { "name" => "taxes_and_fees", "content" => options[:amount_less_fees]},
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:merchant]) },
+                                  { "name" => "help_link", "content" => url_helpers.root_url },
+                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}" },
+                                  { "name" => "refer_link", "content" => url_helpers.user_refer_business_url(options[:merchant]) }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => options[:merchant].email } ],
+         "bcc_address"=> User.platform_email,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    # transaction notification to customer
     def customer_receipt(options = {})
       begin
         template_name = 'customer-receipt-template'
         template_content = []
-        message = { "subject" => "You sent #{options[:amount]} to #{options[:org_name]}",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:user_first_name] || 'there' },
-                                  { "name" => "merchant_business_name", "content" => options[:org_name] },
-                                  { "name" => "transaction_id", "content" => options[:txn_number] },
+        message = { "subject" => "You sent #{options[:amount]} to #{options[:merchant].org_name}",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:customer].first_name || 'there' },
+                                  { "name" => "merchant_business_name", "content" => options[:merchant].org_name },
+                                  { "name" => "transaction_id", "content" => options[:transaction_id] },
                                   { "name" => "date", "content" => options[:created_at] },
                                   { "name" => "status", "content" => options[:status] },
                                   { "name" => "payment_method", "content" => "Visa **** **** **** #{options[:last4]} (Expiry #{options[:exp_month]}/#{options[:exp_year]})" },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "description", "content" => options[:description]},
                                   { "name" => "taxes_and_fees", "content" => options[:taxes_and_fees] },
-                                  { "name" => "total", "content" => options[:amount] },
+                                  { "name" => "total", "content" => options[:total_amount] },
                                   { "name" => "relay_number", "content" => options[:rhombus_number] },
-                                  { "name" => "merchant_email", "content" => options[:merchant_email] },
+                                  { "name" => "merchant_email", "content" => options[:merchant].email },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:user]) },
+                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:customer]) },
                                   { "name" => "relay_link", "content" => sign_up_link }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user].email } ],
+         "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -583,10 +586,10 @@ class EmailingService
         template_name = 'refund-processed'
         template_content = []
         message = { "subject" => "Refund Processed",
-         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] },
+         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] || 'there' },
                                   { "name" => "merchant_business_name", "content" => options[:merchant_business_name] },
                                   { "name" => "currency", "content" => options[:currency] },
-                                  { "name" => "date", "content" => options[:date] },
+                                  { "name" => "refund_date", "content" => options[:date] },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
@@ -595,7 +598,7 @@ class EmailingService
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:user]) }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
+         "to"=> [ { "email" => options[:user].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -613,22 +616,21 @@ class EmailingService
         template_name = 'subscription-failed'
         template_content = []
         message = { "subject" => "Subscription Failed",
-         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] },
+         "global_merge_vars"=> [  { "name" => "customer_first_name", "content" => options[:customer].first_name || 'there' },
                                   { "name" => "merchant_business_name", "content" => options[:merchant_business_name] },
                                   { "name" => "plan_name", "content" => options[:plan_name] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "frequency", "content" => options[:frequency] },
-                                  { "name" => "stripe_response", "content" => options[:stripe_response] },
-                                  { "name" => "date", "content" => options[:date] },
+                                  { "name" => "failed_date", "content" => options[:failed_date] },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
-                                  { "name" => "dashboard_link", "content" => url_helpers.user_url(options[:user]) },
-                                  { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:user]) }
+                                  { "name" => "dashboard_link", "content" => url_helpers.user_url(options[:customer]) },
+                                  { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:customer]) }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
+         "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -710,9 +712,9 @@ class EmailingService
       begin
         template_name = 'new-merchant-customer-subscription'
         template_content = []
-        message = { "subject" => "You have a new #{amount} subscription",
-         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] },
-                                  { "name" => "customer_name", "content" => options[:customer_name] },
+        message = { "subject" => "You have a new #{options[:amount]} subscription",
+         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant].first_name || 'there' },
+                                  { "name" => "customer_name", "content" => options[:customer].first_name || 'there' },
                                   { "name" => "transaction_id", "content" => options[:transaction_id] },
                                   { "name" => "plan_name", "content" => options[:plan_name] },
                                   { "name" => "frequency", "content" => options[:frequency] },
@@ -729,7 +731,7 @@ class EmailingService
                                   { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:merchant]) }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
+         "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -750,7 +752,7 @@ class EmailingService
          "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:first_name] || 'there' },
                                   { "name" => "year", "content" => Time.current.year },
                                   { "name" => "invoice_id", "content" => options[:stripe_invoice_id] },
-                                  { "name" => "date", "content" => options[:date] },#February 23, 2017 | 1:30pm
+                                  { "name" => "receipt_date", "content" => options[:date] },#February 23, 2017 | 1:30pm
                                   { "name" => "status", "content" => options[:status] },
                                   { "name" => "payment_method", "content" => options[:payment_method] },
                                   { "name" => "amount", "content" => options[:sub_total] },
@@ -758,7 +760,7 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "pdf_download_link", "content" => url_helpers.root_url },
+                                  # { "name" => "pdf_download_link", "content" => url_helpers.root_url },
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:user]) },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_link", "content" => EMAIL_US_LINK },
@@ -798,41 +800,6 @@ class EmailingService
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "refer_a_business_link", "content" => url_helpers.user_refer_business_url(options[:user]) },
                                   { "name" => "auto_recharge_link", content: url_helpers.user_sms_usage_url(options[:user]) },
-                               ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
-    def customer_transaction_detail(options={})
-      begin
-        template_name = 'transaction-notification-template'
-        template_content = []
-        message = { "subject" => "#{options[:customer_name]} sent you #{options[:amount]}",
-         "global_merge_vars"=> [  { "name" => "customer_name", "content" => options[:custome_name] },
-                                  { "name" => "first_name", "content" => options[:first_name] || 'there' },
-                                  { "name" => "transaction_id", "content" => options[:id] },
-                                  { "name" => "date", "content" => options[:created_at] },
-                                  { "name" => "status", "content" => options[:status] },
-                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options[:last4]} (Expiry #{options[:exp_month]}/#{options[:exp_year]})" },
-                                  { "name" => "amount", "content" => options[:amount] },
-                                  { "name" => "discription", "content" => options[:discription]},
-                                  { "name" => "taxes_and_fees", "content" => options[:amount_less_fees]},
-                                  { "name" => "currency", "content" => options[:currency] },
-                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:user]) },
-                                  { "name" => "help_link", "content" => url_helpers.root_url },
-                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}" },
-                                  { "name" => "refer_link", "content" => url_helpers.user_refer_business_url(options[:user]) }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
@@ -1090,28 +1057,28 @@ class EmailingService
       end
     end
 
-    def invoice_payment_failed(customer, merchant)
-      begin
-        template_name = 'invoice-payment-failed'
-        template_content = []
-        message = { 'subject' => 'Invoice Payment Failed',
-          'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' },
-            { 'name' => 'id', 'content' => invoice.id },
-            { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
-          ],
-          'merge_language' => 'handlebars',
-          'to'=> [ { 'email' => customer.email } ],
-          "bcc_address"=> merchant.email,
-          'from_name' => 'Edwin from Relay',
-          'from_email' => FROM_EMAIL[:edwin]
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
+    # def invoice_payment_failed(customer, merchant)
+    #   begin
+    #     template_name = 'invoice-payment-failed'
+    #     template_content = []
+    #     message = { 'subject' => 'Invoice Payment Failed',
+    #       'global_merge_vars'=> [ { 'name' => 'first_name', 'content' => customer.first_name || 'there' },
+    #                               { 'name' => 'id', 'content' => invoice.id },
+    #                               { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
+    #                             ],
+    #       'merge_language' => 'handlebars',
+    #       'to'=> [ { 'email' => customer.email } ],
+    #       "bcc_address"=> merchant.email,
+    #       'from_name' => 'Edwin from Relay',
+    #       'from_email' => FROM_EMAIL[:edwin]
+    #     }
+    #     async = true
+    #     result = MANDRILL.messages.send_template template_name, template_content, message, async
+    #   rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+    #     puts "A mandrill error occurred: #{e.class} - #{e.message}"
+    #   rescue StandardError => e
+    #   end
+    # end
 
     def invoice_payment_succeeded(customer)
       begin

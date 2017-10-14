@@ -45,7 +45,7 @@ class Transaction < ActiveRecord::Base
 
       # taxes # tested
       @amt_with_taxes = TransactionFee.amount_with_taxes(@amt, @merchant.tax_percent)
-  
+
       # fees   # tested
       fees = get_fees_schedule
       @stripe_fee = ((@amt_with_taxes * (fees[0]/100)) + fees[1]).round
@@ -61,17 +61,19 @@ class Transaction < ActiveRecord::Base
       # handle response
       if @stripe_res # tested
         update_transaction_data
+        EmailingService.customer_receipt(receipt_options)
+        EmailingService.customer_transaction_detail(receipt_options)
         return [true, "Transaction processed"]
       else
         # This should only run for text based payments. Dashboard payments is handled differently.
         if @source == 'text'
           # if it is a card decline, we text only customers. Merchant might not have textable number on file.
-          if customer.is_customer? 
+          if customer.is_customer?
             if @stripe_res_ary[3]
-              send_response("We're sorry your payment to #{merchant.org_name} failed because: #{@stripe_res_ary[2]}") 
+              send_response("We're sorry your payment to #{merchant.org_name} failed because: #{@stripe_res_ary[2]}")
             else
               send_response("We're sorry your payment to #{merchant.org_name} failed. Please try again later.")
-            end            
+            end
           end
           # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
         end
@@ -82,6 +84,27 @@ class Transaction < ActiveRecord::Base
       #send_payment_failure_email(err, false)  # should go out only for text payments
       [false, "Something went wrong"]
     end
+  end
+
+  def receipt_options
+    {
+      merchant: team,
+      customer: user,
+      amount: txn_amount,
+      transaction_id: txn_number,
+      created_at: created_at.strftime('%B %d,%Y | %I:%M%P'),
+      status: status,
+      last4: last4,
+      exp_month: exp_month,
+      exp_year: exp_year,
+      description: description,
+      taxes_and_fees: amount_with_taxes.to_f,
+      amount_less_fees: txn_amount_less_fees,
+      total_amount: amount.to_f + amount_with_taxes.to_f,
+      relay_number: team.friendly_relay_number,
+      currency: currency,
+      currency_symbol: '$'
+    }
   end
 
   # tested
@@ -167,7 +190,7 @@ class Transaction < ActiveRecord::Base
           if @source == 'dashboard-txn'
             send_response("Hi" + customer_first_name + ", a charge of #{txn_amount} (#{self.currency}) by #{@merchant.org_name} failed because: #{@stripe_res_ary.third}")
           end
-          [false, 'Sorry, we were unable to complete this transaction because: ' + @stripe_res_ary.third]          
+          [false, 'Sorry, we were unable to complete this transaction because: ' + @stripe_res_ary.third]
         else
           [false, 'Sorry, we were unable to complete this transaction. Please try again later.']
         end
