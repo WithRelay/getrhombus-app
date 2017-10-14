@@ -48,7 +48,7 @@ class Refund < ActiveRecord::Base
       merchant_business_name: merchant.org_name,
       currency: txn.currency,
       currency_symbol: '$',
-      date: date.strftime('%B %d,%Y | %I:%M%P'),
+      date: date.strftime('%B %d,%Y | %-I:%M%P'),
       amount: txn.amount_with_taxes,
       user: txn.team
     }
