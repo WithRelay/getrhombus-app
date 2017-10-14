@@ -4,7 +4,6 @@ class AccountReload < ActiveRecord::Base
 
   def reload(amt, user)
     txn = Transaction.new
-    user = User.find 127  # to be removed
 
     re = txn.process_dashboard_txn(amt, User.get_platform_acct_obj, user, 'Account Reload')
     if re.first
