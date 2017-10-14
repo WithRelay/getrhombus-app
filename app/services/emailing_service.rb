@@ -184,40 +184,6 @@ class EmailingService
       end
     end
 
-    def send_payment_notification(options = {})
-      begin
-        template_name = 'payment-notification-merchants'
-        template_content = []
-        message = { "subject"=>"You received a payment with Rhombus",
-         "global_merge_vars"=> [ { "name" => "card_name", "content" => options[:card_name] },
-                                 { "name" => "last_four", "content" => options[:last4] },
-                                 { "name" => "card_type", "content" => options[:card_type] },
-
-                                 { "name" => "customer_email", "content" => options[:customer_email] },
-                                 { "name" => "customer_phone", "content" => options[:customer_phone] },
-                                 { "name" => 'text_message', "content" => options[:text] },
-
-                                 { "name" => "transaction_number", "content" => options[:transaction_number] },
-                                 { "name" => "stripe_txn_number", "content" => options[:stripe_txn_number] },
-                                 { "name" => 'transaction_date', "content" => options[:transaction_date] },
-
-                                 { "name" => 'amount_less_fees', "content" => options[:amount_less_fees] },
-                                 { "name" => 'amount_with_taxes', "content" => options[:amount_with_taxes] },
-                                 { "name" => 'rhombus_number', "content" => options[:rhombus_number] },
-                                 { "name" => "currency", "content" => options[:currency] } ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:to] } ],
-         "from_name" => "Rhombus",
-         "from_email" => User.platform_email
-        }
-        async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
     def charge_failure_notification(options = {})
       begin
         recipient = (options[:to_merchant]) ? options[:to] : User.platform_email
