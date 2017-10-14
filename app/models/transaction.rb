@@ -90,7 +90,7 @@ class Transaction < ActiveRecord::Base
     {
       merchant: team,
       customer: user,
-      amount: amount.to_f,
+      amount: txn_amount,
       transaction_id: txn_number,
       created_at: created_at.strftime('%B %d,%Y | %I:%M%P'),
       status: status,
@@ -99,6 +99,7 @@ class Transaction < ActiveRecord::Base
       exp_year: exp_year,
       description: description,
       taxes_and_fees: amount_with_taxes.to_f,
+      amount_less_fees: txn_amount_less_fees,
       total_amount: amount.to_f + amount_with_taxes.to_f,
       relay_number: team.friendly_relay_number,
       currency: currency,
