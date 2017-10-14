@@ -192,20 +192,20 @@ class StripeEvent
   end
 
   def send_invoice_payment_succeeded_email
-    team = @data.team
-    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(team.time_zone)
+    merchant = @data.customer
+    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(merchant.time_zone)
     options = {
       month: Date::MONTHNAMES[Time.current.month],
       stripe_invoice_id: @data.stripe_invoice_id,
       date: date.strftime('%B %d,%Y | %-I:%M%P'),
       status: 'Invoice payment succeeded',
-      payment_method: "Visa **** **** **** #{team.last4} (Expiry #{team.exp_month}/#{team.exp_year})",
+      payment_method: "Visa **** **** **** #{merchant.last4} (Expiry #{merchant.exp_month}/#{merchant.exp_year})",
       sub_total: @data.subtotal,
       total: @data.total,
       tax_and_fees: (@data.tax.to_f + @data.application_fee.to_f),
       currency: @data.currency,
       currency_symbol: '$',
-      team: team
+      merchant: merchant
     }
     EmailingService.subscription_receipt(options)
   end
