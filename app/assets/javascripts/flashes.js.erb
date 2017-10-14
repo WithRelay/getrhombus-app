@@ -3,26 +3,21 @@
 var FlashHandler = new function() {
   var focused = true, toasters_chime = new Audio("<%= asset_path 'chime_notification_relay.mp3' %>");
 
-  ifvisible.on("blur", function() {
-    focused = false;
-  });
-
-  ifvisible.on("focus", function() {
-    focused = true;
-  });
+  ifvisible.on("blur", function() { focused = false; });
+  ifvisible.on("focus", function() { focused = true; });
 
   // ask for the enable browser notification permission
   this.notificationPermission = function () {
-    if(Notification.permission !== 'granted'){
+    if (Notification.permission !== 'granted') {
       Notification.requestPermission();
-    }
-  }
+    };
+  };
 
   function browserNotification(notification_title, notification_message, notification_icon){
     if (!Notification) {
-      //alert('Desktop notifications not available in your browser. Try Chrome.');
+      FlashHandler.no_native_notification();
       return;
-    }
+    };
 
     if (Notification.permission !== 'granted')
       Notification.requestPermission();
@@ -36,17 +31,17 @@ var FlashHandler = new function() {
         notification.onclick = function () {
           window.focus();
         };
-      }
+      };
 
-      createNotif()
-    }
-  }
+      createNotif();
+    };
+  };
 
   // toast message for error, success, notice, alert
   var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error', 'errors': 'error', 'alert': 'error' };
   this.setFlashMessage = function(msg, type){
     var messageToSet = typeObj[type] || 'Attention';
-    showToastr(messageToSet, arrayToString(msg))
+    showToastr(messageToSet, arrayToString(msg));
     setCloseTimeout(6000, '.toasters');
   };
 
@@ -62,9 +57,9 @@ var FlashHandler = new function() {
       </div>\
     </div>');
     toastrAnimation("." + class_name)
-  }
+  };
 
-  function hideToastr(){
+  function hideToastr() {
     $('.browser-notification-link-block, .toasters').remove();
   }
 
@@ -135,21 +130,22 @@ var FlashHandler = new function() {
     playNotificationChime();
   };
 
-  this.copied_no = function() {
+  this.copied_no = function(message) {
     hideToastr();
     $('body').append(
       '<div class="default toasters">\
         <div class="break-word shrink-text toaster-text word-wrap">\
-          <a href="#" class="toaster-action">Phone number copied to clipboard</a>.\
+          <a href="#" class="toaster-action">' + message + '</a>.\
         </div>\
       </div>'
     )
     setCloseTimeout(5000, '.default.toasters');
-    toastrAnimation('.default.toasters')
+    toastrAnimation('.default.toasters');
     playNotificationChime();
     close_browser_toastr();
-  }
+  };
 
+  /*
   this.schedule_jobs = function(message, no_of_recipient) {
     hideToastr();
     if (focused !== true) {
@@ -170,27 +166,52 @@ var FlashHandler = new function() {
       toastrAnimation('.browser-notification-link-block.scheduled-jobs')
     }
     playNotificationChime();
-  }
+  }*/
+
+  this.schedule_jobs = function(message) {
+    hideToastr();
+    if (focused !== true) {
+      browserNotification('New Campaign sent', message, "<%= asset_path 'Relay-Transparent-500x300.png' %>");
+    } else {
+      $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" \
+                           style="height:auto; min-height: auto; padding-top: 10px; padding-left: 0px;" href="#">\
+                          <div class="scheduled-jobs-notification-description">' + message + '</div>\
+                        </a>');
+      setCloseTimeout(5000, '.browser-notification-link-block');
+      toastrAnimation('.browser-notification-link-block.scheduled-jobs');
+    }
+    playNotificationChime();
+  };
+
+  this.no_native_notification = function(message) {  
+    $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" \
+                         style="height:auto; min-height: auto; padding-top: 10px; padding-left: 0px;" href="#">\
+                        <div class="scheduled-jobs-notification-description">' + 'Desktop notifications not available in your browser. Try Chrome.' + '</div>\
+                      </a>');
+    setCloseTimeout(10000, '.browser-notification-link-block');
+    toastrAnimation('.browser-notification-link-block.scheduled-jobs');
+    playNotificationChime();
+  };
 
   function toastrAnimation(class_name) {
-    class_name = class_name.split(' ').join('.')
+    class_name = class_name.split(' ').join('.');
     $(class_name).animate({
       bottom: 20
-    }, 1000)
-  }
+    }, 1000);
+  };
 
   function setCloseTimeout(time, selector) {
     setTimeout(function() {
-      closeToastrAnimation(selector)
+      closeToastrAnimation(selector);
     }, time);
-  }
+  };
 
   function close_browser_toastr() {
     $('.browser-notification-close').on('click', function (e) {
       e.preventDefault();
-      closeToastrAnimation('.browser-notification-link-block', 'slow')
+      closeToastrAnimation('.browser-notification-link-block', 'slow');
     });
-  }
+  };
 
   function closeToastrAnimation(class_name) {
     $(class_name).animate({bottom: -500}, 2000);
@@ -229,10 +250,10 @@ var FlashHandler = new function() {
   function arrayToString(value){
     if ($.isArray(value)) {
       messageString = ''
-      $.each(value, function(index, value){ messageString += value + "<br>"; })
+      $.each(value, function(index, value){ messageString += value + "<br>"; });
       return messageString;
     } else {
       return value;
-    }
+    };
   };
 }

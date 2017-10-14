@@ -277,7 +277,7 @@ class MessageParser
           res = handle_subscription_through_text
           if res.first 
             send_subscription_responses 
-            publish_message
+            publish_notification
           else
             send_response(res.second || subscription_error_text)
           end
@@ -287,7 +287,7 @@ class MessageParser
         if @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, true).first
           @received_msg.update_column(:transaction_id, @new_txn.id)
           send_payment_responses
-          publish_message
+          publish_notification
           send_relay_tips
         end
       end
@@ -412,9 +412,8 @@ class MessageParser
     true
   end
 
-  def publish_message
-    RealtimeStreamService.notifications({ type: 'new_payment',
-                                          customer_name: "#{@customer.full_name}",
+  def publish_notification
+    RealtimeStreamService.notifications({ type: 'new_payment', customer_name: "#{@customer.full_name}",
                                           profile_pic: User.profile_url_only(@customer), 
                                           amount: "$#{Toolbox::Decimal.cents_to_int_or_2dp(@amt_ary[0])}" },
                                           @merchant.id)

@@ -20,7 +20,7 @@ class RealtimeStreamService
       
         alert_obj = conversation.merchant.alert
         if alert_obj.try(:send_alert)
-          options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %l:%M%P"), 
+          options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %-I:%M%P"), 
                       message: msg.text, sender_profile_url: profile_pic, customer_name: customer_name }          
 
           # email alerts

@@ -49,20 +49,32 @@ module ChannelCampaign
 
     # updates campaign details after sending campaign success.
     def update_campaign(channel, update_campaign = true)
+      count, scheduled_for = 0, @campaign.next_send_at
+
       # sent count is needed in campaigns so it can be used to update campaign recipients
       if update_campaign
         @campaign.increment(:sent_count) 
         @campaign.status = 3 if @campaign.one_time?
         @campaign.next_send_at += @campaign.repeat_days.days if @campaign.recurring?
         @campaign.save(validate: false)
-      end
-
+      end      
+    
       # relationally campaigns can have more lists...but not in practice
       list_id = @campaign.lists.first.id
       @recipients.each do |r|
+        count += 1
         CampaignRecipient.find_or_create_by({ campaign_id: @campaign.id, sent_count: @campaign.sent_count, list_id: list_id,
                                               customer_contact_type: r.class.to_s, customer_contact_id: r.id, channel: channel }) 
       end
+
+      publish_notification(count, scheduled_for)
+    end
+
+    def publish_notification(count, scheduled_for)
+      sent_at = Time.now.in_time_zone(@campaign.user.time_zone).strftime("%-I:%M%P")
+      scheduled_for = " #{scheduled_for.try(:in_time_zone, @campaign.user.time_zone).try(:strftime, '%-I:%M%P')}" 
+      msg = "Your" + scheduled_for + " campaign was sent to #{count} recipients at #{sent_at}."
+      RealtimeStreamService.notifications({ type: 'campaign_sent', message: msg }, @campaign.user_id)
     end
 
   end

@@ -18,7 +18,7 @@
             <%= f.hidden_field :id %>
             <input class="cb checkboxes table-checkbox w-checkbox-input hashtag-check-box" id="reminder_id_<%= reminder.id %>" type="checkbox"
                    data-recipient="<%= name_and_number[:recipient].to_json %>"
-                   data-date-time="<%= reminder.date_time.strftime("%Y-%m-%d %l:%M %p") %>"
+                   data-date-time="<%= reminder.date_time.strftime("%Y-%m-%d %-I:%M %p") %>"
                    data-text="<%= reminder.text %>"
                    data-channel="<%= Reminder.channels[reminder.channel] %>"
                    data-frequency="<%= Reminder.frequency_types[reminder.frequency_type] %>"

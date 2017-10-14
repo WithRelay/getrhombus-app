@@ -73,7 +73,7 @@ $(document).ready(function () {
   var clipboard = new Clipboard('#rhombus-number');
   $(document).on("click", "#rhombus-number", function(e) {
     e.preventDefault();
-    FlashHandler.copied_no();
+    FlashHandler.copied_no('Phone number copied to clipboard');
   });
 
 });

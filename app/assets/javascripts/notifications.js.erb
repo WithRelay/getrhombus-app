@@ -11,7 +11,6 @@ setTimeout(function retry() {
 }, delay);
 
 $(document).ready(function() {
-
   // subcribe to notifications channel
   function subscribe_to_notifications() {
     var merchant_data = UserDetails.object();
@@ -28,7 +27,7 @@ $(document).ready(function() {
         message: function(data) {
           process_notification(data.message);
         }
-      })      
+      });
 
       // Subscribe to merchant channel
       pubnub.subscribe({
@@ -38,18 +37,24 @@ $(document).ready(function() {
   };
 
   subscribe_to_notifications();
-
-  // type: campaign_sent, new_payment, new_message_sms, new_message_messenger
+    
   function process_notification(data) {
-    console.log(data);
     if (data.type == 'campaign_sent') {
-      FlashHandler.schedule_jobs('all sent', 2000)
+      FlashHandler.schedule_jobs(data.message);
     } else if (data.type == 'new_payment') {
-      FlashHandler.payment_notification(data.profile_pic, data.amount, data.customer_name)
+      FlashHandler.payment_notification(data.profile_pic, data.amount, data.customer_name);
+      $('#new-transaction-notification')
     } else if (data.type == 'new_message_sms') {
-      FlashHandler.incoming_sms(data.profile_pic, data.customer_name, data.message)
+      FlashHandler.incoming_sms(data.profile_pic, data.customer_name, data.message);
+      $('#unread-message-notification')
     } else if (data.type == 'new_message_messenger') {
-      FlashHandler.incoming_facebook_message(data.profile_pic, data.customer_name, data.message)
+      FlashHandler.incoming_facebook_message(data.profile_pic, data.customer_name, data.message);
+      $('#unread-message-notification')
+    };
+
+    if (data.type != "campaign_sent") {
+      $(".notification-counter").text(parseInt($(".notification-counter").text().trim()) + 1);
     };
   };
+
 });

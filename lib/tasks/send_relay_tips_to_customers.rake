@@ -12,7 +12,7 @@ task :send_relay_tips => :environment do
           uid = customer.id
           uid_type = 'user'
         else
-          uid = nil
+          uid = customer.phone_number
           uid_type = 'phone_number'
         end
 
@@ -24,8 +24,7 @@ task :send_relay_tips => :environment do
 
   
   # exclude platform for now
-  sql = "SELECT messages.from, messages.user_id_to
-          FROM messages
+  sql = "SELECT messages.from, messages.user_id_to FROM messages
           INNER JOIN users ON users.id = messages.user_id_to
           where users.user_level = 1 and users.id != 1
           group by messages.from"
