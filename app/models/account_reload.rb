@@ -29,6 +29,7 @@ class AccountReload < ActiveRecord::Base
     else
       if re.fourth
         # send email about card issue
+        EmailingService.auto_reload_failure(user)
         puts 'card issue email here'
       end
     end
