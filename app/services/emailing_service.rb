@@ -749,8 +749,8 @@ class EmailingService
         template_name = 'subscription-receipt-template'
         template_content = []
         message = { "subject" => "Thank you for using Relay!",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:first_name] || 'there' },
-                                  { "name" => "year", "content" => Time.current.year },
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:team].first_name || 'there' },
+                                  { "name" => "month", "content" => options[:month] },
                                   { "name" => "invoice_id", "content" => options[:stripe_invoice_id] },
                                   { "name" => "receipt_date", "content" => options[:date] },#February 23, 2017 | 1:30pm
                                   { "name" => "status", "content" => options[:status] },
@@ -761,13 +761,13 @@ class EmailingService
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   # { "name" => "pdf_download_link", "content" => url_helpers.root_url },
-                                  { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:user]) },
+                                  { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:team]) },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_link", "content" => EMAIL_US_LINK },
-                                  { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:user]) }
+                                  { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:team]) }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
+         "to"=> [ { "email" => options[:team].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]

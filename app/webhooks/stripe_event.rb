@@ -45,7 +45,7 @@ class StripeEvent
       plan_name: subscription.plan_name,
       currency: subscription.plan_currency,
       currency_symbol: '$',
-      cancellation_date: cancelled_at.strftime('%B %d,%Y | %I:%M%P'),
+      cancellation_date: cancelled_at.strftime('%B %d,%Y | %-I:%M%P'),
       amount: subscription.txn_amount
     }
   end
@@ -184,10 +184,30 @@ class StripeEvent
             @data.update(transaction_id: txn.id, subscription_id: sbtn.id)
             # Notify customer (could be merchant)
             #EmailingService.invoice_payment_succeeded(@merchant_customer.customer)
+            send_invoice_payment_succeeded_email if @data.team.is_platform?
           end
         end
       end
     end
+  end
+
+  def send_invoice_payment_succeeded_email
+    team = @data.team
+    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(team.time_zone)
+    options = {
+      month: Date::MONTHNAMES[Time.current.month],
+      stripe_invoice_id: @data.stripe_invoice_id,
+      date: date.strftime('%B %d,%Y | %-I:%M%P'),
+      status: 'Invoice payment succeeded',
+      payment_method: "Visa **** **** **** #{team.last4} (Expiry #{team.exp_month}/#{team.exp_year})",
+      sub_total: @data.subtotal,
+      total: @data.total,
+      tax_and_fees: (@data.tax.to_f + @data.application_fee.to_f),
+      currency: @data.currency,
+      currency_symbol: '$',
+      team: team
+    }
+    EmailingService.subscription_receipt(options)
   end
 
   def invoice_payment_failed
@@ -203,7 +223,7 @@ class StripeEvent
       currency: @data.currency,
       currency_symbol: '$',
       frequency: @data.subscription.plan_interval,
-      failed_date: date.strftime('%B %d,%Y | %I:%M%P'),
+      failed_date: date.strftime('%B %d,%Y | %-I:%M%P'),
       amount: @data.total
     }
     EmailingService.subscription_failed(options)
