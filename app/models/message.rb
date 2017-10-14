@@ -60,4 +60,12 @@ class Message < ActiveRecord::Base
     end
   end
 
+  def self.relay_tip1
+    "Relay tips: We've improved your payment experience with Relay by replacing the $ sign with a + tag. You can now text +10 instead of $10 to make a payment to a local business or non-profit."
+  end
+
+  def self.relay_tip2
+    'Relay tips: With the + tag, you can now place the amount anywhere in the message. Ex. "pizza & broccoli +8 yay!" instead of "$8 pizza & broccoli'
+  end
+
 end

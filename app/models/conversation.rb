@@ -143,7 +143,7 @@ class Conversation < ActiveRecord::Base
   # when receiving
   def self.find_or_create_conversation_for_message_and_publish(team, customer, uid_type, uid, msg_instance, unread)
     re = find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread, 'customer')
-    RealtimeStreamService.messages(re[0], re[1], customer, msg_instance, true)
+    RealtimeStreamService.messages(re[0], re[1], customer, msg_instance)
   end
 
   # find or create conversation and attach new message

@@ -288,6 +288,7 @@ class MessageParser
           @received_msg.update_column(:transaction_id, @new_txn.id)
           send_payment_responses
           publish_message
+          send_relay_tips
         end
       end
     end
@@ -297,6 +298,10 @@ class MessageParser
 
   def subscription_error_text
     "Hi#{get_first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
+  end
+
+  def send_relay_tips
+    RelayTipsJob.set(wait: 15.minutes).perform_later(@customer, @merchant) if @customer.customer_transactions.count == 1
   end
 
   def get_tag_images; @tag.images end

@@ -3,51 +3,47 @@ class RealtimeStreamService
   class << self
 
     # might need to redo how conv_ref is sent
-    # Sends a message to the given merchant's channel, provided user and merchant numbers
-    def messages(conversation, conv_ref, customer, msg, send_alert = false)
-
+    def messages(conversation, conv_ref, customer, msg)
       merchant_id = conversation.merchant_id.to_s
-      customer_name = customer.present? ? customer.full_name : ((conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from)
-      profile_pic = User.profile_url_only(customer)
-
-      if send_alert && $redis_merchant_status.get(merchant_id) != 'online'
-        alert_obj = conversation.merchant.alert
-        if alert_obj.try(:send_alert)
-          options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %l:%M%P"), 
-                      message: msg.text, sender_profile_url: profile_pic, customer_name: customer_name }          
-
-          # email alerts
-          options[:sender_email] = customer.try(:email) || ""
-          to = alert_obj.emails.map { |e| { "email" => e } }
-          EmailingService.unread_message_notification(to, options)
-
-          # sms alerts
-          to = alert_obj.sms_numbers
-          if alert_obj.include_sms && to.present?
-            team = User.get_platform_acct_obj
-            msg_to_send = "You have a new unread message from #{options[:sender_name]} on your #{Rails.application.secrets.app['name']} dashboard."
-            to.each do |pn|
-              pn = pn.gsub('+', '')
-              customer = User.find_by(phone_number: pn)
-              uid_type = customer ? 'user' : 'phone_number'
-              uid = customer.try(:id) || pn
-              Conversation.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send)          
-            end
-          end
-        end
-      end
-
-      # will not subscribing and publishing cause all the messages to be republish upon subscribe in view???
-      # it will cause duplicate errors in angular
-      # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id)  
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
                       message: { type: 'new-message', conversation: conversation.conversation_hash,
                                  message: Conversation.message_hash(conversation, msg, conv_ref) })
 
       if conv_ref.source == "customer"
+        
+        customer_name = customer.present? ? customer.full_name : ((conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from)
+        profile_pic = User.profile_url_only(customer)
+
         notifications({ profile_pic: profile_pic, customer_name: customer_name, message: msg.text[0..15] + "...",
                         type: conv_ref.textable_type == 'Message' ? 'new_message_sms' : 'new_message_messenger' },
                         merchant_id)
+        
+        if $redis_merchant_status.get(merchant_id) != 'online'
+          alert_obj = conversation.merchant.alert
+          if alert_obj.try(:send_alert)
+            options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %l:%M%P"), 
+                        message: msg.text, sender_profile_url: profile_pic, customer_name: customer_name }          
+
+            # email alerts
+            options[:sender_email] = customer.try(:email) || ""
+            to = alert_obj.emails.map { |e| { "email" => e } }
+            EmailingService.unread_message_notification(to, options)
+
+            # sms alerts
+            to = alert_obj.sms_numbers
+            if alert_obj.include_sms && to.present?
+              team = User.get_platform_acct_obj
+              msg_to_send = "You have a new unread message from #{options[:sender_name]} on your #{Rails.application.secrets.app['name']} dashboard."
+              to.each do |pn|
+                pn = pn.gsub('+', '')
+                customer = User.find_by(phone_number: pn)
+                uid_type = customer ? 'user' : 'phone_number'
+                uid = customer.try(:id) || pn
+                Conversation.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send)          
+              end
+            end
+          end
+        end
       end
 
       #Rails.logger.debug "DEBUG: and we are in RealtimeStreamService messages method"
@@ -73,4 +69,5 @@ class RealtimeStreamService
     end
 
   end
+
 end

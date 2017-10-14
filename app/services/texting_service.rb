@@ -11,6 +11,11 @@ class TextingService
   TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
   TWILIO_RHOMBUS_APP_SID = Rails.application.secrets.twilio["rhombus_app_sid"]
 
+  FIBERNETICS_API_KEY = Rails.application.secrets.fibernetics["key"]
+  FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics["secret"]
+  FIBERNETICS_BASE_URL = "https://smsadmin.fongo.com"
+  FIBERNETICS_PN = "<redacted_phone_number>"
+
   class << self
 
     def send_sms_nexmo(from, to, message, client_ref)
@@ -38,6 +43,37 @@ class TextingService
         data[:media_url] = media_ary if media_ary.present?
         # https://www.twilio.com/docs/api/rest/message
         [true, client.api.messages.create(data)]
+      rescue StandardError => err
+        [false, err]
+      end
+    end
+
+    def get_subscriber
+      begin
+        #from = from[1..-1] if from.chr == "+"
+        #to = to[1..-1] if to.chr == "+"
+
+        # add timeout
+        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", FIBERNETICS_PN] ])
+        puts (FIBERNETICS_BASE_URL + "/GetSubscriber.ashx?" + uri)
+        re = HTTParty.post(FIBERNETICS_BASE_URL + "/GetSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+        #[true, ]
+        puts re.inspect
+        re
+      rescue StandardError => err
+        [false, err]
+      end
+    end
+
+    def create_subscriber
+      begin
+
+        # add timeout
+        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", FIBERNETICS_PN] ])
+        re = HTTParty.post(FIBERNETICS_BASE_URL + "/CreateSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+        #[true, ]
+        puts re.inspect
+        re
       rescue StandardError => err
         [false, err]
       end
