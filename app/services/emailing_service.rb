@@ -712,7 +712,7 @@ class EmailingService
       begin
         template_name = 'new-merchant-customer-subscription'
         template_content = []
-        message = { "subject" => "You have a new #{amount} subscription",
+        message = { "subject" => "You have a new #{options[:amount]} subscription",
          "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant].first_name || 'there' },
                                   { "name" => "customer_name", "content" => options[:customer].first_name || 'there' },
                                   { "name" => "transaction_id", "content" => options[:transaction_id] },
@@ -760,7 +760,7 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "pdf_download_link", "content" => url_helpers.root_url },
+                                  # { "name" => "pdf_download_link", "content" => url_helpers.root_url },
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:user]) },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_link", "content" => EMAIL_US_LINK },

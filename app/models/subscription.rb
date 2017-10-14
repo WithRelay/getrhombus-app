@@ -27,7 +27,7 @@ class Subscription < ActiveRecord::Base
           fee_schedule = cred[:cred].transaction_fee
           hash[:application_fee_percent] = fee_schedule.subscription_percent.to_f.round(2)
         end
-                
+
         if self.coupon_id.present?
           coupon = Coupon.find_by self.coupon_id
           hash[:coupon] = coupon.stripe_coupon_id if coupon
@@ -73,6 +73,7 @@ class Subscription < ActiveRecord::Base
             created: res.second.created,
             start: res.second.start
           )
+          send_new_merchant_customer_subscription_email
         else
           ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "From create_subscription in stripe"})
           # in case something went wrong after we created a subscription
@@ -89,6 +90,25 @@ class Subscription < ActiveRecord::Base
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
       [false]
     end
+  end
+
+  def send_new_merchant_customer_subscription_email
+    date = DateTime.strptime(start.to_s, '%s').in_time_zone(merchant.time_zone)
+    options = {
+      merchant: merchant,
+      customer: customer,
+      transaction_id: transaction_fee_id,
+      plan_name: plan_name,
+      frequency: plan_interval,
+      transaction_date: date.strftime('%B %d,%Y | %I:%M%P'),
+      payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{customer.exp_month}/#{customer.exp_year})",
+      description: description,
+      currency: plan_currency,
+      less_transaction_fees: txn_amount,
+      amount: total_amount,
+      currency_symbol: '$'
+    }
+    EmailingService.new_merchant_customer_subscription(options)
   end
 
   def cancel_subscription(team, at_period_end = false)
@@ -143,9 +163,9 @@ class Subscription < ActiveRecord::Base
   def get_fees
     sbtn_merchant = merchant
     fees = get_fees_schedule(sbtn_merchant)
-    { 
-      stripe_fee: ((total_amount * (fees[0]/100)) + fees[1]).round, 
-      app_fee: sbtn_merchant.is_platform? ? 0 : (total_amount * (fees[2]/100)).round 
+    {
+      stripe_fee: ((total_amount * (fees[0]/100)) + fees[1]).round,
+      app_fee: sbtn_merchant.is_platform? ? 0 : (total_amount * (fees[2]/100)).round
     }
   end
 
