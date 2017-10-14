@@ -100,7 +100,7 @@ class Subscription < ActiveRecord::Base
       transaction_id: transaction_fee_id,
       plan_name: plan_name,
       frequency: plan_interval,
-      transaction_date: date.strftime('%B %d,%Y | %I:%M%P'),
+      transaction_date: date.strftime('%B %d,%Y | %-I:%M%P'),
       payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{customer.exp_month}/#{customer.exp_year})",
       description: description,
       currency: plan_currency,

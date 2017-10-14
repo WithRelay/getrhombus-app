@@ -92,7 +92,7 @@ class Transaction < ActiveRecord::Base
       customer: user,
       amount: txn_amount,
       transaction_id: txn_number,
-      created_at: created_at.strftime('%B %d,%Y | %I:%M%P'),
+      created_at: created_at.strftime('%B %d,%Y | %-I:%M%P'),
       status: status,
       last4: last4,
       exp_month: exp_month,
