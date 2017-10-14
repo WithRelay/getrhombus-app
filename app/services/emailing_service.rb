@@ -586,7 +586,7 @@ class EmailingService
         template_name = 'refund-processed'
         template_content = []
         message = { "subject" => "Refund Processed",
-         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] },
+         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] || 'there' },
                                   { "name" => "merchant_business_name", "content" => options[:merchant_business_name] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "date", "content" => options[:date] },
@@ -598,7 +598,7 @@ class EmailingService
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:user]) }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
+         "to"=> [ { "email" => options[:user].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
