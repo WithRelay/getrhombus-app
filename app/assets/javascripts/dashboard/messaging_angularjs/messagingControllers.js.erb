@@ -796,7 +796,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // Get logged in merchant id
     $scope.merchant = $('#user-details').data('user-info');
     if (Object.keys($scope.merchant).length) {
-      console.log($scope.merchant)
       // Initialize PubNub with SSL
       Pubnub.init({
         publishKey: $scope.merchant.pubnub_publish_key,
@@ -806,21 +805,17 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
       // get initial conversations
       $scope.loadConversations(true);
-      $scope.getMerchantLists();   
-      console.log("Hello! I am active!!");
+      $scope.getMerchantLists();
 
       ifvisible.on("blur", function() {
-        console.log("Hello! I am inactive!!");
         $scope.update_merchant_status('offline');
       });
 
       ifvisible.on("focus", function() {
-        console.log("Hello! I am active!!");
         $scope.update_merchant_status('online');
       });
 
       ifvisible.onEvery(20, function() {
-        console.log("Hello! I am active!!");
         $scope.update_merchant_status('online');
       });
     };

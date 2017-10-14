@@ -61,6 +61,10 @@ var UtilFunctions = new function() {
     return amt;
   };
 
+  this.is_conversation_page = function() {
+    return window.location.pathname.indexOf('conversation') > -1;
+  };
+
 };
 
 

@@ -4,7 +4,7 @@ class EmailingService
 
   # Note there are a number of global settings for these emails in the mandrill account
   FROM_EMAIL = { edwin: '<redacted_email>', taiwo: '<redacted_email>' }
-  CALENDLY_LINK = 'https://calendly.com/relay/30min/01-23-2017?back=1'
+  CALENDLY_LINK = Rails.application.secrets.calendly
   EMAIL_US_LINK = "mailto:#{Rails.application.secrets.team_email}"
 
   class << self

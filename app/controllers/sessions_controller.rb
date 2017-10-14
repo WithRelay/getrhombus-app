@@ -12,4 +12,6 @@ class SessionsController < Devise::SessionsController
     super
   end
 
+  def set_merchant_status
+  end
 end

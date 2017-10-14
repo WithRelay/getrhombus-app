@@ -3,8 +3,6 @@ class Api::V1::ConversationsController < Api::V1::BaseController
   before_action :check_user
 
 	def index
-    $redis_merchant_status.set(current_user.id.to_s, 'online') 
-
     if params[:select_conversation].present?
       conv = JSON.parse(params[:select_conversation]) 
       if conv['uid'].present? && conv['uid_type'].present?
