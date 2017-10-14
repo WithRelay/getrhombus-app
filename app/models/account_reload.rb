@@ -27,11 +27,7 @@ class AccountReload < ActiveRecord::Base
       }
       EmailingService.sms_credit_receipt(options)
     else
-      if re.fourth
-        # send email about card issue
-        EmailingService.auto_reload_failure(user)
-        puts 'card issue email here'
-      end
+      EmailingService.auto_reload_failure(user)
     end
 
     re
