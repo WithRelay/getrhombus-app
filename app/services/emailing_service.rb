@@ -589,7 +589,7 @@ class EmailingService
          "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] || 'there' },
                                   { "name" => "merchant_business_name", "content" => options[:merchant_business_name] },
                                   { "name" => "currency", "content" => options[:currency] },
-                                  { "name" => "date", "content" => options[:date] },
+                                  { "name" => "refund_date", "content" => options[:date] },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
@@ -616,22 +616,21 @@ class EmailingService
         template_name = 'subscription-failed'
         template_content = []
         message = { "subject" => "Subscription Failed",
-         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] },
+         "global_merge_vars"=> [  { "name" => "customer_first_name", "content" => options[:customer].first_name || 'there' },
                                   { "name" => "merchant_business_name", "content" => options[:merchant_business_name] },
                                   { "name" => "plan_name", "content" => options[:plan_name] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "frequency", "content" => options[:frequency] },
-                                  { "name" => "stripe_response", "content" => options[:stripe_response] },
-                                  { "name" => "date", "content" => options[:date] },
+                                  { "name" => "failed_date", "content" => options[:failed_date] },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
-                                  { "name" => "dashboard_link", "content" => url_helpers.user_url(options[:user]) },
-                                  { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:user]) }
+                                  { "name" => "dashboard_link", "content" => url_helpers.user_url(options[:customer]) },
+                                  { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:customer]) }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
+         "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -753,7 +752,7 @@ class EmailingService
          "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:first_name] || 'there' },
                                   { "name" => "year", "content" => Time.current.year },
                                   { "name" => "invoice_id", "content" => options[:stripe_invoice_id] },
-                                  { "name" => "date", "content" => options[:date] },#February 23, 2017 | 1:30pm
+                                  { "name" => "receipt_date", "content" => options[:date] },#February 23, 2017 | 1:30pm
                                   { "name" => "status", "content" => options[:status] },
                                   { "name" => "payment_method", "content" => options[:payment_method] },
                                   { "name" => "amount", "content" => options[:sub_total] },
@@ -1058,28 +1057,28 @@ class EmailingService
       end
     end
 
-    def invoice_payment_failed(customer, merchant)
-      begin
-        template_name = 'invoice-payment-failed'
-        template_content = []
-        message = { 'subject' => 'Invoice Payment Failed',
-          'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' },
-            { 'name' => 'id', 'content' => invoice.id },
-            { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
-          ],
-          'merge_language' => 'handlebars',
-          'to'=> [ { 'email' => customer.email } ],
-          "bcc_address"=> merchant.email,
-          'from_name' => 'Edwin from Relay',
-          'from_email' => FROM_EMAIL[:edwin]
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
+    # def invoice_payment_failed(customer, merchant)
+    #   begin
+    #     template_name = 'invoice-payment-failed'
+    #     template_content = []
+    #     message = { 'subject' => 'Invoice Payment Failed',
+    #       'global_merge_vars'=> [ { 'name' => 'first_name', 'content' => customer.first_name || 'there' },
+    #                               { 'name' => 'id', 'content' => invoice.id },
+    #                               { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
+    #                             ],
+    #       'merge_language' => 'handlebars',
+    #       'to'=> [ { 'email' => customer.email } ],
+    #       "bcc_address"=> merchant.email,
+    #       'from_name' => 'Edwin from Relay',
+    #       'from_email' => FROM_EMAIL[:edwin]
+    #     }
+    #     async = true
+    #     result = MANDRILL.messages.send_template template_name, template_content, message, async
+    #   rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+    #     puts "A mandrill error occurred: #{e.class} - #{e.message}"
+    #   rescue StandardError => e
+    #   end
+    # end
 
     def invoice_payment_succeeded(customer)
       begin

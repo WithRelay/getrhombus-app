@@ -39,7 +39,7 @@ class StripeEvent
   def cancelled_subscription_options(subscription)
     merchant = subscription.merchant
     cancelled_at =  DateTime.strptime(subscription.canceled_at.to_s, '%s').in_time_zone(merchant.time_zone)
-    { 
+    {
       merchant: merchant,
       customer: subscription.customer,
       plan_name: subscription.plan_name,
@@ -195,7 +195,18 @@ class StripeEvent
     @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
     setup_invoice_data
     # notify customer
-    EmailingService.invoice_payment_failed(@merchant_customer.customer, @merchant_customer.merchant) if @merchant_customer
+    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(@data.team.time_zone)
+    options = {
+      customer: @data.customer,
+      merchant_business_name: @data.team.org_name,
+      plan_name: @data.subscription.plan_name,
+      currency: @data.currency,
+      currency_symbol: '$',
+      frequency: @data.subscription.plan_interval,
+      failed_date: date.strftime('%B %d,%Y | %I:%M%P'),
+      amount: @data.total
+    }
+    EmailingService.subscription_failed(options)
   end
 
   # customer_source_updated webhook will fire if your customers’ info/customer's card info changes
