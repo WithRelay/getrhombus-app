@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171007132336) do
+ActiveRecord::Schema.define(version: 20171015230009) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -51,9 +51,10 @@ ActiveRecord::Schema.define(version: 20171007132336) do
   add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
 
   create_table "api_creds", force: :cascade do |t|
-    t.string  "key",     limit: 191
-    t.string  "secret",  limit: 191
-    t.integer "user_id", limit: 4
+    t.string  "key",         limit: 191
+    t.string  "secret",      limit: 191
+    t.integer "user_id",     limit: 4
+    t.string  "webhook_url", limit: 191
   end
 
   add_index "api_creds", ["key", "secret"], name: "index_api_creds_on_key_and_secret", using: :btree
@@ -575,6 +576,7 @@ ActiveRecord::Schema.define(version: 20171007132336) do
     t.string   "business_name",  limit: 191
   end
 
+  add_index "people", ["stripe_file_id"], name: "index_people_on_stripe_file_id", using: :btree
   add_index "people", ["user_id"], name: "index_people_on_user_id", using: :btree
 
   create_table "plans", force: :cascade do |t|
