@@ -391,7 +391,7 @@ class MessageParser
                                  .where("subscriptions.merchant_customer_id = ? and plans.hashtag_id = ?", @merchant_customer.id, @tag.id)
                                  .where("subscriptions.status = ?", 'active')
                                  .count
-    return true if customer_plans == 0
+    return true #if customer_plans == 0
     send_response("Hi#{get_first_name}, you already have an active subscription to #{@tag.tag}.")
     false
   end

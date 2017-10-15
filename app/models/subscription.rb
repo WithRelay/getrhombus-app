@@ -158,14 +158,12 @@ class Subscription < ActiveRecord::Base
     "Subscription payment to #{merchant_email}. #{org_name}. Rhombus number: #{rhombus_number}"
   end
 
-  # we charge only a percent... and is it on the total amount? or no tax... stripe dont add tax
-  ### should we charge on total?? or how does stripe charge then?
   def get_fees
-    sbtn_merchant = merchant
-    fees = get_fees_schedule(sbtn_merchant)
+    #sbtn_merchant = merchant
+    fees = get_fees_schedule(merchant)
     {
-      stripe_fee: ((total_amount * (fees[0]/100)) + fees[1]).round,
-      app_fee: sbtn_merchant.is_platform? ? 0 : (total_amount * (fees[2]/100)).round
+      stripe_fee: ((amount_with_taxes * (fees[0]/100)) + fees[1]).round,
+      #app_fee: sbtn_merchant.is_platform? ? 0 : (amount_with_taxes * (fees[2]/100)).round
     }
   end
 

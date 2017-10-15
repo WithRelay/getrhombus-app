@@ -38,7 +38,7 @@ class StripeEvent
 
   def cancelled_subscription_options(subscription)
     merchant = subscription.merchant
-    cancelled_at =  DateTime.strptime(subscription.canceled_at.to_s, '%s').in_time_zone(merchant.time_zone)
+    cancelled_at = DateTime.strptime(subscription.canceled_at.to_s, '%s').in_time_zone(merchant.time_zone)
     {
       merchant: merchant,
       customer: subscription.customer,
@@ -134,14 +134,13 @@ class StripeEvent
 
   # Handles connect and platform payments. Parameters are basically the same. So nothing special.
   def invoice_payment_succeeded
-    # Invoice should already exist but if it doesn't, create a new one
+    # stripe doesnt guarantee invoice event order
     @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
     setup_invoice_data
     team = @merchant_customer.try(:merchant)
 
     if team
-      # retrieve charge details
-      # test that charge is true
+      # retrieve charge details. test that charge exist. it doesnt exist for trialing subs
       charge = PaymentService.retrieve_charge(@hash[:charge], team) if @hash[:charge]
       charge = charge.try(:first)
 
@@ -151,27 +150,18 @@ class StripeEvent
       # for now, we have only one line for each invoice - the subscription
       @hash[:lines][:data].each do |l|
         if l[:type] == 'subscription'
-          # find subscription
+
           sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
-
-          # update subscription_id
           if sbtn && txn
-            sbtn_fees = sbtn.get_fees
-            app_fee = txn.app_fee.present? ? txn.app_fee : sbtn_fees[:app_fee]
-            stripe_fee = txn.stripe_fee.present? ? txn.stripe_fee : sbtn_fees[:stripe_fee]
-            description = txn.description.present? ? txn.description : sbtn.description
-
-            # team@ should handle all transactions going forward
-            # dashboard@ is only admin controls
-
             txn.update(
               amount: txn.amt_in_decimal(l[:amount]),
-              app_fee: app_fee, stripe_fee: stripe_fee,
+              app_fee: @hash[:application_fee], stripe_fee: sbtn.get_fees[:stripe_fee],
               amount_with_taxes: txn.amt_in_decimal(@hash[:total]),
               txn_number: txn.txn_number || txn.generate_txn_number,
-              description: description,
+              description: txn.description.present? ? txn.description : sbtn.description,
               team_id: @data.team_id, user_id: @data.customer_id,
               hashtag_id: sbtn.plan.hashtag_id, txn_available_at: @hash[:date],
+              transaction_fee_id: sbtn.transaction_fee_id,
               tax_percent: @hash[:tax_percent],
               # At the moment, charge will only contain 1 line item, what if there are a couple line items?
               txn_uri: charge.id, currency: charge.currency,
