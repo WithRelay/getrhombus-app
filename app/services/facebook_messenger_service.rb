@@ -4,7 +4,11 @@ class FacebookMessengerService
 
     # for messenger_account_linking
     def send_auth_link(page_access_token, recipient_id, welcome_text)
-      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "https://5c547308.ngrok.io/link_facebook"
+      # link_url = "https://5c547308.ngrok.io/link_facebook"
+      link_url = "#{Rails.application.secrets.app['url']}/link_facebook"
+      image_path = ActionController::Base.helpers.image_path("relay-6.png")
+      image_path = default_path[1..-1] if image_path[0] == "/"
+
       body = {
         recipient:{
           id: recipient_id
@@ -16,7 +20,7 @@ class FacebookMessengerService
               template_type: "generic",
               elements: [{
                 title: welcome_text,
-                image_url: "https://www.getrhombus.com/assets/imgo-252069578bf9441f8f0cf59bc8660170.jpg",
+                image_url: Rails.application.routes.url_helpers.root_url + image_path,
                 buttons: [{
                   type: "account_link",
                   url: link_url
@@ -43,7 +47,7 @@ class FacebookMessengerService
 
     def get_page_response(account_linking_token)
       subscribed_pages = FbPage.subscribed
-      subscribed_pages.each do | subscribed_page|
+      subscribed_pages.each do |subscribed_page|
         token = subscribed_page[:page_access_token]
         response = get_page_scope_id(account_linking_token, token)
         if response['recipient'].present?

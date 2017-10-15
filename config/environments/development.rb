@@ -16,7 +16,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: 'smtp.mandrillapp.com',
     authentication: :plain,
-    domain: 'getrhombus.com',
+    domain: 'withrelay.com',
     enable_starttls_auto: true,
     password: '<redacted_password>',
     port: '587',

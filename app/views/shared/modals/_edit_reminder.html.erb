@@ -25,14 +25,16 @@
       <div class="char-count notications" id= "textBoxCounter1" ></div>
       <%= f.text_field :date_time, class: 'daterange delivery-date-time-picker text-field w-input', id:'reminder-date-time' %>
 
-      <div class="notification-frequency radio-button w-radio">
-        <%= f.radio_button :frequency_type, 0, class: 'w-radio-input editReminderFrequency', id: 'edit_reminder_frequency_type_0' %>
-        <label class="w-form-label" for="Notification Frequency">Send once</label>
-      </div>
+      <div class="flex">
+        <div class="notification-frequency radio-button w-radio">
+          <%= f.radio_button :frequency_type, 0, class: 'w-radio-input editReminderFrequency', id: 'edit_reminder_frequency_type_0' %>
+          <label class="w-form-label" for="Notification Frequency">Send once</label>
+        </div>
 
-      <div class="notification-frequency radio-button repeat w-radio">
-        <%= f.radio_button :frequency_type, 1, class: 'w-radio-input editReminderFrequency', id: 'edit_reminder_frequency_type_1' %>
-        <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
+        <div class="notification-frequency radio-button repeat w-radio">
+          <%= f.radio_button :frequency_type, 1, class: 'w-radio-input editReminderFrequency', id: 'edit_reminder_frequency_type_1' %>
+          <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
+        </div>
       </div>
 
       <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, class: "dropdown frequency-dropdown w-select", id: 'editReminderRepeatDays' %>

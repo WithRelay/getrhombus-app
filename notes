@@ -1,26 +1,34 @@
-current stripe api version - 2014-03-28
-https://www.getrhombus.com/receive_delivery_report
-
-
 Bhishma
-- Plans/Subscriptions
-	- Add logic for switching plans/subscriptions
-	- Subscription can be updated...but coupon only
-	- when subscription cancels, release rhombus number, wipe rhombus number, rn_type and delete facebook integration....set user is_active attribute to false
 - Messenger - don't touch this yet until we talk
-	- has_one :fb_cred??? - highlighted
-	- using page_id alone can cause problems... - highlighted
-	- review - fb_cred.rb #link facebook page specific user to Merchant
-	- review - FbCred  page_access_token = (FbPage.find page_id)['page_access_token']
-	- review fb_page.rb where(page_id: page["id"]).first_or_initialize.tap do |row|
-	- review facebook_event.rb current_page = FbPage.find_by_page_id params['id']   in 2 places
-	- review facebook_messenger _service           fb_user = FbCred.find_by_page_specific_id psid
-	- review FbCred.find_by_page_specific_id in facebook_event
-	- review remove_integration
-	- when switching managed page, add that any messenger campaign will now use this page
+- has_one :fb_cred??? - highlighted
+- using page_id alone can cause problems... - highlighted
+- review - fb_cred.rb #link facebook page specific user to Merchant
+- review - FbCred  page_access_token = (FbPage.find page_id)['page_access_token']
+- review fb_page.rb where(page_id: page["id"]).first_or_initialize.tap do |row|
+- review facebook_event.rb current_page = FbPage.find_by_page_id params['id']   in 2 places  - cant track
+- review facebook_messenger _service           fb_user = FbCred.find_by_page_specific_id psid - cant track
+- review FbCred.find_by_page_specific_id in facebook_event - cant track
+- review remove_integration - to be tested
+- when switching managed page, add that any messenger campaign will now use this page
+- account linking
+- messenger logic for messaging page
+- signup?num=#{@received_msg.from} ........ elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup
+  - are you still sending that default message on messenger???? what's the message...needs to be unified
+- facebook got connected but got a flash error
+<%= link_to new_user_registration_path(referrer_uid: @referrer, page_specific_id: @psid, value: @params), id: 'signup', class: 'links sign-up-cta-log-in-page', target: '_blank', onClick: 'javascript:window.close()' do %>
+- why is fb message from merchant saving as merchant source
+- hard to follow the code now but are u querying with merchant id (using page_id alone can cause problems)
+- if reverse linking with image url, what if i log into several accounts with same user.
 
-Taiwo (review)
-- final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
+
+
+
+
+
+
+
+
+
 
 
 

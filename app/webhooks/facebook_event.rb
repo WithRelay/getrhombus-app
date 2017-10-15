@@ -88,7 +88,7 @@ class FacebookEvent
     DateTime.strptime(sec,'%s')
   end
 
-  # Add new user from massenger to FbCred table
+  # Add new user from messenger to FbCred table
   def add_page_user(page, new_user_id)
     linked_fb_cred = FbCred.where(page_specific_id: new_user_id).where.not(user_id: nil)[0]
     @fb_cred = linked_fb_cred || FbCred.add_fb_user_from_messenger(page, new_user_id)

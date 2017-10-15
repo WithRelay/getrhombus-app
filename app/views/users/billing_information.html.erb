@@ -1,5 +1,5 @@
 <!-- ========== Css Files ========== -->
-<% provide(:title, 'Rhombus - Payment Info') %>
+<% provide(:title, 'Relay - Payment Info') %>
 <%= render 'shared/return_to_dashboard' %>
 <div class="dashboard-body settings w-clearfix">
   <div class="dash-content-container settings">
@@ -11,7 +11,7 @@
       <%= form_for(current_user, url: user_registration_update_path(current_user), html: { method: :patch, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
 
         <label class="field-headers form-label settings" for="Business-Name">credit card information</label>
-        <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Rhombus account see <%= link_to 'SMS/MMS usage', user_sms_usage_path(current_user), class: 'no-decoration' %>.
+        <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Relay account see <%= link_to 'SMS/MMS usage', user_sms_usage_path(current_user), class: 'no-decoration' %>.
         <br>
         <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
 

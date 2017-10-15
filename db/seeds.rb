@@ -3,17 +3,6 @@
 #---
 # encoding: utf-8
 
-3.times do
-	Transaction.create!(
-		referenced_user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,
-		user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,
-		team_id: 2,
-		description: ["Baggles purchase", 'abcd', 'Pre order'].sample,
-		amount: [ 20, 22, 33 ,40].sample
-	)
-end
-
-#
 # KnowledgeBaseCategory.create(name: 'Getting Started & Setup', image_name: '014_118.png') do |kbc|
 #   KnowledgeBase.create(
 #                 title: 'Create a Relay account for your business',

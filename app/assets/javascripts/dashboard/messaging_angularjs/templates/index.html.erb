@@ -493,16 +493,17 @@
           <input class="daterange delivery-date-time-picker text-field w-input" placeholder="Notification Delivery Date &amp; Time" type="text" ng-model='scheduled_message.date_time'>
 
           <%# removed data attrs, changed name attr and id %>
-          <div class="notification-frequency radio-button w-radio">
-            <input class="w-radio-input newReminderFrequency" type="radio" value="0" name="reminder[frequency_type]" ng-model="scheduled_message.frequency_type">
-            <label class="w-form-label" for="Notification Frequency">Send once</label>
-          </div>
+          <div class="flex">
+            <div class="notification-frequency radio-button w-radio">
+              <input class="w-radio-input newReminderFrequency" type="radio" value="0" name="reminder[frequency_type]" ng-model="scheduled_message.frequency_type">
+              <label class="w-form-label" for="Notification Frequency">Send once</label>
+            </div>
 
-          <div class="notification-frequency radio-button repeat w-radio">
-            <input class="w-radio-input newReminderFrequency" type="radio" value="1" name="reminder[frequency_type]" ng-model='scheduled_message.frequency_type'>
-            <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
+            <div class="notification-frequency radio-button repeat w-radio">
+              <input class="w-radio-input newReminderFrequency" type="radio" value="1" name="reminder[frequency_type]" ng-model='scheduled_message.frequency_type'>
+              <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
+            </div>
           </div>
-
           <%# changed  id %>
           <select class="dropdown frequency-dropdown w-select" id='newReminderRepeatDays' ng-model='scheduled_message.repeat_days'>
             <option value="3">3 days</option>
@@ -513,7 +514,10 @@
             <option value="90">90 days</option>
           </select>
 
-          <a class="button schedule-notification w-button" ng-click='!disable_secondary_btns && createReminder()'>{{ schedule_notification_btn }}</a><a class="button cancel-notification w-button update-close-modals" data-parent='new-reminder-div'>Cancel</a>
+          
+          <a class="button schedule-notification w-button" ng-click='!disable_secondary_btns && createReminder()'>{{ schedule_notification_btn }}</a>
+          <a class="button cancel-notification w-button update-close-modals" data-parent='new-reminder-div'>Cancel</a>
+          
         </form>
       </div>
     </div>
@@ -536,8 +540,8 @@
       <div>
         <form class="w-clearfix" id="email-form-9" name="email-form-9">
           <textarea class="file-description text-area w-input" id="File-Description-2" maxlength="5000" name="File-Description-2" placeholder="Add description (optional)" ng-model="mms_text.text" ng-trim="true"></textarea>
-          <div class="file-sender split-button-wrapper">
-            <a class="message-window-tabs send-button split-button w-button" ng-click="!disable_secondary_btns && !mms_btn_disabled && sendMMS()">{{send_mms_btn}}</a>
+          <div class="file-sender split-button-wrapper" style="margin-right: -19px;">
+            <a class="message-window-tabs send-button split-button w-button" ng-click="!disable_secondary_btns && !mms_btn_disabled && sendMMS()" style="border-radius: 3px;">{{send_mms_btn}}</a>
           </div>
           <%# added update-close-modals and data %>
           <a class="button cancel-send w-button update-close-modals" data-parent='mms-file-preview-div'>Cancel</a>

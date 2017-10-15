@@ -53,7 +53,7 @@
 
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">SYSTEM NOTIFICATIONS</label>
-        <label class="form-label paragraph syste-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Rhombus. These system notifications include:</label>
+        <label class="form-label paragraph syste-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Relay. These system notifications include:</label>
         <div class="form-check-box w-checkbox">
           <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
           <label class="w-form-label" for="checkbox-2">Notify me when a customer sends a payment</label>
@@ -76,7 +76,7 @@
         </div>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Customer-Signup-Auto-Response">welcome greeting</label>
-        <label class="form-label paragraph" for="Customer-Signup-Auto-Response">Set a warm greeting that will go out to your customers the first time they text you on Rhombus. It's one of the easy ways to make a great impression.</label>
+        <label class="form-label paragraph" for="Customer-Signup-Auto-Response">Set a warm greeting that will go out to your customers the first time they text you on Relay. It's one of the easy ways to make a great impression.</label>
         <%= f.text_area :custom_welcome, value: @custom_welcome, class: 'auto-welcome-message-text-area w-input', id: 'Customer-Signup-Auto-Response', placeholder: "Set welcome message" %>
         <div class="form-field-subtext">150</div>
         <%= f.submit 'Save changes', class: 'button save-changes w-button' %>

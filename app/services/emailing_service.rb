@@ -115,53 +115,11 @@ class EmailingService
       end
     end
 
-    def send_welcome_email_with_referral(merchant_email, to, merchant_name, rhombus_number, rhombus_team_number)
-      begin
-        template_name = "welcome-email-with-referral-customers"
-        template_content = []
-        message = { "subject" => "Welcome to Rhombus",
-         "global_merge_vars" => [ { "name" => "rhombus_team_number", "content" => rhombus_team_number },
-                                  { "name" => "rhombus_number", "content" => rhombus_number },
-                                  { "name" => "merchant_name", "content" => merchant_name } ],
-         "merge_language" => "handlebars",
-         "bcc_address"=> User.platform_email,
-         "to"=> [ { "email" => to } ],
-         "from_name" => "Rhombus",
-         "from_email" => User.platform_email
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
-    def send_welcome_email(to, rhombus_team_number, user_type)
-      begin
-        template_name = (user_type == "merchant") ? "welcome-email-merchants" : "welcome-email-customers"
-        template_content = []
-        message = { "subject" => "Welcome to Rhombus",
-         "merge_language" => "handlebars",
-         "global_merge_vars" => [ { "name" => "rhombus_team_number", "content" => rhombus_team_number } ],
-         "to"=> [ { "email" => to } ],
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Rhombus",
-         "from_email" => User.platform_email
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
     def send_receipt(options = {})
       begin
         template_name = 'receipt'
         template_content = []
-        message = { "subject"=>"You sent a payment with Rhombus",
+        message = { "subject"=>"You sent a payment with Relay",
          "global_merge_vars"=> [ { "name" => "merchant_name", "content" => options[:merchant_name] },
                                  { "name" => 'merchant_email', "content" => options[:merchant_email] },
                                  { "name" => "transaction_number", "content" => options[:transaction_number] },
@@ -202,7 +160,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => recipient } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Rhombus",
+         "from_name" => "Relay",
          "from_email" => User.platform_email
         }
         async = true

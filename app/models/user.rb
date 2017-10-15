@@ -246,10 +246,10 @@ class User < ActiveRecord::Base
 
   private
 
-  # Some users sign up with Rhombus numbers
+  # Some users sign up with Relay numbers
   def phone_number_cannot_be_rhombus_number
     if self.phone_number.present? && User.exists?(rhombus_number: self.phone_number)
-      errors.add(:phone_number, "can't be a Rhombus number. Please enter your phone number.")
+      errors.add(:phone_number, "can't be a Relay number. Please enter your phone number.")
     end
   end
 

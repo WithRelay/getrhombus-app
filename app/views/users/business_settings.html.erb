@@ -1,4 +1,4 @@
-<% provide(:title, 'Rhombus - Merchant Profile') %>
+<% provide(:title, 'Relay - Merchant Profile') %>
 <%= render 'shared/return_to_dashboard' %>
 <div class="dashboard-body settings">
   <div class="dash-content-container settings">
@@ -58,7 +58,7 @@
           <%= f.number_field :tax_percent, step: 0.1, min: 0, class: "form-control settings tax text-field w-input", id: 'user_tax_percent', placeholder: "Tax" %>
         </div>
 
-        <label class="form-label other-info paragraph" for="Re-enter-Password">Set the tax rate that will be applied to every transaction made by your customers via Rhombus. The default rate is set at zero.</label>
+        <label class="form-label other-info paragraph" for="Re-enter-Password">Set the tax rate that will be applied to every transaction made by your customers via Relay. The default rate is set at zero.</label>
 
         <%= f.submit "Save changes", id: "ba-submit", class: "button save-changes w-button" %>
         <input type="hidden" name="page_params" value="business_settings">
