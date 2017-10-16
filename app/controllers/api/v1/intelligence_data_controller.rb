@@ -1,32 +1,29 @@
 class Api::V1::IntelligenceDataController < Api::V1::BaseController
     
     def index
-        # Extract querystring from url
         input = params.keys.first
 
-        #TODO: refactor to remove repetitions
-        if is_phone_number?(input)
-            input_i = OpenCnamData.get_opencnam_info_json_for(input)
-            if !input_i.present?
-                OpenCnamService.get_opencnam_info(input)
-                render json: OpenCnamData.get_opencnam_info_json_for(input)
-            else
-                render json: input_i
-            end
+        request_hash = {:phone_number => [{"OpenCnamData" => "get_opencnam_info_json_for"},
+                                          {"OpenCnamService" => "get_opencnam_info"}],
+                        :email => [{"FullContactData" => "get_fullcontact_info_json_for"},
+                                   {"FullContactService" => "get_fullcontact_info"}]}
+
+        current = request_hash[input_type(input)].first
+        model_class = current.keys[0]
+        service_class = current.keys[1]
+
+        data = model_class.constantize.method(current[model_class]).call(input)
+        if data
+            render json: data
         else
-            input_i = FullContactData.get_fullcontact_info_json_for(input)
-            if !input_i.present?
-                FullContactService.get_fullcontact_info(input)
-                render json: FullContactData.get_fullcontact_info_json_for(input)
-            else
-                render json: input_i
-            end
+            render json: service_class.constantize.method(current[service_class]).call(input)
         end
+
     end
 
     private
-        def is_phone_number?(phone_number)
-            true if Float(phone_number) rescue false
+        def input_type(input)
+            :phone_number if Float(phone_number) rescue :email
         end
 
 end
