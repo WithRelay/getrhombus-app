@@ -1,6 +1,6 @@
 
 <div class="dashboard-body settings">
-  <div class="settings-info-div tokens">
+  <div class="settings-info-div tokens" id='api-tokens'>
     <h5 class='account-status-text'>API KEY: <span class="api-key"><%= @api_cred ? @api_cred.key : '-' %></span></h5>
     <h5 class='account-status-text'>API SECRET: <span class="api-secret"><%= @api_cred ? @api_cred.secret : '-' %></span></h5>
   </div>
@@ -10,13 +10,11 @@
   </div>
 
   <div class="w-col w-col-8" style="float: left;">
-    <%= form_for @api_cred, url: user_api_creds_path(current_user), method: :put, html: { class: "w-clearfix", id: 'alert-form' } do |f| %>
-      <label class="field-headers form-label settings" for="Business-Name">Webhook Url</label>
-      <div class="form-label">
-        <%= f.text_field :webhook_url, class: 'form-control text-field w-input' %>
+    <%= form_for @api_cred, url: user_api_creds_path(current_user), method: :put, html: { class: "w-clearfix", id: 'webhook-url-form' } do |f| %>
+      <div class="form-label" id='webhook-url-div'>
+        <%= f.text_field :webhook_url, class: 'form-control text-field w-input', placeholder: 'Webhook URL' %>
+        <%= f.submit 'Update', class: 'button btn-rhombus w-button' %>
       </div>
-      <%= f.submit 'Update', class: 'button btn-rhombus w-button' %>
-
     <% end %>
   </div>
 </div>

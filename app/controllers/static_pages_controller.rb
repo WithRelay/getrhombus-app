@@ -1,4 +1,5 @@
 class StaticPagesController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:xyz]
 
   [:home, :about, :privacy, :pricing, :terms, :to_404, :request_demo, :features].each do |method_name|
     send :define_method, method_name do
@@ -16,6 +17,11 @@ class StaticPagesController < ApplicationController
     send :define_method, method_name do
       # do nothing
     end
+  end
+
+  def xyz
+    puts params
+    render json: {}
   end
 
 end

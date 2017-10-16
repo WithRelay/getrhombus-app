@@ -71,7 +71,7 @@ class TwilioEvent
       end
 
       Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
-      if @merchant.is_api_user?        
+      if @merchant.is_api_user? && @merchant.api_cred.webhook_url.present?       
         post_message_to_api_user        
       else
         @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
