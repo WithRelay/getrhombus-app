@@ -90,8 +90,10 @@ class TwilioEvent
       body = { from: @message.from, to: @message.to, body: @message.text }
       options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
       HTTParty.post(webhook_url, options)
+    rescue Timeout::Error => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user timeout" })
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user" })
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user standard error" })
     end
   end
 
