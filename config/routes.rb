@@ -96,6 +96,7 @@ Rails.application.routes.draw  do
       patch 'managed-accounts' => "users#create_managed_acct"
       patch 'update-managed-acct' => 'users#update_managed_acct'
       get 'api-cred' => 'api_creds#show'
+      resource :api_creds, only: [:update]
     end
   end
 
