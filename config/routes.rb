@@ -120,7 +120,7 @@ Rails.application.routes.draw  do
     resources :user_lists, only: [:index, :create]
     resources :saved_replies, only: [:index, :create]
     resources :messages do
-      post 'send_message', on: :collection
+      post 'send' => 'messages#send_message', on: :collection
     end
 
     resources :lists, only: [:create, :index, :update] do
@@ -177,8 +177,7 @@ Rails.application.routes.draw  do
       #get 'rating', on: :member
     #end'
 
-    resources :intelligence_data
-
+    resources :intelligence, only: [:index]
   end
 
   ## catch all other to 404

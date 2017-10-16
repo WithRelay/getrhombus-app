@@ -16,14 +16,8 @@ class OpenCnamData < ActiveRecord::Base
   end
 
   def self.get_opencnam_info_json_for(phone)
-    cnam_data = where(:phone_number => phone).first
-    if cnam_data.present?
-      cnam_data.to_json(only: :name)
-    else
-      {}
-    end
-
+    data = where(phone_number: phone).first
+    data ? data.as_json(only: :name).reject { |_,v| v.blank? } : {}
   end
-
 
 end

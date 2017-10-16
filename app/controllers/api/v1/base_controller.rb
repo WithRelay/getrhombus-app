@@ -1,8 +1,5 @@
 class Api::V1::BaseController < ApplicationController
 
-  # before_action :http_basic_authentication
-  # do current_user or token test here and set as current_user
-
   ALLOWED_MIME_TYPE = %w(image/jpg image/png image/jpeg)
   ALLOWED_SIZE_IN_BYTES = 4718592
 
