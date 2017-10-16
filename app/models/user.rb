@@ -135,6 +135,10 @@ class User < ActiveRecord::Base
     self.user_level == 0
   end
 
+  def is_api_user?
+    api_cred.present?
+  end
+
   def full_name
     return "#{card_name}" if is_customer? && card_name.present?
     self.people[0].try(:full_name) || ''
@@ -233,9 +237,9 @@ class User < ActiveRecord::Base
   end
 
   def is_active_merchant?
-    count = Transaction.where(team_id: self.id).count 
+    count = Transaction.where(team_id: self.id).count
             + MerchantCustomer.where(merchant_id: self.id).count
-            + Message.where("user_id = ? or user_id_to = ?", self.id, self.id).count 
+            + Message.where("user_id = ? or user_id_to = ?", self.id, self.id).count
             + FbMessage.where("user_id = ? or user_id_to = ?", self.id, self.id).count
     count > 0
   end

@@ -1,10 +1,12 @@
 class Api::V1::MessagesController < Api::V1::BaseController
+  skip_before_action :verify_authenticity_token, only: [:send_message]
 
-  def send
-    api_cred = ApiCred.find_by(key: params[key], secret: params[:secret])
+  def send_message
+    binding.pry
+    api_cred = ApiCred.find_by(key: params[:key], secret: params[:secret])
     if api_cred
       merchant = api_cred.user
-      all_customer_phones = params[:to].split(',')
+      all_customer_phones = params[:to].split(',').map(&:strip)
       all_customer_phones.each do |phone_number|
         customer = User.find_by(phone_number: phone_number)
         if customer.present?
@@ -16,8 +18,8 @@ class Api::V1::MessagesController < Api::V1::BaseController
           OpenCnamData.find_record_or_get_intelligence_data(uid)
         end
 
-        conv = Conversation.find_or_create_conversation(merchant.id, 'user', customer.id)
-        Conversation.send_message(conv, merchant, params[:body], source= ??)
+        conv = Conversation.find_or_create_conversation(merchant.id, uid, uid_type)
+        Conversation.send_message(conv, merchant, params[:body], 'platform', [])
       end
       response = 'Success'
       status = 200

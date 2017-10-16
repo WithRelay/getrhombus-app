@@ -120,7 +120,7 @@ Rails.application.routes.draw  do
     resources :user_lists, only: [:index, :create]
     resources :saved_replies, only: [:index, :create]
     resources :messages do
-      post 'send', on: :collection
+      post 'send_message', on: :collection
     end
 
     resources :lists, only: [:create, :index, :update] do
