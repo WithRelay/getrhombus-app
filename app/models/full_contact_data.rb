@@ -58,4 +58,14 @@ class FullContactData < ActiveRecord::Base
     end
   end
 
+  def self.get_fullcontact_info_json_for(email)
+    fullcontact_data = where(:email => email).first
+    if fullcontact_data.present?
+      fullcontact_data.to_json(except: [:id, :likelihood, :created_at, :updated_at])
+    else
+      {}
+    end
+
+  end
+
 end
