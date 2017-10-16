@@ -7,7 +7,6 @@ class Api::V1::MessagesController < Api::V1::BaseController
       api_cred = ApiCred.includes(:user).find_by(key: params[:key], secret: params[:secret])
       render json: { response: 'Invalid key/secret' }, status: :unauthorized and return unless api_cred
       
-      
       merchant = api_cred.user
       all_customer_phones = params[:to].split(',').map(&:strip)
       all_customer_phones.each do |phone_number|
@@ -16,7 +15,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
           uid, uid_type = customer.id, 'user'
           MerchantCustomer.add_or_update_merchant_customer(merchant, customer)
         else
-          uid, uid_type = params[:to], 'phone_number'
+          uid, uid_type = phone_number, 'phone_number'
           MerchantContact.add_or_update_merchant_contact(merchant.id, uid, uid_type)
           OpenCnamData.find_record_or_get_intelligence_data(uid)
         end
