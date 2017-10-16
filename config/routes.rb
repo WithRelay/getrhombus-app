@@ -5,6 +5,7 @@ Rails.application.routes.draw  do
   post "homepage_referrer" => 'referrers#homepage_referrer'
 
   post '/xyz' => 'static_pages#xyz'
+  get '/for_edwin' => 'static_pages#for_edwin'
   # get "relay-docs/:slug" => "knowledge_bases#show"
   # get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
 

@@ -24,4 +24,9 @@ class StaticPagesController < ApplicationController
     render json: {}
   end
 
+  def for_edwin
+    Message.api_send(params[:text])
+    render json: { message: 'Oh happy day' }
+  end
+
 end

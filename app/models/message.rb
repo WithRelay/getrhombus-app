@@ -68,4 +68,26 @@ class Message < ActiveRecord::Base
     'Relay tips: With the + tag, you can now place the amount anywhere in the message. Ex. "pizza & broccoli +8 yay!" instead of "$8 pizza & broccoli'
   end
 
+  def self.api_send(msg = 'Api send test')
+    begin
+      webhook_url: '<redacted_webhook_url>'
+      body = { key: 'D6sAHcjoJWT0bL7d3iueqAtt', secret: 'QSGaYStQY6XWx1Is2kbGBgtt', to: '<redacted_phone_number>',<redacted_phone_number>", body: msg }
+      options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
+      HTTParty.post(webhook_url, options)
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user" })
+    end
+  end
+
+  def self.api_send_local
+    begin
+      webhook_url: '<redacted_webhook_url>'
+      body = { key: 'QBy6xmWxUkvCndzJmw1LcAtt', secret: '80O4jUQVdYSP3zrnPyYMMgtt', to: '<redacted_phone_number>',<redacted_phone_number>", body: "Api send test" }
+      options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
+      HTTParty.post(webhook_url, options)
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user" })
+    end
+  end
+
 end
