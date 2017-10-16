@@ -31,8 +31,8 @@ class TwilioEvent
         price, price_multiplier = MMS_PRICE_RECEIVED, MMS_PRICE_RECEIVED * num_media
       else
         price, price_multiplier = SMS_PRICE_RECEIVED, SMS_PRICE_RECEIVED * num_segments
-      end    
-      
+      end
+
       @phone_number = @params[:From].gsub('+', '')
       user = get_user
       @message_id = @params[:MessageSid]
@@ -74,10 +74,28 @@ class TwilioEvent
       @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
       @merchant.deduct_from_account_balance(price_multiplier)
       MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
-    
+      post_message_for_api_user if @merchant.is_api_user?
     rescue ActiveRecord::RecordNotUnique
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_received_message" })
+    end
+  end
+
+  def post_message_for_api_user
+    webhook_url = @merchant.api_cred.webhook_url
+    body = {
+            # body goes here
+            'from': @message.from,
+            'to': @message.to,
+            'body': @message.text
+          }
+    begin
+      options = { body: body.to_json,
+        headers: { 'Content-Type' => 'application/json' }}
+      url = webhook_url
+      HTTParty.post(url, options)
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user" })
     end
   end
 
