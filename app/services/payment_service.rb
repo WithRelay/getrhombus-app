@@ -167,7 +167,8 @@ class PaymentService
         cred = merchant.get_stripe_cred
         if merchant.is_platform? || cred[:type] == 'managed'
           # are the last two attrs ok for platform charges?
-          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], refund_application_fee: true, reverse_transfer: true)
+          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], 
+                                     refund_application_fee: true, reverse_transfer: true)
         else
           re = Stripe::Refund.create({ charge: hash[:charge_id], reason: hash[:reason], 
                                        refund_application_fee: true, reverse_transfer: true }, 
@@ -208,16 +209,15 @@ class PaymentService
       end
     end
 
-    def cancel_subscription(subscription_id, cred, platform, at_period_end)
+    def cancel_subscription(subscription, at_period_end)
       begin
-        res = if platform
-          sbtn = Stripe::Subscription.retrieve(subscription_id)
-          sbtn.delete(at_period_end: at_period_end) # cancel at period end
+        if subscription.merchant.is_platform?
+          sbtn = Stripe::Subscription.retrieve(subscription.stripe_subscription_id)
         else
-          sbtn = Stripe::Subscription.retrieve(subscription_id, { stripe_account: cred.account_id })
-          sbtn.delete(at_period_end: at_period_end)
+          sbtn = Stripe::Subscription.retrieve(subscription.stripe_subscription_id, 
+                  { stripe_account: subscription.merchant.get_stripe_cred[:cred].account_id })
         end
-        [true, res]
+        [true, sbtn.delete(at_period_end: at_period_end)] # cancel at period end for saas sub
       rescue Stripe::StripeError => e
         [false, e]
       rescue StandardError => e
@@ -345,16 +345,18 @@ class PaymentService
     def retrieve_charge(charge_id, merchant)
       begin
         cred = merchant.get_stripe_cred
-        if merchant.is_platform? || cred[:type] == 'managed'
+        if merchant.is_platform?
           re = Stripe::Charge.retrieve(charge_id)
         else
           re = Stripe::Charge.retrieve(charge_id, { stripe_account: cred[:cred].account_id })
         end
         [re]
       rescue Stripe::StripeError => e
+        puts e.inspect
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error], "Stripe is unable to retrieve this charge."]
       rescue StandardError => e
+        puts e.inspect
         [false, e, "Something went wrong on our end"]
       end
     end
