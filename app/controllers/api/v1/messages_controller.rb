@@ -2,7 +2,6 @@ class Api::V1::MessagesController < Api::V1::BaseController
   skip_before_action :verify_authenticity_token, only: [:send_message]
 
   def send_message
-    binding.pry
     api_cred = ApiCred.find_by(key: params[:key], secret: params[:secret])
     if api_cred
       merchant = api_cred.user
