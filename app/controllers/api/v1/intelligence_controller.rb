@@ -3,7 +3,7 @@ class Api::V1::IntelligenceController < Api::V1::BaseController
     
   def index
     begin
-      render json: { response: 'Incomplete parameters' }, status: bad_request and return unless validate_params
+      render json: { response: 'Incomplete parameters' }, status: :bad_request and return unless validate_params
       api_cred = ApiCred.find_by(key: params[:key], secret: params[:secret])
       render json: { response: 'Invalid key/secret' }, status: :unauthorized and return unless api_cred
       
