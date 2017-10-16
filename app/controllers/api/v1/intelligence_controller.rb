@@ -2,18 +2,23 @@ class Api::V1::IntelligenceController < Api::V1::BaseController
   skip_before_action :verify_authenticity_token
     
   def index
-    render json: { response: 'Incomplete parameters' }, status: 500 and return unless validate_params
-    api_cred = ApiCred.find_by(key: params[:key], secret: params[:secret])
-    render json: { response: 'Invalid key/secret' }, status: :unauthorized and return unless api_cred
-    
-    data = query_model
-    if data.blank?
-      calls = request_hash[input_type(params[:query])].second
-      calls[0].constantize.public_send(calls[1], params[:query])
+    begin
+      render json: { response: 'Incomplete parameters' }, status: :bad_request and return unless validate_params
+      api_cred = ApiCred.find_by(key: params[:key], secret: params[:secret])
+      render json: { response: 'Invalid key/secret' }, status: :unauthorized and return unless api_cred
+      
       data = query_model
-    end
+      if data.blank?
+        calls = request_hash[input_type(params[:query])].second
+        calls[0].constantize.public_send(calls[1], params[:query])
+        data = query_model
+      end
 
-    render json: data
+      render json: data
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In api IntelligenceController index" })
+      render json: { response: "Something went wrong" }, status: :internal_server_error
+    end
   end
 
   private

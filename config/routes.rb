@@ -5,6 +5,7 @@ Rails.application.routes.draw  do
   post "homepage_referrer" => 'referrers#homepage_referrer'
 
   post '/xyz' => 'static_pages#xyz'
+  get '/for_edwin' => 'static_pages#for_edwin'
   # get "relay-docs/:slug" => "knowledge_bases#show"
   # get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
 
@@ -121,7 +122,7 @@ Rails.application.routes.draw  do
     resources :api_creds, only: [:create]
     resources :user_lists, only: [:index, :create]
     resources :saved_replies, only: [:index, :create]
-    match 'messages/send' => 'messages#send_message', via: :get
+    match 'messages/send' => 'messages#send_message', via: [:post]
     
     resources :lists, only: [:create, :index, :update] do
       get 'check_list_name', on: :collection
