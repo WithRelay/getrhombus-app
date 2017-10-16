@@ -77,7 +77,7 @@ class Subscription < ActiveRecord::Base
         else
           ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "From create_subscription in stripe"})
           # in case something went wrong after we created a subscription
-          self.cancel_subscription(team, false)
+          self.cancel_subscription
         end
         res
       else
@@ -86,7 +86,7 @@ class Subscription < ActiveRecord::Base
       end
     rescue StandardError => exception
       # if StandardError happened after Stripe was called, delete subscription on Stripe
-      self.cancel_subscription(team, false) if res.length > 0
+      self.cancel_subscription if res.length > 0
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
       [false]
     end
@@ -111,13 +111,14 @@ class Subscription < ActiveRecord::Base
     EmailingService.new_merchant_customer_subscription(options)
   end
 
-  def cancel_subscription(team, at_period_end = false)
+  def cancel_subscription(at_period_end = false)
     begin
-      res = PaymentService.cancel_subscription(self.stripe_subscription_id, team.get_stripe_cred[:cred], team.is_platform?, at_period_end)
+      res = PaymentService.cancel_subscription(self, at_period_end)
       if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
         true
       else
         # notify team via email
+        puts res.inspect
         false
       end
     rescue StandardError => e

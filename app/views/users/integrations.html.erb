@@ -19,9 +19,9 @@
               <b><%= fb_user_name %></b>
             </span>
           </p>
-        <%else%>
+        <% else %>
           <%= link_to "Connect Facebook", user_facebook_omniauth_authorize_path, class: "button integrate-button w-button", data: { disable_with: 'Please wait...'} %>
-        <%end%>
+        <% end %>
       </div>
     </div>
     <div class="flex-underline form-header-underline"></div>

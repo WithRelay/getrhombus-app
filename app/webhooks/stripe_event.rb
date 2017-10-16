@@ -21,9 +21,16 @@ class StripeEvent
   def customer_subscription_deleted
     @data = Subscription.includes(merchant_customer: [:customer, :merchant], plan: []).find_by(stripe_subscription_id: @hash[:id])
     return unless @data
-
+    
     user = @data.customer
-    TextingService.release_number(user.rhombus_number) if user.is_merchant? && user.rhombus_number.present?
+    if user.is_merchant?
+      if user.rhombus_number.present?
+        user.hosted_sms.blank? ? TextingService.release_number(user.rhombus_number) : ''
+      end
+      user.update(rhombus_number: nil, rn_type: nil, rn_country: nil, rn_friendly_name: nil, status: 0)
+      #delete facebook integration here
+      EmailingService.exit_survey(user)
+    end
     update_subscription_data
 
     # Email about cancellation

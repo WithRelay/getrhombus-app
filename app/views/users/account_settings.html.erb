@@ -7,70 +7,71 @@
     <h4 class="form-header">Account Information</h4>
     <div class="flex-underline form-header-underline"></div>
     <%= form_for(current_user, url: user_registration_update_path(current_user), html: { method: :patch, id: "account-settings-form", class: "form-horizontal rhombusFocus" }) do |f| %>
-    <div class="account-settings-form-wrapper">
+      <div class="account-settings-form-wrapper">
 
-      <label class="field-headers form-label settings" for="name">Basic details</label>
-      <div class="company-rep-div w-clearfix">
-        <% if current_user.is_merchant? %>
+        <label class="field-headers form-label settings" for="name">Basic details</label>
+        <div class="company-rep-div w-clearfix">
+          <% if current_user.is_merchant? %>
 
-          <%= f.fields_for :people do |f| %>
-            <div class="form-group">
-              <%= f.text_field :full_name, class: 'form-control full-name settings text-field w-input', placeholder: 'Full name' %>
-              <div class = "errorMessageContainer w-col-12"></div>
-            </div>
+            <%= f.fields_for :people do |f| %>
+              <div class="form-group">
+                <%= f.text_field :full_name, class: 'form-control full-name settings text-field w-input', placeholder: 'Full name' %>
+                <div class = "errorMessageContainer w-col-12"></div>
+              </div>
+            <% end %>
+            <%= f.hidden_field :org_phone, id: "phone_number" %>
+          <% else %>
+              <%= f.hidden_field :phone_number, id: "phone_number" %>
           <% end %>
-          <%= f.hidden_field :org_phone, id: "phone_number" %>
-        <% else %>
-            <%= f.hidden_field :phone_number, id: "phone_number" %>
-        <% end %>
-        <div class="form-group">
-          <%= f.phone_field :phone, id: "phone", class: "form-control password settings text-field w-input" %>
-          <div class = "errorPhone w-col-12"></div>
+          <div class="form-group">
+            <%= f.phone_field :phone, id: "phone", class: "form-control password settings text-field w-input" %>
+            <div class = "errorPhone w-col-12"></div>
+          </div>
+          <input type="hidden" name="page_params" value="account_settings">
         </div>
-        <input type="hidden" name="page_params" value="account_settings">
-      </div>
 
-      <div class="form-group">
-        <%= f.select :time_zone, get_time_zone_lists, { selected: current_user.time_zone }, class: 'form-control dropdown w-select' %>
-        <div class="errorMessageContainer w-col-12"></div>
-      </div>
-
-      <div class="update-email-password-div w-clearfix">
-        <div class="flex-underline form-section-divider"></div>
-        <label class="field-headers form-label settings" for="email">update email/password</label>
         <div class="form-group">
-          <%= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control settings text-field w-input" %>
-            <div class="errorMessageContainer w-col-12"></div>
-        </div>
-        <div class="form-group">
-          <%= f.password_field :current_password, type: 'password', class: 'form-control full-name settings text-field w-input', placeholder: "Current Password" %>
+          <%= f.select :time_zone, get_time_zone_lists, { selected: current_user.time_zone }, class: 'form-control dropdown w-select' %>
           <div class="errorMessageContainer w-col-12"></div>
         </div>
-        <div class="form-group">
-          <%= f.password_field :password, type: "password", id: "newPassword", placeholder: "Enter new password", class: "form-control password settings text-field w-input" %>
-        </div>
-        <div class="form-group">
-          <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control confirm password settings text-field w-input" %>
-        </div>
 
-        <div class="row">
-        <div class= "form-group col-xs-6">
-            <div class="password w-col-4" id="password"></div>
-        </div>
+        <div class="update-email-password-div w-clearfix">
+          <div class="flex-underline form-section-divider"></div>
+          <label class="field-headers form-label settings" for="email">update email/password</label>
+          <div class="form-group">
+            <%= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control settings text-field w-input" %>
+              <div class="errorMessageContainer w-col-12"></div>
+          </div>
+          <div class="form-group">
+            <%= f.password_field :current_password, type: 'password', class: 'form-control full-name settings text-field w-input', placeholder: "Current Password" %>
+            <div class="errorMessageContainer w-col-12"></div>
+          </div>
+          <div class="form-group">
+            <%= f.password_field :password, type: "password", id: "newPassword", placeholder: "Enter new password", class: "form-control password settings text-field w-input" %>
+          </div>
+          <div class="form-group">
+            <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control confirm password settings text-field w-input" %>
+          </div>
 
-        <div class= "form-group col-xs-6">
-            <div class="password w-col-4" id="confirm-password"></div>
-        </div>
+          <div class="row">
+          <div class= "form-group col-xs-6">
+              <div class="password w-col-4" id="password"></div>
+          </div>
+
+          <div class= "form-group col-xs-6">
+              <div class="password w-col-4" id="confirm-password"></div>
+          </div>
+          </div>
+
         </div>
 
       </div>
-
+      <%= f.submit "Save changes", id: "ba-submit", class: "btn-rhombus button save-changes w-button" %>
+      <%#<a class="button deactivate w-button  modal-loader" href="#" modal-target="deactivate-account-modal">Deactivate/Pause Account</a>%>
+    <% end %>
   </div>
-  <%= f.submit "Save changes", id: "ba-submit", class: "btn-rhombus button save-changes w-button" %>
-  <a class="button deactivate w-button  modal-loader" href="#" modal-target="deactivate-account-modal">Deactivate/Pause Account</a>
-  <% end %>
-</div>
-<div class='modal-background w-hidden modal-body deactivate-account-modal'>
-  <%= render 'shared/modals/deactivate_account' %>
-</div>
+  <%#
+  <div class='modal-background w-hidden modal-body deactivate-account-modal'>
+    <%= render 'shared/modals/deactivate_account' %>
+  <%#</div> %>
 </div>
