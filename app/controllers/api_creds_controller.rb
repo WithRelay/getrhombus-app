@@ -1,6 +1,7 @@
 class ApiCredsController < ApplicationController
   include DashboardNotification
-  before_action :set_notifications, :set_api_cred
+  before_action :set_notifications, only: [:show]
+  before_action :set_api_cred
 
   def show; end
 
@@ -16,7 +17,7 @@ class ApiCredsController < ApplicationController
   private
 
   def set_api_cred
-    @api_cred = current_user.api_cred
+    @api_cred = ApiCred.find_or_create_by(user_id: current_user.id)
   end
 end
 
