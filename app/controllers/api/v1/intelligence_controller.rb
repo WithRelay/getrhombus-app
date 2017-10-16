@@ -1,7 +1,10 @@
 class Api::V1::IntelligenceController < Api::V1::BaseController
+  skip_before_action :verify_authenticity_token
     
   def index
     render json: { response: 'Incomplete parameters' }, status: 500 and return unless validate_params
+    api_cred = ApiCred.find_by(key: params[:key], secret: params[:secret])
+    render json: { response: 'Invalid key/secret' }, status: :unauthorized and return unless api_cred
     
     data = query_model
     if data.blank?
@@ -32,6 +35,6 @@ class Api::V1::IntelligenceController < Api::V1::BaseController
   end
 
   def validate_params 
-    params.key?(:query)
+    params.key?(:query) && params.key?(:key) && params.key?(:secret)
   end
 end
