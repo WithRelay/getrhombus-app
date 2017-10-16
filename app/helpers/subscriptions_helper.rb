@@ -8,8 +8,8 @@ module SubscriptionsHelper
   end
 
   def get_saas_plan_amount
-    return unless current_user.is_merchant? && @saas_sub.present?
-    (Plan.find @saas_sub.plan_id).amount / 100
+    return '' unless current_user.is_merchant? && @saas_sub.present?
+    @saas_sub.txn_amount
   end
 
   def saas_plan_name
@@ -21,7 +21,7 @@ module SubscriptionsHelper
   end
 
   def saas_sub_status
-    saas_sub ? saas_sub.status.try(:capitalize) : ''
+    @saas_sub ? @saas_sub.status.try(:capitalize) : ''
   end
 
   def subscription_time_period
@@ -35,7 +35,7 @@ module SubscriptionsHelper
   end
 
   def end_date
-    return '' unless saas_sub.current_period_end.present?
+    return '' unless @saas_sub.current_period_end.present?
     Time.zone.at(@saas_sub.current_period_end).strftime('%B %d, %Y')
   end
 
@@ -54,8 +54,7 @@ module SubscriptionsHelper
       type: saas_coupon_type,
       value: saas_coupon_value,
       duration: saas_coupon_duration,
-      end_date: saas_coupon_end_date
-    } if @coupon.present?
+    }
   end
 
   def saas_coupon_type
@@ -66,7 +65,7 @@ module SubscriptionsHelper
     if @coupon.amount_off.present?
       "$#{Toolbox::Decimal.to_int_or_2dp(@coupon.amount_off.to_f / 100)}"
     else
-      "#{@coupon.present_off}%"
+      "#{@coupon.percent_off}%"
     end
   end
 

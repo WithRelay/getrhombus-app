@@ -40,7 +40,7 @@ class Api::V1::CouponsController < Api::V1::BaseController
     @coupon = Coupon.find(params[:id])
     begin
       status = 500
-      if @coupon.update_coupon(params[:coupon][:name], current_user)
+      if @coupon.update(name: params[:coupon][:name])
         response = 'Coupon name updated successfully'
         status = 200
       else

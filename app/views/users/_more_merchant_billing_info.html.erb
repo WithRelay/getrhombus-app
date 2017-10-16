@@ -14,7 +14,7 @@
         <div class="flex-underline form-section-divider"></div>
 
         <label class="field-headers form-label settings" for="Month-Year-2">COUPON &amp; DISCOUNTS</label>
-        <% if saas_sub.try(:coupon).present? %>
+        <% if saas_sub.try(:coupon) %>
           <% saas_coupon_data = saas_coupon %>
           <div class="settings-info-div">
             <h1 class="business-plan plan-name plans-text">Coupon: <%= saas_coupon_data[:name] %></h1>
@@ -22,7 +22,6 @@
             <p class="settings-details-paragraph">Type: <%= saas_coupon_data[:type]%></p>
             <p class="settings-details-paragraph">Value: <strong><%= saas_coupon_data[:value]%></strong></p>
             <p class="settings-details-paragraph">Duration: <%= saas_coupon_data[:duration]%></p>
-            <p class="settings-details-paragraph">End date: <strong><%= saas_coupon_data[:end_date]%></strong></p>
           </div>
         <% else %>
           <div class="settings-info-div">

@@ -7,11 +7,9 @@ $(document).ready(function () {
   var maxDate = new Date(date.getFullYear() + 4, date.getMonth(), date.getDate());
   var redeem_by_input = $('input[name="coupon[redeem_by]"]');
 
-  if (redeem_by_input.length > 0) {
+  if (redeem_by_input.length) {
     redeem_by_input.daterangepicker({
-      autoUpdateInput: false,
-      timePickerIncrement: 1,
-      showDropdowns: true,
+      timePickerIncrement: 30,
       singleDatePicker: true,
       minDate: tomorrow,
       maxDate: maxDate,
@@ -21,7 +19,6 @@ $(document).ready(function () {
         format: RAILS_DATE_FORMAT,
         cancelLabel: 'Clear'
      },
-      weekStart: 0,
       opens: "right",
       drops: 'up'
     })

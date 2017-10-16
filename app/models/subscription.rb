@@ -117,28 +117,27 @@ class Subscription < ActiveRecord::Base
       if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
         true
       else
-        # notify team via email
-        puts res.inspect
+        ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "From cancel_subscription"})
         false
       end
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From cancel_subscription"})
+      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From cancel_subscription"})
       false
     end
   end
 
-  def update_subscription(team, coupon_id)
+  def update_subscription(coupon)
     begin
-      res = PaymentService.update_subscription(self.stripe_subscription_id, team.get_stripe_cred[:cred], team.is_platform?, coupon_id)
+      res = PaymentService.update_subscription(self, coupon.stripe_coupon_id)
       if res
-        coupon = Coupon.find_by(stripe_coupon_id: res[:discount][:coupon][:id])
-         self.update(coupon_id: coupon.id, status: res.status, cancel_at_period_end: res.cancel_at_period_end)
+        self.update(coupon_id: coupon.id, status: res.status, cancel_at_period_end: res.cancel_at_period_end)
         true
       else
-        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From update_subscription"})
+        ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "From update_subscription"})
         false
       end
     rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From update_subscription"})
       false
     end
   end

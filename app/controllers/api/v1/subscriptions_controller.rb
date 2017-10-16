@@ -1,4 +1,5 @@
 class Api::V1::SubscriptionsController < Api::V1::BaseController
+  before_action :set_subscription, except: [:create]
 
   def create
     begin
@@ -22,6 +23,7 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
         response = check_customer_card[:text]
       end
     rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From Api::V1::SubscriptionsController create"})
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status
@@ -30,15 +32,15 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
   def update
     begin
       status = 500
-      @subscription = Subscription.find params[:id]
       coupon = Coupon.find_by(name: params[:subscription][:coupon])
-      if coupon && @subscription.update_subscription(current_user, coupon.stripe_coupon_id)
+      if coupon && @subscription.update_subscription(coupon)
         response = 'Coupon updated successfully'
         status = 200
       else
         response = (coupon.nil?) ? 'Invalid Discount code' : 'We couldn\'t change discount'
       end
     rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From Api::V1::SubscriptionsController update"})
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status
@@ -47,7 +49,6 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
   def destroy
     begin
       status = 500
-      @subscription = Subscription.find params[:id]
       if @subscription.cancel_subscription
         response = 'Your subscription has been canceled.'
         status = 200
@@ -61,6 +62,10 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
   end
 
   private
+
+  def set_subscription
+    @subscription = Subscription.includes(merchant_customer: [:merchant]).find params[:id]
+  end
 
   def subscription_params
     params.require(:subscription).permit(:quantity, :plan_id, :coupon_id, :merchant_customer_id)

@@ -38,7 +38,6 @@
             <input id="cc-csc" type="tel" class="form-control cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
           </div>
         </div>
-
         
         <div class="row">
           <div class= "form-group col-xs-6">
@@ -48,8 +47,6 @@
               <div class="cvv w-col-4" id="cardCvv"></div>
           </div>
         </div>
-        
-
 
         <input type="hidden" name="page_params" value="update_billing_info">
         <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
@@ -61,10 +58,8 @@
 
         <%= f.submit "Update Information", id: "cc-submit", class: "alt-button button save-changes w-button btn btn-default btn-block btn-rhombus" %>
       <% end %>
-
-      <% if current_user.is_merchant? %>
-        <%= render 'more_merchant_billing_info' %>
-      <% end %>
+      
+      <%= render 'more_merchant_billing_info' if current_user.is_merchant? && !current_user.is_platform? %>
 
     </div>
   </div>

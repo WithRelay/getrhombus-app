@@ -45,30 +45,14 @@ class Coupon < ActiveRecord::Base
       if res.first && self.update(stripe_livemode: res.second.livemode, stripe_coupon_id: res.second.id)
         true
       else
-        #notify team via email
-        # if StandardError happens in create_coupon after Stripe was called or update fails above
-        self.delete_coupon
+        ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "In create_coupon" })
+        self.delete_coupon # if StandardError happens in create_coupon after Stripe was called or update fails above
         false        
       end
 
     rescue StandardError => e
-      # if StandardError happened after Stripe was called, delete plan on Stripe
-      self.delete_coupon if res.length > 0
-      # notify team via email
-      false
-    end
-  end
-
-  def update_coupon(coupon_name, team)
-    begin
-
-      old_name = self.name
-
-      # save so validations run before calling Stripe api
-      self.name = coupon_name
-      self.save ? true : false
-    rescue StandardError => e
-      # notify team via email
+      self.delete_coupon if res.length > 0 # if StandardError happened after Stripe was called, delete plan on Stripe
+      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In create_coupon" })
       false
     end
   end
@@ -77,7 +61,7 @@ class Coupon < ActiveRecord::Base
     begin
       PaymentService.delete_coupon(self.stripe_coupon_id).first
     rescue StandardError => e
-      # notify team via email
+      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In delete_coupon" })
       false
     end
   end
@@ -92,7 +76,7 @@ class Coupon < ActiveRecord::Base
   def validate_redeem_by
     if self.redeem_by.present?
       if (Time.current) > (Time.at(self.redeem_by))
-        errors.add(:redeem_by, 'can\'t be less than current date_time')
+        errors.add(:redeem_by, 'can\'t be less than current date time')
       elsif (Time.current + 4.years) <= (Time.at(self.redeem_by))
         errors.add(:redeem_by, 'can\'t be greater than 5 years from current date time')
       end
