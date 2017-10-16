@@ -195,7 +195,7 @@ class StripeEvent
       month: Date::MONTHNAMES[Time.current.month],
       stripe_invoice_id: @data.stripe_invoice_id,
       date: date.strftime('%B %d,%Y | %-I:%M%P'),
-      status: 'Invoice payment succeeded'.capitalize,
+      status: 'Paid'.capitalize,
       payment_method: "Visa **** **** **** #{merchant.last4} (Expiry #{merchant.exp_month}/#{merchant.exp_year})",
       sub_total: @data.subtotal,
       total: @data.total,
