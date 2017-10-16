@@ -48,11 +48,11 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
     begin
       status = 500
       @subscription = Subscription.find params[:id]
-      if @subscription.cancel_subscription(current_user)
-        response = 'Your subscription has canceled'
+      if @subscription.cancel_subscription
+        response = 'Your subscription has been canceled.'
         status = 200
       else
-        response = 'We couldn\'t cancel your subscription'
+        response = 'We couldn\'t cancel your subscription.'
       end
     rescue StandardError => e
       response = 'Something went wrong on our end.'

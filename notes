@@ -19,6 +19,8 @@ Bhishma
 - why is fb message from merchant saving as merchant source
 - hard to follow the code now but are u querying with merchant id (using page_id alone can cause problems)
 - if reverse linking with image url, what if i log into several accounts with same user.
+- line 15 <% if current_user.fb_creds.present? %> integrations page
+- need remove integration in a method that i can call from subscription deleted
 
 
 
