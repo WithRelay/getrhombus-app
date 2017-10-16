@@ -119,10 +119,8 @@ Rails.application.routes.draw  do
     resources :api_creds, only: [:create]
     resources :user_lists, only: [:index, :create]
     resources :saved_replies, only: [:index, :create]
-    resources :messages do
-      post 'send' => 'messages#send_message', on: :collection
-    end
-
+    match 'messages/send' => 'messages#send_message', via: :get
+    
     resources :lists, only: [:create, :index, :update] do
       get 'check_list_name', on: :collection
     end

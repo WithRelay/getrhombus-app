@@ -127,17 +127,10 @@ class User < ActiveRecord::Base
 
   enum status: { inactive: 0, active: 1, fraudulent: 2 }
 
-  def is_merchant?
-    self.user_level == 1 || is_platform?
-  end
-
-  def is_customer?
-    self.user_level == 0
-  end
-
-  def is_api_user?
-    api_cred.present?
-  end
+  def is_api_user?; api_cred.present? end
+  def is_customer?; self.user_level == 0 end
+  def is_platform?; self.email == User.platform_email end
+  def is_merchant?; self.user_level == 1 || is_platform? end
 
   def full_name
     return "#{card_name}" if is_customer? && card_name.present?
@@ -147,10 +140,6 @@ class User < ActiveRecord::Base
   def first_name
     first_name = full_name.split.first
     first_name.present? ? first_name : nil
-  end
-
-  def is_platform?
-    self.email == User.platform_email
   end
 
   def user_title
@@ -187,13 +176,11 @@ class User < ActiveRecord::Base
     false
   end
 
-  def self.platform_email
-    Rails.application.secrets.team_email
-  end
-
-  def self.get_platform_acct_obj
-    User.find_by(email: User.platform_email)
-  end
+  def self.platform_email; Rails.application.secrets.team_email end
+  def self.get_platform_acct_obj; User.find_by(email: User.platform_email) end
+  def get_page_access_token; self.fb_pages.subscribed.last.try(:page_access_token) end
+  def deduct_from_account_balance(amt); self.decrement!(:account_balance, amt.to_f) end
+  def friendly_relay_number; self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number end
 
   def buy_number(params)
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
@@ -222,18 +209,10 @@ class User < ActiveRecord::Base
     platform_merchant.try(:subscriptions).try(:includes, :plan).try(:last)
   end
 
-  def get_page_access_token
-    self.fb_pages.subscribed.last.try(:page_access_token)
-  end
-
   def get_customer_page_specific_id(page_access_token)
     return unless page_access_token
     (page = FbPage.find_by(page_access_token: page_access_token)) || return
     self.fb_creds.where(fb_page_id: page.id).last.try(:page_specific_id)
-  end
-
-  def deduct_from_account_balance(amt)
-    self.decrement!(:account_balance, amt.to_f)
   end
 
   def is_active_merchant?
@@ -242,10 +221,6 @@ class User < ActiveRecord::Base
             + Message.where("user_id = ? or user_id_to = ?", self.id, self.id).count
             + FbMessage.where("user_id = ? or user_id_to = ?", self.id, self.id).count
     count > 0
-  end
-
-  def friendly_relay_number
-    self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number
   end
 
   private

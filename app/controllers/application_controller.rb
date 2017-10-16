@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
-  #before_action :check_current_user_and_path
+  before_action :check_current_user_and_path
   around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
 
   include CheckUserProfile

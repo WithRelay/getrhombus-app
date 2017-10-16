@@ -1,6 +1,8 @@
 class Api::V1::IntelligenceController < Api::V1::BaseController
     
   def index
+    render json: { response: 'Incomplete parameters' }, status: 500 and return unless validate_params
+    
     data = query_model
     if data.blank?
       calls = request_hash[input_type(params[:query])].second
@@ -27,5 +29,9 @@ class Api::V1::IntelligenceController < Api::V1::BaseController
   def query_model
     calls = request_hash[input_type(params[:query])].first
     calls[0].constantize.public_send(calls[1], params[:query])
+  end
+
+  def validate_params 
+    params.key?(:query)
   end
 end
