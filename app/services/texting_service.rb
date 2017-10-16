@@ -58,7 +58,6 @@ class TextingService
         puts (FIBERNETICS_BASE_URL + "/GetSubscriber.ashx?" + uri)
         re = HTTParty.post(FIBERNETICS_BASE_URL + "/GetSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
         #[true, ]
-        puts re.inspect
         re
       rescue StandardError => err
         [false, err]
@@ -72,7 +71,6 @@ class TextingService
         uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", FIBERNETICS_PN] ])
         re = HTTParty.post(FIBERNETICS_BASE_URL + "/CreateSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
         #[true, ]
-        puts re.inspect
         re
       rescue StandardError => err
         [false, err]
