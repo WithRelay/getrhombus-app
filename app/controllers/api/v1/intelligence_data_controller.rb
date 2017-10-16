@@ -2,11 +2,7 @@ class Api::V1::IntelligenceDataController < Api::V1::BaseController
     
     def index
         # Extract querystring from url
-        url = request.url
-        uri = URI.parse(url)
-        # TODO: check if query string is empty
-        data = CGI.parse(uri.query)
-        input = (data.first)[0]
+        input = params.keys.first
 
         #TODO: refactor to remove repetitions
         if is_phone_number?(input)
@@ -32,3 +28,5 @@ class Api::V1::IntelligenceDataController < Api::V1::BaseController
         def is_phone_number?(phone_number)
             true if Float(phone_number) rescue false
         end
+
+end
