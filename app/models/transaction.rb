@@ -93,7 +93,7 @@ class Transaction < ActiveRecord::Base
       amount: txn_amount,
       transaction_id: txn_number,
       created_at: created_at.strftime('%B %d,%Y | %-I:%M%P'),
-      status: status,
+      status: status.capitalize,
       last4: last4,
       exp_month: exp_month,
       exp_year: exp_year,

@@ -21,7 +21,7 @@ class StripeEvent
   def customer_subscription_deleted
     @data = Subscription.includes(merchant_customer: [:customer, :merchant], plan: []).find_by(stripe_subscription_id: @hash[:id])
     return unless @data
-    
+
     user = @data.customer
     if user.is_merchant?
       if user.rhombus_number.present?
@@ -195,11 +195,11 @@ class StripeEvent
       month: Date::MONTHNAMES[Time.current.month],
       stripe_invoice_id: @data.stripe_invoice_id,
       date: date.strftime('%B %d,%Y | %-I:%M%P'),
-      status: 'Invoice payment succeeded',
+      status: 'Invoice payment succeeded'.capitalize,
       payment_method: "Visa **** **** **** #{merchant.last4} (Expiry #{merchant.exp_month}/#{merchant.exp_year})",
       sub_total: @data.subtotal,
       total: @data.total,
-      tax_and_fees: (@data.tax.to_f + @data.application_fee.to_f),
+      tax_and_fees: (@data.taxes + @data.fees),
       currency: @data.currency,
       currency_symbol: '$',
       merchant: merchant
