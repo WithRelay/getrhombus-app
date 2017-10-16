@@ -13,7 +13,7 @@
     <%= form_for @api_cred, url: user_api_creds_path(current_user), method: :put, html: { class: "w-clearfix", id: 'webhook-url-form' } do |f| %>
       <div class="form-label" id='webhook-url-div'>
         <%= f.text_field :webhook_url, class: 'form-control text-field w-input', placeholder: 'Webhook URL' %>
-        <%= f.submit 'Update', class: 'button btn-rhombus w-button' %>
+        <%= f.submit 'Save', class: 'button btn-rhombus w-button' %>
       </div>
     <% end %>
   </div>
