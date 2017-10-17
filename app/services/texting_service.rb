@@ -61,6 +61,19 @@ class TextingService
       nil
     end
 
+    def get_sms_fibernetics(phone_number, since_id, subscriber_id)
+      begin
+        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], 
+                                    ["phone_number", phone_number], ["since_id", since_id], ['subscriber_id', subscriber_id] ])        
+        return HTTParty.post("https://smsfetch.fongo.com/FetchMessageHandler.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+      rescue Timeout::Error => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In get_sms_fibernetics timeout" })
+      rescue StandardError => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In get_sms_fibernetics" })
+      end
+      nil
+    end
+
     def create_fibernetics_subscriber(fn_num)
       begin
         uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", fn_num] ])

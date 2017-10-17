@@ -71,29 +71,14 @@ class TwilioEvent
       end
 
       Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
-      if @merchant.is_api_user? && @merchant.api_cred.webhook_url.present?       
-        post_message_to_api_user        
-      else
-        @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
-        MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
-      end
-      @merchant.deduct_from_account_balance(price_multiplier)      
-    rescue ActiveRecord::RecordNotUnique
-    rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_received_message" })
-    end
-  end
+      @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
+      @merchant.deduct_from_account_balance(price_multiplier)
+      MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')     
 
-  def post_message_to_api_user
-    begin
-      webhook_url = @merchant.api_cred.webhook_url
-      body = { from: @message.from, to: @message.to, body: @message.text }
-      options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
-      HTTParty.post(webhook_url, options)
-    rescue Timeout::Error => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user timeout" })
+    rescue ActiveRecord::RecordNotUnique => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In twilio save_received_message" })
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user standard error" })
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In twilio save_received_message" })
     end
   end
 

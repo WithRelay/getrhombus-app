@@ -40,8 +40,10 @@ class NexmoEvent
       @merchant.deduct_from_account_balance(SMS_PRICE_RECEIVED * num_segments)
       MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
 
-    rescue ActiveRecord::RecordNotUnique
-    rescue StandardError => e
+    rescue ActiveRecord::RecordNotUnique => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_message" })
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_message" })
       puts e.inspect
     end
   end

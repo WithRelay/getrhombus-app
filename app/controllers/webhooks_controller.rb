@@ -36,15 +36,24 @@ class WebhooksController < ApplicationController
     render json: res
   end
 
+  def fibernetics_events
+    begin
+      FiberneticsEvent.new.process_event(params)
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller fibernetics_events" })
+    end
+    render nothing: true
+  end
+
   private
 
     def set_time_zone(&block)
       if action_name == 'facebook_events'
         @merchant = get_merchant if params['entry']
-      elsif action_name == 'stripe_events'
+      elsif action_name == 'stripe_events' || action_name == 'fibernetics_events'
          @merchant = User.get_platform_acct_obj
       elsif action_name == 'twilio_events'
-        @merchant = User.includes(:api_cred).find_by(rhombus_number: params[:To].gsub('+', ''))
+        @merchant = User.find_by(rhombus_number: params[:To].gsub('+', ''))
       elsif action_name == 'nexmo_events'
         @merchant = User.find_by(rhombus_number: params[:to])
       end

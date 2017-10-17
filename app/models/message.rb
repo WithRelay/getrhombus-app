@@ -27,8 +27,8 @@ class Message < ActiveRecord::Base
         if response.first
           response = response.second
           num_segments = response.num_segments.to_i
-          price = (media_ary.blank?) ? (SMS_PRICE_SENT * num_segments) : MMS_PRICE_SENT
-          merchant.deduct_from_account_balance(price)
+          price = media_ary.blank? ? SMS_PRICE_SENT : MMS_PRICE_SENT
+          merchant.deduct_from_account_balance(price * num_segments)
           self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, 
                                   message_price: response.price, error_code: response.error_code, error_text: response.error_message,
                                   price_unit: response.price_unit, num_segments: num_segments, num_media: response.num_media, relay_price: price)
@@ -39,10 +39,9 @@ class Message < ActiveRecord::Base
       elsif merchant.fn_subscriber_id.present?   #  fibernetics
         response = TextingService.send_sms_fibernetics(from, to, message, merchant.fn_subscriber_id)
         if response && response.code == 200 && response['response']['status'] == 'OK'
-          num_segments = (message.bytesize/140.to_f).ceil
-          price = SMS_PRICE_SENT * num_segments
-          merchant.deduct_from_account_balance(price)
-          self.update_attributes(status: "OK", num_segments: num_segments, relay_price: price)          
+          num_segments = Message.num_of_segments(message)
+          merchant.deduct_from_account_balance(SMS_PRICE_SENT * num_segments)
+          self.update_attributes(status: "OK", num_segments: num_segments, relay_price: SMS_PRICE_SENT)          
         else
           ExceptionNotifier.notify_exception(response, env: Rails.env, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message })
           false
@@ -52,9 +51,8 @@ class Message < ActiveRecord::Base
         if response.first && response.second.code == 200 && response.second["messages"].first["status"] == "0"
           response = response.second
           num_segments = response['message-count'].to_i
-          price = SMS_PRICE_SENT * num_segments
-          merchant.deduct_from_account_balance(price)
-          self.update_attributes(status: response['messages'].first['status'], num_segments: num_segments, relay_price: price,
+          merchant.deduct_from_account_balance(SMS_PRICE_SENT * num_segments)
+          self.update_attributes(status: response['messages'].first['status'], num_segments: num_segments, relay_price: SMS_PRICE_SENT,
                                   message_id: response['messages'].first['message-id'], error_text: response["error-text"],
                                   message_price: response['messages'].first['message-price'])
         else
@@ -66,6 +64,10 @@ class Message < ActiveRecord::Base
       ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From send_and_save_message, unable to send message"})
       false
     end
+  end
+
+  def self.num_of_segments(msg)
+    (msg.bytesize/140.to_f).ceil
   end
 
   def self.relay_tip1
