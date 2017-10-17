@@ -438,7 +438,7 @@ class EmailingService
       begin
         template_name = 'transaction-notification-template'
         template_content = []
-        message = { "subject" => "#{options[:customer].first_name} sent you #{options[:amount]}",
+        message = { "subject" => "#{options[:customer].first_name} sent you #{options[:currency_symbol]}#{options[:amount]}",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:merchant].first_name || 'there' },
                                   { "name" => "customer_name", "content" => options[:customer].first_name },
                                   { "name" => "transaction_id", "content" => options[:transaction_id] },
@@ -474,7 +474,7 @@ class EmailingService
       begin
         template_name = 'customer-receipt-template'
         template_content = []
-        message = { "subject" => "You sent #{options[:amount]} to #{options[:merchant].org_name}",
+        message = { "subject" => "You sent #{options[:currency_symbol]}#{options[:amount]} to #{options[:merchant].org_name}",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:customer].first_name || 'there' },
                                   { "name" => "merchant_business_name", "content" => options[:merchant].org_name },
                                   { "name" => "transaction_id", "content" => options[:transaction_id] },
