@@ -19,10 +19,10 @@ class Message < ActiveRecord::Base
   def send_and_save_message(merchant, user, from, to, message, media_ary = [])
     begin
       # save message before sending
-      user = (user.present?) ? user.id : nil
+      user = user.try(:id)
       self.update_attributes(user_id: merchant.id, user_id_to: user, from: from, to: to, text: message)
 
-      if true #merchant.rn_type.present?      # this is twilio
+      if merchant.rn_type.present?      # twilio
         response = TextingService.send_sms(from, to, message, media_ary)
         if response.first
           response = response.second
@@ -38,6 +38,8 @@ class Message < ActiveRecord::Base
           Notification.text_failure_notification(response.second, from, to, message).deliver_now                         # Notify team of failure
           false
         end
+      elsif merchant.fn_subscriber_id.present?   # fibernetics
+
       else
         response = TextingService.send_sms_nexmo(from, to, message, self.id)
         if response.first && response.second.code == 200 && response.second["messages"].first["status"] == "0"

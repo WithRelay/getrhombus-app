@@ -25,6 +25,53 @@ Bhishma
 
 
 
+tionView::Template::Error (Permission denied @ utime_internal - /var/deploy/relay_dev_v1.5/web_head/releases/20171016073939/tmp/cache/assets/sprockets/v3.0/Op/Op2hGz8ymK-Mq3aT6rcgnQo3IIlK5fxJDNT1DqIUYEM.cache):
+     6:
+     7:       <div class="onboarding-form-div sign-in signup">
+     8:         <%= link_to root_url, class: 'form-logo w-inline-block', id: 'signup-logo' do %>
+     9:           <%= image_tag('Relay-Transparent-500x300.png', width: 50) %>
+    10:         <% end %>
+    11:         <div id="signup-referrer-name" class="hide">ssss</div>
+    12:
+  app/views/devise/registrations/new.html.erb:9:in `block in _app_views_devise_registrations_new_html_erb___2474883598320846284_70300754013680'
+  app/views/devise/registrations/new.html.erb:8:in `_app_views_devise_registrations_new_html_erb___2474883598320846284_70300754013680'
+
+
+
+
+Started GET "/favicon.ico" for 200.88.117.54 at 2017-10-16 10:51:00 -0400
+Cannot render console from 200.88.117.54! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Processing by StaticPagesController#to_404 as
+  Parameters: {"other"=>"favicon"}
+  ^[[1m^[[35mUser Load (5.9ms)^[[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 11  ORDER BY `users`.`id` ASC LIMIT 1
+Permission denied @ utime_internal   Rendered static_pages/to_404.html.erb within layouts/application (2.4ms)
+  ^[[1m^[[36mCampaign Load (1.1ms)^[[0m  ^[[1mSELECT `campaigns`.* FROM `campaigns` WHERE `campaigns`.`status` = 1 AND ((frequency_type = 1 and next_send_at is not null and next_send_at >= '2017-10-16 14:51:00' $
+                                  (frequency_type = 0 and deliver_now = false and date_time is not null and date(date_time) > date(created_at)
+                                    and date_time >= '2017-10-16 14:51:00' and date_time < '2017-10-17 04:20:00'))^[[0m
+  Rendered /var/deploy/relay_dev_v1.5/web_head/shared/bundle/ruby/2.2.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_source.erb (39.0ms)
+  Rendered /var/deploy/relay_dev_v1.5/web_head/shared/bundle/ruby/2.2.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (17.4ms)
+  Rendered /var/deploy/relay_dev_v1.5/web_head/shared/bundle/ruby/2.2.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (2.0ms)
+  Rendered /var/deploy/relay_dev_v1.5/web_head/shared/bundle/ruby/2.2.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (117.4ms)
+Completed 500 Internal Server Error in 158ms
+
+ActionView::Template::Error (Permission denied @ utime_internal - /var/deploy/relay_dev_v1.5/web_head/releases/20171016073939/tmp/cache/assets/sprockets/v3.0/S3/S3_6dbrPq4vxEqf8y_JXIfWJu5yvPCWS9ad_TKTPDdQ.cache):
+    13:     <%= favicon_link_tag 'favicon.ico' %>
+    14:
+    15:     <!--  CSS files -->
+    16:     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true  %>
+    17:
+    18:     <%= javascript_include_tag 'https://js.stripe.com/v2/' %>
+    19:     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  app/views/layouts/application.html.erb:16:in `_app_views_layouts_application_html_erb___1624347197374214579_54821420'
+  app/controllers/application_controller.rb:74:in `set_time_zone'
+
+
+  Rendered /var/deploy/relay_dev_v1.5/web_head/shared/bundle/ruby/2.2.0/gems/action
+
+
+
+
+
 
 
 

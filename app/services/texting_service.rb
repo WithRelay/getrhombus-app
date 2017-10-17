@@ -48,33 +48,30 @@ class TextingService
       end
     end
 
-    def get_subscriber
+    def send_sms_fibernetics(fn_num)
       begin
-        #from = from[1..-1] if from.chr == "+"
-        #to = to[1..-1] if to.chr == "+"
-
-        # add timeout
-        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", FIBERNETICS_PN] ])
-        puts (FIBERNETICS_BASE_URL + "/GetSubscriber.ashx?" + uri)
-        re = HTTParty.post(FIBERNETICS_BASE_URL + "/GetSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
-        #[true, ]
-        re
+        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", fn_num] ])
+        re = HTTParty.post(FIBERNETICS_BASE_URL + "/CreateSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+        return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == "OK"
+      rescue Timeout::Error => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber timeout" })
       rescue StandardError => err
-        [false, err]
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber" })
       end
+      nil
     end
 
-    def create_subscriber
+    def create_fibernetics_subscriber(fn_num)
       begin
-
-        # add timeout
-        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", FIBERNETICS_PN] ])
+        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", fn_num] ])
         re = HTTParty.post(FIBERNETICS_BASE_URL + "/CreateSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
-        #[true, ]
-        re
+        return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == "OK"
+      rescue Timeout::Error => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber timeout" })
       rescue StandardError => err
-        [false, err]
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber" })
       end
+      nil
     end
 
     def buy_number(params)

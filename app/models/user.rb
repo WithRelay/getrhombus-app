@@ -216,11 +216,15 @@ class User < ActiveRecord::Base
   end
 
   def is_active_merchant?
-    count = Transaction.where(team_id: self.id).count
-            + MerchantCustomer.where(merchant_id: self.id).count
-            + Message.where("user_id = ? or user_id_to = ?", self.id, self.id).count
+    count = Transaction.where(team_id: self.id).count + MerchantCustomer.where(merchant_id: self.id).count
+            + Message.where("user_id = ? or user_id_to = ?", self.id, self.id).count 
             + FbMessage.where("user_id = ? or user_id_to = ?", self.id, self.id).count
     count > 0
+  end
+
+  def create_fibernetics_subscriber
+    re = TextingService.create_fibernetics_subscriber(self.rhombus_number)
+    self.update_columns(fn_subscriber_id: re, rn_friendly_name: nil, rn_type: nil, rn_country: nil) if re
   end
 
   private
