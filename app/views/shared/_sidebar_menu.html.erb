@@ -79,5 +79,7 @@
     <%= link_to 'Charges', user_transactions_path(current_user), class: 'charges dashboard-dropdown-link' %>
     <%= link_to 'Pre-authorized', user_transactions_path(current_user, captured: false), class: 'preauth dashboard-dropdown-link' %>
     <%= link_to 'Subscriptions', user_subscriptions_path(current_user ), class: 'subscription dashboard-dropdown-link' %>
-    <%= link_to_if current_user.is_platform?, 'Coupons', user_coupons_path(current_user), class: 'subscription dashboard-dropdown-link' %>
+    <% if  current_user.is_platform? %>
+      <%= link_to 'Coupons', user_coupons_path(current_user), class: 'subscription dashboard-dropdown-link' %>
+    <% end %>
   </div>
