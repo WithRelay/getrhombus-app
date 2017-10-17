@@ -15,7 +15,7 @@ class AccountReload < ActiveRecord::Base
       # send email here
       options = {
         merchant: user,
-        transaction_id: txn.id,
+        transaction_id: txn.txn_number,
         transaction_date: txn.created_at.strftime('%B %d,%Y | %-I:%M%P'),
         status: txn.status.capitalize,
         payment_method: "Visa **** **** **** #{user.last4} (Expiry #{user.exp_month}/#{user.exp_year})",
