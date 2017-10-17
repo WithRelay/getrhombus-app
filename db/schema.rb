@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171016234217) do
+ActiveRecord::Schema.define(version: 20171017002949) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -666,7 +666,7 @@ ActiveRecord::Schema.define(version: 20171016234217) do
     t.string   "publishable_key",           limit: 191
     t.boolean  "livemode",                  limit: 1
     t.integer  "user_id",                   limit: 4
-    t.integer  "transaction_fee_id",        limit: 4
+    t.integer  "transaction_fee_id",        limit: 4,     default: 2
     t.string   "ip",                        limit: 191
     t.integer  "tos_date",                  limit: 4
     t.string   "user_agent",                limit: 191
@@ -674,8 +674,8 @@ ActiveRecord::Schema.define(version: 20171016234217) do
     t.boolean  "payouts_enabled",           limit: 1
     t.text     "account_verification",      limit: 65535
     t.text     "legal_entity_verification", limit: 65535
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
   end
 
   add_index "stripe_creds", ["account_id"], name: "index_stripe_creds_on_account_id", unique: true, using: :btree
@@ -712,7 +712,7 @@ ActiveRecord::Schema.define(version: 20171016234217) do
 
   create_table "transaction_fees", force: :cascade do |t|
     t.string   "provider",             limit: 191
-    t.string   "provider_percent",     limit: 191, default: "2.9"
+    t.string   "provider_percent",     limit: 191, default: "2.8"
     t.integer  "provider_cents",       limit: 4,   default: 30
     t.string   "platform_percent",     limit: 191, default: "0"
     t.integer  "platform_cents",       limit: 4,   default: 0

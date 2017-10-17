@@ -38,8 +38,8 @@ namespace :platform do
   # 3
   desc "Setup stripe fees"
   task :setup_stripe_fees => :environment do
-    TransactionFee.create(provider: 'stripe', fee_type: 0);
-    TransactionFee.create(provider: 'stripe');
+    TransactionFee.create(id: 1, provider: 'stripe', fee_type: 0);
+    TransactionFee.create(id: 2, provider: 'stripe');
   end
 
   #4
