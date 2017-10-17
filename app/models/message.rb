@@ -80,9 +80,9 @@ class Message < ActiveRecord::Base
 
   def self.api_send(msg)
     begin
-      msg = msg.present? ? msg : 'Api send test'
+      msg = msg.present? ? msg : 'Trios number test'
       webhook_url: '<redacted_webhook_url>'
-      body = { key: 'D6sAHcjoJWT0bL7d3iueqAtt', secret: 'QSGaYStQY6XWx1Is2kbGBgtt', to: '<redacted_phone_number>',<redacted_phone_number>", body: msg }
+      body = { key: 'wdJobH3wLOafkjPn3Yn5TQtt', secret: 'XyQjmW19Jf3cCNyesqEHmQtt', to: '<redacted_phone_number>',<redacted_phone_number>", body: msg }
       options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
       HTTParty.post(webhook_url, options)
     rescue StandardError => exception
