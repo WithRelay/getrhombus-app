@@ -407,10 +407,10 @@
             <selectize class="form-control dropdown w-select" config='hashtag_config' ng-model="charge.hashtag_id" options='hashtag_config_options'></selectize>
           </div>
 
-          <input class="amount-field text-field w-input" type="number" min="1" max='15000' ng-model='charge.amount' name="amount" placeholder="10.20" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
+          <input ng-required='true' class="amount-field text-field w-input" type="number" min="1" max='15000' ng-model='charge.amount' name="amount" placeholder="10.20" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
           <%#<span ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">A valid amount is required</span>%>
 
-          <textarea type="text" class="item-description text-area w-input" ng-model='charge.notes' name="notes" placeholder="Item Description" ng-trim='true'></textarea>
+          <textarea type="text" class="item-description text-area w-input" ng-model='charge.notes' name="notes" placeholder="Item Description" ng-trim='true' ng-required="true" ng-class="{'has-error': chargeForm.notes.$invalid && !chargeForm.notes.$pristine }"></textarea>
 
           <div class="form-check-box w-checkbox">
             <input type="checkbox" class="w-checkbox-input" name="authorize" ng-model='charge.authorize' value="authorize">

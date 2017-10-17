@@ -29,35 +29,41 @@ class Message < ActiveRecord::Base
           num_segments = response.num_segments.to_i
           price = (media_ary.blank?) ? (SMS_PRICE_SENT * num_segments) : MMS_PRICE_SENT
           merchant.deduct_from_account_balance(price)
-          self.update_attributes(status: response.status, message_id: response.sid,
-                                  message_timestamp: response.date_updated, message_price: response.price,
-                                  error_code: response.error_code, error_text: response.error_message,
-                                  price_unit: response.price_unit, num_segments: num_segments,
-                                  num_media: response.num_media, relay_price: price)
+          self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, 
+                                  message_price: response.price, error_code: response.error_code, error_text: response.error_message,
+                                  price_unit: response.price_unit, num_segments: num_segments, num_media: response.num_media, relay_price: price)
         else
-          Notification.text_failure_notification(response.second, from, to, message).deliver_now                         # Notify team of failure
+          ExceptionNotifier.notify_exception(response, env: Rails.env, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message })
           false
         end
-      elsif merchant.fn_subscriber_id.present?   # fibernetics
-
-      else
+      elsif merchant.fn_subscriber_id.present?   #  fibernetics
+        response = TextingService.send_sms_fibernetics(from, to, message, merchant.fn_subscriber_id)
+        if response && response.code == 200 && response['response']['status'] == 'OK'
+          num_segments = (message.bytesize/140.to_f).ceil
+          price = SMS_PRICE_SENT * num_segments
+          merchant.deduct_from_account_balance(price)
+          self.update_attributes(status: "OK", num_segments: num_segments, relay_price: price)          
+        else
+          ExceptionNotifier.notify_exception(response, env: Rails.env, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message })
+          false
+        end
+      else # nexmo
         response = TextingService.send_sms_nexmo(from, to, message, self.id)
         if response.first && response.second.code == 200 && response.second["messages"].first["status"] == "0"
           response = response.second
           num_segments = response['message-count'].to_i
-          merchant.deduct_from_account_balance(SMS_PRICE_SENT * num_segments)
-          self.update_attributes(status: response['messages'].first['status'], num_segments: num_segments,
-                                  message_id: response['messages'].first['message-id'],
-                                  message_price: response['messages'].first['message-price'],
-                                  error_text: response["error-text"], relay_price: SMS_PRICE_SENT)
+          price = SMS_PRICE_SENT * num_segments
+          merchant.deduct_from_account_balance(price)
+          self.update_attributes(status: response['messages'].first['status'], num_segments: num_segments, relay_price: price,
+                                  message_id: response['messages'].first['message-id'], error_text: response["error-text"],
+                                  message_price: response['messages'].first['message-price'])
         else
-          Notification.text_failure_notification(response.second, from, to, message).deliver_now               # Notify team of failure
+          ExceptionNotifier.notify_exception(response, env: Rails.env, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message })
           false
         end
       end
     rescue StandardError => err
-      puts err.inspect
-      puts 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrrrrrr'
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From send_and_save_message, unable to send message"})
       false
     end
   end

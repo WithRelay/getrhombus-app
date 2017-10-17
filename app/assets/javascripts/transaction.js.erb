@@ -76,6 +76,9 @@ $(document).ready(function () {
               callback(res['hashtags']);
             }
           });
+        },
+        onChange: function(value) {
+          if (value) $('#charge-amount').val(this.options[value].amount);
         }
       })
       .on('change', function(e) {
@@ -108,7 +111,14 @@ $(document).ready(function () {
               }
             }
           },
-          'transaction[hashtag_id]':{
+          'transaction[notes]' :{
+            validators: {
+              notEmpty: {
+                message: 'A note is required'
+              }
+            }
+          },
+          /*'transaction[hashtag_id]':{
             validators: {
                 callback: {
                   message: 'Please select a item',
@@ -117,7 +127,7 @@ $(document).ready(function () {
                   }
                 }
               }
-            }
+            }*/
           }
       })
       .on('success.form.fv', function(e, data) {

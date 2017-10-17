@@ -24,6 +24,7 @@ Bhishma
 
 
 
+s = TextingService('<redacted_phone_number>', '<redacted_phone_number>', 'test message', "FSGe31457817363405091af6158c716089e")
 
 tionView::Template::Error (Permission denied @ utime_internal - /var/deploy/relay_dev_v1.5/web_head/releases/20171016073939/tmp/cache/assets/sprockets/v3.0/Op/Op2hGz8ymK-Mq3aT6rcgnQo3IIlK5fxJDNT1DqIUYEM.cache):
      6:

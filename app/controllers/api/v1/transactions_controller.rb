@@ -36,7 +36,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
         re = customer.has_valid_card?
         if re[:valid]
           txn = Transaction.new
-          tag = Hashtag.find_by(id: params[:transaction][:hashtag_id])
+          tag = params[:transaction][:hashtag_id].present? ? Hashtag.find_by(id: params[:transaction][:hashtag_id]) : nil
           amount = Toolbox::Decimal.to_cents(params[:transaction][:amount])
           capture = ['1', 'true', true].include?(params[:transaction][:capture]) ? true : false
           re = txn.process_dashboard_txn(amount, current_user, customer, params[:transaction][:notes], tag, capture, 'Message', 'dashboard-txn')

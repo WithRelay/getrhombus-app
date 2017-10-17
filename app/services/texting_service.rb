@@ -48,11 +48,11 @@ class TextingService
       end
     end
 
-    def send_sms_fibernetics(fn_num)
+    def send_sms_fibernetics(from, to, body, subscriber_id)
       begin
-        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", fn_num] ])
-        re = HTTParty.post(FIBERNETICS_BASE_URL + "/CreateSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
-        return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == "OK"
+        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], 
+                                    ["phone_number", from], ["to", to], ["message", body], ['subscriber_id', subscriber_id] ])        
+        return HTTParty.post("https://smssend.fongo.com/Send.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
       rescue Timeout::Error => err
         ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber timeout" })
       rescue StandardError => err
@@ -64,7 +64,7 @@ class TextingService
     def create_fibernetics_subscriber(fn_num)
       begin
         uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", fn_num] ])
-        re = HTTParty.post(FIBERNETICS_BASE_URL + "/CreateSubscriber.ashx?" + uri, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+        re = HTTParty.post(FIBERNETICS_BASE_URL + "/CreateSubscriber.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
         return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == "OK"
       rescue Timeout::Error => err
         ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber timeout" })

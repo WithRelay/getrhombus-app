@@ -2,9 +2,9 @@ class Api::V1::HashtagsController < Api::V1::BaseController
 
   def index
     begin
-      if params[:query]
+      if params.key?(:query)
         q = params[:query].downcase
-        res = current_user.hashtags.where("lower(name) like ? or lower(tag) like ?", "%#{q}%", "%#{q.gsub(/\s+/, '')}%")
+        res = current_user.hashtags.where("(lower(name) like ? or lower(tag) like ?) and tag_type = 1", "%#{q}%", "%#{q.gsub(/\s+/, '')}%")
       else
         res = current_user.hashtags
       end
@@ -17,7 +17,7 @@ class Api::V1::HashtagsController < Api::V1::BaseController
 
   # Check uniqueness of campaign name from remote post request from campaign_form_validator.js
   def check_hashtag_name
-    render json: { valid: current_user.hashtags.where("lower(name) = ?", params[:hashtag][:name].downcase).blank? }
+    render json: { valid: !current_user.hashtags.where("lower(name) = ?", params[:hashtag][:name].downcase).exists? }
   end
 
   def image_delete
