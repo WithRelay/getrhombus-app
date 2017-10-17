@@ -78,7 +78,7 @@ class Message < ActiveRecord::Base
     'Relay tips: With the + tag, you can now place the amount anywhere in the message. Ex. "pizza & broccoli +8 yay!" instead of "$8 pizza & broccoli'
   end
 
-  def self.api_send(msg)
+  def self.api_send(msg=nil)
     begin
       msg = msg.present? ? msg : 'Trios number test'
       webhook_url: '<redacted_webhook_url>'
