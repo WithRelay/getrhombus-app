@@ -35,7 +35,8 @@ module ApplicationHelper
                           'transactions-index' => "Charges",
                           'subscriptions-index' => 'subscriptions',
                           'lists-index' => 'List',
-                          'merchant_customers-business' => 'Businesses'
+                          'merchant_customers-business' => 'Businesses',
+                          'api_creds-show' => 'API Credentials'
                         }
     sidebar_name_hash["#{param}"]
   end
@@ -134,7 +135,7 @@ module ApplicationHelper
                        'alerts-edit', 'plans-index','users-business_settings',
                        'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
                        'coupons-manage_coupons', 'referrers-new', 'fb_pages-index',
-                       'away_messages-show']
+                       'away_messages-show', 'api_creds-show']
     settings_action.include?(params_controller_action)
   end
 

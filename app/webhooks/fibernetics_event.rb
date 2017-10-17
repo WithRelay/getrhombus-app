@@ -37,6 +37,7 @@ class FiberneticsEvent
       return if Message.where(message_id: data['id']).exists?
 
       @phone_number = data['from'].gsub('+', '')
+      @timestamp = data['timestamp']
       user = User.find_by(phone_number: @phone_number)      
       num_segments = Message.num_of_segments(data["body"])      
 
@@ -48,7 +49,7 @@ class FiberneticsEvent
         message_id: data['id'],
         text: data['body'].strip,
         num_segments: num_segments,
-        message_timestamp: data['timestamp'].to_time,
+        message_timestamp: @timestamp.to_time,
         relay_price: SMS_PRICE_RECEIVED
       )
 
@@ -80,7 +81,7 @@ class FiberneticsEvent
   def post_message_to_api_user
     begin
       webhook_url = @merchant.api_cred.webhook_url
-      body = { from: @phone_number, to: @to, body: @message.text }
+      body = { from: @phone_number, to: @to, body: @message.text, timestamp: @timestamp }
       options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
       HTTParty.post(webhook_url, options)
     rescue => exception

@@ -281,7 +281,7 @@
 
     <div class="welcome-to-relay-div" ng-if="!merchant.customer_contact_count">
       <img src="<%= asset_path "019_076.png" %>">
-      <p class="welcome-message-text-area-paragraph">Hi {{ merchant.first_name }}, to get the most out of Relay add or import your customers</p>
+      <p class="welcome-message-text-area-paragraph">Hi {{ merchant.first_name }}, to get the most out of Relay, add or import your customers</p>
       <a class="button messaging-dash-welcome-div w-button" ng-href="/users/{{ merchant.id }}/customers">Add a customer</a>
       <a class="alt button messaging-dash-welcome-div w-button" ng-href="/users/{{ merchant.id }}/customers">Import customers</a>
     </div>

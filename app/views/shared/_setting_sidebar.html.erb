@@ -12,6 +12,12 @@
       <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
     <% end %>
 
+    <% if current_user.is_api_user? %>
+      <%= link_to user_api_cred_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+        <div class="left-nav-tab">Api Creds</div>
+      <% end %>
+    <% end %>
+
     <%= link_to user_away_message_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Away Messages</div>
     <% end %>
