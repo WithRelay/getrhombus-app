@@ -257,7 +257,7 @@ class User < ActiveRecord::Base
       end
 
       if self.is_merchant?
-        Alert.find_or_create_by(user_id: self.id) { |alert| alert.emails = [self.email] }
+        Alert.find_or_create_by(user_id: self.id, send_alert: 0) { |alert| alert.emails = [self.email] }
         AwayMessage.find_or_create_by(user_id: self.id, response: "We're away at the moment and will get back to you when we return :).")
         GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
         origin = List.origins[:system]

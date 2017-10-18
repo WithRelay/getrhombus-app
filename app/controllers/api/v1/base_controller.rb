@@ -1,10 +1,11 @@
 class Api::V1::BaseController < ApplicationController
-
-  ALLOWED_MIME_TYPE = %w(image/jpg image/png image/jpeg)
-  ALLOWED_SIZE_IN_BYTES = 4718592
-
   before_action :cors_preflight_check
   after_action :cors_set_access_control_headers
+
+  ALLOWED_MIME_TYPE = %w(image/jpg image/png image/jpeg)
+  ALLOWED_SIZE_IN_BYTES = 4718592 
+
+  def offline_check; head :no_content end
 
   def cors_set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'
@@ -21,10 +22,6 @@ class Api::V1::BaseController < ApplicationController
       headers['Access-Control-Max-Age'] = '1728000'
       render :text => '', :content_type => 'text/plain'
     end
-  end
-
-  def offline_check
-    head :no_content
   end
 
   private

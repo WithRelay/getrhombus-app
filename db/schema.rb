@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171017002949) do
+ActiveRecord::Schema.define(version: 20171018161904) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20171017002949) do
   add_index "addresses", ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id", using: :btree
 
   create_table "alerts", force: :cascade do |t|
-    t.boolean  "send_alert",  limit: 1,     default: true
+    t.boolean  "send_alert",  limit: 1,     default: false
     t.integer  "interval",    limit: 4,     default: 15
     t.boolean  "include_sms", limit: 1,     default: false
     t.text     "sms_numbers", limit: 65535

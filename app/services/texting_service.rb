@@ -11,8 +11,8 @@ class TextingService
   TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
   TWILIO_RHOMBUS_APP_SID = Rails.application.secrets.twilio["rhombus_app_sid"]
 
-  FIBERNETICS_API_KEY = Rails.application.secrets.fibernetics["key"]
-  FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics["secret"]
+  FIBERNETICS_API_KEY = Rails.application.secrets.fibernetics["key"]   #GetRhombusTest
+  FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics["secret"] #qZAmwz9m8Z6b
   FIBERNETICS_BASE_URL = "https://smsadmin.fongo.com"
   FIBERNETICS_PN = "<redacted_phone_number>"
 

@@ -4,7 +4,7 @@ window.Offline.options = {
   checks: { xhr: { url: '/v1/offline_check' } }
 };
 
-var delay = 15000;
+var delay = 20000;
 setTimeout(function retry() {
   //if (Offline.state == "up") Offline.check();
   setTimeout(retry, delay);
