@@ -132,7 +132,8 @@ class FacebookMessengerService
     def get_profile_pic(access_token, id)
       begin
         graph = Koala::Facebook::API.new(access_token)
-        graph.get_picture(id, type: :large)
+        picture_data = graph.get_picture_data(id, type: :large)
+        picture_data['data']['url']
       rescue StandardError => err
       end
     end
