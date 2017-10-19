@@ -5,7 +5,7 @@ class DripCampaignJob
   def self.perform
     ActiveRecord::Base.clear_active_connections!
 
-    User.where(user_level: 1).each do |user|
+    User.where(user_level: 1, status: 1).each do |user|
 
       diff_in_days = (((Time.current.change(hour: 0) - user.created_at.change(hour: 0)) / 1.day).to_i) - 1
 

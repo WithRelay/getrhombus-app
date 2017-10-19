@@ -1,22 +1,12 @@
 class AlertsController < ApplicationController
   include DashboardNotification
 
-  before_action :set_alert, only: [:show, :edit, :update, :destroy]
+  before_action :set_alert, only: [:show, :edit, :update]
   before_action :set_notifications , only: [:edit]
 
   respond_to :html
 
-  def index
-    @alerts = Alert.all
-    respond_with(@alerts)
-  end
-
   def show
-    respond_with(@alert)
-  end
-
-  def new
-    @alert = Alert.new
     respond_with(@alert)
   end
 
@@ -38,14 +28,9 @@ class AlertsController < ApplicationController
     redirect_to user_notifications_path, notice: "Updated"  #respond_with(@alert)
   end
 
-  def destroy
-    @alert.destroy
-    respond_with(@alert)
-  end
-
   private
     def set_alert
-      @alert = Alert.find_by(user_id: current_user.id) #Alert.find(params[:id])
+      @alert = Alert.find_or_create_by(user_id: current_user.id) { |alert| alert.emails = [current_user.email] }
     end
 
     def alert_params

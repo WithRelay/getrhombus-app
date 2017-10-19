@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
 
   after_commit :do_signup_stuff, on: :create
 
-  enum status: { inactive: 0, active: 1, fraudulent: 2 }
+  enum status: { inactive: 0, active: 1, fraudulent: 2, api_only: 3 }
 
   def is_api_user?; api_cred.present? end
   def is_customer?; self.user_level == 0 end
@@ -257,7 +257,6 @@ class User < ActiveRecord::Base
       end
 
       if self.is_merchant?
-        Alert.find_or_create_by(user_id: self.id, send_alert: 0) { |alert| alert.emails = [self.email] }
         AwayMessage.find_or_create_by(user_id: self.id, response: "We're away at the moment and will get back to you when we return :).")
         GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
         origin = List.origins[:system]
