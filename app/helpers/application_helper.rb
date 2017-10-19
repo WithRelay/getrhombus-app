@@ -81,7 +81,7 @@ module ApplicationHelper
   end
 
   def authenticated_pages
-     unauthenticate_controller || restrict_devise_actions || relay_docs_pages || link_facebook || csv_actions
+    onboarding_pages || unauthenticate_controller || restrict_devise_actions || relay_docs_pages || link_facebook || csv_actions
   end
 
   def link_facebook
@@ -149,6 +149,11 @@ module ApplicationHelper
     controller_actions.include?(params_controller_action)
   end
 
+  def onboarding_pages
+    onboarding_actions = ['numbers-new']
+    onboarding_actions.include?(params_controller_action)
+  end
+
   def params_controller_action
     "#{params[:controller]}-#{params[:action]}"
   end
@@ -156,7 +161,7 @@ module ApplicationHelper
   def restrict_devise_actions
     restricted_actions = ['users-add_profile_info', 'users-add_subscription',
                           'sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
-                          'users-add_rhombus_number', 'users-verify_hosted_sms_order', 'devise/passwords-edit', 'devise/passwords-update',
+                          'users-verify_hosted_sms_order', 'devise/passwords-edit', 'devise/passwords-update',
                           'registrations-edit', 'devise/passwords-new', 'devise/passwords-create', 'users-add_card_info'
                          ]
     restricted_actions.include?(params_controller_action)

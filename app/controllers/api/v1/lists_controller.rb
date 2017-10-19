@@ -50,7 +50,7 @@ class Api::V1::ListsController < Api::V1::BaseController
           render json: { error: list.errors.full_messages.to_json }, status: 500
         end
       else
-        list = save_list
+        list = save_segment
         if list.errors.full_messages.blank?
           str = list.is_segment? ? 'segments' : 'lists'
           render json: { notice: "Segment saved", redirect_url: "/users/#{current_user.id}/#{str}/#{list.id}" }, status: 200
@@ -87,7 +87,7 @@ class Api::V1::ListsController < Api::V1::BaseController
     # @param user_id The user_id
     # @param segment a text field that stores segment data
     # default is nil (i.e. list)
-    def save_list
+    def save_segment
       @filter_params = segment_params
       List.create(name: @filter_params[:segment_name], list_type: @filter_params[:list_type], origin: List.origins[:merchant],
                   channel: @filter_params[:list_channel], user_id: current_user.id, segment: get_segment_data_hash,

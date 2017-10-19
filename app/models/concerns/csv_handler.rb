@@ -76,7 +76,7 @@ module CSVHandler
 
         if @customer.blank?
           # don't process the dummy data we put in the template file
-          unless row[:email] == '<redacted_email>' && row[:email].blank?
+          if row[:email].present? && row[:email] != '<redacted_email>'
             error_hash[row[:email]] = []
 
             begin

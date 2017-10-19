@@ -11,10 +11,10 @@ class TextingService
   TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
   TWILIO_RHOMBUS_APP_SID = Rails.application.secrets.twilio["rhombus_app_sid"]
 
-  FIBERNETICS_API_KEY = Rails.application.secrets.fibernetics["key"]   #GetRhombusTest
-  FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics["secret"] #qZAmwz9m8Z6b
-  FIBERNETICS_BASE_URL = "https://smsadmin.fongo.com"
-  FIBERNETICS_PN = "<redacted_phone_number>"
+  #FIBERNETICS_PN = "<redacted_phone_number>"
+  FIBERNETICS_API_KEY = Rails.application.secrets.fibernetics["key"] #-> <redacted_webhook_url>
+  FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics["secret"]
+  # Not currently used alternative - GetRhombusTest, #qZAmwz9m8Z6b -> #<redacted_webhook_url>
 
   class << self
 
@@ -42,10 +42,12 @@ class TextingService
         # 5MB max size, 10 images max
         data[:media_url] = media_ary if media_ary.present?
         # https://www.twilio.com/docs/api/rest/message
-        [true, client.api.messages.create(data)]
+        return [true, client.api.messages.create(data)]
+      rescue Twilio::REST::TwilioError => err
       rescue StandardError => err
-        [false, err]
       end
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service send_sms", from: from, to: to, body: body, media_ary: media_ary })
+      [false, err]
     end
 
     def send_sms_fibernetics(from, to, body, subscriber_id)
@@ -77,7 +79,7 @@ class TextingService
     def create_fibernetics_subscriber(fn_num)
       begin
         uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", fn_num] ])
-        re = HTTParty.post(FIBERNETICS_BASE_URL + "/CreateSubscriber.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+        re = HTTParty.post("https://smsadmin.fongo.com/CreateSubscriber.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
         return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == "OK"
       rescue Timeout::Error => err
         ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber timeout" })
@@ -97,8 +99,10 @@ class TextingService
                 sms_application_sid: TWILIO_RHOMBUS_APP_SID)
           return re.phone_number.gsub('+', ''), re.friendly_name
         end
-      rescue Twilio::REST::RestException
-      rescue StandardError => e
+      rescue Twilio::REST::TwilioError => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service buy_number", params: params })
+      rescue StandardError => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service buy_number", params: params })
       end
       false
     end
@@ -124,9 +128,11 @@ class TextingService
         end
 
         { number: number.nil? ? '' : number.phone_number  }
-      rescue Twilio::REST::RestException
+      rescue Twilio::REST::TwilioError => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service search_number", params: params })
         { error: "Twilio cannot provision the number." }
-      rescue StandardError => e
+      rescue StandardError => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service search_number", params: params })
         { error: e.message }
       end
     end
@@ -136,12 +142,12 @@ class TextingService
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         number = client.lookups.v1.phone_numbers(num).fetch
         #number.national_format
-        [number.phone_number[1..-1], number.country_code]
-      rescue Twilio::REST::RestException
-        false
-      rescue StandardError => e
-        false
+        return [number.phone_number[1..-1], number.country_code]
+      rescue Twilio::REST::TwilioError => err
+      rescue StandardError => err
       end
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service number_lookup", num: num })
+      false
     end
 
     def twilio_list
@@ -409,7 +415,8 @@ class TextingService
         # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
         client.incoming_phone_numbers.list({phone_number: num}).each { |n| n.delete }
         true
-      rescue StandardError => e
+      rescue StandardError => err
+        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service release_number", num: num })
         false
       end
     end

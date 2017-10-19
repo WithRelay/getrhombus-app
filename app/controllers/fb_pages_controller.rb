@@ -22,7 +22,7 @@ class FbPagesController < ApplicationController
 
     if res && @fb_page.try(:subscribe)
       redirect_to user_fb_pages_path(current_user), flash: {
-        notice: @fb_page.page_name + ' page has been successfully subscribed'
+        notice: "Successfully subscribed to #{@fb_page.page_name} page"
       }
     else
       redirect_to user_fb_pages_path(current_user), flash: {
@@ -34,7 +34,7 @@ class FbPagesController < ApplicationController
   def unsubscribe_user_fb_page
     if @fb_page.try(:unsubscribe)
       redirect_to user_fb_pages_path(current_user), flash: {
-        notice: @fb_page.page_name + ' page has been successfully unsubscribed'
+        notice: "Successfully unsubscribed #{@fb_page.page_name} page"
       }
     else
       redirect_to user_fb_pages_path(current_user), flash: {

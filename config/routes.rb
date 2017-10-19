@@ -60,7 +60,7 @@ Rails.application.routes.draw  do
         post 'auto_recharge' => "registrations#auto_recharge"
       end
       get 'sms-usage'
-      get 'add-rhombus-number'
+      get 'add-rhombus-number' => 'numbers#new'
       get 'verify-hosted-sms-order' => 'users#verify_hosted_sms_order'
       post 'verify_hosted_sms'
       get 'add-subscription'
@@ -101,6 +101,7 @@ Rails.application.routes.draw  do
       patch 'update-managed-acct' => 'users#update_managed_acct'
       get 'api-cred' => 'api_creds#show'
       resource :api_creds, only: [:update]
+      resource :numbers, only: [:create]
     end
   end
 
@@ -164,6 +165,7 @@ Rails.application.routes.draw  do
     end
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :merchant_customers,  path: :customers, only: [:index, :create]
+    post '/customer_csv' => 'merchant_customers#customer_csv'
     resources :merchant_contacts,  path: :contacts, only: [:index]
     resources :demos, only: [:create]
     resources :conversations, only: [:index, :show] do

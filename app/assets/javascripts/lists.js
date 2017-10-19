@@ -205,7 +205,7 @@ $(document).on('ready page:load', function() {
   // Fired on click on create list button
   $("#create_list_button").click(function(e) {
     if (!isAnyCheckboxSelected('.obj-checkbox-selector')) {
-      setFlashForList('Please select customer from the table', 'error');
+      setFlashForList('Please select customers from the table', 'error');
     } else {
       obj_ids = getSelectedObjectIds();
       $("#new-list-modal-div").lightbox_me({

@@ -1,7 +1,7 @@
 module AdditionalUserActions
   extend ActiveSupport::Concern
 
-  [:add_rhombus_number, :verify_hosted_sms_order, :add_subscription, :add_card_info, :billing_information, :integrations].each do |method_name|
+  [:verify_hosted_sms_order, :add_subscription, :add_card_info, :billing_information, :integrations].each do |method_name|
     send :define_method, method_name do
       # do nothing
     end

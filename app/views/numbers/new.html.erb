@@ -5,7 +5,7 @@
         <h4 class="form-header">Setup phone number</h4>
         <div class="flex-underline form-header-underline"></div>
         <div class="get-started-2 log-in-form">
-          <%= form_for(current_user, url: user_registration_update_path(current_user), html: { method: :patch, class: "w-clearfix", id: "search_number_form" }) do |f| %>
+          <%= form_for('number', url: user_numbers_path(current_user), html: { method: :post, class: "w-clearfix", id: "search_number_form" }) do |f| %>
 
             <select class="dropdown w-select" data-name="Number Type" id="hosted_sms_select">
               <option value="use-existing-landline">Use my existing landline or toll-free number</option>
@@ -23,8 +23,6 @@
                 <%= f.text_field :area_code, id: 'searchNumberField', class: "login text-field w-input", placeholder: "Enter area code" %>
 
                 <div class="area-code-availability flex-underline form-header-underline"></div>
-
-                <input type="hidden" name="page_params" value="add_rhombus_number">
 
                 <label class="form-label paragraph" for="Area-Code-Unavailable-CTA-2">Area code availability depends on the telecom network providers. What would you like to do if your preferred area code is unavailable?</label>
                 <select class="dropdown w-select" id="areaCodeUnavailable" >

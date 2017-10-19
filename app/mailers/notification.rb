@@ -10,11 +10,4 @@ class Notification < ActionMailer::Base
     mail to: TEAM_EMAIL, subject: "Failed to Tokenize"
   end
 
-  def text_failure_notification(response, from = "", to = "", message = "")
-  	@response = response
-    @from = from
-    @to = to
-    @text = message
-  	mail to: TEAM_EMAIL, subject: "Nexmo API Error"
-  end
 end

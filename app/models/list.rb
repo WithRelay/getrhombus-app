@@ -37,4 +37,16 @@ class List < ActiveRecord::Base
     end
   end
 
+  def create_default_segments(merchant)
+    orn, ct, cus, con = List.origins[:system], List.campaign_types[:campaign], List.list_types[:customer], List.list_types[:contact]
+    merchant.lists.create([
+      { name: 'New Customers', segment: new_customers_default_segment_data, origin: orn, list_type: cus, campaign_type: ct },
+      { name: 'New Contacts', segment: new_contacts_default_segment_data, origin: orn, list_type: con, campaign_type: ct },
+      { name: 'Active Customers', segment: active_customers_default_segment_data, origin: orn, list_type: cus, campaign_type: ct },
+      { name: 'Active Contacts', segment: active_contacts_default_segment_data, origin: orn, list_type: con, campaign_type: ct },
+      { name: 'Inactive Customers', segment: inactive_customers_default_segment_data, origin: orn, list_type: cus, campaign_type: ct },
+      { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: orn, list_type: con, campaign_type: ct }
+    ])
+  end
+
 end

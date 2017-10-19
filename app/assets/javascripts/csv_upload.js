@@ -10,15 +10,15 @@ $(document).ready(function () {
     file = this.files; // Get the selected files from the input.
     if (file && file.length) {
       if (file.length > 1)
-        Flashhandler.setflashmessage("Please upload one csv file", 'error');
+        FlashHandler.setFlashMessage("Please upload one csv file", 'error');
       else {
         file = file[0];
-        console.log(file.type)
         if (file.type.match('csv')) {
           $('#csv-file-name').text(file.name);
           return;
-        } else
-          Flashhandler.setflashmessage("Can't upload file type",'error');
+        } else {
+          FlashHandler.setFlashMessage("Can't upload file type", 'error');
+        }
       }
     }
 
@@ -47,16 +47,16 @@ $(document).ready(function () {
 
   function send_payload(payload) {
     var xhr = new XMLHttpRequest(); // Set up the request.
-    xhr.open('POST', '/v1/customers.csv', true); // Open the connection.
+    xhr.open('POST', '/v1/customer_csv', true); // Open the connection.
     xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
     xhr.onload = function() {
       if (xhr.readyState === 4) {
+        var status_type = 'error';
         if (xhr.status === 200) {
           reset_file_picker();
-        } else {
-          //console.log('Something went wrong on our end.')
-        }
-        //console.log(JSON.parse(xhr.responseText));
+          status_type = 'notice';
+        };
+        FlashHandler.setFlashMessage(JSON.parse(xhr.responseText).response, status_type);
         button.text("Import customers").prop('disabled', false);
       }
     };

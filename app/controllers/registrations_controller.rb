@@ -59,10 +59,6 @@ class RegistrationsController < Devise::RegistrationsController
       if set_update_flash_messages[:subscription] && current_user.is_merchant?
         subscription = create_saas_subscription
         msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
-      elsif set_update_flash_messages[:rhombus_number] && current_user.is_merchant?
-        unless current_user.buy_number(params['user'])
-          msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
-        end
       elsif set_update_flash_messages[:card_info] || set_update_flash_messages[:billing_info]
         if current_user.is_customer? && set_update_flash_messages[:card_info]
           session[:msg_id] = params[:user][:msg_id]
@@ -144,11 +140,6 @@ class RegistrationsController < Devise::RegistrationsController
                                         error: msg,
                                         subscription: true
                                       },
-                    add_rhombus_number: {
-                                          success: 'Relay number added',
-                                          error: 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.',
-                                          rhombus_number: true
-                                        },
                     add_card_info: {
                                     success: 'Card info added',
                                     error: msg,

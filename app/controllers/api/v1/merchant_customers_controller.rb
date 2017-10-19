@@ -14,41 +14,49 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
     end
   end
 
+  def customer_csv
+    begin
+      status = 200
+      response = "CSV file uploaded"
+      doc = current_user.documents.create(attachment: params['csv'])
+      CsvCustomerImportJob.perform_later(current_user, doc)
+    rescue StandardError => exception
+      status = 500
+      response = 'Unable to upload customer csv'
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In v1 merchant_customers customer_csv_upload" })      
+    end
+
+    render json: { response: response }, status: status
+  end
+
   def create
     begin
-      status, error, response = 200, nil, 'User Added'
+      status, error, response = 200, 'Something went wrong on our end.', 'User Added'
+      ActiveRecord::Base.transaction do
+        @customer = User.find_by(email: params[:user][:email])
 
-      if params[:format] == 'csv'
-        doc = current_user.documents.create(attachment: params['csv'])
-        CsvCustomerImportJob.perform_later(current_user, doc)
-        response = "CSV file uploaded."
-      elsif params[:format] == 'json'
-        ActiveRecord::Base.transaction do
-          @customer = User.find_by(email: params[:user][:email])
+        if @customer.present?
+          raise StandardError unless add_to_merchant_customer_and_referrer(false)
+        else
+          params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
+          params[:user][:user_level] = 0
 
-          if @customer.present?
-            raise StandardError unless add_to_merchant_customer_and_referrer(false)
-          else
-            params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
-            params[:user][:user_level] = 0
+          @customer = User.new(api_v1_user_params)
+          @customer.customer_source = { id: current_user.id, method: 'added', temp_password: params[:user][:password] }
+          @customer.save!
 
-            @customer = User.new(api_v1_user_params)
-            @customer.customer_source = { id: current_user.id, method: 'added', temp_password: params[:user][:password] }
-            @customer.save!
+          raise StandardError unless merchant_customer = add_to_merchant_customer_and_referrer
+          merchant_customer.user_lists.create!(api_v1_user_list_params) if api_v1_user_list_params[:list_id].present?
 
-            raise StandardError unless merchant_customer = add_to_merchant_customer_and_referrer
-            merchant_customer.user_lists.create!(api_v1_user_list_params) if api_v1_user_list_params[:list_id].present?
-
-            @customer.create_address!(@address_params) if any_address_params_present?
-            @customer.people.create!(@person_params) if api_v1_person_params[:full_name].present?              
-            if @user_params[:card_token].present?
-              re = @customer.add_token_for_user(@user_params[:card_token], false) 
-              puts 'add_token_for_user in merchant_customer controller'
-              unless re.first
-                error = "Unable to add customer"
-                error += re.third ? ' because: ' + re.third : '.'
-                raise StandardError
-              end
+          @customer.create_address!(@address_params) if any_address_params_present?
+          @customer.people.create!(@person_params) if api_v1_person_params[:full_name].present?              
+          if @user_params[:card_token].present?
+            re = @customer.add_token_for_user(@user_params[:card_token], false) 
+            puts 'add_token_for_user in merchant_customer controller'
+            unless re.first
+              error = "Unable to add customer"
+              error += re.third ? ' because: ' + re.third : '.'
+              raise StandardError
             end
           end
         end
@@ -62,7 +70,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In v1 merchant_customers create" })
       status = 500
       customer_errors = @customer.errors.full_messages
-      response = customer_errors.present? ? customer_errors : (error || 'Something went wrong on our end.')
+      response = customer_errors.present? ? customer_errors : error
     end
 
     render json: { response: response }, status: status

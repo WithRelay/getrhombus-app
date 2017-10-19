@@ -40,8 +40,7 @@ class FbMessage < ActiveRecord::Base
         end
         true
       else
-        # Notify team of failure
-        Notification.text_failure_notification(response, from, to, message).deliver_now
+        ExceptionNotifier.notify_exception(response, env: Rails.env, data: { message: "From FbMessage.rb send_and_save_message, unable to send message", from: from, to: to, text: message })
         false
       end
     rescue StandardError => err

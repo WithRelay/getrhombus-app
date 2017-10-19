@@ -3,7 +3,6 @@ class User < ActiveRecord::Base
   extend UserProfile
   include CSVHandler
   include AddTokenToUser
-  include SegmentQueries
   include Transactionable
 
   attr_accessor :phone, :msg_id, :captured_amt, :referrer
@@ -186,16 +185,14 @@ class User < ActiveRecord::Base
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
     EmailingService.hosted_sms_progress_notice(self, number.try(:second)) if self.hosted_sms.present?
     return false unless number
-    self.relay_uid = generate_uid
-    self.rhombus_number = number[0]
-    self.rn_friendly_name = number[1]
-    if self.relay_uid.present?
-      self.short_url = UrlShortenerService.shorten_link("#{url_helpers.new_user_registration_url}?referrer_uid=#{self.relay_uid}")
-    end
+
+    uid = generate_uid
+    url = "#{url_helpers.new_user_registration_url}?referrer_uid=#{uid}"
+    self.attributes(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url)
+    deduct_from_account_balance(NUMBER_PRICE)
 
     #welcome_text = "Howdy! Wondering how to get started? Add or import your customers and contacts to start messaging them immediately. If you have any questions, message us here and a member of our team will be happy to help."
     #Conversation.find_or_create_conversation_for_message_and_send_publish(User.get_platform_acct_obj, self, 'user', self.id, welcome_text)
-    deduct_from_account_balance(NUMBER_PRICE)
   end
 
   def has_valid_card?
@@ -245,9 +242,7 @@ class User < ActiveRecord::Base
 
   def the_titleizer
     self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
-    self.url = self.url.strip unless self.url.blank?
-    self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
-    self.org_name = self.org_name.strip unless self.org_name.blank?
+    [:url, :custom_welcome, :org_name].each { |a| self[a] = self[a].strip if self[a].present? }
   end
 
   def do_signup_stuff
@@ -257,25 +252,15 @@ class User < ActiveRecord::Base
       end
 
       if self.is_merchant?
-        AwayMessage.find_or_create_by(user_id: self.id, response: "We're away at the moment and will get back to you when we return :).")
-        GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
-        origin = List.origins[:system]
-        campaign_type = List.campaign_types[:campaign]
-        self.lists.create([
-          { name: 'New Customers', segment: new_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
-          { name: 'New Contacts', segment: new_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type },
-          { name: 'Active Customers', segment: active_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
-          { name: 'Active Contacts', segment: active_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type },
-          { name: 'Inactive Customers', segment: inactive_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
-          { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type }
-        ])
+        List.new.create_default_segments(self)
         GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
         IncompleteSignupJob.set(wait: INCOMPLETE_SIGNUP_EMAIL_DELAY.seconds).perform_later(self)
+        AwayMessage.find_or_create_by(user_id: self.id, response: "We're away at the moment and will get back to you when we return :).")
       end
 
-      WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
       GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
       GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+      WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From do_signup_stuff"})
     end

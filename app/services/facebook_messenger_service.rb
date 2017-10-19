@@ -4,8 +4,8 @@ class FacebookMessengerService
 
     # for messenger_account_linking
     def send_auth_link(page_access_token, recipient_id, welcome_text)
-      # link_url = "https://5c547308.ngrok.io/link_facebook"
-      link_url = "#{Rails.application.secrets.app['url']}/link_facebook"
+      #link_url = "#{Rails.application.secrets.app['url']}/link_facebook"
+      link_url = "http://localhost:3000/link_facebook"
       image_path = ActionController::Base.helpers.image_path("relay-6.png")
       image_path = default_path[1..-1] if image_path[0] == "/"
 
