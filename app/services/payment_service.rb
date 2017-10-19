@@ -40,17 +40,17 @@ class PaymentService
       rescue Stripe::CardError => e   # Since it's a decline, Stripe::CardError will be caught
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From PaymentService add_token_to_stripe_customer", hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService add_token_to_stripe_customer", hash: hash, cred: cred })
         [false, e, e.json_body[:error][:message]]
       rescue Stripe::StripeError => e
         # send this only to platform
         # Notification.token_failure_notification(e.json_body[:error], ....).deliver_now
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From PaymentService add_token_to_stripe_customer", hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService add_token_to_stripe_customer", hash: hash, cred: cred })
         [false, e]
       rescue StandardError => e
         # send this only to platform
         #Notification.token_failure_notification(e, .....).deliver_now
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From PaymentService add_token_to_stripe_customer", hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService add_token_to_stripe_customer", hash: hash, cred: cred })
         [false, e]
       end
     end
@@ -66,10 +66,10 @@ class PaymentService
         cu.delete
         [true]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From PaymentService delete_customer", hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService delete_customer", customer_id: customer_id, cred: cred })
         [false, e]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From PaymentService delete_customer", hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService delete_customer", customer_id: customer_id, cred: cred })
         [false, e]
       end
     end
@@ -131,14 +131,14 @@ class PaymentService
 
         [re]
       rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService charge", merchant: merchant, customer: customer, amt: amount_with_taxes })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService charge", merchant: merchant, customer: customer, amt: amount_with_taxes })
         [false, e, e.json_body[:error][:message], true]
         #Stripe::InvalidRequestError (Amount must convert to at least 50 cents. 2.08 kr converts to approximately $0.26.)
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService charge", merchant: merchant, customer: customer, amt: amount_with_taxes })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService charge", merchant: merchant, customer: customer, amt: amount_with_taxes })
         [false, e.json_body[:error], "Stripe error"]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService charge", merchant: merchant, customer: customer, amt: amount_with_taxes })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService charge", merchant: merchant, customer: customer, amt: amount_with_taxes })
         [false, e, "Something went wrong"]
       end
     end
@@ -150,8 +150,10 @@ class PaymentService
         return charge_ary unless charge_ary.first
         [charge_ary.first.capture]
       rescue Stripe::StripeError => e
+        ExceptionNotifier.notify_exception(e, data: { message: "In capture_charge", charge_id: charge_id, merchant: merchant, env: Rails.env })
         [false, e.json_body[:error], "Stripe is unable to process charge. Note that authorized txns over 7 days can no longer be processed."]
       rescue StandardError => e
+        ExceptionNotifier.notify_exception(e, data: { message: "In capture_charge", charge_id: charge_id, merchant: merchant, env: Rails.env })
         [false, e, "Sorry, we were unable to complete this transaction. Please try again later."]
       end
     end
@@ -171,11 +173,11 @@ class PaymentService
         end
         [re]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From refund_charge", merchant: merchant, hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "From refund_charge", merchant: merchant, hash: hash, env: Rails.env })
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error]]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From refund_charge", merchant: merchant, hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "From refund_charge", merchant: merchant, hash: hash, env: Rails.env })
         [false, e]
       end
     end
@@ -194,14 +196,14 @@ class PaymentService
 
         [true, re]
       rescue Stripe::CardError => exception
-        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription", hash: hash })
+        ExceptionNotifier.notify_exception(exception, data: { message: "From create_subscription", hash: hash, env: Rails.env, cred: cred })
         # Since it's a decline, Stripe::CardError will be caught
         [false, exception, exception.json_body[:error][:message]]
       rescue Stripe::StripeError => exception
-        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription", hash: hash })
+        ExceptionNotifier.notify_exception(exception, data: { message: "From create_subscription", hash: hash, env: Rails.env, cred: cred })
         [false, exception]
       rescue StandardError => exception
-        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription", hash: hash })
+        ExceptionNotifier.notify_exception(exception, data: { message: "From create_subscription", hash: hash, env: Rails.env, cred: cred })
         [false, exception]
       end
     end
@@ -216,10 +218,10 @@ class PaymentService
         end
         [true, sbtn.delete(at_period_end: at_period_end)] # cancel at period end for saas sub
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService cancel_subscription", subscription: subscription })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService cancel_subscription", subscription: subscription, env: Rails.env })
         [false, e]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService cancel_subscription", subscription: subscription })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService cancel_subscription", subscription: subscription, env: Rails.env })
         [false, e]
       end
     end
@@ -237,10 +239,10 @@ class PaymentService
         
         sbtn.save
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService update_subscription" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService update_subscription", env: Rails.env, subscription: subscription })
         false
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService update_subscription" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService update_subscription", env: Rails.env, subscription: subscription })
         false
       end
     end
@@ -254,10 +256,10 @@ class PaymentService
         end
         [true, plan]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService create_plan", hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService create_plan", hash: hash, cred: cred, env: Rails.env })
         [false, e]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService create_plan", hash: hash })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService create_plan", hash: hash, cred: cred, env: Rails.env })
         [false, e]
       end
     end
@@ -273,10 +275,10 @@ class PaymentService
         plan.delete
         [true]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService delete_plan" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService delete_plan", env: Rails.env, plan_id: plan_id, cred: cred })
         [false, e]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService delete_plan" })
+        ExceptionNotifier.notify_exception(e,  data: { message: "In PaymentService delete_plan", env: Rails.env, plan_id: plan_id, cred: cred })
         [false, e]
       end
     end
@@ -296,10 +298,10 @@ class PaymentService
 
         [true]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService update_plan" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService update_plan", env: Rails.env, plan_id: plan_id, cred: cred, hash: hash })
         [false, e]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService update_plan" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService update_plan", env: Rails.env, plan_id: plan_id, cred: cred, hash: hash })
         [false, e]
       end
     end
@@ -310,10 +312,10 @@ class PaymentService
         re = Stripe::Coupon.create(hash)
         [true, re]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService create_coupon" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService create_coupon", env: Rails.env, hash: hash })
         [false,  e]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService create_coupon" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService create_coupon", env: Rails.env, hash: hash })
         [false, e]
       end
     end
@@ -324,10 +326,10 @@ class PaymentService
         coupon.delete
         [true]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService delete_coupon" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService delete_coupon", id: id, env: Rails.env })
         [false,  e]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService delete_coupon" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService delete_coupon", id: id, env: Rails.env })
         [false, e]
       end
     end
@@ -337,11 +339,11 @@ class PaymentService
         re = Stripe::Coupon.retrieve(coupon_id)
         re.valid
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService is_valid_coupon" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService is_valid_coupon", coupon_id: coupon_id, env: Rails.env })
         # Display a very generic error to the user, and maybe send yourself an email
         false
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService is_valid_coupon" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService is_valid_coupon", coupon_id: coupon_id, env: Rails.env })
         false
       end
     end
@@ -356,11 +358,11 @@ class PaymentService
         end
         [re]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService retrieve_charge" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService retrieve_charge", env: Rails.env, charge_id: charge_id, merchant: merchant })
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error], "Stripe is unable to retrieve this charge."]
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In PaymentService retrieve_charge" })
+        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService retrieve_charge", env: Rails.env, charge_id: charge_id, merchant: merchant })
         [false, e, "Something went wrong on our end"]
       end
     end

@@ -23,7 +23,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
     rescue StandardError => exception
       status = 500
       response = 'Unable to upload customer csv'
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In v1 merchant_customers customer_csv_upload" })      
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In v1 merchant_customers customer_csv_upload", env: Rails.env })      
     end
 
     render json: { response: response }, status: status
@@ -67,7 +67,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
       response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
       response = "Customer's email is already in use." if msg.include?('index_users_on_email')
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In v1 merchant_customers create" })
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In v1 merchant_customers create", env: Rails.env })
       status = 500
       customer_errors = @customer.errors.full_messages
       response = customer_errors.present? ? customer_errors : error

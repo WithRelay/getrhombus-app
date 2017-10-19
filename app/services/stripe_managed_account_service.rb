@@ -22,10 +22,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       puts account.inspect
       account
     rescue Stripe::StripeError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService create_account" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService create_account", self: self, env: Rails.env })
       exception
     rescue StandardError => exception # returns error object to retrieve error message is e.message. handle stripe create account error
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService create_account" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService create_account", self: self, env: Rails.env })
       exception
     end
   end
@@ -37,10 +37,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
         :file => File.new(image.path)
       )
     rescue Stripe::StripeError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService upload_file" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService upload_file", self: self, env: Rails.env })
       exception
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService upload_file" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService upload_file", self: self, env: Rails.env })
       exception
     end
   end
@@ -55,10 +55,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       puts bank_account
       bank_account
     rescue Stripe::StripeError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService create_external_account" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService create_external_account", self: self, env: Rails.env })
       exception
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService create_external_account" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService create_external_account", self: self, env: Rails.env })
       exception # error object contains message attribute
     end
   end
@@ -70,10 +70,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     puts account
     account.save
   rescue Stripe::StripeError => exception
-    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_account_email" })
+    ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService update_account_email", self: self, env: Rails.env, account: account })
     exception
   rescue StandardError => exception
-    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_account_email" })
+    ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService update_account_email", self: self, env: Rails.env, account: account })
     exception
   end
 
@@ -87,10 +87,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     puts account
     account.save
   rescue Stripe::StripeError => exception
-    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_account" })
+    ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService update_account", self: self, env: Rails.env, account: account })
     exception
   rescue StandardError => exception
-    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_account" })
+    ExceptionNotifier.notify_exception(exception, data: { message: "In StripeManagedAccountService update_account", self: self, env: Rails.env, account: account })
     exception
   end
 

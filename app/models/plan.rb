@@ -54,7 +54,7 @@ class Plan < ActiveRecord::Base
         else
           # if StandardError happens in create_plan after Stripe was called or update fails above
           self.delete_plan(team)
-          #notify team via email
+          ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From create_plan in plan.rb", res: res, self: self, hash: hash })
           false
         end
       else
@@ -62,7 +62,7 @@ class Plan < ActiveRecord::Base
         false
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_plan in plan.rb"})
+      ExceptionNotifier.notify_exception(exception, data: { message: "From create_plan in plan.rb", res: res, self: self, hash: hash })
       # if StandardError happens here after Stripe was called, delete plan on Stripe
       self.delete_plan(team) if res.length > 0
       false
@@ -92,7 +92,7 @@ class Plan < ActiveRecord::Base
 
       res.first
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From update_plan in plan.rb"})
+      ExceptionNotifier.notify_exception(exception, data: { message: "From update_plan in plan.rb", res: res, self: self, env: Rails.env })
       self.update(name: old_name, statement_descriptor: old_descriptor)
       false
     end
@@ -104,7 +104,7 @@ class Plan < ActiveRecord::Base
       delete_plan_segment if res
       res
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From delete_plan in plan.rb"})
+      ExceptionNotifier.notify_exception(exception, data: { message: "From delete_plan in plan.rb", res: res, self: self, env: Rails.env })
       false
     end
   end

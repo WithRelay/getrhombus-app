@@ -10,7 +10,7 @@ class WebhooksController < ApplicationController
       StripeEvent.new.process_event(params, type)
       #end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller stripe_events" })
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In webhooks controller stripe_events", env: Rails.env })
     end
     render nothing: true
   end
@@ -31,7 +31,7 @@ class WebhooksController < ApplicationController
     begin
       res = FacebookEvent.new.process_event(params, current_page, @merchant)
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller facebook_events" })
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In webhooks controller facebook_events", env: Rails.env })
     end
     render json: res
   end
@@ -40,7 +40,7 @@ class WebhooksController < ApplicationController
     begin
       FiberneticsEvent.new.process_event(params)
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller fibernetics_events" })
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In webhooks controller fibernetics_events", env: Rails.env })
     end
     render nothing: true
   end

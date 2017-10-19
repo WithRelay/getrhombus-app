@@ -49,7 +49,7 @@ module AddTokenToUser
       send_decline_text(res.third) if self.is_customer? && send_decline_msg && res.third
       res
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In add_token_for_user" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In add_token_for_user", env: Rails.env, merchant_customers: merchant_customers, hash: hash })
       [false]
     end
   end

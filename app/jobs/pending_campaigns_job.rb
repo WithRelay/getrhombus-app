@@ -42,7 +42,7 @@ class PendingCampaignsJob
         end
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In PendingCampaignsJob perform" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In PendingCampaignsJob perform", env: Rails.env, campaigns: campaigns })
     end
   end 
 

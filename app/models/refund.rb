@@ -31,7 +31,7 @@ class Refund < ActiveRecord::Base
         end
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In refund_card_txn" } )
+      ExceptionNotifier.notify_exception(exception, data: { message: "In refund_card_txn", re: re, env: Rails.env, self: self, merchant: merchant, params: params } )
       [false, "We're unable to refund this transaction. Please try again later."]
     end
   end

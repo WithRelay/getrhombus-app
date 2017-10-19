@@ -30,7 +30,7 @@ class AlertsController < ApplicationController
 
   private
     def set_alert
-      @alert = Alert.find_or_create_by(user_id: current_user.id) { |alert| alert.emails = [current_user.email] }
+      @alert = Alert.find_or_create_by(user_id: current_user.id) { |a| a.emails = [current_user.email] }
     end
 
     def alert_params

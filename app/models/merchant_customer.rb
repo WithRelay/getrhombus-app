@@ -44,8 +44,8 @@ class MerchantCustomer < ActiveRecord::Base
         end
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In add_or_update_merchant_customer", 
-                                                                            customer: cus })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In add_or_update_merchant_customer", merchant: merch,
+                                                            env: Rails.env, customer: cus })
     end
 
     false

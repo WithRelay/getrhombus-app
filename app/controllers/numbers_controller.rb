@@ -9,7 +9,8 @@ class NumbersController < ApplicationController
       redirect_to user_conversations_path
     else
       flash[:error] = 'We are unable to assign a Relay number. A member of our support team will contact you shortly.'
-      ExceptionNotifier.notify_exception('', env: Rails.env, data: { message: "Unable to assign number for id #{current_user.id}" })
+      ExceptionNotifier.notify_exception(StandardError.new, env: request.env, data: { message: "Unable to assign number for id #{current_user.id}", 
+                                                                                      env: Rails.env, re: re })
       redirect_to user_add_rhombus_number_path
     end
   end

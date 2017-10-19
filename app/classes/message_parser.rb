@@ -9,7 +9,8 @@ class MessageParser
   def process_message(merchant, customer, uid, uid_type, received_msg, channel)
     begin
       return if received_msg.text.blank?
-
+      puts '12o2j321n3 1 2o3 o1j23oj123oij1o2 j3o12 j3oi12'
+      puts request ? request.env : '<redacted_phone_number>'
       # tested
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
       
@@ -97,7 +98,7 @@ class MessageParser
       end
 
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In process_message" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In process_message", env: Rails.env })
     end
   end
 
@@ -358,7 +359,7 @@ class MessageParser
         [false, "Hi#{get_first_name}, #{@tag.tag} is no longer available for subscription."]        
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In handle_subscription_through_text" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In handle_subscription_through_text", env: Rails.env })
       [false]
     end
   end
@@ -375,11 +376,11 @@ class MessageParser
         end
         [false, res_text]       
       else
-        ExceptionNotifier.notify_exception(nil, env: Rails.env, data: { message: "In create_text_subscription. no merchant_customer relationship",
-                                                                        merchant: @merchant, customer: @customer })
+        ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In create_text_subscription. no merchant_customer relationship",
+                                                                        merchant: @merchant, customer: @customer, env: Rails.env })
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In create_text_subscription" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In create_text_subscription", env: Rails.env })
       [false]
     end
   end

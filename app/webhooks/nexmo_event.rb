@@ -41,9 +41,9 @@ class NexmoEvent
       MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
 
     rescue ActiveRecord::RecordNotUnique => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_message" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In save_message", env: Rails.env, params: @params })
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_message" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In save_message", env: Rails.env, params: @params })
       puts e.inspect
     end
   end
@@ -51,8 +51,8 @@ class NexmoEvent
   # save outbound delivery report
   def update_message
     Message.where(id: @params["client-ref"])
-          .update_all(status: @params[status], message_price: @params[:price],
-            error_code: @params["err-code"], message_timestamp: @params['message-timestamp'])
+           .update_all(status: @params[status], message_price: @params[:price],
+                       error_code: @params["err-code"], message_timestamp: @params['message-timestamp'])
   end
 
   private

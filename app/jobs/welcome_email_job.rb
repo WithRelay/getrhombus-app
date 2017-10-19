@@ -39,8 +39,8 @@ class WelcomeEmailJob < ApplicationJob
         merchant, customer = sender, user
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From WelcomeEmailJob",
-                                                                            merchant: merchant, customer: customer })
+      ExceptionNotifier.notify_exception(exception, data: { message: "From WelcomeEmailJob", env: Rails.env, 
+                                                            merchant: merchant, customer: customer })
     end
   end
 

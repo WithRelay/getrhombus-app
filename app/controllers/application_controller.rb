@@ -6,16 +6,16 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
-  before_action :check_current_user_and_path
-  around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
+  #before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
+  #before_action :check_current_user_and_path
+  #around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
 
   def after_sign_in_path_for(resource)
     check_user_redirect || root_path
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "CanCan AccessDenied" })
+    ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "CanCan AccessDenied", env: Rails.env })
     redirect_to_404(exception.message)
   end
 

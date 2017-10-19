@@ -6,8 +6,8 @@ class IncompleteSignupJob < ApplicationJob
       Resque.logger.debug 'incomplete_signup job'
       EmailingService.incomplete_sign_up(user) unless user.get_saas_subscription
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From IncompleteSignupJob",
-                                                                            merchant: user })
+      ExceptionNotifier.notify_exception(exception, data: { message: "From IncompleteSignupJob", env: Rails.env,
+                                                            merchant: user })
     end
   end
 

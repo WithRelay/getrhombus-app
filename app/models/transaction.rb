@@ -80,7 +80,7 @@ class Transaction < ActiveRecord::Base
         [false, @stripe_res_ary[2]]
       end
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From process_payment in transaction.rb"})
+      ExceptionNotifier.notify_exception(err, data: { message: "From process_payment in transaction.rb", res: @stripe_res_ary, env: Rails.env, self: self, merchant: merchant, customer: customer, amt: amt })
       #send_payment_failure_email(err, false)  # should go out only for text payments
       [false, "Something went wrong"]
     end
@@ -196,7 +196,7 @@ class Transaction < ActiveRecord::Base
         end
       end
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From handled_captured_txn in transaction.rb"})
+      ExceptionNotifier.notify_exception(err, data: { message: "From handled_captured_txn in transaction.rb", self: self, res: @stripe_res_ary, merchant: @merchant, customer: @customer, amt: @amt })
       [false, "Sorry, we were unable to complete this transaction. Please try again later."]
     end
   end
@@ -215,7 +215,7 @@ class Transaction < ActiveRecord::Base
         end
       end
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From handle_uncaptured_txn in transaction.rb"})
+      ExceptionNotifier.notify_exception(err, data: { message: "From handle_uncaptured_txn in transaction.rb", self: self, res: @stripe_res_ary, merchant: @merchant, customer: @customer, amt: @amt })
       [false, "We were unable to authorize transaction. Please try again later."]
     end
   end
@@ -233,7 +233,7 @@ class Transaction < ActiveRecord::Base
         [false, payment_ary[2]]
       end
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From capture_uncaptured_txn in transaction.rb"})
+      ExceptionNotifier.notify_exception(err, data: { message: "From capture_uncaptured_txn in transaction.rb", env: Rails.env, self: self, re: payment_ary })
       [false, "Sorry, we were unable to complete this transaction. Please try again later."]
     end
   end

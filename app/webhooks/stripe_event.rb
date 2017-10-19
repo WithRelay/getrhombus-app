@@ -284,8 +284,8 @@ class StripeEvent
       user_params = response_user_params.merge(bank_account_details)
       managed_account_user.update(user_params)
     rescue => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeEvent account_updated",
-                                                                            merchant: managed_account_user, data: @hash })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeEvent account_updated", env: Rails.env,
+                                                            merchant: managed_account_user, data: @hash })
     end
   end
 

@@ -76,9 +76,9 @@ class TwilioEvent
       MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')     
 
     rescue ActiveRecord::RecordNotUnique => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In twilio save_received_message" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In twilio save_received_message", env: Rails.env, params: @params })
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In twilio save_received_message" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In twilio save_received_message", env: Rails.env, params: @params })
     end
   end
 

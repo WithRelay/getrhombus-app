@@ -16,7 +16,7 @@ class Api::V1::IntelligenceController < Api::V1::BaseController
 
       render json: data
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In api IntelligenceController index" })
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In api IntelligenceController index", env: Rails.env })
       render json: { response: "Something went wrong" }, status: :internal_server_error
     end
   end

@@ -28,6 +28,7 @@ class TextingService
         # ["status-report-req", 1]
         [true, HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})]
       rescue StandardError => err
+        ExceptionNotifier.notify_exception(err, data: { message: "In texting service send_sms_nexmo", from: from, to: to, body: body, env: Rails.env })
         [false, err]
       end
     end
@@ -46,7 +47,7 @@ class TextingService
       rescue Twilio::REST::TwilioError => err
       rescue StandardError => err
       end
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service send_sms", from: from, to: to, body: body, media_ary: media_ary })
+      ExceptionNotifier.notify_exception(err, data: { message: "In texting service send_sms", from: from, to: to, body: body, media_ary: media_ary, env: Rails.env })
       [false, err]
     end
 
@@ -56,9 +57,9 @@ class TextingService
                                     ["phone_number", from], ["to", to], ["message", body], ['subscriber_id', subscriber_id] ])        
         return HTTParty.post("https://smssend.fongo.com/Send.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
       rescue Timeout::Error => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber timeout" })
+        ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber timeout", from: from, to: to, body: body, env: Rails.env })
       rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber" })
+        ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber", from: from, to: to, body: body, env: Rails.env })
       end
       nil
     end
@@ -69,9 +70,9 @@ class TextingService
                                     ["phone_number", phone_number], ["since_id", since_id], ['subscriber_id', subscriber_id] ])        
         return HTTParty.post("https://smsfetch.fongo.com/FetchMessageHandler.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
       rescue Timeout::Error => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In get_sms_fibernetics timeout" })
+        ExceptionNotifier.notify_exception(err, data: { message: "In get_sms_fibernetics timeout", phone_number: phone_number })
       rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In get_sms_fibernetics" })
+        ExceptionNotifier.notify_exception(err, data: { message: "In get_sms_fibernetics", phone_number: phone_number })
       end
       nil
     end
@@ -82,9 +83,9 @@ class TextingService
         re = HTTParty.post("https://smsadmin.fongo.com/CreateSubscriber.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
         return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == "OK"
       rescue Timeout::Error => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber timeout" })
+        ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber timeout", fn_num: fn_num })
       rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In create_fibernetics_subscriber" })
+        ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber", fn_num: fn_num })
       end
       nil
     end
@@ -100,9 +101,9 @@ class TextingService
           return re.phone_number.gsub('+', ''), re.friendly_name
         end
       rescue Twilio::REST::TwilioError => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service buy_number", params: params })
+        ExceptionNotifier.notify_exception(err, data: { message: "In texting service buy_number", params: params, env: Rails.env })
       rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service buy_number", params: params })
+        ExceptionNotifier.notify_exception(err, data: { message: "In texting service buy_number", params: params, env: Rails.env })
       end
       false
     end
@@ -129,10 +130,10 @@ class TextingService
 
         { number: number.nil? ? '' : number.phone_number  }
       rescue Twilio::REST::TwilioError => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service search_number", params: params })
+        ExceptionNotifier.notify_exception(err, data: { message: "In texting service search_number", params: params, env: Rails.env })
         { error: "Twilio cannot provision the number." }
       rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service search_number", params: params })
+        ExceptionNotifier.notify_exception(err, data: { message: "In texting service search_number", params: params, env: Rails.env })
         { error: e.message }
       end
     end
@@ -146,7 +147,7 @@ class TextingService
       rescue Twilio::REST::TwilioError => err
       rescue StandardError => err
       end
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service number_lookup", num: num })
+      ExceptionNotifier.notify_exception(err, data: { message: "In texting service number_lookup", num: num, env: Rails.env })
       false
     end
 
@@ -416,7 +417,7 @@ class TextingService
         client.incoming_phone_numbers.list({phone_number: num}).each { |n| n.delete }
         true
       rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "In texting service release_number", num: num })
+        ExceptionNotifier.notify_exception(err, data: { message: "In texting service release_number", num: num, env: Rails.env })
         false
       end
     end

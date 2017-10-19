@@ -72,9 +72,9 @@ class FiberneticsEvent
       end
       @merchant.deduct_from_account_balance(SMS_PRICE_RECEIVED * num_segments)  
     rescue ActiveRecord::RecordNotUnique => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_received_message" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In save_received_message", env: Rails.env, params: @params })
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_received_message" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In save_received_message", env: Rails.env, params: @params })
     end
   end
 
@@ -85,7 +85,7 @@ class FiberneticsEvent
       options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
       HTTParty.post(webhook_url, options)
     rescue => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user standard error" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In post_message_for_api_user standard error", env: Rails.env, params: @params })
     end
   end
 

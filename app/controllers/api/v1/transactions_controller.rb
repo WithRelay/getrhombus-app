@@ -24,7 +24,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
         render json: { response: "Cannot perform this action." }, status: 500
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In V1::TransactionsController refund" } )
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In V1::TransactionsController refund", env: Rails.env } )
       render json: { response: "Something went wrong on our end." }, status: 500
     end
   end
@@ -52,7 +52,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
         render json: { response: "Your account doesn't support dashboard payments" }, status: 500
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In V1::TransactionsController create" } )
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In V1::TransactionsController create", env: Rails.env } )
       render json: { response: "Something went wrong on our end." }, status: 500
     end
   end

@@ -26,7 +26,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
       
       render json: { response: "Success" }, status: 200
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In api messages send" })
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In api messages send", env: Rails.env })
       render json: { response: "Something went wrong" }, status: :internal_server_error
     end
   end

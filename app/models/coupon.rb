@@ -45,14 +45,14 @@ class Coupon < ActiveRecord::Base
       if res.first && self.update(stripe_livemode: res.second.livemode, stripe_coupon_id: res.second.id)
         true
       else
-        ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "In create_coupon" })
+        ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In create_coupon", env: Rails.env, res: res, hash: hash, self: self })
         self.delete_coupon # if StandardError happens in create_coupon after Stripe was called or update fails above
         false        
       end
 
     rescue StandardError => e
       self.delete_coupon if res.length > 0 # if StandardError happened after Stripe was called, delete plan on Stripe
-      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In create_coupon" })
+      ExceptionNotifier.notify_exception(e, data: { message: "In create_coupon", env: Rails.env, res: res, hash: hash, self: self })
       false
     end
   end
@@ -61,7 +61,7 @@ class Coupon < ActiveRecord::Base
     begin
       PaymentService.delete_coupon(self.stripe_coupon_id).first
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "In delete_coupon" })
+      ExceptionNotifier.notify_exception(e, data: { message: "In delete_coupon", env: Rails.env, self: self })
       false
     end
   end

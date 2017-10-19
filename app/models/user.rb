@@ -234,15 +234,12 @@ class User < ActiveRecord::Base
   end
 
   def set_merchant_org_phone
-    if is_merchant?
-      self.org_phone = self.phone_number
-      self.phone_number = nil
-    end
+    self.attributes(org_phone: self.phone_number, phone_number: nil) if is_merchant?
   end
 
   def the_titleizer
+    [:url, :custom_welcome, :org_name].each { |a| self[a].try(:strip!) }
     self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
-    [:url, :custom_welcome, :org_name].each { |a| self[a] = self[a].strip if self[a].present? }
   end
 
   def do_signup_stuff
@@ -262,7 +259,7 @@ class User < ActiveRecord::Base
       GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
       WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From do_signup_stuff"})
+      ExceptionNotifier.notify_exception(exception, data: { message: "From do_signup_stuff", self: self, env: Rails.env })
     end
   end
 

@@ -33,7 +33,7 @@ class Message < ActiveRecord::Base
                                   message_price: response.price, error_code: response.error_code, error_text: response.error_message,
                                   price_unit: response.price_unit, num_segments: num_segments, num_media: response.num_media, relay_price: price)
         else
-          ExceptionNotifier.notify_exception(response, env: Rails.env, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message })
+          ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env, response: response })
           false
         end
       elsif merchant.fn_subscriber_id.present?   #  fibernetics
@@ -43,7 +43,7 @@ class Message < ActiveRecord::Base
           merchant.deduct_from_account_balance(SMS_PRICE_SENT * num_segments)
           self.update_attributes(status: "OK", num_segments: num_segments, relay_price: SMS_PRICE_SENT)          
         else
-          ExceptionNotifier.notify_exception(response, env: Rails.env, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message })
+          ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env, response: response })
           false
         end
       else # nexmo
@@ -56,12 +56,12 @@ class Message < ActiveRecord::Base
                                   message_id: response['messages'].first['message-id'], error_text: response["error-text"],
                                   message_price: response['messages'].first['message-price'])
         else
-          ExceptionNotifier.notify_exception(response, env: Rails.env, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message })
+          ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env, response: response })
           false
         end
       end
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From send_and_save_message, unable to send message"})
+      ExceptionNotifier.notify_exception(err, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env })
       false
     end
   end
@@ -86,7 +86,7 @@ class Message < ActiveRecord::Base
       options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
       HTTParty.post(webhook_url, options)
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In post_message_for_api_user", env: Rails.env })
     end
   end
 
@@ -97,7 +97,7 @@ class Message < ActiveRecord::Base
       options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
       HTTParty.post(webhook_url, options)
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In post_message_for_api_user" })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In post_message_for_api_user local", options: options })
     end
   end
 

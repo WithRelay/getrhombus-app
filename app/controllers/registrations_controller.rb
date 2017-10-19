@@ -68,7 +68,7 @@ class RegistrationsController < Devise::RegistrationsController
         msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In check_params_with_update" })
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In check_params_with_update", env: Rails.env })
       msg = "Something went wrong"
     end
     
@@ -112,7 +112,7 @@ class RegistrationsController < Devise::RegistrationsController
       end
       token_res
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In create_saas_subscription" })
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In create_saas_subscription", env: Rails.env })
       [false]
     end
   end

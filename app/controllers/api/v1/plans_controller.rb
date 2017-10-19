@@ -15,7 +15,7 @@ class Api::V1::PlansController < Api::V1::BaseController
       end
       render json: { "plans" => res }, status: 200
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From v1 PlansController index"})
+      ExceptionNotifier.notify_exception(err, env: request.env, data: { message: "From v1 PlansController index", env: Rails.env })
       render json: { error: "Unable to find your plans" }, status: 500
     end
   end
@@ -33,7 +33,7 @@ class Api::V1::PlansController < Api::V1::BaseController
         @plan.destroy     # revoke created plan on error
       end
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From v1 PlansController create"})
+      ExceptionNotifier.notify_exception(err, env: request.env, data: { message: "From v1 PlansController create", env: Rails.env })
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status
@@ -49,7 +49,7 @@ class Api::V1::PlansController < Api::V1::BaseController
         response = @plan.errors.messages.present? ? @plan.errors.full_messages : "We couldn't update the plan name"
       end
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From v1 PlansController update"})
+      ExceptionNotifier.notify_exception(err, env: request.env, data: { message: "From v1 PlansController update", env: Rails.env })
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status

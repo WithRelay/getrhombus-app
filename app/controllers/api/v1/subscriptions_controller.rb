@@ -23,7 +23,7 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
         response = check_customer_card[:text]
       end
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From Api::V1::SubscriptionsController create"})
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "From Api::V1::SubscriptionsController create", env: Rails.env })
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status
@@ -40,7 +40,7 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
         response = (coupon.nil?) ? 'Invalid Discount code' : 'We couldn\'t change discount'
       end
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From Api::V1::SubscriptionsController update"})
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "From Api::V1::SubscriptionsController update", env: Rails.env })
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status

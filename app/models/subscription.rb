@@ -75,7 +75,7 @@ class Subscription < ActiveRecord::Base
           )
           send_new_merchant_customer_subscription_email
         else
-          ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "From create_subscription in stripe"})
+          ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From create_subscription in stripe", hash: hash, self: self, res: res, env: Rails.env })
           # in case something went wrong after we created a subscription
           self.cancel_subscription
         end
@@ -87,7 +87,7 @@ class Subscription < ActiveRecord::Base
     rescue StandardError => exception
       # if StandardError happened after Stripe was called, delete subscription on Stripe
       self.cancel_subscription if res.length > 0
-      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
+      ExceptionNotifier.notify_exception(exception, data: { message: "From create_subscription", hash: hash, self: self, res: res, env: Rails.env })
       [false]
     end
   end
@@ -117,7 +117,7 @@ class Subscription < ActiveRecord::Base
       if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
         true
       else
-        ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "From cancel_subscription"})
+        ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From cancel_subscription", self: self, res: res, env: Rails.env })
         false
       end
     rescue StandardError => e
@@ -133,11 +133,11 @@ class Subscription < ActiveRecord::Base
         self.update(coupon_id: coupon.id, status: res.status, cancel_at_period_end: res.cancel_at_period_end)
         true
       else
-        ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "From update_subscription"})
+        ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From update_subscription", coupon: coupon, self: self, res: res, env: Rails.env })
         false
       end
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(e, env: Rails.env, data: { message: "From update_subscription"})
+      ExceptionNotifier.notify_exception(e, data: { message: "From update_subscription", coupon: coupon, self: self, res: res, env: Rails.env })
       false
     end
   end
