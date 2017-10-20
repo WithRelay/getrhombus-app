@@ -179,9 +179,11 @@ class StripeEvent
             )
 
             @data.update(transaction_id: txn.id, subscription_id: sbtn.id)
-            # Notify customer (could be merchant)
-            #EmailingService.invoice_payment_succeeded(@merchant_customer.customer)
-            send_invoice_payment_succeeded_email if @data.team.is_platform?
+            if @data.team.is_platform? # saas subscription
+              send_invoice_payment_succeeded_email 
+            else
+              EmailingService.invoice_payment_succeeded(team.email, @merchant_customer.customer)
+            end
           end
         end
       end
@@ -204,7 +206,7 @@ class StripeEvent
       currency_symbol: '$',
       merchant: merchant
     }
-    EmailingService.subscription_receipt(options)
+    EmailingService.saas_subscription_receipt(options)
   end
 
   def invoice_payment_failed
@@ -216,6 +218,7 @@ class StripeEvent
     options = {
       customer: @data.customer,
       merchant_business_name: @data.team.org_name,
+      merchant_email: @data.team.email,
       plan_name: @data.subscription.plan_name,
       currency: @data.currency,
       currency_symbol: '$',
@@ -226,9 +229,7 @@ class StripeEvent
     EmailingService.subscription_failed(options)
   end
 
-  # customer_source_updated webhook will fire if your customers’ info/customer's card info changes
   def customer_source_updated
-    # customer source info/customer's card info
     @source = @hash[:data][:object]
 
     # find customer
@@ -238,9 +239,8 @@ class StripeEvent
     if mc
       @data = mc.customer
       update_customer_source
-      # find customer and admin
-      # Notify them (admin) (customer)
-      EmailingService.customer_source_updated(mc.customer, mc.merchant)
+      # notify admin only
+      EmailingService.customer_source_updated(mc.customer)
     end
   end
 

@@ -38,14 +38,12 @@ class Refund < ActiveRecord::Base
 
   # Refund notification
   def send_refund_notification
-    #EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
-     # card_name: user.card_name, last4: user.last4, text: message, org_phone: merchant.org_phone,
-      #rhombus_number: merchant.rhombus_number, dump: err, to_merchant: true)
     merchant = txn.team
     date = DateTime.strptime(time, '%s').in_time_zone(merchant.time_zone)
     options = {
       merchant_first_name: merchant.first_name,
       merchant_business_name: merchant.org_name,
+      merchant_email: merchant.email,
       currency: txn.currency,
       currency_symbol: '$',
       date: date.strftime('%B %d,%Y | %-I:%M%P'),

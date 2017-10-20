@@ -3,7 +3,7 @@ class EmailingService
   MANDRILL = Mandrill::API.new Rails.application.secrets.mandrill['key']
 
   # Note there are a number of global settings for these emails in the mandrill account
-  FROM_EMAIL = { edwin: '<redacted_email>', taiwo: '<redacted_email>' }
+  FROM_NAME = { edwin: 'Edwin from Relay', taiwo: 'Taiwo from Relay' }
   CALENDLY_LINK = Rails.application.secrets.calendly
   EMAIL_US_LINK = "mailto:#{Rails.application.secrets.team_email}"
 
@@ -13,7 +13,7 @@ class EmailingService
     def sign_in_link; url_helpers.new_user_session_url end
     def sign_up_link; url_helpers.new_user_registration_url end
 
-    def send_completed_notice(user)
+    def send_hosted_number_completed_notice(user)
       begin
         template_name = 'hosted-sms-activated'
         template_content = []
@@ -27,7 +27,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
+         "from_name" => FROM_NAME[:edwin],
          "from_email" => User.platform_email
         }
         async = true
@@ -38,7 +38,7 @@ class EmailingService
       end
     end
 
-    def send_action_required_notice(hosted_number_order)
+    def send_hosted_number_action_required_notice(hosted_number_order)
       begin
         template_name = 'hosted-sms-action-required'
         template_content = []
@@ -71,7 +71,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "from_name" => "Email from Relay",
+         "from_name" => FROM_NAME[:edwin],
          "from_email" => User.platform_email
         }
         async = true
@@ -82,7 +82,7 @@ class EmailingService
       end
     end
 
-    def send_failed_notice(user)
+    def send_hosted_number_failed_notice(user)
       begin
         template_name = 'hosted-sms-failed'
         template_content = []
@@ -94,7 +94,7 @@ class EmailingService
          'merge_language' => 'handlebars',
          'to'=> [ { 'email' => user.email } ],
          'bcc_address'=> User.platform_email,
-         'from_name' => 'Edwin from Relay',
+         'from_name' => FROM_NAME[:edwin],
          'from_email' => User.platform_email
         }
         async = true
@@ -132,7 +132,10 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
          "from_name" => options[:merchant_name],
-         "from_email" => User.platform_email
+         "from_email" => User.platform_email,
+         "headers" => {
+            "Reply-To" => options[:merchant_email]
+          },
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -160,7 +163,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => recipient } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Relay",
+         "from_name" => FROM_NAME[:edwin],
          "from_email" => User.platform_email
         }
         async = true
@@ -183,8 +186,8 @@ class EmailingService
                                ],
          "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => user.email } ],
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -206,8 +209,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => user.email } ],
-         "from_name" => "Taiwo from Relay",
-         "from_email" => FROM_EMAIL[:taiwo]
+         "from_name" => FROM_NAME[:taiwo],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -229,8 +232,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Taiwo from Relay",
-         "from_email" => FROM_EMAIL[:taiwo]
+         "from_name" => FROM_NAME[:taiwo],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -255,8 +258,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -276,7 +279,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Relay Report",
+         "from_name" => FROM_NAME[:edwin],
          "from_email" => User.platform_email
         }
         async = true
@@ -299,8 +302,8 @@ class EmailingService
                                ],
          'to'=> [ { 'email' => user.email } ],
          'bcc_address'=> User.platform_email,
-         'from_name' => 'Edwin from Relay',
-         'from_email' => FROM_EMAIL[:edwin]
+         'from_name' => FROM_NAME[:edwin],
+         'from_email' => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -322,8 +325,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -345,8 +348,8 @@ class EmailingService
          'merge_language' => 'handlebars',
          'to'=> [ { 'email' => user.email } ],
          'bcc_address'=> User.platform_email,
-         'from_name' => 'Edwin from Relay',
-         'from_email' => FROM_EMAIL[:edwin]
+         'from_name' => FROM_NAME[:edwin],
+         'from_email' => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -368,8 +371,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -422,8 +425,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -458,8 +461,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -495,41 +498,11 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
-    # not completed
-    # old template on mailchimp
-    def transaction_receipt(options = {})
-      begin
-        template_name = 'transaction-receipt'
-        template_content = []
-        message = { "subject" => "Receipt",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:user_first_name] || 'there' },
-                                  { "name" => "customer_name", "content" => options[:customer_name] },
-                                  { "name" => "transaction_id", "content" => options[:transaction_id] },
-                                  { "name" => "date", "content" => options[:created_at] },
-                                  { "name" => "status", "content" => options[:status] },
-                                  { "name" => "payment_method", "content" => options[:payment_method] },
-                                  { "name" => "amount", "content" => options[:amount] },
-                                  { "name" => "previous_balance", "content" => options[:previous_balance] },
-                                  { "name" => "current_balance", "content" => options[:current_balance] },
-                                  { "name" => "currency", "content" => options[:currency] },
-                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] }
-                               ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email,
+         "headers" => {
+            "Reply-To" => options[:merchant].email
+          },
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -558,8 +531,11 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email,
+         "headers" => {
+            "Reply-To" => options[:merchant_email]
+          },
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -590,8 +566,11 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email,
+         "headers" => {
+            "Reply-To" => options[:merchant_email]
+          },
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -621,8 +600,11 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email,
+         "headers" => {
+            "Reply-To" => options[:merchant].email
+          },
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -655,8 +637,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -691,8 +673,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -702,7 +684,7 @@ class EmailingService
       end
     end
 
-    def subscription_receipt(options = {})
+    def saas_subscription_receipt(options = {})
       begin
         template_name = 'subscription-receipt-template'
         template_content = []
@@ -727,8 +709,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -762,8 +744,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -792,8 +774,8 @@ class EmailingService
          'merge_language' => 'handlebars',
          'to'=> to,
          'bcc_address'=> User.platform_email,
-         'from_name' => 'Edwin from Relay',
-         'from_email' => FROM_EMAIL[:edwin]
+         'from_name' => FROM_NAME[:edwin],
+         'from_email' => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -817,8 +799,8 @@ class EmailingService
          'merge_language' => 'handlebars',
          "to"=> [ { "email" => email } ],
          'bcc_address'=> User.platform_email,
-         'from_name' => 'Edwin from Relay',
-         'from_email' => FROM_EMAIL[:edwin]
+         'from_name' => FROM_NAME[:edwin],
+         'from_email' => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -839,8 +821,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -862,8 +844,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -886,8 +868,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -909,8 +891,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -936,7 +918,7 @@ class EmailingService
           "to"=> [ { "email" => user.email } ],
           "bcc_address"=> User.platform_email,
           "from_name" => merchant.user_title,
-          "from_email" => FROM_EMAIL[:edwin],
+          "from_email" => User.platform_email,
           "headers" => {
             "Reply-To" => merchant.email
           },
@@ -949,26 +931,7 @@ class EmailingService
       end
     end
 
-    def customer_subscription_deleted(user)
-      begin
-        template_name = 'customer-subscription-deleted'
-        template_content = []
-        message = { "subject" => "Subscription deleted",
-          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
-          "merge_language" => "handlebars",
-          "to"=> [ { "email" => user.email } ],
-          "bcc_address"=> User.platform_email,
-          "from_name" => "Edwin from Relay",
-          "from_email" => FROM_EMAIL[:edwin]
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
+    # to platform only
     def customer_subscription_updated(merchant, plan_name, subscription_id)
       begin
         template_name = 'customer-subscription-updated'
@@ -979,10 +942,9 @@ class EmailingService
             { "name" => "subscription_id", "content" => subscription_id }
           ],
           "merge_language" => "handlebars",
-          "to"=> [ { "email" => merchant.email } ],
-          "bcc_address"=> User.platform_email,
-          "from_name" => "Edwin from Relay",
-          "from_email" => FROM_EMAIL[:edwin]
+          "to"=> [ { "email" => User.platform_email } ],
+          "from_name" => "Email from Relay",
+          "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -992,6 +954,7 @@ class EmailingService
       end
     end
 
+    # to platform only
     def invoice_created(invoice)
       begin
         template_name = 'invoice-created'
@@ -1000,12 +963,11 @@ class EmailingService
           "global_merge_vars"=> [{ "name" => "first_name", "content" => 'Team' },
             { 'name' => 'id', 'content' => invoice.id },
             { 'name' => 'subscription_id', 'content' => invoice.subscription_id },
-            # other invoice data will be here according to email template
           ],
           'merge_language' => 'handlebars',
           'to'=> [ { 'email' => User.platform_email } ],
-          'from_name' => 'Edwin from Relay',
-          'from_email' => FROM_EMAIL[:edwin]
+          'from_name' => 'Email from Relay',
+          'from_email' => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -1015,34 +977,11 @@ class EmailingService
       end
     end
 
-    # def invoice_payment_failed(customer, merchant)
-    #   begin
-    #     template_name = 'invoice-payment-failed'
-    #     template_content = []
-    #     message = { 'subject' => 'Invoice Payment Failed',
-    #       'global_merge_vars'=> [ { 'name' => 'first_name', 'content' => customer.first_name || 'there' },
-    #                               { 'name' => 'id', 'content' => invoice.id },
-    #                               { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
-    #                             ],
-    #       'merge_language' => 'handlebars',
-    #       'to'=> [ { 'email' => customer.email } ],
-    #       "bcc_address"=> merchant.email,
-    #       'from_name' => 'Edwin from Relay',
-    #       'from_email' => FROM_EMAIL[:edwin]
-    #     }
-    #     async = true
-    #     result = MANDRILL.messages.send_template template_name, template_content, message, async
-    #   rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-    #     puts "A mandrill error occurred: #{e.class} - #{e.message}"
-    #   rescue StandardError => e
-    #   end
-    # end
-
-    def invoice_payment_succeeded(customer)
+    def invoice_payment_succeeded(merchant_email, customer)
       begin
         template_name = 'invoice-payment-succeed'
         template_content = []
-        message = { 'subject' => 'Invoice Payment Succeed',
+        message = { 'subject' => 'Subscription Renewed',
           'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' },
             { 'name' => 'id', 'content' => invoice.id },
             { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
@@ -1050,8 +989,11 @@ class EmailingService
           'merge_language' => 'handlebars',
           'to'=> [ { 'email' => customer.email } ],
           "bcc_address"=> User.platform_email,
-          'from_name' => 'Edwin from Relay',
-          'from_email' => FROM_EMAIL[:edwin]
+          'from_name' => FROM_NAME[:edwin],
+          'from_email' => User.platform_email,
+          "headers" => {
+            "Reply-To" => merchant_email
+          },
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -1061,17 +1003,17 @@ class EmailingService
       end
     end
 
-    def customer_source_updated(customer, merchant)
+    # to platform only
+    def customer_source_updated(customer)
       begin
         template_name = 'customer-source-updated'
         template_content = []
         message = { 'subject' => 'Customer Source Updated',
           'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' }],
           'merge_language' => 'handlebars',
-          'to'=> [ { 'email' => customer.email } ],
-          "bcc_address"=> merchant.email,
-          'from_name' => 'Edwin from Relay',
-          'from_email' => FROM_EMAIL[:edwin]
+          'to'=> [ { 'email' => User.platform_email } ],
+          'from_name' => 'Email from Relay',
+          'from_email' => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -1111,8 +1053,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
+         "from_name" => FROM_NAME[:edwin],
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
