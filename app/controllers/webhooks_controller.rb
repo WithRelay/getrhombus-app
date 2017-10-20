@@ -1,6 +1,6 @@
 class WebhooksController < ApplicationController
-  around_action :set_time_zone
   skip_before_action :verify_authenticity_token
+  around_action :set_time_zone
 
   def stripe_events
     begin

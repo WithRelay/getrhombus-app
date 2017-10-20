@@ -6,9 +6,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   
   before_action :configure_permitted_parameters, if: :devise_controller?
-  #before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
-  #before_action :check_current_user_and_path
-  #around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
+  before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
+  before_action :check_current_user_and_path
+  around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
 
   def after_sign_in_path_for(resource)
     check_user_redirect || root_path
@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   def check_current_user_and_path
     if not_ping_controller_actions? && !devise_controller?
       # Avoid js or api json requests, forms, static pages and guest user
-      if request.format.html? && request.get? && ['static_pages', 'knowledge_base_categories', 'knowledge_bases'].exclude?(controller_name) && current_user.present?
+      if request.format.html? == true && request.get? && ['static_pages', 'knowledge_base_categories', 'knowledge_bases'].exclude?(controller_name) && current_user.present?
         # target only pages users actually see.
         if params[:user_id].present? && current_user.id != params[:user_id].to_i
           redirect_to_404('Forbidden. That simple.')

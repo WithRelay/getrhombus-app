@@ -9,8 +9,7 @@ class MessageParser
   def process_message(merchant, customer, uid, uid_type, received_msg, channel)
     begin
       return if received_msg.text.blank?
-      puts '12o2j321n3 1 2o3 o1j23oj123oij1o2 j3o12 j3oi12'
-      puts request ? request.env : '<redacted_phone_number>'
+      
       # tested
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
       

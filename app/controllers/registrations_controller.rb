@@ -130,7 +130,8 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def set_update_flash_messages(msg = '')
-    page_params = { add_profile_info: {
+    page_params = { 
+                    add_profile_info: {
                                         success: 'Profile created',
                                         error: resource.errors.full_messages,
                                         profile_info: true

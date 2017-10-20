@@ -86,7 +86,7 @@ class Message < ActiveRecord::Base
       options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
       HTTParty.post(webhook_url, options)
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In post_message_for_api_user", env: Rails.env })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In post_message_for_api_user", env: Rails.env, options: options })
     end
   end
 
