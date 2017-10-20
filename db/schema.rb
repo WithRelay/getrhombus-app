@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171018161904) do
+ActiveRecord::Schema.define(version: 20171020212126) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -643,6 +643,16 @@ ActiveRecord::Schema.define(version: 20171018161904) do
 
   add_index "saved_replies", ["user_id"], name: "index_saved_replies_on_user_id", using: :btree
 
+  create_table "sms_fees", force: :cascade do |t|
+    t.string   "provider",     limit: 191
+    t.decimal  "inbound_sms",              precision: 16, scale: 8, default: 0.015
+    t.decimal  "outbound_sms",             precision: 16, scale: 8, default: 0.015
+    t.decimal  "inbound_mms",              precision: 16, scale: 8, default: 0.04
+    t.decimal  "outbound_mms",             precision: 16, scale: 8, default: 0.02
+    t.datetime "created_at",                                                        null: false
+    t.datetime "updated_at",                                                        null: false
+  end
+
   create_table "standalone_stripe_creds", force: :cascade do |t|
     t.string   "email",              limit: 191
     t.string   "account_id",         limit: 191
@@ -845,6 +855,7 @@ ActiveRecord::Schema.define(version: 20171018161904) do
     t.string   "country",                limit: 191
     t.text     "description",            limit: 65535
     t.string   "use_rhombus_for",        limit: 191
+    t.integer  "sms_fee_id",             limit: 4,                              default: 1
     t.string   "rhombus_number",         limit: 191
     t.string   "rn_friendly_name",       limit: 191
     t.string   "rn_type",                limit: 191

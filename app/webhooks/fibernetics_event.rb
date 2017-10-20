@@ -4,7 +4,7 @@ class FiberneticsEvent
     # Parameters: {"userId"=>"+<redacted_phone_number>", "signature"=>"203554682", "message"=>"new_messages"}
     @params = params
     @to = params[:userId].gsub('+', '')
-    @merchant = User.includes(:api_cred).find_by(rhombus_number: @to)
+    @merchant = User.includes(:api_cred, :sms_fee).find_by(rhombus_number: @to)
     get_message if @merchant
   end
 
@@ -39,7 +39,8 @@ class FiberneticsEvent
       @phone_number = data['from'].gsub('+', '')
       @timestamp = data['timestamp']
       user = User.find_by(phone_number: @phone_number)      
-      num_segments = Message.num_of_segments(data["body"])      
+      num_segments = Message.num_of_segments(data["body"])     
+      sms_price = @merchant.sms_fee.inbound_sms 
 
       @message = Message.create!(
         to: @to,
@@ -50,7 +51,7 @@ class FiberneticsEvent
         text: data['body'].strip,
         num_segments: num_segments,
         message_timestamp: @timestamp.to_time,
-        relay_price: SMS_PRICE_RECEIVED
+        relay_price: sms_price
       )
 
       # create or add to existing conversation, send to real time service
@@ -70,7 +71,7 @@ class FiberneticsEvent
         @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
         MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
       end
-      @merchant.deduct_from_account_balance(SMS_PRICE_RECEIVED * num_segments)  
+      @merchant.deduct_from_account_balance(sms_price * num_segments)  
     rescue ActiveRecord::RecordNotUnique => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In save_received_message", env: Rails.env, params: @params })
     rescue StandardError => exception

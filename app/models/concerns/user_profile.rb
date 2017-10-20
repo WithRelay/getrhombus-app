@@ -40,7 +40,7 @@ module UserProfile
   end
 
   def check_profile_picture(cus)
-    return { type: 'color', value: COLORS.first.first } if cus.nil?
+    return { type: 'color', value: GLOBAL_COLORS.first.first } if cus.nil?
 
     user_fb_cred = cus.fb_creds
     if user_fb_cred.present? && user_fb_cred.first.profile_pic_url.present?
@@ -51,7 +51,7 @@ module UserProfile
     if contact_email && contact_email.photo_url.present?
       return { type: 'image', value: contact_email.photo_url }
     elsif cus.user_color.blank?
-      cus.update(user_color: COLORS.sample.first)
+      cus.update(user_color: GLOBAL_COLORS.sample.first)
     end
     { type: 'color', value: cus.user_color }
   end

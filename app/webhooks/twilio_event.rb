@@ -28,9 +28,11 @@ class TwilioEvent
       num_segments = @params[:NumSegments].to_i
 
       if num_media > 0
-        price, price_multiplier = MMS_PRICE_RECEIVED, MMS_PRICE_RECEIVED * num_media
+        mms_price = @merchant.sms_fee.inbound_mms 
+        price, price_multiplier = mms_price, mms_price * num_media
       else
-        price, price_multiplier = SMS_PRICE_RECEIVED, SMS_PRICE_RECEIVED * num_segments
+        sms_price = @merchant.sms_fee.inbound_sms 
+        price, price_multiplier = sms_price, sms_price * num_segments
       end
 
       @phone_number = @params[:From].gsub('+', '')

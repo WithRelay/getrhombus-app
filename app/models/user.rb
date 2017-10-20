@@ -45,6 +45,7 @@ class User < ActiveRecord::Base
   has_many :customer_merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
   has_many :merchant_customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
 
+  belongs_to :sms_fee
   has_one :hosted_sms
   has_one :api_cred
   has_many :reminders, -> { where campaign_type: Campaign.campaign_types[:reminder_campaign] }
