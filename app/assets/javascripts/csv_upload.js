@@ -14,7 +14,7 @@ $(document).ready(function () {
       else {
         file = file[0];
         console.log(file.type);
-        if (file.type.match('csv')) {
+        if (['csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].indexOf(file.type) > -1) {
           $('#csv-file-name').text(file.name);
           return;
         } else {
