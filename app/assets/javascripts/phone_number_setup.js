@@ -70,15 +70,16 @@ $(document).ready(function () {
       if (data.error) {
         FlashHandler.setFlashMessage("We are unable to search for any numbers.", 'error');
       } else if (data.number == '') {
-      if (['US', 'CA'].indexOf(country) > -1) {
-        if (code_unavailable == 'try_again') {
-          FlashHandler.setFlashMessage("We don't have any numbers with that area code, try another.", 'error');
+        if (['US', 'CA'].indexOf(country) > -1) {
+          if (code_unavailable == 'try_again') {
+            FlashHandler.setFlashMessage("We don't have any numbers with that area code, try another.", 'error');
+          } else {
+            searchNumberField.val('');
+            $('#search_number_form').submit();
+          }
         } else {
-          searchNumberField.val('');
-          $('#search_number_form').submit();
+          FlashHandler.setFlashMessage("We don't have any numbers in this country.", 'error');
         }
-      } else
-        FlashHandler.setFlashMessage("We don't have any numbers in this country.", 'error');
       } else {
         searchNumberField.val(area_code);
         $('#search_number_form').submit();

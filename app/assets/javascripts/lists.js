@@ -64,7 +64,7 @@ $(document).on('ready page:load', function() {
           $("#edit_list_form").attr("action", edit_list_form.join('/') + '/' + selected_edit_list[0]);
         },
         overlayCSS: {
-          background: '#ffffff', opacity: .8
+          background: 'rgba(99,114,130,0.5)', opacity: .8
         }
       });
     }
@@ -150,7 +150,7 @@ $(document).on('ready page:load', function() {
         //$("#lists_amt_2").val($("#amount_2").val());
       },
       overlayCSS: {
-        background: '#ffffff', opacity: .8
+        background: 'rgba(99,114,130,0.5)', opacity: .8
       }
     });
   });
@@ -218,7 +218,7 @@ $(document).on('ready page:load', function() {
           $("#listChannel").val(getListChannel());
         },
         overlayCSS: {
-          background: '#ffffff', opacity: .8
+          background: 'rgba(99,114,130,0.5)', opacity: .8
         }
       });
     }

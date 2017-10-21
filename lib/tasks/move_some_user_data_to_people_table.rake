@@ -24,6 +24,8 @@
     select * from users where user_level = 1 
     and last_name is null and first_name is not null
 
+    rn_type, rn_country should be filled out for twilio
+
 =end
 
 

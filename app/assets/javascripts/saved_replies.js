@@ -80,7 +80,7 @@ $(document).ready(function() {
     $("#edit-saved-reply-modal").lightbox_me({
       centered: true,
       overlayCSS: {
-        background: '#ffffff', opacity: .8
+        background: 'rgba(99,114,130,0.5)', opacity: .8
       }
     });
 
