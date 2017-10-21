@@ -13,6 +13,7 @@ $(document).ready(function () {
         FlashHandler.setFlashMessage("Please upload one csv file", 'error');
       else {
         file = file[0];
+        console.log(file.type);
         if (file.type.match('csv')) {
           $('#csv-file-name').text(file.name);
           return;

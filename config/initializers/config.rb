@@ -15,12 +15,3 @@ GLOBAL_COLORS = [
 ].freeze
 
 PAGINATION_PER_PAGE = 5
-
-# in seconds, must be integer
-SIGNUP_EMAIL_DELAY = 120
-INCOMPLETE_SIGNUP_EMAIL_DELAY = 720
-
-NUMBER_PRICE = 1
-
-# Transactions before this date cannot be refunded
-V1_5_LIVE_DATE = Time.now.utc

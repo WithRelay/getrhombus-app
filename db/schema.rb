@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171020212126) do
+ActiveRecord::Schema.define(version: 20171021134920) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -623,12 +623,13 @@ ActiveRecord::Schema.define(version: 20171020212126) do
   add_index "referrers", ["referrer_email"], name: "index_referrers_on_referrer_email", using: :btree
 
   create_table "refunds", force: :cascade do |t|
-    t.string   "uri",            limit: 255
-    t.string   "time",           limit: 255
-    t.string   "reason",         limit: 255
+    t.integer  "transaction_id",  limit: 4
+    t.string   "uri",             limit: 255
+    t.string   "time",            limit: 255
+    t.string   "reason",          limit: 255
+    t.integer  "amount_refunded", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "transaction_id", limit: 4
   end
 
   add_index "refunds", ["transaction_id"], name: "index_refunds_on_transaction_id", using: :btree

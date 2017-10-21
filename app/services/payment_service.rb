@@ -159,10 +159,9 @@ class PaymentService
     end
 
     # returns array with refund status, error object
-    def refund_charge(hash, merchant)
+    def refund_charge(hash, cred, is_platform)
       begin
-        cred = merchant.get_stripe_cred
-        if merchant.is_platform? || cred[:type] == 'managed'
+        if is_platform || cred[:type] == 'managed'
           # are the last two attrs ok for platform charges?
           re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], 
                                      refund_application_fee: true, reverse_transfer: true)
@@ -351,14 +350,15 @@ class PaymentService
     def retrieve_charge(charge_id, merchant)
       begin
         cred = merchant.get_stripe_cred
-        if merchant.is_platform?
+        if merchant.is_platform? || cred[:type] == 'managed'
           re = Stripe::Charge.retrieve(charge_id)
         else
           re = Stripe::Charge.retrieve(charge_id, { stripe_account: cred[:cred].account_id })
         end
         [re]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService retrieve_charge", env: Rails.env, charge_id: charge_id, merchant: merchant })
+        puts e.inspect
+        #ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService retrieve_charge", env: Rails.env, charge_id: charge_id, merchant: merchant })
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error], "Stripe is unable to retrieve this charge."]
       rescue StandardError => e

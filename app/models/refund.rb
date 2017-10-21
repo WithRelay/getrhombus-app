@@ -3,6 +3,11 @@ class Refund < ActiveRecord::Base
   validates :uri, :time, presence: true
   belongs_to :txn, foreign_key: :transaction_id, class_name: :Transaction
 
+  # Stripe no longer refunds its fees for accounts created after this date
+  STRIPE_TZ = "Pacific Time (US & Canada)"
+  STRIPE_NO_FEES_REFUND_DATE = "September 14, 2017"
+  STRIPE_REFUND_REASONS = ['fraudulent', 'duplicate', 'requested_by_customer'].freeze
+
   # Only managed account txns can be refunded.
   # We aren't refunding Standalone acct txns going forward once we move to managed accounts.
   def refund_card_txn(merchant, params)
@@ -11,28 +16,31 @@ class Refund < ActiveRecord::Base
       is_platform = merchant.is_platform?
 
       if txn.nil?
-        [false, "Transaction doesn't exists."]
+        [false, "Transaction doesn't exists.".freeze]
       elsif txn.refund.present?
-        [false, "Transaction has already been refunded."]
+        [false, "Transaction has already been refunded.".freeze]
       elsif !is_platform && txn.team_id != merchant.id            # For admin refunds.
-        [false, "Transaction wasn't created by you."]
+        [false, "Transaction wasn't created by you.".freeze]
       else
         params[:charge_id] = txn.txn_uri
         params[:reason] = 'requested_by_customer' unless STRIPE_REFUND_REASONS.include? params[:reason]
 
-        re = PaymentService.refund_charge(params, merchant)
+        cred = merchant.get_stripe_cred
+        re = PaymentService.refund_charge(params, cred, is_platform)
 
         if re.first
-          self.update(uri: re.first.id, time: re.first.created, reason: params[:reason], transaction_id: txn.id)
+          fee = cred[:cred].created_at.in_time_zone(STRIPE_TZ) >= STRIPE_NO_FEES_REFUND_DATE.in_time_zone(STRIPE_TZ) ? txn.stripe_fee : 0
+          amt_refunded = Toolbox::Decimal.to_cents(txn.amount_with_taxes) - fee
+          self.update(uri: re.first.id, time: re.first.created, reason: params[:reason], transaction_id: txn.id, amount_refunded: amt_refunded)
           send_refund_notification
-          [true, "Payment has been refunded."]
+          [true, "Payment has been refunded.".freeze]
         else
-          [false, "We're unable to refund this transaction. Please try again later."]
+          [false, "We're unable to refund this transaction. Please try again later.".freeze]
         end
       end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In refund_card_txn", re: re, env: Rails.env, self: self, merchant: merchant, params: params } )
-      [false, "We're unable to refund this transaction. Please try again later."]
+      [false, "We're unable to refund this transaction. Please try again later.".freeze]
     end
   end
 

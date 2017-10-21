@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   attr_accessor :channel, :referrer_uid, :tos_acceptance, :customer_source
   attr_accessor :area_code, :card_token, :page_specific_id
 
+  NUMBER_PRICE, SIGNUP_EMAIL_DELAY, INCOMPLETE_SIGNUP_EMAIL_DELAY = 1, 120, 720
+  
   delegate :url_helpers, to: 'Rails.application.routes'
 
   # validation rules for user attributes
