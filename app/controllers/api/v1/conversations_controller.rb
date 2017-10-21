@@ -42,17 +42,17 @@ class Api::V1::ConversationsController < Api::V1::BaseController
       @conversation.conversation_refs.update_all(unread: false)
       render json: {}, status: 200
     else
-      # email team here
+      ExceptionNotifier.notify_exception(StandardError.new, env: request.env, data: { message: "From v1::ConversationsController close", env: Rails.env, conv_ref: conv_ref })
       render json: {}, status: 500
     end
   end
 
   def mark_conv_ref_as_read
     begin
-      #ConversationRef.where(id: params[:ref_id], conversation_id: params[:id]).update_all(unread: false)
+      ConversationRef.where(id: params[:ref_id], conversation_id: params[:id]).update_all(unread: false)
       render json: {}
     rescue StandardError => e
-      # email team
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "From v1::ConversationsController mark_conv_ref_as_read", env: Rails.env })
       render json: {}, status: 500
     end    
   end
@@ -75,6 +75,7 @@ class Api::V1::ConversationsController < Api::V1::BaseController
       raise StandardError unless re
       render json: re.first, status: :created
     rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "From v1::ConversationsController mms", env: Rails.env })
       render json: { error: "Unable to upload file" }, status: 500
     end
   end
