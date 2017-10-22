@@ -16,12 +16,16 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
 
   def customer_csv
     begin
-      status = 200
+      status = 500
       response = "CSV file uploaded"
       doc = current_user.documents.create(attachment: params['csv'])
-      CsvCustomerImportJob.perform_later(current_user, doc)
+      if doc.errors.full_messages.blank?
+        CsvCustomerImportJob.perform_later(current_user, doc)
+        status = 200
+      else
+        response = doc.errors.full_messages
+      end
     rescue StandardError => exception
-      status = 500
       response = 'Unable to upload customer csv'
       ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In v1 merchant_customers customer_csv_upload", env: Rails.env })      
     end
