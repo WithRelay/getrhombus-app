@@ -33,6 +33,19 @@ $(document).ready(function() {
       pubnub.subscribe({
         channels: ['notifications_<%= Rails.env %>_' + merchant_data.id.toString()]
       });
+
+
+      ifvisible.on("blur", function() {
+        $scope.update_merchant_status('offline');
+      });
+
+      ifvisible.on("focus", function() {
+        $scope.update_merchant_status('online');
+      });
+
+      ifvisible.onEvery(20, function() {
+        $scope.update_merchant_status('online');
+      });
     };
   };
 
@@ -56,5 +69,15 @@ $(document).ready(function() {
       $(".notification-counter").text(parseInt($(".notification-counter").text().trim()) + 1);
     };
   };
+
+  function update_merchant_status(status) {
+    $.ajax({
+      url: '/v1/users/' + $scope.merchant.id.toString() + '/update_merchant_status.json',
+      dataType: 'json',
+      data: { status: status, on_conversation_page: UtilFunctions.is_conversation_page() },
+      error: function() { console.log('Something went wrong...Unable to update merchant status'); },
+      success: function() { console.log('Merchant status updated'); }
+    });
+  }
 
 });

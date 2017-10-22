@@ -45,8 +45,8 @@ class Api::V1::UsersController < Api::V1::BaseController
   end
 
   def update_merchant_status
-    if "OK" != $redis_merchant_status.set(params[:id], params[:status])
-      # Notify team here
+    if "OK" != $redis_merchant_status.set(params[:id], params.to_json)
+      ExceptionNotifier.notify_exception(exception, data: { message: "In update_merchant_status", env: Rails.env, params: params })
     end
     head :no_content
   end

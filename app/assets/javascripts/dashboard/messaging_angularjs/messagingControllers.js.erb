@@ -761,16 +761,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       });
     };
 
-    $scope.update_merchant_status = function(status) {
-      $.ajax({
-        url: '/v1/users/' + $scope.merchant.id.toString() + '/update_merchant_status.json',
-        dataType: 'json',
-        data: { status: status },
-        error: function() { console.log('Something went wrong...Unable to update merchant status'); },
-        success: function() { console.log('Merchant status updated'); }
-      });
-    }
-
     $scope.setup_pubnub = function() {
       $rootScope.$on(Pubnub.getMessageEventNameFor($scope.merchant.message_channel), function (ngEvent, envelope) {
         $scope.$apply(function () {
@@ -810,18 +800,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       // get initial conversations
       $scope.loadConversations(true);
       $scope.getMerchantLists();
-
-      ifvisible.on("blur", function() {
-        $scope.update_merchant_status('offline');
-      });
-
-      ifvisible.on("focus", function() {
-        $scope.update_merchant_status('online');
-      });
-
-      ifvisible.onEvery(20, function() {
-        $scope.update_merchant_status('online');
-      });
     };
 
   }

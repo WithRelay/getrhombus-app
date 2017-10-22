@@ -9,36 +9,44 @@ class RealtimeStreamService
                       message: { type: 'new-message', conversation: conversation.conversation_hash,
                                  message: Conversation.message_hash(conversation, msg, conv_ref) })
 
-      if conv_ref.source == "customer" && $redis_merchant_status.get(merchant_id) != 'online'
+      if conv_ref.source == "customer"
+        merchant_status, customer_name, profile_pic = JSON.parse($redis_merchant_status.get(merchant_id)), nil, nil
         
-        customer_name = customer.present? ? customer.full_name : ((conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from)
-        profile_pic = User.profile_url_only(customer)
+        unless merchant_status["on_conversation_page"]
+          customer_name = get_customer_name(customer, conversation.uid_type, msg.from)
+          profile_pic = get_profile_url(customer)
 
-        notifications({ profile_pic: profile_pic, customer_name: customer_name, message: msg.text[0..15] + "...",
-                        type: conv_ref.textable_type == 'Message' ? 'new_message_sms' : 'new_message_messenger' },
-                        merchant_id)
-      
-        alert_obj = conversation.merchant.alert
-        if alert_obj.try(:send_alert)
-          options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %-I:%M%P"), 
-                      message: msg.text, sender_profile_url: profile_pic, customer_name: customer_name }          
+          notifications({ profile_pic: profile_pic, customer_name: customer_name, message: msg.text[0..15] + "...",
+                          type: conv_ref.textable_type == 'Message' ? 'new_message_sms' : 'new_message_messenger' },
+                          merchant_id)
+        end
+          
+        if merchant_status['status'] != 'online'
+          alert_obj = conversation.merchant.alert
+          if alert_obj.try(:send_alert)
+            customer_name = customer_name || get_customer_name(customer, conversation.uid_type, msg.from)
+            profile_pic = profile_pic || get_profile_url(customer)
 
-          # email alerts
-          options[:sender_email] = customer.try(:email) || ""
-          to = alert_obj.emails.map { |e| { "email" => e } }
-          EmailingService.unread_message_notification(to, options)
+            options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %-I:%M%P"), 
+                        message: msg.text, sender_profile_url: profile_pic, customer_name: customer_name }          
 
-          # sms alerts
-          to = alert_obj.sms_numbers
-          if alert_obj.include_sms && to.present?
-            team = User.get_platform_acct_obj
-            msg_to_send = "You have a new unread message from #{options[:sender_name]} on your #{Rails.application.secrets.app['name']} dashboard."
-            to.each do |pn|
-              pn = pn.gsub('+', '')
-              customer = User.find_by(phone_number: pn)
-              uid_type = customer ? 'user' : 'phone_number'
-              uid = customer.try(:id) || pn
-              Conversation.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send)          
+            # email alerts
+            options[:sender_email] = customer.try(:email) || ""
+            to = alert_obj.emails.map { |e| { "email" => e } }
+            EmailingService.unread_message_notification(to, options)
+
+            # sms alerts
+            to = alert_obj.sms_numbers
+            if alert_obj.include_sms && to.present?
+              team = User.get_platform_acct_obj
+              msg_to_send = "You have a new unread message from #{options[:sender_name]} on your #{Rails.application.secrets.app['name']} dashboard."
+              to.each do |pn|
+                pn = pn.gsub('+', '')
+                customer = User.find_by(phone_number: pn)
+                uid_type = customer ? 'user' : 'phone_number'
+                uid = customer.try(:id) || pn
+                Conversation.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send)          
+              end
             end
           end
         end
@@ -64,6 +72,14 @@ class RealtimeStreamService
     # payload is a hash with the data needed in the client. must include one of the types above
     def notifications(payload, merchant_id)
       $pubnub.publish(channel: 'notifications_' + Rails.env + '_' + merchant_id.to_s, message: payload)
+    end
+
+    def get_customer_name(cus, uid_type, from)
+      cus.present? ? cus.full_name : ((uid_type == 'fb_page') ? 'Messenger' : from)
+    end
+
+    def get_profile_url(cus)
+      User.get_profile_url(cus)
     end
 
   end
