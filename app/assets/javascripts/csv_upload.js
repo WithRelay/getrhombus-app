@@ -14,7 +14,8 @@ $(document).ready(function () {
       else {
         file = file[0];
         console.log(file.type);
-        if (['csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].indexOf(file.type) > -1) {
+        if ( file.type.indexOf('csv') > -1 ||
+             ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].indexOf(file.type) > -1) {
           $('#csv-file-name').text(file.name);
           return;
         } else {
@@ -63,7 +64,7 @@ $(document).ready(function () {
     };
 
     xhr.onerror = function(e) {
-      console.log('Unable to upload csv file.');
+      FlashHandler.setFlashMessage('Unable to upload csv file.', 'error');
       button.text("Import customers").prop('disabled', false);
     };
     xhr.send(payload); // Send the Data.

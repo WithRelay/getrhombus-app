@@ -105,7 +105,10 @@ module CSVHandler
                 @customer.valid?
               else
                 ActiveRecord::Base.transaction do
-                  @customer = User.create(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
+                  @customer = User.new(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
+                  @customer.customer_source = { id: self.id, method: 'added', temp_password: row[:password] }
+                  @customer.save!
+
                   if @customer.persisted? && (row[:first_name] || row[:last_name])
                     person = @customer.people.create(first_name: row[:first_name], last_name: row[:last_name]) 
                     if person.persisted? && (row[:street_address] || row[:city] || row[:postal_code] || row[:state_province] || row[:country])
@@ -119,13 +122,13 @@ module CSVHandler
               # check for @customer errors
               if @customer.errors.messages.present? || error
                 @customer.errors.messages.each do |k,v|
-                  v.each { |r| error_hash[row[:email]].push("#{k}.humanize.downcase #{r}.") }
+                  v.each { |r| error_hash[row[:email]].push("#{k.humanize.downcase} #{r}.") }
                 end
                 error = true
               else
+                MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
                 MerchantCustomer.add_or_update_merchant_customer(self, @customer)
                 Referrer.save_referrer_with_uid(self.relay_uid, @customer.id)
-                # send email or text here
               end
             rescue ActiveRecord::RecordNotUnique => e
               puts e.inspect
@@ -142,7 +145,6 @@ module CSVHandler
             error_hash.delete(row[:email]) unless error
           end
         else
-          # send text here
           MerchantCustomer.add_or_update_merchant_customer(self, @customer)
         end
       end
