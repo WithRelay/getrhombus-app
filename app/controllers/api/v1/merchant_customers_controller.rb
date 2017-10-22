@@ -20,6 +20,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
       response = "CSV file uploaded"
       doc = current_user.documents.create(attachment: params['csv'])
       puts doc.errors.inspect
+      puts doc.errors.full_messages.inspect
       if doc.errors.full_messages.blank?
         CsvCustomerImportJob.perform_later(current_user, doc)
         status = 200
