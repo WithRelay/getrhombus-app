@@ -21,6 +21,7 @@ module CSVHandler
         end
       end
     rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In get_transactions_csv", env: Rails.env, user_id: user_id, start_date: start_date, end_date: end_date, subscription: subscription })
       false
     end
   end
@@ -131,13 +132,13 @@ module CSVHandler
                 Referrer.save_referrer_with_uid(self.relay_uid, @customer.id)
               end
             rescue ActiveRecord::RecordNotUnique => e
-              puts e.inspect
+              ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv first exception block", env: Rails.env, self: self })
               msg = e.original_exception.message
               error_hash[row[:email]].push("Phone number is already in use.") if msg.include?('index_users_on_phone_number')
               error_hash[row[:email]].push("Email is already in use.") if msg.include?('index_users_on_email')
               error = true
             rescue StandardError => e
-              puts e.inspect
+              ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv second exception block", env: Rails.env, self: self })
               error = true
               error_hash[row[:email]].push("Something went wrong on our end.")
             end
@@ -159,8 +160,7 @@ module CSVHandler
       puts response.inspect
       response
     rescue StandardError => e
-      puts e.inspect
-      # email platform
+      ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv third exception block", env: Rails.env, self: self })
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
