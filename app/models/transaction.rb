@@ -98,9 +98,9 @@ class Transaction < ActiveRecord::Base
       exp_month: exp_month,
       exp_year: exp_year,
       description: description,
-      taxes_and_fees: amount_with_taxes.to_f,
+      taxes_and_fees: taxes_and_fees,
       amount_less_fees: txn_amount_less_fees,
-      total_amount: amount.to_f + amount_with_taxes.to_f,
+      total_amount: txn_amount,
       relay_number: team.friendly_relay_number,
       currency: currency,
       currency_symbol: '$'
@@ -259,6 +259,12 @@ class Transaction < ActiveRecord::Base
 
   def txn_amount_less_fees
     amt = self.amount_with_taxes - self.app_fee.to_f/100 - self.stripe_fee.to_f/100
+    "#{Transaction.big_decimal_2dp(amt)}"
+  end
+
+  def taxes_and_fees
+    # How to add taxes??
+    amt = self.app_fee.to_f/100 + self.stripe_fee.to_f/100
     "#{Transaction.big_decimal_2dp(amt)}"
   end
 
