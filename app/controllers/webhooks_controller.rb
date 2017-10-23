@@ -5,7 +5,7 @@ class WebhooksController < ApplicationController
   def stripe_events
     begin
       # Verify the event by fetching it from Stripe
-      #if PaymentService.retrieve_charge(type=='platform', ) params[:id] == event[:id]  
+      #if PaymentService.retrieve_charge(type=='platform', ) params[:id] == event[:id]
       type = (request.original_fullpath.include? 'platform') ? 'platform' : 'connect'
       StripeEvent.new.process_event(params, type)
       #end
@@ -68,7 +68,7 @@ class WebhooksController < ApplicationController
     end
 
     def get_merchant
-      @merchant = current_page.user
+      @merchant = current_page.try(:user)
     end
 
 end

@@ -28,7 +28,7 @@ class Conversation < ActiveRecord::Base
 
   def conversation_hash
     last_message = ConversationRef.where(conversation_id: self.id).last
-    
+
     if last_message.present?
       last_message = last_message.textable
       last_message.text = 'image attached' if last_message.present? && last_message.text.blank? && last_message.images.exists?
@@ -66,6 +66,7 @@ class Conversation < ActiveRecord::Base
 	end
 
 	def self.message_hash(conv, msg, conv_ref)
+    return {} unless msg
     {
       id: msg.id,
       conv_ref_id: conv_ref.id,
@@ -76,11 +77,11 @@ class Conversation < ActiveRecord::Base
       ts: msg.created_at.to_i,
       ago: Conversation.new.time_in_relative_form(msg.created_at, 'short_format'),
       unread: conv_ref.unread,
-      images: msg.images.map { |i| { id: i.id, url: i.avatar.url } },         
+      images: msg.images.map { |i| { id: i.id, url: i.avatar.url } },
       channel: msg.class.name
-  	}
+    }
 	end
-  
+
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, source, media = [])
     begin
@@ -150,7 +151,7 @@ class Conversation < ActiveRecord::Base
   def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread, source)
     conv = find_or_create_conversation(team_id, uid_type, uid)
     conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread, source: source)
-    
+
     # basically, only customer and merchant messages should start new conversations
     conv.update(is_resolved: false, updated_at: conv_ref.created_at) if ['customer', 'merchant'].include?(source)
     update_conversation_resolution(team_id, conv.id, conv_ref.id, source)
