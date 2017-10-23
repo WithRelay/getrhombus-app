@@ -19,6 +19,7 @@
 //= require angularjs/angular-scrollglue.js
 //= require angular-rails-templates
 //= require offline.js
+//= require clipboard.min
 
 // used for client side form validation
 //= require formValidation.min
@@ -26,11 +27,11 @@
 //= require url-parameters
 //= require moment
 //= require user_details
-//= require notifications
 
 // We need to place these js before jquery ujs for workable confirmation dialog box
 //= require ifvisible.min.js
 //= require flashes
+//= require util_functions
 //= require get_started
 //= require hashtags_plans_coupons_alerts
 //= require plan
@@ -51,6 +52,7 @@
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
 
+//= require notifications
 //= require jquery.lightbox_me
 //= require intlTelInput.min
 //= require jquery.payment
@@ -72,8 +74,6 @@
 //= require export_csv
 //= require sms-usage
 //= require phone_number_formatter
-//= require clipboard.min
-//= require util_functions
 //= require location.js
 //= require stripe.js.erb
 //= require credit_card_form

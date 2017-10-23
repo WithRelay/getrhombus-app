@@ -14,7 +14,7 @@ class RealtimeStreamService
 
         puts merchant_status.inspect
         
-        unless merchant_status["on_conversation_page"]
+        unless merchant_status["on_conversation_page"] == 'true'
           customer_name = get_customer_name(customer, conversation.uid_type, msg.from)
           profile_pic = get_profile_url(customer)
 

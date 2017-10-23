@@ -11,6 +11,8 @@ setTimeout(function retry() {
 }, delay);
 
 $(document).ready(function() {
+  var merchant_id;
+
   // subcribe to notifications channel
   function subscribe_to_notifications() {
     var merchant_data = UserDetails.object();
@@ -34,18 +36,10 @@ $(document).ready(function() {
         channels: ['notifications_<%= Rails.env %>_' + merchant_data.id.toString()]
       });
 
-
-      ifvisible.on("blur", function() {
-        $scope.update_merchant_status('offline');
-      });
-
-      ifvisible.on("focus", function() {
-        $scope.update_merchant_status('online');
-      });
-
-      ifvisible.onEvery(20, function() {
-        $scope.update_merchant_status('online');
-      });
+      merchant_id = merchant_data.id.toString();
+      ifvisible.on("blur", function() { update_merchant_status('offline'); });
+      ifvisible.on("focus", function() { update_merchant_status('online'); });
+      ifvisible.onEvery(20, function() { update_merchant_status('online'); });
     };
   };
 
@@ -72,7 +66,7 @@ $(document).ready(function() {
 
   function update_merchant_status(status) {
     $.ajax({
-      url: '/v1/users/' + $scope.merchant.id.toString() + '/update_merchant_status.json',
+      url: '/v1/users/' + merchant_id + '/update_merchant_status.json',
       dataType: 'json',
       data: { status: status, on_conversation_page: UtilFunctions.is_conversation_page() },
       error: function() { console.log('Something went wrong...Unable to update merchant status'); },
