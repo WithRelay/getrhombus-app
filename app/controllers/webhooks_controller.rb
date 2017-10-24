@@ -49,7 +49,6 @@ class WebhooksController < ApplicationController
 
     def set_time_zone(&block)
       if action_name == 'facebook_events'
-        puts params['entry']
         @merchant = get_merchant if params['entry']
       elsif action_name == 'stripe_events' || action_name == 'fibernetics_events'
          @merchant = User.get_platform_acct_obj

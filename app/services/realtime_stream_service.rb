@@ -11,8 +11,6 @@ class RealtimeStreamService
 
       if conv_ref.source == "customer"
         merchant_status, sender_name, profile_pic = JSON.parse($redis_merchant_status.get(merchant_id)), nil, nil
-
-        puts merchant_status.inspect
         
         unless merchant_status["on_conversation_page"] == 'true'
           sender_name = get_customer_name(customer, conversation.uid_type, msg.from)

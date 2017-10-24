@@ -66,7 +66,6 @@ class Conversation < ActiveRecord::Base
 	end
 
 	def self.message_hash(conv, msg, conv_ref)
-    return {} unless msg
     {
       id: msg.id,
       conv_ref_id: conv_ref.id,
@@ -90,7 +89,7 @@ class Conversation < ActiveRecord::Base
       if conv.uid_type == "user"
         customer = conv.user
         # supports merchant dashboard chat
-        to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : customer.phone_number
+        to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from.try(:page_access_token)) : customer.phone_number
         #to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : (customer.is_merchant? ? customer.rhombus_number : customer.phone_number)
       else
         to = conv.uid
