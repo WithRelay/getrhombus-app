@@ -1,4 +1,4 @@
-/*window.Offline.options = {
+window.Offline.options = {
   interceptRequests: false,
   requests: false,
   checks: { xhr: { url: '/v1/offline_check' } }
@@ -9,7 +9,7 @@ setTimeout(function retry() {
   //if (Offline.state == "up") Offline.check();
   setTimeout(retry, delay);
 }, delay);
-*/
+
 $(document).ready(function() {
   var merchant_id;
 
@@ -37,7 +37,7 @@ $(document).ready(function() {
       pubnub.subscribe({ channels: ['notifications_<%= Rails.env %>_' + merchant_id] });      
       ifvisible.on("blur", function() { update_merchant_status('offline'); });
       ifvisible.on("focus", function() { update_merchant_status('online'); });
-      ifvisible.onEvery(20, function() { update_merchant_status('online'); });
+      ifvisible.onEvery(25, function() { update_merchant_status('online'); });
     };
   };
 

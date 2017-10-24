@@ -28,10 +28,6 @@ Bhishma
 - why do we need this?? get_user_relation.... since receive_message is for incoming already??
 
 
-{"first_name"=>"Ijiola", "last_name"=>"Elesinmogun", "profile_pic"=>"https://scontent.xx.fbcdn.net/v/t1.0-1/20663775_10155636499870701_8489990842445102004_n.jpg?oh=830483068ed754a00f11220aad6912e3&oe=5A766DE0", "locale"=>"en_US", "timezone"=>-4, "gender"=>"female", "id"=>"<redacted_phone_number>"}
-
-
-
 
 s = TextingService('<redacted_phone_number>', '<redacted_phone_number>', 'test message', "FSGe31457817363405091af6158c716089e")
 
