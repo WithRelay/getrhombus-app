@@ -1,4 +1,4 @@
-window.Offline.options = {
+/*window.Offline.options = {
   interceptRequests: false,
   requests: false,
   checks: { xhr: { url: '/v1/offline_check' } }
@@ -9,7 +9,7 @@ setTimeout(function retry() {
   //if (Offline.state == "up") Offline.check();
   setTimeout(retry, delay);
 }, delay);
-
+*/
 $(document).ready(function() {
   var merchant_id;
 
@@ -18,6 +18,8 @@ $(document).ready(function() {
     var merchant_data = UserDetails.object();
     // merchant and up only
     if (!jQuery.isEmptyObject( merchant_data )) {
+      merchant_id = merchant_data.id.toString();
+
       // Initialize PubNub with SSL
       var pubnub = new PubNub({
         publishKey: merchant_data.pubnub_publish_key,
@@ -32,11 +34,7 @@ $(document).ready(function() {
       });
 
       // Subscribe to merchant channel
-      pubnub.subscribe({
-        channels: ['notifications_<%= Rails.env %>_' + merchant_data.id.toString()]
-      });
-
-      merchant_id = merchant_data.id.toString();
+      pubnub.subscribe({ channels: ['notifications_<%= Rails.env %>_' + merchant_id] });      
       ifvisible.on("blur", function() { update_merchant_status('offline'); });
       ifvisible.on("focus", function() { update_merchant_status('online'); });
       ifvisible.onEvery(20, function() { update_merchant_status('online'); });

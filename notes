@@ -18,9 +18,18 @@ Bhishma
 <%= link_to new_user_registration_path(referrer_uid: @referrer, page_specific_id: @psid, value: @params), id: 'signup', class: 'links sign-up-cta-log-in-page', target: '_blank', onClick: 'javascript:window.close()' do %>
 - why is fb message from merchant saving as merchant source
 - hard to follow the code now but are u querying with merchant id (using page_id alone can cause problems)
-- if reverse linking with image url, what if i log into several accounts with same user.
+- if reverse linking with image url, what if i log into several accounts with same user. or someone else now owns my account...??w what happens
 - line 15 <% if current_user.fb_creds.present? %> integrations page
 - need remove integration in a method that i can call from subscription deleted
+- FbPage.find_by(page_id: required_params['id'], user_id: @merchant.id) if required_params in webhook controller...fixed it
+- is page_id unique for every admin? or it is the same for everyone?? i think that's why for shelflet...i was seeing another id from bhisma's computer. else we need to prevent adding the page again...unless u log in with literally the same account...we can't link same active?? page id to multiple users
+- link_page_specific_user should be only one user... if u do for multiple, so which one do u return??
+- can we link by fb cred email??
+- why do we need this?? get_user_relation.... since receive_message is for incoming already??
+
+
+{"first_name"=>"Ijiola", "last_name"=>"Elesinmogun", "profile_pic"=>"https://scontent.xx.fbcdn.net/v/t1.0-1/20663775_10155636499870701_8489990842445102004_n.jpg?oh=830483068ed754a00f11220aad6912e3&oe=5A766DE0", "locale"=>"en_US", "timezone"=>-4, "gender"=>"female", "id"=>"<redacted_phone_number>"}
+
 
 
 

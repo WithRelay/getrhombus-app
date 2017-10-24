@@ -7,7 +7,7 @@ class FacebookMessengerService
       #link_url = "#{Rails.application.secrets.app['url']}/link_facebook"
       link_url = "http://localhost:3000/link_facebook"
       image_path = ActionController::Base.helpers.image_path("relay-6.png")
-      image_path = default_path[1..-1] if image_path[0] == "/"
+      image_path = image_path[1..-1] if image_path[0] == "/"
 
       body = {
         recipient:{

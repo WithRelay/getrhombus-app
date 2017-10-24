@@ -29,7 +29,7 @@ class WebhooksController < ApplicationController
   def facebook_events
     res = {}
     begin
-      res = FacebookEvent.new.process_event(params, current_page, @merchant)
+      res = FacebookEvent.new.process_event(params, @current_page, @merchant)
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In webhooks controller facebook_events", env: Rails.env })
     end
@@ -49,6 +49,7 @@ class WebhooksController < ApplicationController
 
     def set_time_zone(&block)
       if action_name == 'facebook_events'
+        puts params['entry']
         @merchant = get_merchant if params['entry']
       elsif action_name == 'stripe_events' || action_name == 'fibernetics_events'
          @merchant = User.get_platform_acct_obj
@@ -64,7 +65,7 @@ class WebhooksController < ApplicationController
 
     def current_page
       required_params = params['entry'].try(:last)
-      FbPage.find_by_page_id required_params['id'] if required_params
+      @current_page = FbPage.find_by_page_id required_params['id'] if required_params
     end
 
     def get_merchant

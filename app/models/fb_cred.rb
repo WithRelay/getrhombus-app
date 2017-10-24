@@ -17,6 +17,7 @@ class FbCred < ActiveRecord::Base
       end
       true
     rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, data: { message: "In from_omniauth", env: Rails.env, user_id: id })
       false
     end
   end
@@ -30,27 +31,18 @@ class FbCred < ActiveRecord::Base
       timezone = ActiveSupport::TimeZone.new(user_data['timezone']).tzinfo.name
       gender = user_data['gender']
       link_response = link_page_specific_user(url)
-      welcome_text = "Welcome #{full_name} to Relay-Message Commerce platform"
-      fb_cred = FbCred.find_or_initialize_by(page_specific_id: new_user_id)
+      welcome_text = "Welcome #{full_name} to Relay Platform"
+      fb_cred = FbCred.find_or_initialize_by(page_specific_id: new_user_id)      
       if link_response.present?
-        fb_cred.update(
-          name: full_name, gender: gender,
-          email: link_response[:email],
-          time_zone: timezone, profile_pic_url: url,
-          fb_id: link_response[:fb_id],
-          user_id: link_response[:user_id],
-          fb_page_id: fb_page.id
-        )
+        fb_cred.update(name: full_name, gender: gender, email: link_response[:email], time_zone: timezone, profile_pic_url: url,
+                        fb_id: link_response[:fb_id], user_id: link_response[:user_id], fb_page_id: fb_page.id)
       else
         send_auth_link(page_access_token, new_user_id, welcome_text)
-        fb_cred.update(
-          name: full_name,time_zone: timezone,
-          gender: gender, profile_pic_url: url,
-          fb_page_id: fb_page.id
-        )
+        fb_cred.update(name: full_name,time_zone: timezone, gender: gender, profile_pic_url: url, fb_page_id: fb_page.id)
       end
-      fb_cred if fb_cred.save
+      fb_cred
     rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, data: { message: "In add_fb_user_from_messenger", env: Rails.env, fb_page: fb_page })
     end
   end
 
@@ -67,8 +59,7 @@ class FbCred < ActiveRecord::Base
   def self.link_page_specific_user(pic_url)
     response = {}
     user_identifier = extract_profile_pic_identifier(pic_url)
-    all_user_fb_cred = FbCred.where.not(fb_id: nil)
-                                        .where(page_specific_id: nil)
+    all_user_fb_cred = FbCred.where.not(fb_id: nil, profile_pic_url: [nil, '']).where(page_specific_id: nil)
     all_user_fb_cred.each do |cred|
       if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
         response = { fb_id: cred.fb_id, email: cred.email, user_id: cred.user_id }
@@ -79,8 +70,7 @@ class FbCred < ActiveRecord::Base
 
   def self.reverse_link_account(fb_cred)
     user_identifier = extract_profile_pic_identifier(fb_cred.profile_pic_url)
-    unlinked_fb_creds = FbCred.where(fb_id: nil)
-                              .where.not(page_specific_id: nil)
+    unlinked_fb_creds = FbCred.where(fb_id: nil).where.not(page_specific_id: nil, profile_pic_url: [nil, ''])
     unlinked_fb_creds.each do |cred|
       if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
         cred.update(fb_id: fb_cred.fb_id, email: fb_cred.email, user_id: fb_cred.user_id)
@@ -95,8 +85,7 @@ class FbCred < ActiveRecord::Base
     name_array = name.split('_')
     name_array.shift
     name_array.pop
-    pic_identifier = name_array.join('_')
-    pic_identifier
+    name_array.join('_')
   end
 
 end

@@ -9,11 +9,8 @@ class FacebookEvent
     else #after verification for messenger event
       @required_params = @params['entry'].last
       @event = @required_params['messaging'].last
-      read_event = @event['read']
       message_event = @event['message']
-      if message_event.present?
-        receive_message
-      end
+      receive_message if message_event.present?
     end
   end
 
@@ -41,45 +38,31 @@ class FacebookEvent
       message = @event['message']
       @attachments = message['attachments']
       seq = message['seq']
-      text = message['text']
-      text = '' if text.nil?
+      text = message['text'].present? ? message['text'] : ""
       timestamp = set_timestamp(@event['timestamp'])
       message_id =  message['mid']
       @message_from = @event['sender']['id']
       @message_to = @event['recipient']['id']
-      fb_page_id = @current_page.id
-      new_user_id = (@current_page.page_id == @message_to)? @message_from : @message_to
-      add_page_user(@current_page, new_user_id)
-
+      new_user_id = (@current_page.page_id == @message_to) ? @message_from : @message_to
+      
+      add_page_user(@current_page, new_user_id)       
       get_uid_and_uid_type
-      @merchant_id = @merchant.id
 
-      get_user_relation
-
-      @fb_message = FbMessage.new
-      @fb_message.update(message_id: message_id, text: text, seq: seq,
-        time_stamp: timestamp, from: @message_from, to: @message_to, fb_page_id: fb_page_id,
-        user_id: @user_id, user_id_to: @user_id_to)
-      @customer = User.where(id: @user_id_to).first
+      @fb_message = FbMessage.create!(message_id: message_id, text: text, seq: seq, time_stamp: timestamp,
+                                      from: @message_from, to: @message_to, fb_page_id: @current_page.id, 
+                                      user_id: @customer.try(:id), user_id_to: @merchant.id)
+      
       save_attachments if @attachments.present?
-      if @fb_message.persisted?
-        Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid, @fb_message, true)
-        @merchant.away_message.check_office_hours(@merchant, @customer, @uid_type, @uid, "FbMessage")
-      end
-    rescue ActiveRecord::RecordNotUnique
-    rescue StandardError => err
-      nil
-    end
-  end
 
-  def get_user_relation
-    if (@current_page.page_id == @message_from)
-      @user_id = @merchant_id
-      @user_id_to = @uid unless @uid == @fb_cred.page_specific_id
-    else
-      @user_id = @uid unless @uid == @fb_cred.page_specific_id
-      @user_id_to = @merchant_id
+      Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid, @fb_message, true)
+      @merchant.away_message.check_office_hours(@merchant, @customer, @uid_type, @uid, "FbMessage")
+      #MessageParser.new.process_message(@merchant, @customer, @uid, @uid_type, @fb_message, 'FbMessage')
+      return
+    rescue ActiveRecord::RecordNotUnique => err
+    rescue StandardError => err
     end
+    ExceptionNotifier.notify_exception(err, data: { message: "In facebook event receive_message", env: Rails.env, 
+                                                    fb_message: @fb_message, merchant: @merchant })
   end
 
   # set datetime in utc
@@ -96,9 +79,10 @@ class FacebookEvent
 
   # it gives user id from page specific id of user
   def get_uid_and_uid_type
-    if @fb_cred.user.present?
-      @uid, @uid_type =  @fb_cred.user_id, 'user'
-      MerchantCustomer.add_or_update_merchant_customer(@merchant, @fb_cred.user)
+    @customer = @fb_cred.user
+    if @customer.present?
+      @uid, @uid_type = @fb_cred.user_id, 'user'
+      MerchantCustomer.add_or_update_merchant_customer(@merchant, @customer)
     else
       @uid, @uid_type =  @fb_cred.page_specific_id, 'fb_page'
       MerchantContact.add_or_update_merchant_contact(@merchant.id, @uid, @uid_type)
@@ -137,7 +121,7 @@ class FacebookEvent
     end
     user_name = fb_user.name.split.first
     page_access_token = page.page_access_token
-    text = "Sorry #{user_name}, currently we only support image file attachments"
+    text = "Sorry #{user_name}, we currently only support image files"
     Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, @uid_type, @uid, text, "FbMessage")
   end
 

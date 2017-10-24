@@ -10,15 +10,15 @@ class RealtimeStreamService
                                  message: Conversation.message_hash(conversation, msg, conv_ref) })
 
       if conv_ref.source == "customer"
-        merchant_status, customer_name, profile_pic = JSON.parse($redis_merchant_status.get(merchant_id)), nil, nil
+        merchant_status, sender_name, profile_pic = JSON.parse($redis_merchant_status.get(merchant_id)), nil, nil
 
         puts merchant_status.inspect
         
         unless merchant_status["on_conversation_page"] == 'true'
-          customer_name = get_customer_name(customer, conversation.uid_type, msg.from)
+          sender_name = get_customer_name(customer, conversation.uid_type, msg.from)
           profile_pic = get_profile_url(customer)
 
-          notifications({ profile_pic: profile_pic, customer_name: customer_name, message: msg.text[0..15] + "...",
+          notifications({ profile_pic: profile_pic, customer_name: sender_name, message: msg.text[0..15] + "...",
                           type: conv_ref.textable_type == 'Message' ? 'new_message_sms' : 'new_message_messenger' },
                           merchant_id)
         end
@@ -26,11 +26,11 @@ class RealtimeStreamService
         if merchant_status['status'] != 'online'
           alert_obj = conversation.merchant.alert
           if alert_obj.try(:send_alert)
-            customer_name = customer_name || get_customer_name(customer, conversation.uid_type, msg.from)
+            sender_name = sender_name || get_customer_name(customer, conversation.uid_type, msg.from)
             profile_pic = profile_pic || get_profile_url(customer)
 
             options = { merchant: conversation.merchant, message_time: msg.created_at.strftime("%A, %-I:%M%P"), 
-                        message: msg.text, sender_profile_url: profile_pic, customer_name: customer_name }          
+                        message: msg.text, sender_profile_url: profile_pic, sender_name: sender_name }          
 
             # email alerts
             options[:sender_email] = customer.try(:email) || ""
@@ -77,11 +77,11 @@ class RealtimeStreamService
     end
 
     def get_customer_name(cus, uid_type, from)
-      cus.present? ? cus.full_name : ((uid_type == 'fb_page') ? 'Messenger' : from)
+      cus.present? ? cus.full_name : ((uid_type == 'fb_page') ? 'Facebook Messenger' : from)
     end
 
     def get_profile_url(cus)
-      User.get_profile_url(cus)
+      User.profile_url_only(cus)
     end
 
   end
