@@ -180,7 +180,7 @@ class StripeEvent
 
             @data.update(transaction_id: txn.id, subscription_id: sbtn.id)
             if @data.team.is_platform? # saas subscription
-              send_invoice_payment_succeeded_email 
+              send_invoice_payment_succeeded_email
             else
               EmailingService.invoice_payment_succeeded(team.email, @merchant_customer.customer)
             end
@@ -199,9 +199,9 @@ class StripeEvent
       date: date.strftime('%B %d,%Y | %-I:%M%P'),
       status: 'Paid'.capitalize,
       payment_method: "Visa **** **** **** #{merchant.last4} (Expiry #{merchant.exp_month}/#{merchant.exp_year})",
-      sub_total: @data.subtotal,
-      total: @data.total,
-      tax_and_fees: (@data.taxes + @data.fees),
+      sub_total: Toolbox::Decimal.to_int_or_2dp(@data.subtotal.to_f/100),
+      total: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100),
+      tax_and_fees: Toolbox::Decimal.to_int_or_2dp(@data.tax.to_f/100 + @data.application_fee.to_f/100),
       currency: @data.currency,
       currency_symbol: '$',
       merchant: merchant
@@ -224,7 +224,7 @@ class StripeEvent
       currency_symbol: '$',
       frequency: @data.subscription.plan_interval,
       failed_date: date.strftime('%B %d,%Y | %-I:%M%P'),
-      amount: @data.total
+      amount: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100)
     }
     EmailingService.subscription_failed(options)
   end

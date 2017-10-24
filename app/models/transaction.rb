@@ -100,7 +100,7 @@ class Transaction < ActiveRecord::Base
       description: description,
       taxes_and_fees: taxes_and_fees,
       amount_less_fees: txn_amount_less_fees,
-      total_amount: txn_amount,
+      total_amount: Transaction.big_decimal_2dp(amount_with_taxes),
       relay_number: team.friendly_relay_number,
       currency: currency,
       currency_symbol: '$'
@@ -263,9 +263,9 @@ class Transaction < ActiveRecord::Base
   end
 
   def taxes_and_fees
-    # How to add taxes??
-    amt = self.app_fee.to_f/100 + self.stripe_fee.to_f/100
-    "#{Transaction.big_decimal_2dp(amt)}"
+    tax_amt = (amount_with_taxes - amount).to_f
+    fees_amt = app_fee.to_f/100 + stripe_fee.to_f/100
+    "#{ Toolbox::Decimal.to_int_or_2dp(tax_amt + fees_amt) }"
   end
 
   def relative_time

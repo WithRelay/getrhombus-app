@@ -143,7 +143,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def total_amount
-    self.plan_amount * self.quantity
+    Toolbox::Decimal.to_int_or_2dp(self.plan_amount * self.quantity)
   end
 
   def txn_amount
