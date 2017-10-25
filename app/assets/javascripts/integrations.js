@@ -126,14 +126,14 @@ $( document ).ready(function() {
         $('#select_page').val('Subscribe');
         $('#select_page').attr('class', 'button w-button')
         $('#select_page').attr('disabled', true)
-        $('#select_page').attr('title', 'Already used by other page admin')
+        $('#select_page').attr('title', 'Already subscribed by other page admin')
       }
       else{
         $('#select_page').show();
         $('#select_page').val('Unsubscribe');
         $('#select_page').attr('class', 'button w-button')
         $('#select_page').attr('disabled', true)
-        $('#select_page').attr('title', 'Already used by other page admin')
+        $('#select_page').attr('title', 'Already subscribed by other page admin')
       }
     }
     else {
