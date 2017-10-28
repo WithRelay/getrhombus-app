@@ -3,7 +3,7 @@ class Document < ActiveRecord::Base
   belongs_to :user
   has_attached_file :attachment
   after_validation :clean_up_paperclip_errors
-  validates_attachment_content_type :attachment, content_type: ["text/csv", 'application/vnd.ms-excel']
+  validates_attachment_content_type :attachment, content_type: ["text/csv", 'text/plain', 'application/vnd.ms-excel']
 
   private
 
