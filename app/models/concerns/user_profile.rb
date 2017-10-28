@@ -40,7 +40,7 @@ module UserProfile
   end
 
   def check_profile_picture(cus)
-    return { type: 'color', value: GLOBAL_COLORS.first.first } #if cus.nil?
+    return { type: 'color', value: GLOBAL_COLORS.first.first } if cus.nil?
 
     user_fb_cred = cus.fb_creds
     if user_fb_cred.present? && user_fb_cred.first.profile_pic_url.present?
