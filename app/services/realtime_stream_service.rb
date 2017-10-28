@@ -10,7 +10,8 @@ class RealtimeStreamService
                                  message: Conversation.message_hash(conversation, msg, conv_ref) })
 
       if conv_ref.source == "customer"
-        merchant_status, sender_name, profile_pic = JSON.parse($redis_merchant_status.get(merchant_id)), nil, nil
+        merchant_status = $redis_merchant_status.get(merchant_id) || "{}"
+        merchant_status, sender_name, profile_pic = JSON.parse(merchant_status), nil, nil
         
         unless merchant_status["on_conversation_page"] == 'true'
           sender_name = get_customer_name(customer, conversation.uid_type, msg.from)

@@ -7,6 +7,8 @@ $pubnub = Pubnub.new(
   ssl: true
 )
 
+$merchant_status_redis_namespace = "relay-#{Rails.env}-merchant-status"
+
 GLOBAL_COLORS = [
   ['yellow', '#FFD966'], ['lilac', '#F8B5CC'], ['light-blue', '#B3D4FC'],
   ['light-green', '#97CB51'], ['purple', '#B5739D'], ['blue', '#3F51B5'],

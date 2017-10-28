@@ -68,4 +68,9 @@ namespace :resque do
     puts 'Clearing zombie workers...'
     Resque.workers.each(&:prune_dead_workers)
   end
+
+  task clear_merchant_statuses: :environment do
+    r = Redis.new
+    r.keys("#{$merchant_status_redis_namespace}:*").each { |k| puts "clearing #{k}"; puts r.del(k) }
+  end
 end
