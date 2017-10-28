@@ -73,7 +73,7 @@ module CSVHandler
         end
 
         row = row.to_hash
-        @customer = User.where(email: row[:email])
+        @customer = User.find_by(email: row[:email])
 
         if @customer.blank?
           # don't process the dummy data we put in the template file
@@ -123,7 +123,7 @@ module CSVHandler
               # check for @customer errors
               if @customer.errors.messages.present? || error
                 @customer.errors.messages.each do |k,v|
-                  v.each { |r| error_hash[row[:email]].push("#{k.humanize.downcase} #{r}.") }
+                  v.each { |r| error_hash[row[:email]].push("#{k}".humanize + " #{r}.") }
                 end
                 error = true
               else
