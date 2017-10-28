@@ -41,8 +41,10 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
       ActiveRecord::Base.transaction do
         @customer = User.find_by(email: params[:user][:email])
 
-        if @customer.present?
-          raise StandardError unless add_to_merchant_customer_and_referrer(false)
+        if @customer.present? 
+          if @customer.is_customer?
+            raise StandardError unless add_to_merchant_customer_and_referrer(false)
+          end
         else
           params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
           params[:user][:user_level] = 0

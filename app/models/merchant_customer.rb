@@ -18,7 +18,7 @@ class MerchantCustomer < ActiveRecord::Base
 
   def self.add_or_update_merchant_customer(merch, cus)
     begin
-      return true if cus.is_platform?
+      return true if cus.is_platform? || merch.try(:id) == cus.try(:id)
 
       if merch.try(:id)
         # check for number and set is_customer

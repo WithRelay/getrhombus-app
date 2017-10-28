@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  var card_name = '';
 
   if ($('#transaction-customer-id').length > 0) {
     $('#transaction-customer-id')
@@ -12,10 +13,12 @@ $(document).ready(function () {
         closeAfterSelect: true,
         render: {
           item: function(item, escape) {
-            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>';
+            card_name = UtilFunctions.is_present(item.card_name) ?  " - " + escape(item.card_name) + '';
+            return '<div> <span class="">' + escape(item.email) + card_name + '</span></div>';
           },
           option: function(item, escape) {
-            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>';
+            card_name = UtilFunctions.is_present(item.card_name) ?  " - " + escape(item.card_name) + '';
+            return '<div> <span class="">' + escape(item.email) + card_name + '</span></div>';
           }
         },
         load: function(query, callback) {

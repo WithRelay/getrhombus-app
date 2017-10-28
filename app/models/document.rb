@@ -11,8 +11,6 @@ class Document < ActiveRecord::Base
   # See: https://github.com/thoughtbot/paperclip/pull/1554 and
   # https://github.com/thoughtbot/paperclip/commit/2aeb491fa79df886a39c35911603fad053a201c0
   def clean_up_paperclip_errors
-    puts errors.inspect
-    puts "-----------------------------------------"
     errors.delete(:attachment)
     if errors[:attachment_content_type].present?
       errors.add(:base, 'Please save file as a CSV and re-upload') 
