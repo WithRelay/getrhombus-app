@@ -42,4 +42,8 @@ class FbPage < ActiveRecord::Base
       destroy
     end
   end
+
+  def subscribed_by_other_user?
+    FbPage.where(page_id: self.page_id, subscription_status: true).where.not(user_id: self.user_id).present?
+  end
 end

@@ -10,10 +10,16 @@ class FbPagesController < ApplicationController
   end
 
   def update_user_fb_page
-    if params['commit'] == 'Subscribe'
-      subscribe_user_fb_page
+    if @fb_page.subscribed_by_other_user?
+      redirect_to user_fb_pages_path(current_user), flash: {
+        error: 'Already subscribed by other page admin'
+      }
     else
-      unsubscribe_user_fb_page
+      if params['commit'] == 'Subscribe'
+        subscribe_user_fb_page
+      else
+        unsubscribe_user_fb_page
+      end
     end
   end
 

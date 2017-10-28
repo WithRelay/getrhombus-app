@@ -1,15 +1,19 @@
 $( document ).ready(function() {
   "use strict";
   var index = 1;
+  var index2 = 2;
   if ($('#select_page').length > 0){
-    check_status($('#select_page').val().split(' ')[index]);
+    check_status($('#select_page').val().split(' ')[index], $('#select_page').val().split(' ')[index2]);
     $( '#Select-Facebook-Page' ).change(function() {
-      check_status($(this).val().split(' ')[index]);
+      check_status($(this).val().split(' ')[index], $(this).val().split(' ')[index2]);
     });
   }
 
   $('#select_page').click(function (evt) {
-    if (($(this).val() === 'Subscribe') && (!$(this).attr('subscribed_page'))) {
+    if ($(this).disabled) {
+      return false;
+    }
+    else if (($(this).val() === 'Subscribe') && (!$(this).attr('subscribed_page'))) {
       if (!$(this).attr('canSubscribe')) {
         FlashHandler.setConfirmationDialog('#select_page',
           'Conversations linked to your Facebook page being synced to your business app integrations. Continue?', 'Subscribe', 'canSubscribe' );
@@ -111,19 +115,40 @@ $( document ).ready(function() {
     }
   });
 
-  function check_status(val) {
-    if (!val) {
+  function check_status(subscription_status, subscribed_by_other_user) {
+    debugger
+    if (!subscription_status) {
       $('#select_page').hide();
     }
-    else if (val === 'false') {
-      $('#select_page').show();
-      $('#select_page').val('Subscribe');
-      $('#select_page').attr('class', 'button w-button')
+    else if (subscribed_by_other_user == 'true') {
+      if (subscription_status === 'false') {
+        $('#select_page').show();
+        $('#select_page').val('Subscribe');
+        $('#select_page').attr('class', 'button w-button')
+        $('#select_page').attr('disabled', true)
+        $('#select_page').attr('title', 'Already subscribed by other page admin')
+      }
+      else{
+        $('#select_page').show();
+        $('#select_page').val('Unsubscribe');
+        $('#select_page').attr('class', 'button w-button')
+        $('#select_page').attr('disabled', true)
+        $('#select_page').attr('title', 'Already subscribed by other page admin')
+      }
     }
-    else{
-      $('#select_page').show();
-      $('#select_page').val('Unsubscribe');
-      $('#select_page').attr('class', 'button w-button')
-    };
+    else {
+      $('#select_page').attr('disabled', false)
+      if (subscription_status === 'false') {
+        $('#select_page').show();
+        $('#select_page').val('Subscribe');
+        $('#select_page').attr('class', 'button w-button')
+      }
+      else{
+        $('#select_page').show();
+        $('#select_page').val('Unsubscribe');
+        $('#select_page').attr('class', 'button w-button')
+      }
+    }
+
   };
 });
