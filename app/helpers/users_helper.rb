@@ -72,6 +72,7 @@ module UsersHelper
     Chartkick.options = {
       colors: ["rgba(74, 144, 226, .3)", 'rgb(7, 46, 91)']
     }
+    
     if @dashboard_messages_data[:msg_30_days][:chart_data].empty?
       htm = '<div class= "no-chart-data graph">
       <p class="empty-view-short-paragraph">No data. '
@@ -87,7 +88,7 @@ module UsersHelper
               ticks: {
                 beginAtZero: true,
                 autoSkip: false,
-                minRotation: 60
+                minRotation: 0
               },
               time: {
                 unit: 'day',

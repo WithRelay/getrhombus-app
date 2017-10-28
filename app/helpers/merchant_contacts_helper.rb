@@ -11,7 +11,7 @@ module MerchantContactsHelper
       html = h.image_tag(profile_pic[:value], class: class_name, width: 24)
     elsif profile_pic[:type] == "color"
       class_name = class_name + " radius-color-#{profile_pic[:value]}"
-      html = ("<div class='"+ class_name +"'></div>").html_safe
+      html = ("<div class='profile-color-text "+ class_name +"'>#{user_profile_data[:full_name].first}</div>").html_safe
     end
     html
   end

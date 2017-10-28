@@ -32,14 +32,20 @@ class BasePresenter < SimpleDelegator
     user = find_user
 
     profile_pic = User.check_profile_picture(user)
-    puts profile_pic.inspect
     if profile_pic[:type] == "image"
-      html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24, alt: '')
+      html = h.image_tag(profile_pic[:value], class: 'table-profile-picture header-notifications-dropdown', width: 24, alt: '')
       html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24, alt: '') if need_campaign_class?
     elsif profile_pic[:type] == "color"
-      class_name_value = "table-profile-picture radius-color-#{profile_pic[:value]}"
-      class_name = ['Transaction'].include?(@model.class.to_s) ? class_name_value : "campaigns #{class_name_value}"
-      html = ("<div class='"+ class_name + "'></div>").html_safe
+      if user
+        uid, uid_type = user.id, 'user'
+      else
+        uid, uid_type = @model.try(:uid), @model.try(:uid_type)
+      end
+      
+      profile_name = User.get_conversation_display_name(uid, uid_type, user)
+      class_name_value = "table-profile-picture radius-color-#{profile_pic[:value]} header-notifications-dropdown "
+      class_name = ['Transaction'].include?(@model.class.to_s) ? class_name_value : "campaigns #{class_name_value} "
+      html = ("<div class='profile-color-text "+ class_name + "'>#{profile_name[0]}</div>").html_safe
     end
     html
   end
@@ -95,7 +101,7 @@ class BasePresenter < SimpleDelegator
   end
 
   def need_campaign_class?
-    [Hashtag, MerchantCustomer].include?(@model.class)
+    [MerchantCustomer].include?(@model.class)
   end
 
 end

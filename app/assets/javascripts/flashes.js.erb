@@ -70,7 +70,7 @@ var FlashHandler = new function() {
     } else {
       $('body').append('<a class="browser-notification-link-block w-inline-block" href="#">\
         <div class="browser-notification-row w-row">\
-          <div class="browser-notification-row-column-1 w-clearfix w-col w-col-4">\
+          <div class="browser-notification-row-column-1 w-clearfix w-col w-col-4 in-app-notifications">\
             <img class="browser-notification customer-profile-picture pic" height="40" src="'+profile_pic+'" width="40">\
           </div>\
           <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
@@ -95,7 +95,7 @@ var FlashHandler = new function() {
     } else {
       $('body').append('<a class="browser-notification-link-block sms-browser-notification w-inline-block" href="#">\
         <div class="browser-notification-row w-row">\
-          <div class="browser-notification-row-column-1 payment-notification w-clearfix w-col w-col-4">\
+          <div class="browser-notification-row-column-1 payment-notification w-clearfix w-col w-col-4 in-app-notifications">\
             <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
           </div>\
           <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
@@ -106,8 +106,8 @@ var FlashHandler = new function() {
           </div>\
         </div>\
       </a>')
-      setCloseTimeout(10000, '.browser-notification-link-block');
-      toastrAnimation('.browser-notification-link-block')
+      //setCloseTimeout(10000, '.browser-notification-link-block');
+      toastrAnimation('.browser-notification-link-block');
       close_browser_toastr();
     }
     playNotificationChime();

@@ -16,7 +16,7 @@ module ApplicationHelper
                           'hashtags-index' => 'Hashtags',
                           'merchant_customers-index' => 'Customers',
                           'users-show' => 'Main',
-                          'merchant_contacts-index' => 'Leads | Contacts',
+                          'merchant_contacts-index' => 'Contacts',
                           'users-billing_information' => 'Billing Info',
                           'users-account_settings'=> 'Account Info',
                           'alerts-edit' => 'Notifications',
@@ -51,7 +51,7 @@ module ApplicationHelper
 
   def render_header_partial
     return if params[:controller] == 'merchant_customers' && params[:action] == 'show'
-    return render 'shared/settings_header' if setting_pages
+    return render 'shared/authenticated_header' if setting_pages
     return render 'shared/docs_header' if relay_docs_pages || privacy_and_terms_pages
     return render 'shared/unauthenticate_header' if unauthenticate_controller && !restrict_static_pages
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params

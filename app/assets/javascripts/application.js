@@ -97,7 +97,6 @@
 //= require managed-account
 //= require custom
 //= require phone_number_setup
-//= require typeit
 //= require Chart.bundle
 //= require chartkick
 //= require segment

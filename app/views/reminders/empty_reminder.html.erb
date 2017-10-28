@@ -1,5 +1,5 @@
 <div class="customer-dash sub-nav-bar w-clearfix">
-  <a class="add sub-nav-button w-button modal-loader" href="#"> <strong>Set new reminder</strong></a>
+  <a class="add sub-nav-button w-button modal-loader" href="#"> <strong>Schedule message</strong></a>
 </div>
 <div class="dashboard-body">
   <div class="blank-page-container w-container">
@@ -8,6 +8,6 @@
     <div class='modal-background w-hidden modal-body'>
       <%= render partial: 'shared/modals/new_reminder', locals: { reminder: Reminder.new }  %>
     </div>
-    <%= button_tag 'Set new reminder', class: 'button error-page-button w-button modal-loader', 'data-ix' => "schedule-notification", id: "set-new-reminder-loader" %>
+    <%= button_tag 'Schedule message', class: 'button error-page-button w-button modal-loader', 'data-ix' => "schedule-notification", id: "set-new-reminder-loader" %>
   </div>
 </div>

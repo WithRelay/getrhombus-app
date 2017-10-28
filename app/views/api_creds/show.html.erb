@@ -1,4 +1,6 @@
 
+<%= render 'shared/back_to_dashboard' %>
+
 <div class="dashboard-body settings">
   <div class="settings-info-div tokens" id='api-tokens'>
     <h5 class='account-status-text'>API KEY: <span class="api-key"><%= @api_cred.key.present? ? @api_cred.key : '-' %></span></h5>
