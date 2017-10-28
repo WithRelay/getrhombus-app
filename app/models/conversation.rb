@@ -36,17 +36,17 @@ class Conversation < ActiveRecord::Base
 
     if self.uid_type == 'user'
       mc = MerchantCustomer.find_by(merchant_id: self.merchant_id, customer_id: self.uid)
-      has_messenger = self.user.try(:get_customer_page_specific_id, self.merchant.get_page_access_token) && true
+      #has_messenger = self.user.try(:get_customer_page_specific_id, self.merchant.get_page_access_token) && true
     else
       mc = MerchantContact.find_by(merchant_id: self.merchant_id, uid: self.uid, uid_type: self.uid_type)
-      has_messenger = mc.try(:page_specific_id_valid?)
+      #has_messenger = mc.try(:page_specific_id_valid?)
     end
 
     {
       id: self.id,
       uid: self.uid,
       uid_type: self.uid_type,
-      has_messenger: has_messenger,
+      #has_messenger: has_messenger,
       mc_id: mc.try(:id).try(:to_s),
       mc_type: mc ? mc.class.name : nil,
       profile_image: User.check_profile_picture(user),

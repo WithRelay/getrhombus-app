@@ -3,7 +3,7 @@ module CampaignsHelper
   def channel_list(campaign, list)
     # Switching between channels is probably dangerous for persisted campaigns
     # Ex: Email content can't become sms
-    channel_list = { SMS: 0, MMS: 1, Email: 3, 'Facebook Messenger' => 2 }
+    channel_list = { SMS: 0, MMS: 1, Email: 3 } #, 'Facebook Messenger' => 2 }
 
     if campaign.persisted?
       { format_campaign_channel(campaign.channel) => get_channel_enum_value(campaign.channel) }
@@ -11,11 +11,11 @@ module CampaignsHelper
       { format_campaign_channel(list[0].channel) => get_channel_enum_value(list[0].channel) }
     else
       # if merchant hasn't connect fb_page
-      unless current_user.get_page_access_token.present?
-        channel_list.except('Facebook Messenger')
-      else
-        channel_list
-      end
+      #unless current_user.get_page_access_token.present?
+      #  channel_list.except('Facebook Messenger')
+      #else
+        return channel_list
+      #end
     end
   end
 
@@ -26,12 +26,12 @@ module CampaignsHelper
   end
 
   def reminder_channels
-    channel_list = { SMS: 0, "Facebook Messenger" => 2 }
-    unless current_user.get_page_access_token.present?
-      channel_list.except("Facebook Messenger")
-    else
-      channel_list
-    end
+    channel_list = { SMS: 0 }#, "Facebook Messenger" => 2 }
+    #unless current_user.get_page_access_token.present?
+    #  channel_list.except("Facebook Messenger")
+    #else
+      return channel_list
+    #end
   end
 
   def get_channel_enum_value(channel)

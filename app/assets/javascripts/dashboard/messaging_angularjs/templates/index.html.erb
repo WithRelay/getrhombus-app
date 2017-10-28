@@ -103,6 +103,7 @@
                     <div class="message-input-options-text"> &nbsp; &nbsp;Saved reply</div>
                   </a>
 
+                  <%#
                   <div class="toggle-component" ng-if="merchant.has_messenger && selected_conversation.uid_type == 'user' && selected_conversation.has_messenger">
                     <label class="toggle">
                       <input type="checkbox" ng-model="new_message.channel" />
@@ -113,6 +114,7 @@
                   <a class="message-input-box-option-buttons w-inline-block" ng-if="!merchant.has_messenger" ng-href='/users/{{merchant.id}}/integrations'>
                     <div class="message-input-options-text"> &nbsp; &nbsp;Connect Facebook</div>
                   </a>
+                  %>
                 </div>
               </nav>
             </div>
