@@ -13,11 +13,11 @@ $(document).ready(function () {
         closeAfterSelect: true,
         render: {
           item: function(item, escape) {
-            card_name = UtilFunctions.is_present(item.card_name) ?  " - " + escape(item.card_name) + '';
+            card_name = UtilFunctions.is_present(item.card_name) ?  " - " + escape(item.card_name) : '';
             return '<div> <span class="">' + escape(item.email) + card_name + '</span></div>';
           },
           option: function(item, escape) {
-            card_name = UtilFunctions.is_present(item.card_name) ?  " - " + escape(item.card_name) + '';
+            card_name = UtilFunctions.is_present(item.card_name) ?  " - " + escape(item.card_name) : '';
             return '<div> <span class="">' + escape(item.email) + card_name + '</span></div>';
           }
         },

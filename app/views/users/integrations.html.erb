@@ -1,8 +1,11 @@
 <%= render 'shared/return_to_dashboard' %>
 <div class="dashboard-body settings" id='objlists' data-object-type='integrations'>
-<div class="dash-content-container integrations settings w-clearfix">
-  <h4 class="form-header">Integrations</h4>
-  <div class="flex-underline form-header-underline"></div>
+  <div class="dash-content-container integrations settings w-clearfix">
+    <h4 class="form-header">Integrations</h4>
+    <div class="flex-underline form-header-underline"></div>
+<%
+#=begin %>
+
     <div class="integrations-row w-row">
       <div class="w-clearfix w-col w-col-9">
         <img class="integration-partner-icon" src="/assets/messenger-logo.png" width="50">
@@ -42,6 +45,9 @@
       </div>
     </div>
     <div class="flex-underline form-header-underline"></div>
+<%
+#=end %>
+
     <% if true #current_user.is_platform? %>
       <div class="integrations-row w-row">
         <div class="w-clearfix w-col w-col-9">
