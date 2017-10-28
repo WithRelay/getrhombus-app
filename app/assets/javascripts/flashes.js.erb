@@ -42,7 +42,7 @@ var FlashHandler = new function() {
   this.setFlashMessage = function(msg, type){
     var messageToSet = typeObj[type] || 'Attention';
     showToastr(messageToSet, arrayToString(msg));
-    setCloseTimeout(6000, '.toasters');
+    setCloseTimeout(12000, '.toasters');
   };
 
   function showToastr(type, message) {
@@ -81,7 +81,7 @@ var FlashHandler = new function() {
           </div>\
         </div>\
       </a>')
-      setCloseTimeout(5000, '.browser-notification-link-block');
+      setCloseTimeout(10000, '.browser-notification-link-block');
       toastrAnimation('.browser-notification-link-block')
       close_browser_toastr();
     }
@@ -106,7 +106,7 @@ var FlashHandler = new function() {
           </div>\
         </div>\
       </a>')
-      setCloseTimeout(5000, '.browser-notification-link-block');
+      setCloseTimeout(10000, '.browser-notification-link-block');
       toastrAnimation('.browser-notification-link-block')
       close_browser_toastr();
     }
@@ -123,7 +123,7 @@ var FlashHandler = new function() {
         <div class="payment-notification-amount">'+amount+'</div>\
         <div class="payment-sender-name shrink-text">'+customer_name+'.</div>\
       </a>')
-      setCloseTimeout(5000, '.browser-notification-link-block');
+      setCloseTimeout(10000, '.browser-notification-link-block');
       toastrAnimation('.browser-notification-link-block')
       close_browser_toastr();
     }
@@ -139,7 +139,7 @@ var FlashHandler = new function() {
         </div>\
       </div>'
     )
-    setCloseTimeout(5000, '.default.toasters');
+    setCloseTimeout(10000, '.default.toasters');
     toastrAnimation('.default.toasters');
     playNotificationChime();
     close_browser_toastr();
@@ -177,7 +177,7 @@ var FlashHandler = new function() {
                            style="height:auto; min-height: auto; padding-top: 10px; padding-left: 0px;" href="#">\
                           <div class="scheduled-jobs-notification-description">' + message + '</div>\
                         </a>');
-      setCloseTimeout(5000, '.browser-notification-link-block');
+      setCloseTimeout(10000, '.browser-notification-link-block');
       toastrAnimation('.browser-notification-link-block.scheduled-jobs');
     }
     playNotificationChime();

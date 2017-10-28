@@ -146,7 +146,7 @@ module CSVHandler
             error_hash.delete(row[:email]) unless error
           end
         else
-          MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+          MerchantCustomer.add_or_update_merchant_customer(self, @customer) if @customer.is_customer?
         end
       end
 
