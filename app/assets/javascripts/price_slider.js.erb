@@ -78,22 +78,20 @@ var PriceSlider = new function() {
   };
 
   function planInfo(amount) {
-    if(amount == 555){
-      var email = "<%= Rails.application.secrets.team_email %>";
-      $('.pricing-table-button').text('Email Us').attr('href', 'mailto:' + email);
+    if (amount == 555) {
+      $('.pricing-table-button').text('Email Us').attr('href', "mailto:<%= Rails.application.secrets.team_email %>");
       return '<div class="customer-count-text">\
-        <strong>50k+ or Premium Support</strong></div>\
+        <strong>50k+ or Premium support</strong></div>\
         <div class="price-table underline-div"></div>\
-        <h1 class="plan-amount">Custom Pricing</h1>'
-    }
-    else{
-      $('.pricing-table-button').text('Get Started').attr('href', '/users/sign_up');
+        <h1 class="plan-amount">Custom Pricing</h1>';
+    } else {
+      $('.pricing-table-button').text('Get Started').attr('href', "<%=  Rails.application.routes.url_helpers.new_user_registration_url %>");
       return '<div class="customer-count-text">\
         <strong>'+ parseInt(pricingSlider.value).toLocaleString('en-US') +'</strong>\
         <span class="customer-count-text-alt">customers</span></div>\
         <div class="price-table underline-div"></div>\
-        <h1 class="plan-amount">$'+ amount +'/Month</h1>'
-    }
+        <h1 class="plan-amount">$'+ amount +'/Month</h1>';
+    };
   };
 
 };

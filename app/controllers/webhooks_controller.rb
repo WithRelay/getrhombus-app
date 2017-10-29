@@ -53,6 +53,7 @@ class WebhooksController < ApplicationController
       elsif action_name == 'stripe_events' || action_name == 'fibernetics_events'
          @merchant = User.get_platform_acct_obj
       elsif action_name == 'twilio_events'
+        puts '<redacted_phone_number>'
         @merchant = User.includes(:sms_fee).find_by(rhombus_number: params[:To].gsub('+', ''))
       elsif action_name == 'nexmo_events'
         @merchant = User.includes(:sms_fee).find_by(rhombus_number: params[:to])
