@@ -307,16 +307,13 @@ class StripeEvent
     }
   end
 
-  def address_params
-    @hash[:legal_entity][:address]
-  end
-
   def bank_account_details
     bank_account_params = @account.external_accounts.data.first
     bank_account = BankAccount.find_by_stripe_bank_account_id(bank_account_params[:id])
     bank_account_details = {}
     bank_account_details[:bank_accounts_attributes] = { country: bank_account_params[:country],
-                                                        routing_number: bank_account_params[:routing_number],
+                                                        # take this out for now cos CA number is concatenated
+                                                        #routing_number: bank_account_params[:routing_number],
                                                         currency: bank_account_params[:currency],
                                                         bank_name: bank_account_params[:name],
                                                         status: bank_account_params[:status],

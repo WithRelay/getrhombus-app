@@ -1016,6 +1016,7 @@ textarea { resize: none;}
 
   #managed-acct-picture-div {
     margin-left: 10%;
+    position: relative;
     text-align: left;
     margin-bottom: 80px;
   }
@@ -1083,5 +1084,23 @@ span.profile-pic-or {
   justify-content: center;
   color: white;
   font-size: 12px;
-  font-weight: bolder;
+}
+
+.attach-id {
+  z-index: 100;
+  position: relative;
+}
+
+.photo-input-div {
+  position: absolute;
+  z-index: 1;
+  margin-left: 9px;
+  margin-top: 9px;
+}
+
+#photo-input {
+  height: 30px;
+  width: 83px;
+  border-radius: 4px;
+  border: 1px solid #0f55eb;
 }

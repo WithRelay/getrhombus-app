@@ -79,7 +79,11 @@
 
   <div id="managed-acct-picture-div">
     <%#<a class="attach-image" href="#" id='select-images-button'></a>%>
-    <button type="button" id='select-images-button' class="dash-header-links new-link">Attach ID</button>
+    <div class="form-group col-xs-6 photo-input-div">
+      <input type="text" name="person[photo]" id='photo-input' class="form-control">
+      <div class="messageContainer w-col-12" style="margin-left: -5%; margin-top: 13px;"></div>
+    </div>
+    <button type="button" id='select-images-button' class="dash-header-links new-link attach-id" style="border: none;">Attach ID</button>
     <span class="profile-pic-or">OR</span>
     <button type="button" class="dash-header-links new-link modal-loader" id='webcam-capture' modal-target='new-webcam-modal'>Take picture of ID</button>
     <%#<a class="button w-button modal-loader" href="#" ><i class="material-icons webcam-icon">photo_camera</i></a>%>
@@ -92,12 +96,12 @@
   </div>
 
   <!-- for new images -->
-  <div id='new-image-previews'>
+  <div id='new-image-previews' style="margin-top: 90px;">
   </div>
 
   <!-- for already attached images -->
   <% if @image %>
-    <div>
+    <div id='current-image-previews'>
       <%= div_for @image do |image| %>
         <%= present(image).image_url %>
         <%= present(image).image_name %>

@@ -214,7 +214,7 @@ $(document).on('ready page:load', function() {
     US: { postcode_label: 'Zip', city_label: 'City', street_label: 'Street', with_state: true }
   }
 
-  var datePicker = new DatePicker( '.userDateOfBirth', false, { time: false,  select: false, max: true } );
+  var datePicker = new DatePicker('.userDateOfBirth', false, { time: false, select: false, max: true });
   datePicker.datePicker();
 
   $('#bank-currency-select').change(function() {
@@ -272,25 +272,6 @@ $(document).on('ready page:load', function() {
     }
 
     if (!rep_formatter[country].without_address) $(".person-country-select").html(options).val(country).trigger('change');
-  });
-
-  $('#account-country-select').change(function() {
-
-    $("#account-country").val(this.value);
-    $('#account-number').attr("placeholder", bank_countries_list_placeholder[this.value][1]);
-
-    // Canada, Hong Kong and Singapore need additional handling
-    if ($('#managed-acct-country').val() == "CA") {
-      var cur = (this.value == 'US') ? 'USD' : 'CAD';
-      $('#routing-number').attr("placeholder", bank_details_formatter[cur].routing_placeholder);
-      $('#routing-number-label').text(bank_details_formatter[cur].routing_label);
-      cur = $("#bank-currency").val();
-      (cur == "USD" && this.value == 'US') ? hide_institution_number() : show_institution_number(cur);
-    } else if (['SG', 'HK'].indexOf($('#managed-acct-country').val()) > -1) {
-      show_institution_number($("#bank-currency").val());
-    } else {
-      hide_institution_number();
-    }
   });
 
   ($('#managed-acct-country option:selected').val()) && build_currency_details($('#managed-acct-country option:selected').val())
@@ -363,7 +344,7 @@ $(document).on('ready page:load', function() {
     }
     $('#company-state').html(html_content);
 
-  }).change();
+  });//.change();
 
   function build_country_options(hash) {
     var options = '';
@@ -425,8 +406,8 @@ $(document).on('ready page:load', function() {
     $('#institution-number').attr("placeholder", hash.placeholder);
   }
 
-  function find_currency_in_array(val, ary) {
-    if (val = '') return ary[0];
+  function find_item_in_array(val, ary) {
+    if (val == '') return ary[0];
     return (ary.indexOf(val) > -1) ? val : ary[0];
   };
 
@@ -446,7 +427,7 @@ $(document).on('ready page:load', function() {
       $("#bank-currency-select-label").hide();
     } else {
       $("#bank-currency-select-label").show();
-      cur = find_currency_in_array( $("#bank-currency").val(), cur );
+      cur = find_item_in_array( $("#bank-currency").val().toUpperCase(), cur );
       $("#bank-currency-select").val(cur).trigger('change').show();
     }
   };
@@ -479,15 +460,11 @@ $(document).on('ready page:load', function() {
     var selected_country = $("#account-country").val();
     if (x.length == 1) $("#account-country-select").val(x[0]).trigger('change').hide();
     else {
-      x = find_country_in_array(selected_country, x);
+      x = find_item_in_array(selected_country, x);
       $("#account-country-select").val(x).trigger('change').show();
     }
   };
 
-  function find_country_in_array(val, ary) {
-    if (val = '') return ary[0];
-    return (ary.indexOf(val) > -1) ? val : ary[0];
-  };
 
 /*
   $('#user-people').on('cocoon:after-insert', function(e, insertedItem) {
@@ -500,16 +477,16 @@ $(document).on('ready page:load', function() {
 */
 
   (function($) {
-      FormValidation.Validator.digitNine = {
-          validate: function(validator, $field, options) {
-              // ... Do your logic checking
-              value = $field.val()
-              if ( /^\d+$/.test(value) && value.length == 9) {
-                  return true    // or
-              }
-              return false
-          }
-      };
+    FormValidation.Validator.digitNine = {
+      validate: function(validator, $field, options) {
+        // ... Do your logic checking
+        value = $field.val()
+        if ( /^\d+$/.test(value) && value.length == 9) {
+          return true    // or
+        }
+        return false
+      }
+    };
   }(window.jQuery));
 
   // validate managed account create update form
@@ -626,8 +603,19 @@ $(document).on('ready page:load', function() {
           callback: {
             message: 'Enter a valid routing number',
             callback: function(value, validator, $field){
-              var selectedCountry = $('#managed-acct-country').val();
-              return Stripe.bankAccount.validateRoutingNumber(value, selectedCountry)
+              var selectedCountry = $("#account-country-select").val();
+              if (selectedCountry == 'US') {
+                return {
+                  valid: Stripe.bankAccount.validateRoutingNumber(value, selectedCountry)
+                }
+              } else if (selectedCountry == 'CA') {
+                value = value + "-" + $('#institution-number').val();
+                var response = Stripe.bankAccount.validateRoutingNumber(value, selectedCountry);
+                return {
+                  valid: response,
+                  message: (response ? '' : 'Enter a valid transit and institution code')
+                }
+              }
             }
           },
           notEmpty: {
@@ -635,17 +623,16 @@ $(document).on('ready page:load', function() {
           }
         }
       },
-
       'user[bank_accounts_attributes][0][institution_number]': {
         validators: {
           callback: {
             message: 'Bank code is required',
             callback: function (value, validator, $field){
-                var selectedCountry = $('#managed-acct-country').val();
-                if(selectedCountry === "CA" && value === ""){
-                  return false;
-                }
-                return true;
+              var selectedCountry = $("#account-country-select").val();
+              if (selectedCountry === "CA" && value.trim().length != 3) {
+                return false;
+              };
+              return true;
             }
           }
         }
@@ -702,7 +689,6 @@ $(document).on('ready page:load', function() {
           }
         }
       },
-
       'user[people_attributes][0][last4]': {
         validators: {
           notEmpty: {
@@ -712,7 +698,21 @@ $(document).on('ready page:load', function() {
             message: 'SSN should be a 9-digit number'
           }
         }
-      }
+      },
+
+      'person[photo]': {
+        validators: {
+          callback: {
+            message: "Please attach an ID",
+            callback: function(value, validator, $field) {
+              if (UtilFunctions.is_present($('#select-images').val()) || UtilFunctions.is_present($('#current-image-previews').html())) {
+                return { valid: true }  
+              };
+              return { valid: false }
+            }
+          }
+        }
+      },
     }
   })
   .on('err.validator.fv', function(e, data) {
@@ -741,6 +741,34 @@ $(document).on('ready page:load', function() {
     }
     return age;
   };
+
+  $('#institution-number').on('input', function() { 
+    this.value = UtilFunctions.positive_integer_from_zero_only(this.value);
+    if (this.value.trim().length > 3) {
+      this.value = this.value.slice(0, 3);
+    };    
+  });
+
+  $('#account-country-select').change(function() {
+
+    $("#account-country").val(this.value);
+    $('#account-number').attr("placeholder", bank_countries_list_placeholder[this.value][1]);
+
+    // Canada, Hong Kong and Singapore need additional handling
+    if ($('#managed-acct-country').val() == "CA") {
+      var cur = (this.value == 'US') ? 'USD' : 'CAD';
+      $('#routing-number').attr("placeholder", bank_details_formatter[cur].routing_placeholder);
+      $('#routing-number-label').text(bank_details_formatter[cur].routing_label);
+      cur = $("#bank-currency").val();
+      (cur == "USD" && this.value == 'US') ? hide_institution_number() : show_institution_number(cur);
+    } else if (['SG', 'HK'].indexOf($('#managed-acct-country').val()) > -1) {
+      show_institution_number($("#bank-currency").val());
+    } else {
+      hide_institution_number();
+    }
+
+    $('#managed-account-form').formValidation('resetField', 'user[bank_accounts_attributes][0][routing_number]');
+  }).change();
 
 });
 

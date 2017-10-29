@@ -16,6 +16,14 @@ var UtilFunctions = new function() {
     }
   };
 
+  this.positive_integer_from_zero_only = function(v) {
+    if (!(/^(\d+)$/.test(v))) return '';
+    else {
+      if (v.match(/^[0-9]\d*$/)) return v;
+      else return v.slice(0, -1);
+    }
+  };
+
 /*
   this.set_first_and_last_names = function() {
   	var full_name = $('#user_full_name').val().trim().replace(/\s{2,}/g,' ').split(' ');

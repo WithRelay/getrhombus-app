@@ -12,12 +12,7 @@ class ListsController < ApplicationController
 
   # segment type list index action
   def segments
-    @list_segments = current_user.segments.campaign
-                                 .paginate(
-                                    per_page: PAGINATION_PER_PAGE,
-                                    page: params[:page]
-                                 )
-                                 .order(created_at: :desc)
+    @list_segments = current_user.segments.campaign.paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
     if @list_segments.present?
       respond_to do |format|
         format.js { render partial: 'list_segments.js.erb', locals: { obj: @list_segments } }
