@@ -10,6 +10,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :user
   belongs_to :team, class_name: 'User'
   belongs_to :transaction_fee
+  belongs_to :subscription
 
   delegate :name, to: :hashtag, prefix: :item, allow_nil: true
   delegate :email, to: :user, prefix: :customer

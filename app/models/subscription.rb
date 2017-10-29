@@ -3,6 +3,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :plan
   belongs_to :coupon
   belongs_to :merchant_customer, inverse_of: :subscriptions
+  has_many :transactions
 
   has_many :invoices
 
@@ -11,6 +12,7 @@ class Subscription < ActiveRecord::Base
 
   delegate :name, :interval, :amount, :currency, :interval_name, to: :plan, prefix: :plan, allow_nil: true
   delegate :merchant_email, :org_name, :rhombus_number, :merchant, :customer, to: :merchant_customer
+
 
   def create_subscription(hash)
     begin
@@ -73,7 +75,6 @@ class Subscription < ActiveRecord::Base
             created: res.second.created,
             start: res.second.start
           )
-          send_new_merchant_customer_subscription_email
         else
           ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From create_subscription in stripe", hash: hash, self: self, res: res, env: Rails.env })
           # in case something went wrong after we created a subscription
@@ -90,25 +91,6 @@ class Subscription < ActiveRecord::Base
       ExceptionNotifier.notify_exception(exception, data: { message: "From create_subscription", hash: hash, self: self, res: res, env: Rails.env })
       [false]
     end
-  end
-
-  def send_new_merchant_customer_subscription_email
-    date = DateTime.strptime(start.to_s, '%s').in_time_zone(merchant.time_zone)
-    options = {
-      merchant: merchant,
-      customer: customer,
-      transaction_id: transaction_fee_id,
-      plan_name: plan_name,
-      frequency: plan_interval,
-      transaction_date: date.strftime('%B %d,%Y | %-I:%M%P'),
-      payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{customer.exp_month}/#{customer.exp_year})",
-      description: description,
-      currency: plan_currency,
-      less_transaction_fees: txn_amount,
-      amount: total_amount,
-      currency_symbol: '$'
-    }
-    EmailingService.new_merchant_customer_subscription(options)
   end
 
   def cancel_subscription(at_period_end = false)

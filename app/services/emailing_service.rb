@@ -622,7 +622,7 @@ class EmailingService
       begin
         template_name = 'new-merchant-customer-subscription'
         template_content = []
-        message = { "subject" => "You have a new #{options[:amount]} subscription",
+        message = { "subject" => "You have a new #{options[:currency_symbol]}#{options[:amount]} subscription",
          "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant].first_name || 'there' },
                                   { "name" => "customer_name", "content" => options[:customer].first_name || 'there' },
                                   { "name" => "transaction_id", "content" => options[:transaction_id] },
@@ -643,7 +643,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true

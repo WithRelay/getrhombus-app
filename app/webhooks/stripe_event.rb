@@ -123,7 +123,7 @@ class StripeEvent
   def setup_invoice_data
     # Ensure all these exists else it isnt ours. They should.
     key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :managed_stripe_customer_id
-    @merchant_customer = MerchantCustomer.includes(:merchant).find_by(key => @hash[:customer])
+    @merchant_customer = MerchantCustomer.includes(:merchant, :customer).find_by(key => @hash[:customer])
 
     if @merchant_customer
       @data.team_id = @merchant_customer.merchant_id
@@ -144,11 +144,12 @@ class StripeEvent
     # stripe doesnt guarantee invoice event order
     @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
     setup_invoice_data
-    team = @merchant_customer.try(:merchant)
+    @team = @merchant_customer.try(:merchant)
+    @customer = @merchant_customer.customer
 
-    if team
+    if @team
       # retrieve charge details. test that charge exist. it doesnt exist for trialing subs
-      charge = PaymentService.retrieve_charge(@hash[:charge], team) if @hash[:charge]
+      charge = PaymentService.retrieve_charge(@hash[:charge], @team) if @hash[:charge]
       charge = charge.try(:first)
 
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
@@ -182,12 +183,32 @@ class StripeEvent
             if @data.team.is_platform? # saas subscription
               send_invoice_payment_succeeded_email
             else
-              EmailingService.invoice_payment_succeeded(team.email, @merchant_customer.customer)
+              EmailingService.invoice_payment_succeeded(@team.email, @customer)
+              send_new_merchant_customer_subscription_email(sbtn, txn)
             end
           end
         end
       end
     end
+  end
+
+  def send_new_merchant_customer_subscription_email
+    date = DateTime.strptime(sbtn.start.to_s, '%s').in_time_zone(@team.time_zone)
+    options = {
+      merchant: @team,
+      customer: @customer,
+      transaction_id: txn.txn_number,
+      plan_name: sbtn.plan_name,
+      frequency: sbtn.plan_interval,
+      transaction_date: txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
+      payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
+      description: sbtn.description,
+      currency: sbtn.plan_currency,
+      less_transaction_fees: txn.txn_amount_less_fees,
+      amount: txn.txn_amount,
+      currency_symbol: '$'
+    }
+    EmailingService.new_merchant_customer_subscription(options)
   end
 
   def send_invoice_payment_succeeded_email
