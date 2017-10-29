@@ -16,14 +16,14 @@ class AccountReload < ActiveRecord::Base
       options = {
         merchant: user,
         transaction_id: txn.txn_number,
-        transaction_date: txn.created_at.strftime('%B %d,%Y | %-I:%M%P'),
+        transaction_date: txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
         status: txn.status.capitalize,
         payment_method: "Visa **** **** **** #{user.last4} (Expiry #{user.exp_month}/#{user.exp_year})",
-        amount: amt,
+        amount: Toolbox::Decimal.to_int_or_2dp(amt.to_f/100),
         currency: txn.currency,
         currency_symbol: '$',
-        previous_balance: previous_balance,
-        current_balance: current_balance,
+        previous_balance: Toolbox::Decimal.to_int_or_2dp(previous_balance),
+        current_balance: Toolbox::Decimal.to_int_or_2dp(current_balance),
       }
       EmailingService.sms_credit_receipt(options)
     else
