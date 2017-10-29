@@ -15,7 +15,7 @@
   <% if f.index == 0 %>
     <div class="form-group col-xs-6">
       <label class="form-label label-margin rep-pii-label">SSN</label>
-      <%= f.text_field :last4, placeholder: "SSN", class: 'settings short-field ssn text-field w-input rep-pii form-control', id: "SSN" %>
+      <%= f.text_field :last4, placeholder: "SSN", class: 'settings short-field ssn text-field w-input rep-pii form-control', id: "SSN", readonly: current_user.managed_account_is_verified? %>
       <div class="messageContainer w-col-12"></div>
     </div>
   <% end %>
@@ -80,7 +80,7 @@
   <div id="managed-acct-picture-div">
     <%#<a class="attach-image" href="#" id='select-images-button'></a>%>
     <div class="form-group col-xs-6 photo-input-div">
-      <input type="text" name="person[photo]" id='photo-input' class="form-control">
+      <input type="text" name="person[photo]" id='photo-input' class="form-control" readonly>
       <div class="messageContainer w-col-12" style="margin-left: -5%; margin-top: 13px;"></div>
     </div>
     <button type="button" id='select-images-button' class="dash-header-links new-link attach-id" style="border: none;">Attach ID</button>

@@ -81,7 +81,7 @@
                 <div class="message-graph-header-text">Weekly Transactions</div>
               </div>
               <div class="w-col w-col-6">
-                <div class="conversation-to-date-text">$<%= number_with_delimiter(@dashboard_transactions[:this_week_tranc], delimiter: ',') %> Transactions this Week</div>
+                <div class="conversation-to-date-text">$<%= number_with_delimiter(Toolbox::Decimal.to_int_or_2dp(@dashboard_transactions[:this_week_tranc]), delimiter: ',') %> Transactions this Week</div>
               </div>
             </div>
           </div>

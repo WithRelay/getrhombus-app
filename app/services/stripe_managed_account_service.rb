@@ -1,7 +1,7 @@
 # stripe managed account class handles invidual and company managed account creating and updating
 # Accepts parameter user and params where user is current user and params is from partialform _managed
 # NOTE constants in this class are immutable. elements of array cannot be modified because of .freeze
-class StripeManagedAccountService < Struct.new( :user, :params )
+class StripeManagedAccountService < Struct.new( :user, :params, :image_params )
 
   # this countries has common params to send for creating manged individual/company account
   COMMON_COUNTRIES = %W(AT FI FR IT LU NL NO PT IE ES SE BE DK DE US AU GB).freeze
@@ -128,7 +128,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   end
 =end
 
-  def retrieve_account; Stripe::Account.retrieve(user.stripe_creds[0].account_id) end
+  def retrieve_account 
+    @stripe_cred = user.stripe_creds[0]
+    Stripe::Account.retrieve(@stripe_cred.account_id) 
+  end
 
   # address function returns hash address_attributes from params so that it will be convinient to use hash
   def address; params[:address_attributes] end
@@ -140,7 +143,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def people; params[:people_attributes]['0'] end
 
   # returns image object
-  def image; params[:avatar] end
+  def image; image_params[:avatar] end
 
   # returns bank account hash
   def bank_account; params[:bank_accounts_attributes]['0'] end
@@ -218,7 +221,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   def update_company_managed_account
     company_account = managed_company_account.except!(:type, :country, :product_description)
-    company_account[:legal_entity].except!(:personal_id_number)
+    company_account[:legal_entity].except!(:personal_id_number) if @stripe_cred.legal_entity_verification["status"] == 'verified'
     company_account[:legal_entity][:verification].except!(:document) if image.blank?
     company_account
   end

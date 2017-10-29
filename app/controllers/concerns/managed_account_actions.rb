@@ -56,7 +56,7 @@ module ManagedAccountActions
 
   def save_identity_doc
     if image_params[:avatar].present?
-      stripe_managed = StripeManagedAccountService.new(current_user, image_params)
+      stripe_managed = StripeManagedAccountService.new(current_user, {}, image_params)
       file_upload = stripe_managed.upload_file
       return false unless file_upload.is_a?(Stripe::FileUpload)
       person = @user.people.representative.first
@@ -78,7 +78,7 @@ module ManagedAccountActions
   end
 
   def user_managed_account
-    stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
+    stripe_managed = StripeManagedAccountService.new(current_user, full_user_params, image_params)
     action = { 'create_managed_acct'=> [:create_account, :create_external_account],
                'update_managed_acct'=> [:update_account, :check_update_or_create] }
     account = stripe_managed.send(action[params[:action]][0])

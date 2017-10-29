@@ -137,7 +137,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def description
-    "Subscription payment to #{merchant_email}. #{org_name}. Rhombus number: #{rhombus_number}"
+    "Subscription payment to #{merchant_email}. #{org_name}. Relay number: #{rhombus_number}"
   end
 
   def get_fees
@@ -152,23 +152,6 @@ class Subscription < ActiveRecord::Base
   def get_fees_schedule(merchant)
     fee_schedule = merchant.is_platform? ? TransactionFee.platform.first : merchant.get_stripe_cred[:cred].transaction_fee
     [fee_schedule.provider_percent.to_f, fee_schedule.provider_cents.to_f, fee_schedule.subscription_percent.to_f]
-  end
-
-  def send_payment_responses(msg_to_send, channel, media = [])
-    send_response(msg_to_send, channel, media)
-    send_email_receipt
-    #send_merchant_receipt
-  end
-
-  def send_response(msg_to_send, channel, media = [])
-    cus = self.customer
-    Conversation.find_or_create_conversation_for_message_and_send_publish(self.merchant, cus, 'user', cus.id, msg_to_send, channel, media)
-  end
-
-  def send_email_receipt
-  end
-
-  def send_merchant_receipt
   end
 
 =begin

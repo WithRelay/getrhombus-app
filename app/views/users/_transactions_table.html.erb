@@ -33,7 +33,7 @@
       </div>
       <div class="w-col w-col-3">
         <div class="customer-list-content-div">
-          <div class="new-customer-table-text">$<%= t.amount %></div>
+          <div class="new-customer-table-text">$<%= Toolbox::Decimal.to_int_or_2dp(t.amount) %></div>
         </div>
       </div>
     </div>
