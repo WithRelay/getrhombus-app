@@ -15,6 +15,7 @@ var PriceSlider = new function() {
                 12: { amt: 400, min: 35001, max: 40000 },
                 13: { amt: 450, min: 40001, max: 45000 },
                 14: { amt: 500, min: 45001, max: 50000 },
+                15: { amt: 555, min: 50001, max: 60000 }
               };
   var keys = Object.keys(plans);
 
@@ -27,7 +28,7 @@ var PriceSlider = new function() {
       //currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0;
       if (pricingSlider) {
         var slider = new Powerange(pricingSlider, {
-          callback: displayValue, min: 100, max: 50000,
+          callback: displayValue, min: 100, max: 60000,
           start: 100, step: 100, vertical: false, hideRange: true
         });
       };
@@ -77,11 +78,22 @@ var PriceSlider = new function() {
   };
 
   function planInfo(amount) {
-    return '<div class="customer-count-text">\
-      <strong>'+ parseInt(pricingSlider.value).toLocaleString('en-US') +'</strong>\
-      <span class="customer-count-text-alt">customers</span></div>\
-      <div class="price-table underline-div"></div>\
-      <h1 class="plan-amount">$'+ amount +'/Month</h1>'
+    if(amount == 555){
+      var email = "<%= Rails.application.secrets.team_email %>";
+      $('.pricing-table-button').text('Email Us').attr('href', 'mailto:' + email);
+      return '<div class="customer-count-text">\
+        <strong>50k+ or Premium Support</strong></div>\
+        <div class="price-table underline-div"></div>\
+        <h1 class="plan-amount">Custom Pricing</h1>'
+    }
+    else{
+      $('.pricing-table-button').text('Get Started').attr('href', '/users/sign_up');
+      return '<div class="customer-count-text">\
+        <strong>'+ parseInt(pricingSlider.value).toLocaleString('en-US') +'</strong>\
+        <span class="customer-count-text-alt">customers</span></div>\
+        <div class="price-table underline-div"></div>\
+        <h1 class="plan-amount">$'+ amount +'/Month</h1>'
+    }
   };
 
 };
