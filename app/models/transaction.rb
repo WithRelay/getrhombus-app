@@ -142,14 +142,16 @@ class Transaction < ActiveRecord::Base
 
   def send_payment_failure_email(err, to_merchant)
     EmailingService.charge_failure_notification(
-      to: @merchant.email,
+      merchant_email: @merchant.email,
       customer_email: @customer.email,
       customer_phone: @customer.phone_number,
       card_name: @customer.card_name,
-      last4: @customer.last4, text: @msg,
+      last4: @customer.last4,
+      message: @msg,
       org_phone: @merchant.org_phone,
-      rhombus_number: @merchant.rhombus_number,
-      dump: err, to_merchant: to_merchant
+      rhombus_number: @merchant.friendly_relay_number,
+      reason: err,
+      to_merchant: to_merchant
     )
   end
 

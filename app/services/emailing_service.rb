@@ -117,23 +117,25 @@ class EmailingService
 
     def charge_failure_notification(options = {})
       begin
-        recipient = (options[:to_merchant]) ? options[:to] : User.platform_email
+        recipient = (options[:to_merchant]) ? options[:merchant_email] : User.platform_email
         template_name = 'charge-failure'
         template_content = []
         message = { "subject"=>"Charge Failure",
          "global_merge_vars"=> [  { "name" => "customer_email", "content" => options[:customer_email] },
                                   { "name" => "customer_phone", "content" => options[:customer_phone] },
                                   { "name" => "card_name", "content" => options[:card_name] },
-                                  { "name" => "last_four", "content" => options[:last4] },
-                                  { "name" => 'text_message', "content" => options[:text] },
-                                  { "name" => 'merchant_email', "content" => options[:to] },
-                                  { "name" => "business_phone", "content" => options[:org_phone] },
-                                  { "name" => 'rhombus_number', "content" => options[:rhombus_number] },
-                                  { "name" => "dump", "content" => options[:dump].to_s } ],
+                                  { "name" => "last4", "content" => options[:last4] },
+                                  { "name" => 'message', "content" => options[:message] },
+                                  { "name" => 'merchant_email', "content" => options[:merchant_email] },
+                                  { "name" => "merchant_phone_number", "content" => options[:org_phone] },
+                                  { "name" => 'relay_number', "content" => options[:relay_number] },
+                                  { "name" => "reason", "content" => options[:reason].to_s },
+                                  { "name" => 'help_center_link', "content" => url_helpers.root_url },
+                                  { "name" => 'email_link', "content" => EMAIL_US_LINK }],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => recipient } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true
