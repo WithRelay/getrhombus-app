@@ -52,7 +52,7 @@ class StripeEvent
       plan_name: subscription.plan_name,
       currency: subscription.plan_currency,
       currency_symbol: '$',
-      cancellation_date: cancelled_at.strftime('%B %d,%Y | %-I:%M%P'),
+      cancellation_date: cancelled_at.strftime('%B %d, %Y | %-I:%M%P'),
       amount: subscription.txn_amount
     }
   end
@@ -63,11 +63,11 @@ class StripeEvent
   # It also notifies us of changes from trial to active
   # You generally don't want to notify merchants or users in this method
   def customer_subscription_updated
-    @data = Subscription.includes(merchant_customer: [:merchant, :customer], plan: []).find_by(stripe_subscription_id: @hash[:id])
+    @data = Subscription.includes(:plan).find_by(stripe_subscription_id: @hash[:id])
     return unless @data
     update_subscription_data
     # Email admin about update
-    EmailingService.customer_subscription_updated(@data.merchant_customer.merchant, @data.plan_name, @data.id)
+    EmailingService.customer_subscription_updated(@data.plan_name, @data.id)
   end
 
   # Most fields aren't important but we can resave data
@@ -184,7 +184,7 @@ class StripeEvent
             if @sbtn.transactions.count == 1
               send_new_merchant_customer_subscription_email
             else
-              # send email to merchant
+              send_merchant_subscription_notification_email
             end
           end
         end
@@ -209,6 +209,25 @@ class StripeEvent
       currency_symbol: '$'
     }
     EmailingService.new_merchant_customer_subscription(options)
+  end
+
+  def send_merchant_subscription_notification_email
+    date = DateTime.strptime(@sbtn.start.to_s, '%s').in_time_zone(@team.time_zone)
+    options = {
+      merchant: @team,
+      customer: @customer,
+      transaction_id: @txn.txn_number,
+      plan_name: @sbtn.plan_name,
+      frequency: @sbtn.plan_interval_name,
+      date: @txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
+      payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
+      description: @sbtn.description,
+      currency: @sbtn.plan_currency,
+      amount_less_fees: @txn.txn_amount_less_fees,
+      amount: @txn.txn_amount,
+      currency_symbol: '$'
+    }
+    EmailingService.merchant_subscription_notification(options)
   end
 
   def send_invoice_payment_succeeded_email
@@ -259,21 +278,21 @@ class StripeEvent
     mc = MerchantCustomer.find_by(platform_stripe_customer_id: @source[:customer]) unless mc
 
     if mc
-      @data = mc.customer
+      @customer = mc.customer
       update_customer_source
       # notify admin only
-      EmailingService.customer_source_updated(mc.customer)
+      EmailingService.customer_source_updated(@customer)
     end
   end
 
   def update_customer_source
-    @data.last4 = @source[:last4]
-    @data.card_id = @source[:id]
-    @data.exp_month = @source[:exp_month]
-    @data.exp_year = @source[:exp_year]
-    @data.card_type = @source[:brand] if @source[:brand].present?
-    @data.card_name = @source[:name] if @source[:name].present?
-    @data.save
+    @customer.last4 = @source[:last4]
+    @customer.card_id = @source[:id]
+    @customer.exp_month = @source[:exp_month]
+    @customer.exp_year = @source[:exp_year]
+    @customer.card_type = @source[:brand] if @source[:brand].present?
+    @customer.card_name = @source[:name] if @source[:name].present?
+    @customer.save
   end
 
   # This really shouldn't occur since we currently don't allow invoices to be updated
