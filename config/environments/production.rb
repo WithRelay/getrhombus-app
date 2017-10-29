@@ -3,6 +3,7 @@ Rails.application.configure do
 
   #### added
   config.action_mailer.default_url_options = { host: Rails.application.secrets.app["url"] }
+  
   # ActionMailer Config
   # Setup for production - deliveries, no errors raised
   config.action_mailer.delivery_method = :smtp
