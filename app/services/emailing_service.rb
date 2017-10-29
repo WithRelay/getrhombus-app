@@ -288,7 +288,7 @@ class EmailingService
       begin
         template_name = 'three-month-follow-up'
         template_content = []
-        message = { "subject" => "It’s been a 3 months",
+        message = { "subject" => "It’s been 3 months",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
                                   { 'name' => 'calendly_link', 'content' => CALENDLY_LINK }
                                ],
@@ -395,7 +395,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true
@@ -431,7 +431,43 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
+         "from_email" => User.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def merchant_subscription_notification(options={})
+      begin
+        template_name = 'merchant-subscription-notification'
+        template_content = []
+        message = { "subject" => "#{options[:customer].first_name} sent you #{options[:currency_symbol]}#{options[:amount]}",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:merchant].first_name || 'there' },
+                                  { "name" => "customer_name", "content" => options[:customer].first_name },
+                                  { "name" => "transaction_id", "content" => options[:transaction_id] },
+                                  { "name" => "frequency", "content" => options[:frequency] },
+                                  { "name" => "plan_name", "content" => options[:plan_name] },
+                                  { "name" => "date", "content" => options[:date] },
+                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options[:last4]} (Expiry #{options[:exp_month]}/#{options[:exp_year]})" },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => "description", "content" => options[:description]},
+                                  { "name" => "amount_less_fees", "content" => options[:amount_less_fees]},
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:merchant]) },
+                                  { "name" => "help_link", "content" => url_helpers.root_url },
+                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}" },
+                                  { "name" => "refer_link", "content" => url_helpers.user_refer_business_url(options[:merchant]) }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => options[:merchant].email } ],
+         "bcc_address"=> User.platform_email,
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true
@@ -536,7 +572,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email,
          "headers" => {
             "Reply-To" => options[:merchant_email]
@@ -550,6 +586,7 @@ class EmailingService
       end
     end
 
+    # to customer
     def subscription_cancelled(options = {})
       begin
         template_name = 'subscription-cancelled'
@@ -570,7 +607,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email,
          "headers" => {
             "Reply-To" => options[:merchant].email
@@ -584,6 +621,7 @@ class EmailingService
       end
     end
 
+    # to merchant
     def cancelled_subscription(options = {})
       begin
         template_name = 'cancelled-subscription'
@@ -607,7 +645,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true
@@ -654,13 +692,14 @@ class EmailingService
       end
     end
 
-    def saas_subscription_receipt(options = {})
+    def customer_subscription_receipt(options = {})
       begin
-        template_name = 'subscription-receipt-template'
+        template_name = 'customer-subscription-receipt-template'
         template_content = []
         message = { "subject" => "Thank you for using Relay!",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:merchant].first_name || 'there' },
-                                  { "name" => "month", "content" => options[:month] },
+                                  { "name" => "frequency", "content" => options[:frequency] },
+                                  { "name" => "plan_name", "content" => options[:plan_name] },
                                   { "name" => "invoice_id", "content" => options[:stripe_invoice_id] },
                                   { "name" => "receipt_date", "content" => options[:date] },#February 23, 2017 | 1:30pm
                                   { "name" => "status", "content" => options[:status] },
@@ -679,7 +718,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true
@@ -694,7 +733,7 @@ class EmailingService
       begin
         template_name = 'sms-credit-receipt-template'
         template_content = []
-        message = { "subject" => "Thank you for using Relay!",
+        message = { "subject" => "SMS Balance Reload",
          "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant].first_name || 'there' },
                                   { "name" => "transaction_id", "content" => options[:transaction_id] },
                                   { "name" => "transaction_date", "content" => options[:transaction_date] },#February 23, 2017 | 1:30pm
@@ -744,7 +783,7 @@ class EmailingService
          'merge_language' => 'handlebars',
          'to'=> to,
          'bcc_address'=> User.platform_email,
-         'from_name' => FROM_NAME[:edwin],
+         'from_name' => 'Relay',
          'from_email' => User.platform_email
         }
         async = true
@@ -814,7 +853,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true
@@ -902,24 +941,10 @@ class EmailingService
     end
 
     # to platform only
-    def customer_subscription_updated(merchant, plan_name, subscription_id)
+    def customer_subscription_updated(plan_name, subscription_id)
       begin
-        template_name = 'customer-subscription-updated'
-        template_content = []
-        message = { "subject" => "Subscription updated",
-          "global_merge_vars"=> [{ "name" => "first_name", "content" => merchant.first_name || 'there' },
-            { "name" => "plan_name", "content" => plan_name },
-            { "name" => "subscription_id", "content" => subscription_id }
-          ],
-          "merge_language" => "handlebars",
-          "to"=> [ { "email" => User.platform_email } ],
-          "from_name" => "Email from Relay",
-          "from_email" => User.platform_email
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+        text = "Hi team, Subscription with id #{subscription_id} and plan name #{plan_name} was updated."
+        email_to_platform(text, "Subscription updated")
       rescue StandardError => e
       end
     end
@@ -927,48 +952,8 @@ class EmailingService
     # to platform only
     def invoice_created(invoice)
       begin
-        template_name = 'invoice-created'
-        template_content = []
-        message = { 'subject' => 'Invoice Created',
-          "global_merge_vars"=> [{ "name" => "first_name", "content" => 'Team' },
-            { 'name' => 'id', 'content' => invoice.id },
-            { 'name' => 'subscription_id', 'content' => invoice.subscription_id },
-          ],
-          'merge_language' => 'handlebars',
-          'to'=> [ { 'email' => User.platform_email } ],
-          'from_name' => 'Email from Relay',
-          'from_email' => User.platform_email
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
-    def invoice_payment_succeeded(merchant_email, customer)
-      begin
-        template_name = 'invoice-payment-succeed'
-        template_content = []
-        message = { 'subject' => 'Subscription Renewed',
-          'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' },
-            { 'name' => 'id', 'content' => invoice.id },
-            { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
-          ],
-          'merge_language' => 'handlebars',
-          'to'=> [ { 'email' => customer.email } ],
-          "bcc_address"=> User.platform_email,
-          'from_name' => FROM_NAME[:edwin],
-          'from_email' => User.platform_email,
-          "headers" => {
-            "Reply-To" => merchant_email
-          },
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+        text = "Hi team, Invoice with id #{invoice.id} was created."
+        email_to_platform(text, 'Invoice Created')
       rescue StandardError => e
       end
     end
@@ -976,21 +961,18 @@ class EmailingService
     # to platform only
     def customer_source_updated(customer)
       begin
-        template_name = 'customer-source-updated'
-        template_content = []
-        message = { 'subject' => 'Customer Source Updated',
-          'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' }],
-          'merge_language' => 'handlebars',
-          'to'=> [ { 'email' => User.platform_email } ],
-          'from_name' => 'Email from Relay',
-          'from_email' => User.platform_email
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+        text = "Hi team, Payment source for customer with id #{customer.id} was updated."
+        email_to_platform(text, 'Customer Source Updated')
       rescue StandardError => e
       end
+    end
+
+    def email_to_platform(text, subject)
+      message_hash = { html: text, from_name: 'Email From Relay',
+                       subject: subject,
+                       to: [ { "email" => User.platform_email } ]
+                     }
+      send_email_campaign(message_hash, true)
     end
 
     def send_weekly_mail(options = {})

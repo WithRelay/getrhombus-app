@@ -52,7 +52,7 @@ class StripeEvent
       plan_name: subscription.plan_name,
       currency: subscription.plan_currency,
       currency_symbol: '$',
-      cancellation_date: cancelled_at.strftime('%B %d,%Y | %-I:%M%P'),
+      cancellation_date: cancelled_at.strftime('%B %d, %Y | %-I:%M%P'),
       amount: subscription.txn_amount
     }
   end
@@ -63,11 +63,11 @@ class StripeEvent
   # It also notifies us of changes from trial to active
   # You generally don't want to notify merchants or users in this method
   def customer_subscription_updated
-    @data = Subscription.includes(merchant_customer: [:merchant, :customer], plan: []).find_by(stripe_subscription_id: @hash[:id])
+    @data = Subscription.includes(:plan).find_by(stripe_subscription_id: @hash[:id])
     return unless @data
     update_subscription_data
     # Email admin about update
-    EmailingService.customer_subscription_updated(@data.merchant_customer.merchant, @data.plan_name, @data.id)
+    EmailingService.customer_subscription_updated(@data.plan_name, @data.id)
   end
 
   # Most fields aren't important but we can resave data
@@ -153,38 +153,38 @@ class StripeEvent
       charge = charge.try(:first)
 
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
-      txn = Transaction.where(txn_uri: charge.id).first_or_initialize if charge
+      @txn = Transaction.where(txn_uri: charge.id).first_or_initialize if charge
 
       # for now, we have only one line for each invoice - the subscription
       @hash[:lines][:data].each do |l|
         if l[:type] == 'subscription'
 
-          sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
-          if sbtn && txn
-            txn.update(
-              amount: txn.amt_in_decimal(l[:amount]),
-              app_fee: @hash[:application_fee], stripe_fee: sbtn.get_fees[:stripe_fee],
-              amount_with_taxes: txn.amt_in_decimal(@hash[:total]),
-              txn_number: txn.txn_number || txn.generate_txn_number,
-              description: txn.description.present? ? txn.description : sbtn.description,
+          @sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
+          if @sbtn && @txn
+            @txn.update(
+              amount: @txn.amt_in_decimal(l[:amount]),
+              app_fee: @hash[:application_fee], stripe_fee: @sbtn.get_fees[:stripe_fee],
+              amount_with_taxes: @txn.amt_in_decimal(@hash[:total]),
+              txn_number: @txn.txn_number || @txn.generate_txn_number,
+              description: @txn.description.present? ? @txn.description : @sbtn.description,
               team_id: @data.team_id, user_id: @data.customer_id,
-              hashtag_id: sbtn.plan.hashtag_id, txn_available_at: @hash[:date],
-              transaction_fee_id: sbtn.transaction_fee_id,
+              hashtag_id: @sbtn.plan.hashtag_id, txn_available_at: @hash[:date],
+              transaction_fee_id: @sbtn.transaction_fee_id,
               tax_percent: @hash[:tax_percent],
               # At the moment, charge will only contain 1 line item, what if there are a couple line items?
               txn_uri: charge.id, currency: charge.currency,
               status: charge.status, last4: charge.source.last4,
               exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
               card_type: charge.source.brand, card_name: charge.source.name,
-              subscription_id: sbtn.id, destination: charge.destination, captured: charge.captured
+              subscription_id: @sbtn.id, destination: charge.destination, captured: charge.captured
             )
 
-            @data.update(transaction_id: txn.id, subscription_id: sbtn.id)
-            if @data.team.is_platform? # saas subscription
-              send_invoice_payment_succeeded_email
+            @data.update(transaction_id: @txn.id, subscription_id: @sbtn.id)
+            send_invoice_payment_succeeded_email
+            if @sbtn.transactions.count == 1
+              send_new_merchant_customer_subscription_email
             else
-              EmailingService.invoice_payment_succeeded(@team.email, @customer)
-              send_new_merchant_customer_subscription_email(sbtn, txn)
+              send_merchant_subscription_notification_email
             end
           end
         end
@@ -193,41 +193,60 @@ class StripeEvent
   end
 
   def send_new_merchant_customer_subscription_email
-    date = DateTime.strptime(sbtn.start.to_s, '%s').in_time_zone(@team.time_zone)
+    date = DateTime.strptime(@sbtn.start.to_s, '%s').in_time_zone(@team.time_zone)
     options = {
       merchant: @team,
       customer: @customer,
-      transaction_id: txn.txn_number,
-      plan_name: sbtn.plan_name,
-      frequency: sbtn.plan_interval,
-      transaction_date: txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
+      transaction_id: @txn.txn_number,
+      plan_name: @sbtn.plan_name,
+      frequency: @sbtn.plan_interval_name,
+      transaction_date: @txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
       payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
-      description: sbtn.description,
-      currency: sbtn.plan_currency,
-      less_transaction_fees: txn.txn_amount_less_fees,
-      amount: txn.txn_amount,
+      description: @sbtn.description,
+      currency: @sbtn.plan_currency,
+      less_transaction_fees: @txn.txn_amount_less_fees,
+      amount: @txn.txn_amount,
       currency_symbol: '$'
     }
     EmailingService.new_merchant_customer_subscription(options)
   end
 
-  def send_invoice_payment_succeeded_email
-    merchant = @data.customer
-    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(merchant.time_zone)
+  def send_merchant_subscription_notification_email
+    date = DateTime.strptime(@sbtn.start.to_s, '%s').in_time_zone(@team.time_zone)
     options = {
-      month: Date::MONTHNAMES[Time.current.month],
+      merchant: @team,
+      customer: @customer,
+      transaction_id: @txn.txn_number,
+      plan_name: @sbtn.plan_name,
+      frequency: @sbtn.plan_interval_name,
+      date: @txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
+      payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
+      description: @sbtn.description,
+      currency: @sbtn.plan_currency,
+      amount_less_fees: @txn.txn_amount_less_fees,
+      amount: @txn.txn_amount,
+      currency_symbol: '$'
+    }
+    EmailingService.merchant_subscription_notification(options)
+  end
+
+  def send_invoice_payment_succeeded_email
+    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(@team.time_zone)
+    options = {
+      frequency: @sbtn.plan_interval_name.downcase,
+      plan_name: @sbtn.plan_name
       stripe_invoice_id: @data.stripe_invoice_id,
-      date: date.strftime('%B %d,%Y | %-I:%M%P'),
-      status: 'Paid'.capitalize,
-      payment_method: "Visa **** **** **** #{merchant.last4} (Expiry #{merchant.exp_month}/#{merchant.exp_year})",
+      date: date.strftime('%B %d, %Y | %-I:%M%P'),
+      status: 'Paid',
+      payment_method: "Visa **** **** **** #{@customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
       sub_total: Toolbox::Decimal.to_int_or_2dp(@data.subtotal.to_f/100),
       total: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100),
       tax_and_fees: Toolbox::Decimal.to_int_or_2dp(@data.tax.to_f/100 + @data.application_fee.to_f/100),
       currency: @data.currency,
       currency_symbol: '$',
-      merchant: merchant
+      merchant: @team
     }
-    EmailingService.saas_subscription_receipt(options)
+    EmailingService.customer_subscription_receipt(options)
   end
 
   def invoice_payment_failed
@@ -235,16 +254,17 @@ class StripeEvent
     @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
     setup_invoice_data
     # notify customer
-    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(@data.team.time_zone)
+    team = @data.team
+    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(team.time_zone)
     options = {
       customer: @data.customer,
-      merchant_business_name: @data.team.org_name,
-      merchant_email: @data.team.email,
+      merchant_business_name: team.org_name,
+      merchant_email: team.email,
       plan_name: @data.subscription.plan_name,
       currency: @data.currency,
       currency_symbol: '$',
-      frequency: @data.subscription.plan_interval,
-      failed_date: date.strftime('%B %d,%Y | %-I:%M%P'),
+      frequency: @data.subscription.plan_interval_name,
+      failed_date: date.strftime('%B %d, %Y | %-I:%M%P'),
       amount: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100)
     }
     EmailingService.subscription_failed(options)
@@ -258,21 +278,21 @@ class StripeEvent
     mc = MerchantCustomer.find_by(platform_stripe_customer_id: @source[:customer]) unless mc
 
     if mc
-      @data = mc.customer
+      @customer = mc.customer
       update_customer_source
       # notify admin only
-      EmailingService.customer_source_updated(mc.customer)
+      EmailingService.customer_source_updated(@customer)
     end
   end
 
   def update_customer_source
-    @data.last4 = @source[:last4]
-    @data.card_id = @source[:id]
-    @data.exp_month = @source[:exp_month]
-    @data.exp_year = @source[:exp_year]
-    @data.card_type = @source[:brand] if @source[:brand].present?
-    @data.card_name = @source[:name] if @source[:name].present?
-    @data.save
+    @customer.last4 = @source[:last4]
+    @customer.card_id = @source[:id]
+    @customer.exp_month = @source[:exp_month]
+    @customer.exp_year = @source[:exp_year]
+    @customer.card_type = @source[:brand] if @source[:brand].present?
+    @customer.card_name = @source[:name] if @source[:name].present?
+    @customer.save
   end
 
   # This really shouldn't occur since we currently don't allow invoices to be updated
