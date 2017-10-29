@@ -656,11 +656,12 @@ class EmailingService
 
     def customer_subscription_receipt(options = {})
       begin
-        template_name = 'subscription-receipt-template'
+        template_name = 'customer-subscription-receipt-template'
         template_content = []
         message = { "subject" => "Thank you for using Relay!",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:merchant].first_name || 'there' },
-                                  { "name" => "month", "content" => options[:month] },
+                                  { "name" => "frequency", "content" => options[:frequency] },
+                                  { "name" => "plan_name", "content" => options[:plan_name] },
                                   { "name" => "invoice_id", "content" => options[:stripe_invoice_id] },
                                   { "name" => "receipt_date", "content" => options[:date] },#February 23, 2017 | 1:30pm
                                   { "name" => "status", "content" => options[:status] },
@@ -679,7 +680,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true
