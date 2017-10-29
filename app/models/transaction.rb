@@ -123,7 +123,7 @@ class Transaction < ActiveRecord::Base
                 card_name: @stripe_res.source.name, tax_percent: @merchant.tax_percent, destination: @stripe_res.destination,
                 team_id: @merchant.id, user_id: @customer.id, notes: @msg, hashtag_id: @hashtag.try(:id), captured: @stripe_res.captured,
                 exp_month: @stripe_res.source.exp_month, exp_year: @stripe_res.source.exp_year, card_type: @stripe_res.source.brand,
-                description: "Payment to #{@merchant.email}. #{@merchant.org_name}. rhombus number: #{@merchant.rhombus_number}",
+                description: "Payment to #{@merchant.email}. #{@merchant.org_name}. Relay number: #{@merchant.rhombus_number}",
                 transaction_fee_id: @fee_schedule.id)
   end
 
