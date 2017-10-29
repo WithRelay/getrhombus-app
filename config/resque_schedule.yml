@@ -5,12 +5,12 @@ drip_campaign_emails:
   description: "This job runs our drip campaigns."
   queue: <%= Rails.env %>_drip_campaign_emails
 
-weekly_activity_summary:
-  cron: '0 11 * * 1 America/New_York' #“At 11am Eastern Time on Monday.”
-  class: "WeeklyActivitySummaryJob"
-  args:
-  description: "This job send weekly activity summary."
-  queue: <%= Rails.env %>_weekly_activity_summary
+#weekly_activity_summary:
+#  cron: '0 11 * * 1 America/New_York' #“At 11am Eastern Time on Monday.”
+#  class: "WeeklyActivitySummaryJob"
+#  args:
+#  description: "This job send weekly activity summary."
+#  queue: <%= Rails.env %>_weekly_activity_summary
 
 # card_expired_emails:
 #   cron: "0 12 * * * America/New_York"
