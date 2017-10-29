@@ -55,7 +55,7 @@ class Refund < ActiveRecord::Base
       currency: txn.currency,
       currency_symbol: '$',
       date: date.strftime('%B %d, %Y | %-I:%M%P'),
-      amount: Toolbox::Decimal.to_int_or_2dp(txn.amount_with_taxes),
+      amount: Toolbox::Decimal.to_int_or_2dp(amount_refunded.to_f/100),
       user: txn.team
     }
     EmailingService.refund_processed(options)
