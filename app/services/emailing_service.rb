@@ -115,36 +115,6 @@ class EmailingService
       end
     end
 
-    def send_receipt(options = {})
-      begin
-        template_name = 'receipt'
-        template_content = []
-        message = { "subject"=>"You sent a payment with Relay",
-         "global_merge_vars"=> [ { "name" => "merchant_name", "content" => options[:merchant_name] },
-                                 { "name" => 'merchant_email', "content" => options[:merchant_email] },
-                                 { "name" => "transaction_number", "content" => options[:transaction_number] },
-                                 { "name" => 'transaction_date', "content" => options[:transaction_date] },
-                                 { "name" => 'text_message', "content" => options[:text] },
-                                 { "name" => 'amount', "content" => options[:amount] },
-                                 { "name" => 'amount_with_taxes', "content" => options[:amount_with_taxes] },
-                                 { "name" => 'business_phone', "content" => options[:org_phone] },
-                                 { "name" => "currency", "content" => options[:currency] } ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:to] } ],
-         "from_name" => options[:merchant_name],
-         "from_email" => User.platform_email,
-         "headers" => {
-            "Reply-To" => options[:merchant_email]
-          },
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
     def charge_failure_notification(options = {})
       begin
         recipient = (options[:to_merchant]) ? options[:to] : User.platform_email
