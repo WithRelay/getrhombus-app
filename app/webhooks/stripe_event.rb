@@ -181,11 +181,7 @@ class StripeEvent
 
             @data.update(transaction_id: @txn.id, subscription_id: @sbtn.id)
             send_invoice_payment_succeeded_email
-            if @sbtn.transactions.count == 1
-              send_new_merchant_customer_subscription_email
-            else
-              send_merchant_subscription_notification_email
-            end
+            @sbtn.transactions.count == 1 ? send_new_merchant_customer_subscription_email : send_merchant_subscription_notification_email
           end
         end
       end
@@ -234,7 +230,7 @@ class StripeEvent
     date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(@team.time_zone)
     options = {
       frequency: @sbtn.plan_interval_name.downcase,
-      plan_name: @sbtn.plan_name
+      plan_name: @sbtn.plan_name,
       stripe_invoice_id: @data.stripe_invoice_id,
       date: date.strftime('%B %d, %Y | %-I:%M%P'),
       status: 'Paid',
