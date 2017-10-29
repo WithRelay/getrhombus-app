@@ -235,16 +235,17 @@ class StripeEvent
     @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
     setup_invoice_data
     # notify customer
-    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(@data.team.time_zone)
+    team = @data.team
+    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(team.time_zone)
     options = {
       customer: @data.customer,
-      merchant_business_name: @data.team.org_name,
-      merchant_email: @data.team.email,
+      merchant_business_name: team.org_name,
+      merchant_email: team.email,
       plan_name: @data.subscription.plan_name,
       currency: @data.currency,
       currency_symbol: '$',
-      frequency: @data.subscription.plan_interval,
-      failed_date: date.strftime('%B %d,%Y | %-I:%M%P'),
+      frequency: @data.subscription.plan_interval_name,
+      failed_date: date.strftime('%B %d, %Y | %-I:%M%P'),
       amount: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100)
     }
     EmailingService.subscription_failed(options)

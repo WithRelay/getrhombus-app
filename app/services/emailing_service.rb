@@ -815,7 +815,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
-         "from_name" => FROM_NAME[:edwin],
+         "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
         async = true
