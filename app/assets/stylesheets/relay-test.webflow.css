@@ -13668,6 +13668,7 @@ h4 {
   margin-left: 20%;
   font-family: 'Maisonneue book', sans-serif;
   color: #62676d;
+  text-decoration: none;
 }
 
 .saved-replies-alt-wrapper {
@@ -16120,6 +16121,14 @@ h4 {
   color: #141d67;
 }
 
+.referrer {
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin: 25px auto;
+  border-radius: 50%;
+}
+
 html.w-mod-js *[data-ix="display-none-on-load"] {
   display: none;
 }
@@ -16145,11 +16154,24 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
     width: auto;
     margin-right: 0%;
   }
+  .button.add-people {
+    right: 23%;
+  }
+  .button.deactivate {
+    margin-right: 7%;
+    float: right;
+  }
   .button.div-cta.hero-alt-button {
     margin-left: 0%;
   }
   .button.use-case-button {
     width: 25%;
+  }
+  .button.error-page-button {
+    width: 30%;
+  }
+  .button.facebook {
+    margin-right: 2%;
   }
   .nav-menu.hamburger {
     margin-top: 0px;
@@ -16203,7 +16225,7 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
     min-height: 580px;
   }
   .links.login-form-password-reset {
-    margin-right: 15%;
+    margin-right: 0%;
   }
   .signup-box-subheading.premium-table {
     margin-left: 20px;
@@ -16220,8 +16242,30 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .country-block {
     margin-left: 0px;
   }
+  .dashboard-nav {
+    left: 0%;
+    width: 100%;
+    min-width: 100%;
+  }
+  .sub-nav-bar.settings {
+    width: 100%;
+    min-width: 100%;
+  }
+  .dashboard-body {
+    width: 100%;
+    min-width: 100%;
+  }
+  .dashboard-body.settings {
+    width: 100%;
+    min-width: 100%;
+  }
   .messaging-dashboard {
     max-width: auto;
+  }
+  .dash-content-container.settings {
+    width: 80%;
+    min-width: 80%;
+    margin-left: 11%;
   }
   .account-setup-box-header {
     margin-left: 20px;
@@ -16237,6 +16281,9 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .onboarding-side-bar-paragraph.credit {
     width: auto;
     margin-right: auto;
+  }
+  .sub-nav-options-wrapper.transactions {
+    width: 100%;
   }
   .footer-cta-forms {
     margin-right: 25%;
@@ -16287,6 +16334,17 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .def-content-table-2-column-2 {
     padding-left: 20px;
+  }
+  .integrations-row {
+    margin-right: 20px;
+    margin-left: 20px;
+  }
+  .integration-settings-div {
+    margin-right: 30px;
+    margin-left: 30px;
+  }
+  .authentication-column-text.name-tag.shrink-text {
+    margin-left: 0%;
   }
   .features-div-paragraph-wrapper {
     padding-right: 0px;
@@ -16384,6 +16442,10 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
     padding-right: 60px;
     padding-left: 60px;
   }
+  .blank-page-content-wrapper.loading.reset-password {
+    padding-right: 100px;
+    padding-left: 100px;
+  }
   .use-case-image-wrapper-non-profit {
     height: 650px;
   }
@@ -16413,6 +16475,12 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .conversation-bubble-place-holder-div.agent {
     width: 68%;
   }
+  .column-47 {
+    padding-left: 0px;
+  }
+  .column-48 {
+    padding-left: 0px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -16421,15 +16489,36 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
     margin-left: 20px;
     float: left;
   }
+  .button.save-changes.alt-button {
+    right: 15%;
+    width: 50%;
+  }
+  .button.save-changes.integrations {
+    width: 35%;
+    float: none;
+  }
   .button.def-content-section-button {
     right: 0px;
     margin-left: 0%;
+  }
+  .button.integrate-button {
+    float: none;
+  }
+  .button.add-people {
+    right: 19%;
+  }
+  .button.deactivate {
+    margin-left: 11%;
+    float: left;
   }
   .button.div-cta.hero-alt-button {
     text-align: left;
   }
   .button.use-case-button {
     width: 35%;
+  }
+  .button.error-page-button {
+    width: 40%;
   }
   .button.html-email-button {
     width: auto;
@@ -16499,7 +16588,8 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
     text-align: center;
   }
   .links.login-form-password-reset {
-    margin-left: 20%;
+    margin-left: 30%;
+    padding-bottom: 1px;
     float: left;
   }
   .default-content-section-2.table-section.customer_management {
@@ -16539,6 +16629,17 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .country-block {
     margin-left: 50px;
   }
+  .dashboard-nav {
+    left: 0%;
+  }
+  .sub-nav-bar.settings {
+    width: 100%;
+    min-width: 100%;
+  }
+  .dashboard-body.settings {
+    width: 100%;
+    min-width: 100%;
+  }
   .logo-icon {
     margin-left: 20px;
   }
@@ -16547,6 +16648,9 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .whats-new-container {
     height: 50%;
+  }
+  .form-check-box.footer-cta.login-form {
+    margin-left: 30%;
   }
   .footer-cta-forms {
     margin-right: 15%;
@@ -16566,6 +16670,9 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .value-prop-table-column-2.pre-cta-div {
     margin-top: 0px;
+  }
+  .transactions-table-row {
+    margin-bottom: 20px;
   }
   .def-content-section-paragraph {
     display: block;
@@ -16594,6 +16701,16 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .def-content-table-2-column-2 {
     padding-right: 80px;
     padding-left: 80px;
+  }
+  .transaction-summary-cell {
+    margin-bottom: 20px;
+  }
+  .transaction-summary-cell.subscriptions {
+    margin-bottom: 20px;
+  }
+  .authentication-column-text.name-tag.shrink-text {
+    margin-bottom: 10px;
+    float: none;
   }
   .section-3-header {
     text-align: center;
@@ -16711,6 +16828,10 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .sign-in-link {
     top: -20px;
   }
+  .blank-page-content-wrapper.loading.reset-password {
+    padding-right: 50px;
+    padding-left: 50px;
+  }
   .use-case-image-wrapper-non-profit {
     height: 600px;
   }
@@ -16778,6 +16899,21 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .button.pricing-table-button {
     width: 70%;
   }
+  .button.save-changes {
+    width: 50%;
+  }
+  .button.save-changes.alt-button {
+    right: 5%;
+    width: 70%;
+  }
+  .button.save-changes.alt-button.discount-code {
+    right: 5%;
+    width: 70%;
+  }
+  .button.save-changes.integrations {
+    width: 50%;
+    float: none;
+  }
   .button.hero-button {
     width: auto;
   }
@@ -16793,6 +16929,12 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
     margin-right: auto;
     margin-left: auto;
   }
+  .button.integrate-button {
+    float: none;
+  }
+  .button.add-people {
+    right: 8%;
+  }
   .button.div-cta {
     margin-right: 1%;
     margin-bottom: 20px;
@@ -16800,6 +16942,9 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .button.use-case-button {
     width: 60%;
     margin-bottom: 10px;
+  }
+  .button.error-page-button {
+    width: 60%;
   }
   .button.html-email-button {
     width: auto;
@@ -16826,6 +16971,30 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .text-field.login {
     border: 1px solid #1f8cec;
+  }
+  .text-field.settings.password {
+    width: 60%;
+  }
+  .text-field.settings.password.confirm {
+    margin-left: 10%;
+  }
+  .text-field.settings.tax {
+    width: 45%;
+  }
+  .text-field.settings.re-enter-password {
+    width: 75%;
+  }
+  .text-field.settings.short-field {
+    width: 75%;
+  }
+  .text-field.settings.short-field.routing-number {
+    width: 75%;
+  }
+  .text-field.add-funds-amount-field {
+    width: 50%;
+  }
+  .text-field.sms-alerts {
+    width: 60%;
   }
   .first-content-section-sub-header {
     margin-right: 8px;
@@ -16875,6 +17044,10 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .links.footer-links.blog-links {
     padding-left: 0px;
   }
+  .links.login-form-password-reset {
+    margin-right: 10%;
+    margin-left: 15%;
+  }
   .default-content-section-2.value-prop-details.features {
     padding-bottom: 80px;
   }
@@ -16900,6 +17073,20 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .transaction-fee-table-column-2 {
     margin-top: 20px;
+  }
+  .sub-nav-bar.settings {
+    width: 100%;
+    min-width: 100%;
+  }
+  .dashboard-body.settings {
+    width: 100%;
+    min-width: 100%;
+  }
+  .dash-content-container.settings {
+    width: 90%;
+    min-width: 89%;
+    margin-right: 5%;
+    margin-left: 5%;
   }
   .onboarding-right-bar {
     display: block;
@@ -16928,8 +17115,30 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
     padding-right: 25px;
     padding-left: 25px;
   }
+  .dropdown.currency {
+    width: 50%;
+  }
+  .dropdown.bank-country {
+    width: 55%;
+  }
+  .alerts-dropdown {
+    width: 60%;
+  }
   .form-check-box.footer-cta.login-form {
-    margin-left: 25%;
+    margin-left: 20%;
+  }
+  .settings-info-div {
+    margin-right: 5%;
+    margin-left: 5%;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+  .settings-info-div.balance-section {
+    margin-right: 5%;
+    margin-left: 5%;
+  }
+  .settings-details-paragraph.account-balance {
+    margin-bottom: 10px;
   }
   .footer-cta-forms {
     margin-right: 5%;
@@ -16979,6 +17188,12 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .phone {
     margin-left: 0px;
+  }
+  .transaction-summary-cell {
+    margin-bottom: 15px;
+  }
+  .transaction-summary-cell.subscriptions {
+    margin-bottom: 15px;
   }
   .div-cta-button.sub-header {
     margin-right: 0px;
@@ -17093,6 +17308,10 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .article-h1 {
     font-size: 20px;
     line-height: 25px;
+  }
+  .blank-page-content-wrapper.loading.reset-password {
+    padding-right: 0px;
+    padding-left: 0px;
   }
   .use-case-image-wrapper-non-profit {
     height: 500px;
