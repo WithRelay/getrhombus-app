@@ -237,7 +237,7 @@ class User < ActiveRecord::Base
   end
 
   def set_merchant_org_phone
-    self.attributes(org_phone: self.phone_number, phone_number: nil) if is_merchant?
+    self.attributes = { org_phone: self.phone_number, phone_number: nil } if is_merchant?
   end
 
   def the_titleizer
