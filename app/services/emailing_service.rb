@@ -654,7 +654,7 @@ class EmailingService
       end
     end
 
-    def saas_subscription_receipt(options = {})
+    def customer_subscription_receipt(options = {})
       begin
         template_name = 'subscription-receipt-template'
         template_content = []
@@ -938,32 +938,6 @@ class EmailingService
           'to'=> [ { 'email' => User.platform_email } ],
           'from_name' => 'Email from Relay',
           'from_email' => User.platform_email
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
-    def invoice_payment_succeeded(merchant_email, customer)
-      begin
-        template_name = 'invoice-payment-succeed'
-        template_content = []
-        message = { 'subject' => 'Subscription Renewed',
-          'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' },
-            { 'name' => 'id', 'content' => invoice.id },
-            { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
-          ],
-          'merge_language' => 'handlebars',
-          'to'=> [ { 'email' => customer.email } ],
-          "bcc_address"=> User.platform_email,
-          'from_name' => FROM_NAME[:edwin],
-          'from_email' => User.platform_email,
-          "headers" => {
-            "Reply-To" => merchant_email
-          },
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async

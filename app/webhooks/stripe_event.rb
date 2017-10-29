@@ -180,11 +180,11 @@ class StripeEvent
             )
 
             @data.update(transaction_id: txn.id, subscription_id: sbtn.id)
-            if @data.team.is_platform? # saas subscription
-              send_invoice_payment_succeeded_email
-            else
-              EmailingService.invoice_payment_succeeded(@team.email, @customer)
+            send_invoice_payment_succeeded_email
+            if sbtn.transactions.count == 1
               send_new_merchant_customer_subscription_email(sbtn, txn)
+            else
+              # send email to merchant
             end
           end
         end
@@ -227,7 +227,7 @@ class StripeEvent
       currency_symbol: '$',
       merchant: merchant
     }
-    EmailingService.saas_subscription_receipt(options)
+    EmailingService.customer_subscription_receipt(options)
   end
 
   def invoice_payment_failed
