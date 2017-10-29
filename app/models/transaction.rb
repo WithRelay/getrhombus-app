@@ -61,8 +61,6 @@ class Transaction < ActiveRecord::Base
       # handle response
       if @stripe_res # tested
         update_transaction_data
-        EmailingService.customer_receipt(receipt_options)
-        EmailingService.customer_transaction_detail(receipt_options)
         return [true, "Transaction processed"]
       else
         # This should only run for text based payments. Dashboard payments is handled differently.
@@ -80,9 +78,9 @@ class Transaction < ActiveRecord::Base
         [false, @stripe_res_ary[2]]
       end
     rescue StandardError => err
-      ExceptionNotifier.notify_exception(err, data: { message: "From process_payment in transaction.rb", res: @stripe_res_ary, env: Rails.env, self: self, merchant: merchant, customer: customer, amt: amt })
+      ExceptionNotifier.notify_exception(err, data: { message: 'From process_payment in transaction.rb', res: @stripe_res_ary, env: Rails.env, self: self, merchant: merchant, customer: customer, amt: amt })
       #send_payment_failure_email(err, false)  # should go out only for text payments
-      [false, "Something went wrong"]
+      [false, 'Something went wrong']
     end
   end
 
@@ -92,7 +90,7 @@ class Transaction < ActiveRecord::Base
       customer: user,
       amount: txn_amount,
       transaction_id: txn_number,
-      created_at: created_at.strftime('%B %d,%Y | %-I:%M%P'),
+      created_at: created_at.strftime('%B %d, %Y | %-I:%M%P'),
       status: status.capitalize,
       last4: last4,
       exp_month: exp_month,
@@ -132,32 +130,13 @@ class Transaction < ActiveRecord::Base
   # tested
   def send_payment_responses(msg_to_send, media = [])
     send_response(msg_to_send, media)
-    send_email_receipt
-    #send_merchant_receipt
+    EmailingService.customer_receipt(receipt_options)
+    EmailingService.customer_transaction_detail(receipt_options)
   end
 
   # tested
   def send_response(msg_to_send, media = [])
     Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send, @channel, media)
-  end
-
-  # tested
-  def send_email_receipt
-    EmailingService.send_receipt(
-      text: self.notes,
-      to: @customer.email,
-      org_phone: @merchant.org_phone,
-      currency: self.currency,
-      merchant_email: @merchant.email,
-      merchant_name: @merchant.org_name,
-      transaction_date: self.created_at,
-      transaction_number: self.txn_number,
-      amount: Transaction.big_decimal_2dp(self.amount),
-      amount_with_taxes: txn_amount
-    )
-  end
-
-  def send_merchant_receipt
   end
 
   def send_payment_failure_email(err, to_merchant)
