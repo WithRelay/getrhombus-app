@@ -350,7 +350,7 @@ class PaymentService
     def retrieve_charge(charge_id, merchant)
       begin
         cred = merchant.get_stripe_cred
-        if merchant.is_platform? || cred[:type] == 'managed'
+        if merchant.is_platform? #|| cred[:type] == 'managed'
           re = Stripe::Charge.retrieve(charge_id)
         else
           re = Stripe::Charge.retrieve(charge_id, { stripe_account: cred[:cred].account_id })

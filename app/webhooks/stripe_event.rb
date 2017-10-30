@@ -160,9 +160,6 @@ class StripeEvent
         if l[:type] == 'subscription'
 
           @sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
-          puts @sbtn.inspect
-          puts @txn.inspect
-          puts '============================================='
           if @sbtn && @txn
             @txn.update(
               amount: @txn.amt_in_decimal(l[:amount]),
@@ -200,7 +197,7 @@ class StripeEvent
       plan_name: @sbtn.plan_name,
       frequency: @sbtn.plan_interval_name,
       transaction_date: @txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
-      payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
+      payment_method: "Visa **** **** **** #{@customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
       description: @sbtn.description,
       currency: @sbtn.plan_currency,
       less_transaction_fees: @txn.txn_amount_less_fees,
@@ -219,7 +216,7 @@ class StripeEvent
       plan_name: @sbtn.plan_name,
       frequency: @sbtn.plan_interval_name,
       date: @txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
-      payment_method: "Visa **** **** **** #{customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
+      payment_method: "Visa **** **** **** #{@customer.last4} (Expiry #{@customer.exp_month}/#{@customer.exp_year})",
       description: @sbtn.description,
       currency: @sbtn.plan_currency,
       amount_less_fees: @txn.txn_amount_less_fees,
@@ -243,7 +240,7 @@ class StripeEvent
       tax_and_fees: Toolbox::Decimal.to_int_or_2dp(@data.tax.to_f/100 + @data.application_fee.to_f/100),
       currency: @data.currency,
       currency_symbol: '$',
-      merchant: @team
+      customer: @customer
     }
     EmailingService.customer_subscription_receipt(options)
   end

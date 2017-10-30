@@ -476,10 +476,8 @@ class EmailingService
         result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
-        puts '<redacted_phone_number>'
       rescue StandardError => e
-        puts e.inspect
-        puts '<redacted_phone_number>'
+        puts e.inspect        
       end
     end
 
@@ -667,7 +665,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "You have a new #{options[:currency_symbol]}#{options[:amount]} subscription",
          "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant].first_name || 'there' },
-                                  { "name" => "customer_name", "content" => options[:customer].first_name || 'there' },
+                                  { "name" => "customer_name", "content" => options[:customer].first_name || 'A customer' },
                                   { "name" => "transaction_id", "content" => options[:transaction_id] },
                                   { "name" => "plan_name", "content" => options[:plan_name] },
                                   { "name" => "frequency", "content" => options[:frequency] },
@@ -693,10 +691,8 @@ class EmailingService
         result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
-        puts '<redacted_phone_number>'
       rescue StandardError => e
         puts e.inspect
-        puts '<redacted_phone_number>'
       end
     end
 
@@ -705,7 +701,7 @@ class EmailingService
         template_name = 'customer-subscription-receipt-template'
         template_content = []
         message = { "subject" => "Thank you for using Relay!",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:merchant].first_name || 'there' },
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:customer].first_name || 'there' },
                                   { "name" => "frequency", "content" => options[:frequency] },
                                   { "name" => "plan_name", "content" => options[:plan_name] },
                                   { "name" => "invoice_id", "content" => options[:stripe_invoice_id] },
@@ -718,13 +714,13 @@ class EmailingService
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   # { "name" => "pdf_download_link", "content" => url_helpers.root_url },
-                                  { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:merchant]) },
+                                  { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:customer]) },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_link", "content" => EMAIL_US_LINK },
-                                  { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:merchant]) }
+                                  { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:customer]) }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:merchant].email } ],
+         "to"=> [ { "email" => options[:customer].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => 'Relay',
          "from_email" => User.platform_email
@@ -732,11 +728,9 @@ class EmailingService
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-        puts '<redacted_phone_number>'
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"        
       rescue StandardError => e
         puts e.inspect
-        puts '<redacted_phone_number>'
       end
     end
 
