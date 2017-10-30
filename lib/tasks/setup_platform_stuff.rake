@@ -61,23 +61,12 @@ namespace :platform do
   desc "remove duplicate message id in messages"
   task :remove_duplicate_message_id_in_messages => :environment do  
 
-    sql = "
-            UPDATE messages 
-              SET messages.message_id = null 
-              where messages.message_id in ( 
-                SELECT message_id 
-                FROM (select message_id from messages as m from messages) 
-                GROUP BY m.message_id 
-                HAVING count(*) > 1); 
-          "
-
-    sql = "UPDATE `messages` 
-           SET `message_id` = null 
-            WHERE `message_id` IN (SELECT x.message_id
-                          FROM (SELECT `message_id` 
-                                  FROM `messages` 
-                                  GROUP BY `message_id` 
-                                  HAVING COUNT(*) > 1) x)"
+    sql = "UPDATE messages 
+            JOIN (SELECT messages.message_id
+                    FROM messages
+                GROUP BY messages.message_id
+                   HAVING COUNT(*) > 1) x ON x.message_id = messages.message_id
+             SET messages.message_id = null ;"
     ActiveRecord::Base.connection.execute("SET SQL_SAFE_UPDATES=0;")  
     ActiveRecord::Base.connection.execute(sql)  
     ActiveRecord::Base.connection.execute('SET SQL_SAFE_UPDATES=1;')  
