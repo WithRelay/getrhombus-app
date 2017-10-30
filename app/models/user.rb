@@ -191,7 +191,7 @@ class User < ActiveRecord::Base
 
     uid = generate_uid
     url = "#{url_helpers.new_user_registration_url}?referrer_uid=#{uid}"
-    self.attributes(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"])
+    self.attributes = { relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"] }
     deduct_from_account_balance(NUMBER_PRICE)
 
     #welcome_text = "Howdy! Wondering how to get started? Add or import your customers and contacts to start messaging them immediately. If you have any questions, message us here and a member of our team will be happy to help."
