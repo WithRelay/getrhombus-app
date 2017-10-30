@@ -57,13 +57,16 @@
         </div>
       </div>
 
+<%
+=begin
+%>
       <div class="check-box editor w-checkbox w-clearfix lebel_padding padding_tweet_enable">
-        <%= f.check_box :enable_tweet, class: "w-checkbox-input" %><label class="check-radio-text w-form-label" for="Deliver-now-2">Enable Tweet</label>
+        <%#= f.check_box :enable_tweet, class: "w-checkbox-input" %><label class="check-radio-text w-form-label" for="Deliver-now-2">Enable Tweet</label>
       </div>
-
-      <label class="editor-options form-label lebel_padding" > &nbsp; Type</label>
-      <%= f.select :tag_type, options_for_select(present(@hashtag).get_tag_type_options, selected: present(@hashtag).get_tag_type_value), {}, { class: "dropdown editor-dropdown w-select" } %>
-
+<%
+=end
+%>
+      
       <div class="hashtag-payment-settings">
         <p class="editor-paragraph tips"> &nbsp;TIP: Fixed amounts for payment Hashtags are suitable for products or services with a set price.</p>
       </div>
