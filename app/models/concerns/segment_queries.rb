@@ -159,6 +159,9 @@ module SegmentQueries
       str = " select mc.customer_id, mc.id, mc.merchant_id, mc.created_at, mc.updated_at from merchant_customers mc "
     end
 
+#{"base_query":"customer_created","base_filter":"less_than","base_val":"1","additional_query":"customer_spend","addition_filter":"more_than","addition_val":"100"}
+
+
     # note contacts will never have amount for transactions
     if data["additional_val"].present? && user_type == 'customer'
       str += " inner join transactions t on mc.customer_id = t.user_id and t.team_id = #{data["merchant_id"]} 

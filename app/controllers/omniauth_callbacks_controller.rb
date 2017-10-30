@@ -46,7 +46,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def check_user_present
     unless current_user.present?
-      redirect_to signin_path
+      redirect_to new_user_session_path
     end
   end
 

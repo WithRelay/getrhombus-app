@@ -114,8 +114,8 @@ class Api::V1::ListsController < Api::V1::BaseController
     def get_segment_data_hash
       {
         base_query: @filter_params[:segment_type], base_filter: @filter_params[:segment_filter], base_val: @filter_params[:segment_num_days],
-        additional_query: @filter_params[:additional_segment_type], addition_filter: @filter_params[:amt_filter],
-        addition_val: @filter_params[:amt_1]
+        additional_query: @filter_params[:additional_segment_type], additional_filter: @filter_params[:amt_filter],
+        additional_val: @filter_params[:amt_1]
        }
     end
 end

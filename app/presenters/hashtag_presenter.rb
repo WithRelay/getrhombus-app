@@ -7,7 +7,7 @@ class HashtagPresenter < BasePresenter
 	end
 
 	def format_tag_amount
-		@model.non_payment_tag? ? '---' : "$#{Toolbox::Decimal.to_int_or_2dp(@model.transactions.sum(:amount_with_taxes))}"
+		@model.non_payment_tag? ? '---' : "$#{Toolbox::Decimal.to_int_or_2dp(@model.transactions.only_captured_transactions.sum(:amount_with_taxes))}"
 	end
 
 	def get_submit_text
