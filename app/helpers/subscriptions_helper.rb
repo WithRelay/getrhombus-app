@@ -86,14 +86,12 @@ module SubscriptionsHelper
     end
   end
 
-  def invoices
-    Invoice.where(team_id: current_user.id, paid: true)
-  end
-
   def subscription_invoices
-    today_invoices = Invoice.where(team_id: current_user.id, paid: true)
+    where_str = "#{current_user.is_merchant? ? 'team_id' : 'customer_id' } = #{current_user.id} and paid = 1"
+
+    today_invoices = Invoice.where(where_str)
       .where("date >= ?", Time.current.beginning_of_day.to_i).pluck(:total, :application_fee)
-    yesterday_invoices = Invoice.where(team_id: current_user.id, paid: true)
+    yesterday_invoices = Invoice.where(where_str)
     .where("date < ? && date >= ?", (Time.current.beginning_of_day).to_i, (Time.current.beginning_of_day - 1.days).to_i).pluck(:total, :application_fee)
     @subscription_invoices = [today_invoices, yesterday_invoices]
     @subscription_invoices

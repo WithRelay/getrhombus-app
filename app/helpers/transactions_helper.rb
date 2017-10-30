@@ -6,24 +6,26 @@ module TransactionsHelper
     # and include only captured transactions
     # account reload txns are included by default..right
 
+    where_str = "#{current_user.is_merchant? ? 'team_id' : 'user_id' } = #{current_user.id}"
+
     if params[:captured] == "false"
-     today_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_uncaptured_transactions()
+     today_transactions = Transaction.exclude_refunded_transactions().where(where_str).only_uncaptured_transactions()
                                       .exclude_subscriptions()
                                       .where("transactions.created_at >= ?", Time.current.beginning_of_day)
                                       .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
 
-      yesterday_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_uncaptured_transactions()
+      yesterday_transactions = Transaction.exclude_refunded_transactions().where(where_str).only_uncaptured_transactions()
                                          .exclude_subscriptions()
                                          .where("transactions.created_at < ? && transactions.created_at >= ?", Time.current.beginning_of_day, (Time.current.beginning_of_day - 1.days))
                                          .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
 
     else
-      today_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
+      today_transactions = Transaction.exclude_refunded_transactions().where(where_str).only_captured_transactions()
                                       .exclude_subscriptions()
                                       .where("transactions.created_at >= ?", Time.current.beginning_of_day)
                                       .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
 
-      yesterday_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
+      yesterday_transactions = Transaction.exclude_refunded_transactions().where(where_str).only_captured_transactions()
                                .exclude_subscriptions()
                                .where("transactions.created_at < ? && transactions.created_at >= ?", Time.current.beginning_of_day, (Time.current.beginning_of_day - 1.days))
                                .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
