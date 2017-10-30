@@ -1,25 +1,28 @@
 <div class="customer-dash sub-nav-bar w-clearfix">
   <div class="sub-nav-options-wrapper transactions w-clearfix">
-    <a class="w-button sub-nav-button add modal-loader"  href="#" modal-target= 'new-plan-modal'> <strong>Create plan</strong></a>
-    <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-subscription-modal'><strong>Create subscription</strong></a>
-    <!-- <a class="export sub-nav-button w-button" href="#">&nbsp; Export</a> -->
-    <div class='modal-background w-hidden modal-body new-plan-modal'>
-      <%= render 'shared/modals/new_plan' %>
-    </div>
-    <div class='modal-background w-hidden modal-body new-subscription-modal'>
-      <%= render 'shared/modals/new_subscription' %>
-    </div>
-    <a class="w-button sub-nav-button modal-loader" id="cancel-customer-subscription" href="#" modal-target= 'cancel-subscription-modal'><strong>Cancel subscription</strong></a>
-    <div class='modal-background w-hidden modal-body cancel-subscription-modal'>
-      <%= render 'shared/modals/confirmation' %>
-    </div>
-    <% if @subscriptions.present? %>
-      <div class="date-range-wrapper w-clearfix">
-        <form class="date-picker-form w-clearfix" id="email-form-3" name="email-form-3">
-          <input class="date-picker-field w-input" id="Subscription-Date-Range-Picker" maxlength="256" placeholder="Date Picker" type="text">
-        </form>
+    
+    <% if current_user.is_merchant? %>
+      <a class="w-button sub-nav-button add modal-loader"  href="#" modal-target= 'new-plan-modal'> <strong>Create plan</strong></a>
+      <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-subscription-modal'><strong>Create subscription</strong></a>
+      <!-- <a class="export sub-nav-button w-button" href="#">&nbsp; Export</a> -->
+      <div class='modal-background w-hidden modal-body new-plan-modal'>
+        <%= render 'shared/modals/new_plan' %>
+      </div>
+      <div class='modal-background w-hidden modal-body new-subscription-modal'>
+        <%= render 'shared/modals/new_subscription' %>
+      </div>
+      <a class="w-button sub-nav-button modal-loader" id="cancel-customer-subscription" href="#" modal-target= 'cancel-subscription-modal'><strong>Cancel subscription</strong></a>
+      <div class='modal-background w-hidden modal-body cancel-subscription-modal'>
+        <%= render 'shared/modals/confirmation' %>
       </div>
     <% end %>
+
+    <div class="date-range-wrapper w-clearfix">
+      <form class="date-picker-form w-clearfix" id="email-form-3" name="email-form-3">
+        <input class="date-picker-field w-input" id="Subscription-Date-Range-Picker" maxlength="256" placeholder="Date Picker" type="text">
+      </form>
+    </div>
+    
   </div>
 </div>
 

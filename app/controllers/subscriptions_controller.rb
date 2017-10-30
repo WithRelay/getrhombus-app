@@ -6,11 +6,20 @@ class SubscriptionsController < ApplicationController
 
   def index
     @plan = Plan.new
-    @subscriptions = Subscription.includes(merchant_customer: [:customer], plan: [])                                  
+    if current_user.is_merchant?
+      @subscriptions = Subscription.includes(merchant_customer: [:customer], plan: [])                                  
                                   .where('merchant_customers.merchant_id' => current_user.id)                                 
                                   .where.not(status: 'canceled') 
                                   .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
                                   .order(created_at: :desc)
+    else
+      @subscriptions = Subscription.includes(merchant_customer: [:merchant], plan: [])                                  
+                                  .where('merchant_customers.customer_id' => current_user.id)                                 
+                                  .where.not(status: 'canceled') 
+                                  .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
+                                  .order(created_at: :desc)
+
+    end
     @subscriptions.present? ? render_requested_format(@subscriptions) : render(:empty_subscription)
   end
 
