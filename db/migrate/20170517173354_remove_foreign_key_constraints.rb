@@ -2,7 +2,6 @@ class RemoveForeignKeyConstraints < ActiveRecord::Migration
   def change   
     foreign_keys(:alerts).each do |k|
       remove_foreign_key :alerts, name: k.options[:name]
-
     end
 
     foreign_keys(:invoices).each do |k|

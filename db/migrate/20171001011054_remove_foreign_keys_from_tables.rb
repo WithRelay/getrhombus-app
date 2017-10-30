@@ -6,7 +6,5 @@ class RemoveForeignKeysFromTables < ActiveRecord::Migration
     remove_foreign_key "message_resolutions", "users"
     remove_foreign_key "messages", "hashtags"
     remove_foreign_key "refunds", "transactions"
-    remove_foreign_key "transactions", "hashtags"
-    remove_foreign_key "transactions", "subscriptions"
   end
 end
