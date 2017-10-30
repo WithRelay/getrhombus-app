@@ -186,7 +186,7 @@ class Transaction < ActiveRecord::Base
   def handle_uncaptured_txn
     begin
       if @stripe_res
-        send_response("Hi" + customer_first_name + ", #{txn_amount} (#{self.currency}) has been authorized by #{@merchant.org_name} for #{@hashtag.name}.")
+        send_response("Hi" + customer_first_name + ", #{txn_amount} (#{self.currency}) has been authorized by #{@merchant.org_name}#{ ' for ' + @hashtag.name if @hashtag}.")
         [true, 'Transaction is authorized']
       else
         if @stripe_res_ary[3]
