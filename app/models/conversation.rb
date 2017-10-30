@@ -17,7 +17,7 @@ class Conversation < ActiveRecord::Base
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
-  	convs = where(merchant_id: merchant_id, is_resolved: false).paginate(page: page, per_page: 7).order(updated_at: :desc, id: :desc)
+  	convs = where(merchant_id: merchant_id, is_resolved: false).paginate(page: page, per_page: 10).order(updated_at: :desc, id: :desc)
   	convs.map { |conv| conv.conversation_hash }
 
     # this is for test.
