@@ -723,7 +723,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           reminderService.createReminder({ reminder: hash })
           .then(function(data) {
             console.log(data)
-            FlashHandler.setFlashMessage('Reminder created', 'notice');
+            FlashHandler.setFlashMessage('Your message has been scheduled', 'notice');
             $('.update-close-modals').click();
           }, function(data) {
             console.log(data)

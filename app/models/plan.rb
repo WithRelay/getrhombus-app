@@ -58,7 +58,7 @@ class Plan < ActiveRecord::Base
           false
         end
       else
-        errors[:base] << "Your account doesn't support creating plans."
+        errors[:base] << "Connect your bank account to create a plan"
         false
       end
     rescue StandardError => exception

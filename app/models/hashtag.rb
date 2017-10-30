@@ -3,7 +3,7 @@ class Hashtag < ActiveRecord::Base
   include Transactionable
   
   belongs_to :user
-  belongs_to :txn, class_name: :Transaction
+  has_many :transactions
 
   # test this again  
   has_many :plans

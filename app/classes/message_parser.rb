@@ -33,6 +33,7 @@ class MessageParser
       end
 
       @tag = Hashtag.includes(:merchant_plan).where('user_id = ? and lower(tag) = ? and status = 1', @merchant.id, @tag.downcase).first if @tag.present?
+      @received_msg.update_column(:hashtag_id, @tag.id) if @tag.present?       # update message with tag
 
       @is_valid_payment_intent = @amt_ary[0] && @amt_ary[1].present?
       if @is_valid_payment_intent && !is_amount_under_limit?    #tested
@@ -180,7 +181,6 @@ class MessageParser
       # if valid payment, charge amt user texted
       @is_valid_payment_intent ? [@amt_ary[0], "no_tag"] : []
     else   
-      @received_msg.update(hashtag_id: @tag.id)                       # update message with tag
       if @tag.non_payment_tag?                                        # tested
         puts 'not payment tag'
         @is_valid_payment_intent ? [@amt_ary[0], "no_tag_amt"] : []

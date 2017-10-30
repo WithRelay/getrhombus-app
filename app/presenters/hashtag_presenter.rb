@@ -6,6 +6,10 @@ class HashtagPresenter < BasePresenter
 		TAG_TYPES[:"#{@model.tag_type}"]
 	end
 
+	def format_tag_amount
+		@model.non_payment_tag? ? '---' : "$#{Toolbox::Decimal.to_int_or_2dp(@model.transactions.sum(:amount_with_taxes))}"
+	end
+
 	def get_submit_text
 		@model.new_record? ? "Create Hashtag" : @model.active? ? 'Update Hashtag' : 'Resume Hashtag'
 	end

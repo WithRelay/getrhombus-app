@@ -82,7 +82,7 @@ class Subscription < ActiveRecord::Base
         end
         res
       else
-        errors[:base] << "Your account doesn't support creating subscriptions."
+        errors[:base] << "Connect your bank account to create a subscription"
         [false]
       end
     rescue StandardError => exception

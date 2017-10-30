@@ -49,7 +49,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
           render json: { response: re[:text] }, status: 500
         end
       else
-        render json: { response: "Your account doesn't support dashboard payments" }, status: 500
+        render json: { response: "Connect your bank account to charge customers" }, status: 500
       end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In V1::TransactionsController create", env: Rails.env } )
