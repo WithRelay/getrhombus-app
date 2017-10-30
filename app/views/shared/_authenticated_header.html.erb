@@ -7,17 +7,19 @@
         <%= link_to user_path(current_user) do %>
           <div class="dash-header-links"><strong class="important-text-69">Dashboard</strong></div>
         <% end %>      
-        <%= link_to user_merchant_customers_path(current_user) do %>
-          <div class="dash-header-links new-link"><strong class="important-text-70">All customers</strong></div>
-        <% end %>
-        <%= link_to user_transactions_path(current_user) do%>
-          <div class="dash-header-links new-link"><strong class="important-text-71">Transactions</strong></div>
-        <% end %>
-        <%= link_to user_lists_path(current_user) do%>
-          <div class="dash-header-links new-link"><strong class="important-text-72">List</strong></div>
-        <% end %>
-        <%= link_to user_conversations_path(current_user) do%>
-          <div class="dash-header-links new-link"><strong class="important-text-73">Conversations</strong></div>
+        <% if current_user.is_merchant? %>
+          <%= link_to user_merchant_customers_path(current_user) do %>
+            <div class="dash-header-links new-link"><strong class="important-text-70">All customers</strong></div>
+          <% end %>
+          <%= link_to user_transactions_path(current_user) do%>
+            <div class="dash-header-links new-link"><strong class="important-text-71">Transactions</strong></div>
+          <% end %>
+          <%= link_to user_lists_path(current_user) do%>
+            <div class="dash-header-links new-link"><strong class="important-text-72">List</strong></div>
+          <% end %>
+          <%= link_to user_conversations_path(current_user) do%>
+            <div class="dash-header-links new-link"><strong class="important-text-73">Conversations</strong></div>
+          <% end %>
         <% end %>
       <% end %>
       <%= render "shared/rhombus_number" %>
