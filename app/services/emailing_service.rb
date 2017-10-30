@@ -638,7 +638,7 @@ class EmailingService
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "customer_full_name", "content" => options[:customer].full_name },
                                   { "name" => "email", "content" => options[:customer].email },
-                                  { "name" => "phone", "content" => options[:customer].phone },
+                                  { "name" => "phone", "content" => options[:customer].phone_number },
                                   { "name" => "help_center_link", "content" => url_helpers.root_url },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "view_profile_link", "content" => url_helpers.user_merchant_customer_url(options[:merchant], options[:customer]) },
