@@ -160,6 +160,9 @@ class StripeEvent
         if l[:type] == 'subscription'
 
           @sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
+          puts @sbtn.inspect
+          puts @txn.inspect
+          puts '============================================='
           if @sbtn && @txn
             @txn.update(
               amount: @txn.amt_in_decimal(l[:amount]),
