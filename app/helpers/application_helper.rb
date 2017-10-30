@@ -32,7 +32,7 @@ module ApplicationHelper
                           'fb_pages-index' => 'FB Integrations',
                           'lists-show' => @list.try(:name),
                           'campaigns-index' => 'Campaigns',
-                          'transactions-index' => "Charges",
+                          'transactions-index' => params[:captured] == 'false' ? 'Pre-Auth' : "Charges",
                           'subscriptions-index' => 'subscriptions',
                           'lists-index' => 'List',
                           'merchant_customers-business' => 'Businesses',

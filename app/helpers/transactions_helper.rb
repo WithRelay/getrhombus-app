@@ -5,15 +5,30 @@ module TransactionsHelper
     # you can't refund subscriptions easily.
     # and include only captured transactions
     # account reload txns are included by default..right
-    today_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
+
+    if params[:captured] == "false"
+     today_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_uncaptured_transactions()
                                       .exclude_subscriptions()
                                       .where("transactions.created_at >= ?", Time.current.beginning_of_day)
                                       .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
 
-    yesterday_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
+      yesterday_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_uncaptured_transactions()
+                                         .exclude_subscriptions()
+                                         .where("transactions.created_at < ? && transactions.created_at >= ?", Time.current.beginning_of_day, (Time.current.beginning_of_day - 1.days))
+                                         .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
+
+    else
+      today_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
+                                      .exclude_subscriptions()
+                                      .where("transactions.created_at >= ?", Time.current.beginning_of_day)
+                                      .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
+
+      yesterday_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
                                .exclude_subscriptions()
                                .where("transactions.created_at < ? && transactions.created_at >= ?", Time.current.beginning_of_day, (Time.current.beginning_of_day - 1.days))
                                .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
+
+    end
 
     @all_transactions = [today_transactions, yesterday_transactions]
     @all_transactions
