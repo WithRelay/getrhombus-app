@@ -6,7 +6,7 @@ class SavedRepliesController < ApplicationController
   def index
     @saved_replies = current_user.saved_replies.order(created_at: :desc)
                                 .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page])
-    @saved_replies.present? ? render_requested_format(@saved_replies) : render(:empty_saved_reply)
+    !@saved_replies.present? ? render_requested_format(@saved_replies) : render(:empty_saved_reply)
   end
 
   def update
