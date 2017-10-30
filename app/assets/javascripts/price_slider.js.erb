@@ -17,6 +17,10 @@ var PriceSlider = new function() {
                 14: { amt: 500, min: 45001, max: 50000 },
                 15: { amt: 555, min: 50001, max: 60000 }
               };
+
+  if (UtilFunctions.is_add_subscription_page()) {
+    delete plans[15];  
+  }  
   var keys = Object.keys(plans);
 
   this.bind_slider = function() {
