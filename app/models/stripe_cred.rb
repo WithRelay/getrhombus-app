@@ -10,7 +10,7 @@ class StripeCred < ActiveRecord::Base
 
   # the default
   def set_transaction_fee_id
-    self.transaction_fee_id = 1
+    self.transaction_fee_id = 2
   end
 end
 

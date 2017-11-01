@@ -1,3 +1,6 @@
+
+# TASK 11
+
 # run after migrations since we need the people table
 # then run the migration below to remove the unwanted columns afterwards.
 
@@ -17,7 +20,7 @@
     select * from users where user_level = 0 
     and last_name = '' # first_name = '' # is null
 
-    select * from users where lower(card_name) = 'Visa'
+    select * from users where lower(card_name) = 'visa'
 
     select * from users where card_name = card_type
 
@@ -31,12 +34,17 @@
 
 desc "Move merchant person data to people table"
 task :move_some_user_data_to_people_table => :environment do
+  users = User.where(user_level: 1)
+  puts "Going to update #{users.count} users"
 
-  User.where(user_level: 1).each do |u|
-
-    # move only merchants even if some user info is incomplete
-    if (u.first_name.present? || u.last_name.present?)      
-      Person.create(first_name: u.first_name, last_name: u.last_name, role: 'representative', user_id: u.id)
+  ActiveRecord::Base.transaction do
+    users.each do |u|
+      if u.first_name.present? || u.last_name.present? 
+        puts "Update #{u.email}"
+        person = Person.create!(first_name: u.first_name, last_name: u.last_name, role: '0', user_id: u.id)
+        puts person.inspect
+      end
+      puts "Moving on \n"
     end
   end
 end

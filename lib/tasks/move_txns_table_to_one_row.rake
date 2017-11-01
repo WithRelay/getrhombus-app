@@ -1,4 +1,6 @@
 
+# TASK 12 
+
 # run after migrations to create/rename the columns, since table need to be redone first
 # then run the migration below to remove the unwanted columns afterwards.
 

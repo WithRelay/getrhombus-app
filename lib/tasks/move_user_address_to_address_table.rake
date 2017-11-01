@@ -1,4 +1,6 @@
 
+# TASK 10
+
 # run after migrations since we need the address
 # then run the migration below to remove the unwanted columns afterwards.
 
@@ -24,16 +26,19 @@
 
 desc "move address in user table to address table"
 task :move_user_address_to_address_table => :environment do
+  users = User.where(user_level: 1)
+  puts "Going to update #{users.count} users"
 
-  User.where(user_level: 1).each do |u|
-
-  	# move only merchants even if some user info is incomplete
-  	# we currently don't need customer address
-  	if u.street_address.present? || u.city.present? || u.state_province.present? || u.country.present? || u.zip_code.present?
-    	
-    	Address.create(street_address: u.street_address, city: u.city, state_province: u.state_province, 
-                    country: u.country, postal_code: u.zip_code, addressable_id: u.id,
-                    addressable_type: 'User')
-	  end
+  ActiveRecord::Base.transaction do
+    users.each do |u|
+    	# move only merchants even if some user info is incomplete. we currently don't need customer address
+    	if u.street_address.present? || u.city.present? || u.state_province.present? || u.country.present? || u.zip_code.present?
+      	puts 'Updating address'
+      	a = Address.create!(street_address: u.street_address, city: u.city, state_province: u.state_province, 
+                            country: u.country, postal_code: u.zip_code, addressable_id: u.id, addressable_type: 'User')
+        puts a.inspect
+  	  end
+    end
+    puts "moving on.. \n"
   end
 end

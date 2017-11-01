@@ -142,8 +142,7 @@ class TextingService
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         number = client.lookups.v1.phone_numbers(num).fetch
-        #number.national_format
-        return [number.phone_number[1..-1], number.country_code]
+        return [number.phone_number[1..-1], number.country_code, number.national_format]
       rescue Twilio::REST::TwilioError => err
       rescue StandardError => err
       end

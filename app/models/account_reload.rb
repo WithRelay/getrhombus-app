@@ -17,7 +17,7 @@ class AccountReload < ActiveRecord::Base
         merchant: user,
         transaction_id: txn.txn_number,
         transaction_date: txn.created_at.strftime('%B %d, %Y | %-I:%M%P'),
-        status: txn.status.capitalize,
+        status: txn.try(:status).try(:capitalize),
         payment_method: "Visa **** **** **** #{user.last4} (Expiry #{user.exp_month}/#{user.exp_year})",
         amount: Toolbox::Decimal.to_int_or_2dp(amt.to_f/100),
         currency: txn.currency,

@@ -74,6 +74,20 @@ class PaymentService
       end
     end
     
+    # for platform only
+    def get_customer_card_id(customer_id)
+      begin
+        cu = Stripe::Customer.retrieve(customer_id)
+        [cu.sources.all.data.last.id]        
+      rescue Stripe::StripeError => e
+        ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService retrieve_customer", customer_id: customer_id })
+        [false, e]
+      rescue StandardError => e
+        ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService retrieve_customer", customer_id: customer_id })
+        [false, e]
+      end
+    end
+    
     def charge(amount_with_taxes, amt_less_fees, merchant, customer, msg, capture)
       begin
         stripe_cred = merchant.get_stripe_cred

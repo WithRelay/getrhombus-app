@@ -1,14 +1,35 @@
 
-### remove the customer uri column after migration
-### get card_id from stripe api to store in card_id column
+# TASK 3
 
 desc "move customer to merchant customer"
 task :move_customer_to_merchant_customer => :environment do
+  users = User.where(user_level: 0)
+  puts "Going to update #{users.count} users"
 
-  User.where(user_level: 0).each do |u|
-  	if u.customer_uri.present?
-  		MerchantCustomer.create(merchant_id: User.get_platform_acct_obj.id, 
-  								customer_id: u.id, platform_stripe_customer_id: u.customer_uri)
-  	end
+  ActiveRecord::Base.transaction do
+    users.each do |user|
+      puts user.email
+
+      if user.customer_uri.present?
+        puts "#{user.customer_uri}"
+        re = TextingService.get_customer_card_id(user.customer_uri)
+        if re.first
+          puts "#{user.customer_uri} => #{re.first}"
+          user.update!(card_id: re.first) 
+        end
+      end
+
+    	MerchantCustomer.create!(merchant_id: User.get_platform_acct_obj.id, customer_id: user.id, 
+                               platform_stripe_customer_id: (user.customer_uri.present? ? user.customer_uri : nil))
+
+      puts "Created Merchant customer \n"
+    end
   end
 end
+
+# Then
+# 1. write migration to remove the customer uri column after migration
+# 2. get card_id from stripe api to store in card_id column
+
+# Note 
+# Need to test that the customer_uri actually belongs to the platform

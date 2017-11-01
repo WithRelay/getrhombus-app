@@ -39,7 +39,7 @@ namespace :platform do
   desc "Setup stripe and sms fees"
   task :setup_stripe_and_sms_fees => :environment do
     TransactionFee.create(id: 1, provider: 'stripe', fee_type: 0);
-    TransactionFee.create(id: 2, provider: 'stripe');
+    TransactionFee.create(id: 2, provider: 'stripe', provider_percent: '2.9');
     SmsFee.create(id: 1, provider: 'twilio');
   end
 

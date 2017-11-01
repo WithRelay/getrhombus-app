@@ -25,7 +25,9 @@ class Subscription < ActiveRecord::Base
 
       if is_platform || (team.is_merchant? && cred[:type] == 'managed')
 
-        unless is_platform
+        if is_platform
+          fee_schedule = TransactionFee.platform.first
+        else
           fee_schedule = cred[:cred].transaction_fee
           hash[:application_fee_percent] = fee_schedule.subscription_percent.to_f.round(2)
         end

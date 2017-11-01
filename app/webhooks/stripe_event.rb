@@ -141,50 +141,55 @@ class StripeEvent
 
   # Handles connect and platform payments. Parameters are basically the same. So nothing special.
   def invoice_payment_succeeded
-    # stripe doesnt guarantee invoice event order
-    @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-    setup_invoice_data
-    @team = @merchant_customer.try(:merchant)
-    @customer = @merchant_customer.customer
+    begin
+      # stripe doesnt guarantee invoice event order
+      @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
+      setup_invoice_data
+      @team = @merchant_customer.try(:merchant)
+      @customer = @merchant_customer.customer
 
-    if @team
-      # retrieve charge details. test that charge exist. it doesnt exist for trialing subs
-      charge = PaymentService.retrieve_charge(@hash[:charge], @team) if @hash[:charge]
-      charge = charge.try(:first)
+      if @team
+        # retrieve charge details. test that charge exist. it doesnt exist for trialing subs
+        charge = PaymentService.retrieve_charge(@hash[:charge], @team) if @hash[:charge]
+        charge = charge.try(:first)
 
-      # a transaction should not already exist but we need to check if it does so we don't send out emails again
-      @txn = Transaction.where(txn_uri: charge.id).first_or_initialize if charge
+        # a transaction should not already exist but we need to check if it does so we don't send out emails again
+        @txn = Transaction.where(txn_uri: charge.id).first_or_initialize if charge
 
-      # for now, we have only one line for each invoice - the subscription
-      @hash[:lines][:data].each do |l|
-        if l[:type] == 'subscription'
+        # for now, we have only one line for each invoice - the subscription
+        @hash[:lines][:data].each do |l|
+          if l[:type] == 'subscription'
 
-          @sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
-          if @sbtn && @txn
-            @txn.update(
-              amount: @txn.amt_in_decimal(l[:amount]),
-              app_fee: @hash[:application_fee], stripe_fee: @sbtn.get_fees[:stripe_fee],
-              amount_with_taxes: @txn.amt_in_decimal(@hash[:total]),
-              txn_number: @txn.txn_number || @txn.generate_txn_number,
-              description: @txn.description.present? ? @txn.description : @sbtn.description,
-              team_id: @data.team_id, user_id: @data.customer_id,
-              hashtag_id: @sbtn.plan.hashtag_id, txn_available_at: @hash[:date],
-              transaction_fee_id: @sbtn.transaction_fee_id,
-              tax_percent: @hash[:tax_percent],
-              # At the moment, charge will only contain 1 line item, what if there are a couple line items?
-              txn_uri: charge.id, currency: charge.currency,
-              status: charge.status, last4: charge.source.last4,
-              exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
-              card_type: charge.source.brand, card_name: charge.source.name,
-              subscription_id: @sbtn.id, destination: charge.destination, captured: charge.captured
-            )
+            @sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
+            if @sbtn && @txn
+              @txn.update(
+                amount: @txn.amt_in_decimal(l[:amount]),
+                app_fee: @hash[:application_fee], stripe_fee: @sbtn.get_fees[:stripe_fee],
+                amount_with_taxes: @txn.amt_in_decimal(@hash[:total]),
+                txn_number: @txn.txn_number || @txn.generate_txn_number,
+                description: @txn.description.present? ? @txn.description : @sbtn.description,
+                team_id: @data.team_id, user_id: @data.customer_id,
+                hashtag_id: @sbtn.plan.hashtag_id, txn_available_at: @hash[:date],
+                transaction_fee_id: @sbtn.transaction_fee_id,
+                tax_percent: @hash[:tax_percent],
+                # At the moment, charge will only contain 1 line item, what if there are a couple line items?
+                txn_uri: charge.id, currency: charge.currency,
+                status: charge.status, last4: charge.source.last4,
+                exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
+                card_type: charge.source.brand, card_name: charge.source.name,
+                subscription_id: @sbtn.id, destination: charge.destination, captured: charge.captured
+              )
 
-            @data.update(transaction_id: @txn.id, subscription_id: @sbtn.id)
-            send_invoice_payment_succeeded_email
-            @sbtn.transactions.count == 1 ? send_new_merchant_customer_subscription_email : send_merchant_subscription_notification_email
+              @data.update(transaction_id: @txn.id, subscription_id: @sbtn.id)
+              send_invoice_payment_succeeded_email
+              @sbtn.transactions.count == 1 ? send_new_merchant_customer_subscription_email : send_merchant_subscription_notification_email
+            end
           end
         end
       end
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeEvent invoice_payment_succeeded", env: Rails.env,
+                                                            merchant: @team, data: @data, hash: @hash, customer: @customer })
     end
   end
 
