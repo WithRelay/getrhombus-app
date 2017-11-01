@@ -1,6 +1,7 @@
 
 # Task 4
 
+=begin
 desc "switch all bitly links to relay and referrer_id"
 task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
 
@@ -27,3 +28,4 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
     end
   end
 end
+=end
