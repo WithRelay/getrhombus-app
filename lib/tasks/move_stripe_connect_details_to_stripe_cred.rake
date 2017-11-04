@@ -8,6 +8,7 @@ task :move_stripe_connect_details_to_standalone_stripe_cred => :environment do
   ActiveRecord::Base.transaction do
     count = 0
     User.where(user_level: 1).each do |u|
+      puts "\n"
       count = count + 1
       puts "#{count}"
       if u.stripe_access_token.present?

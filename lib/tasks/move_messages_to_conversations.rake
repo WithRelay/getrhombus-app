@@ -17,7 +17,9 @@ task :move_messages_to_conversations => :environment do
   Message.in_batches.each do |messages|
     puts "Going to update #{messages.count} messages"
     ActiveRecord::Base.transaction do  
+      orphaned_count = 0
       messages.each do |m|
+        puts "\n"
         # Conversation must have merchant_id but can have different types of uids
 
         u = User.find_by(id: m.user_id)
@@ -60,9 +62,12 @@ task :move_messages_to_conversations => :environment do
             c.update_column(:updated_at, m.created_at)
             cr = ConversationRef.create!(textable_id: m.id, textable_type: 'Message', conversation_id: c.id, source: 2)  
             update_conversation_resolution(u.id, c.id, cr.id, 'customer')
+          else
+            # else orphaned message  
+            puts "this message is orphaned. id #{m.id} => #{m.text}"
+            orphaned_count = orphaned_count + 1
+            puts "#{orphaned_count} so far"
           end
-
-          # else orphaned message
         end
 
         puts "moving on... \n"

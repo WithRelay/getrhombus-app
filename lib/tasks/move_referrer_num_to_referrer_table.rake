@@ -8,6 +8,7 @@ task :move_referrer_num_to_referrer_table => :environment do
 
   ActiveRecord::Base.transaction do
     User.where(user_level: 0).each do |user|
+      puts "\n"
       puts user.email
 
       if user.referrer_num.present? 

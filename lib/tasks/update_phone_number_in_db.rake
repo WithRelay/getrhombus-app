@@ -40,6 +40,7 @@ task :update_customer_number_data => :environment do
     puts "Going to update #{messages.count} messages"
     ActiveRecord::Base.transaction do  
       messages.each do |m|
+        puts "\n"
         puts m.id
 
         # none payment messages

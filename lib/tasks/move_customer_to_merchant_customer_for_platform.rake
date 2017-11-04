@@ -2,7 +2,7 @@
 # TASK 3
 
 desc "move customer to merchant customer"
-task :move_customer_to_merchant_customer => :environment do
+task :move_customer_to_merchant_customer_for_platform => :environment do
   users = User.where(user_level: 0)
   puts "Going to update #{users.count} users"
 
@@ -19,7 +19,7 @@ task :move_customer_to_merchant_customer => :environment do
         end
       end
 
-    	MerchantCustomer.create!(merchant_id: User.get_platform_acct_obj.id, customer_id: user.id, 
+    	MerchantCustomer.find_or_create_by!(merchant_id: User.get_platform_acct_obj.id, customer_id: user.id, 
                                platform_stripe_customer_id: (user.customer_uri.present? ? user.customer_uri : nil))
 
       puts "Created Merchant customer \n"
