@@ -1,5 +1,5 @@
 
-# TASK 7
+# TASK 7. Tested
 
 # NOTE
 
@@ -36,62 +36,59 @@ desc "Update all customer phone number in DB based on user id and vice versa"
 task :update_customer_number_data => :environment do
 
   # update messages
-  Message.in_batches.each do |messages|
-    puts "Going to update #{messages.count} messages"
-    ActiveRecord::Base.transaction do  
-      messages.each do |m|
-        puts "\n"
-        puts m.id
+  ActiveRecord::Base.transaction do  
+    Message.find_each do |m|  
+      puts "\n"
+      puts m.id
 
-        # none payment messages
-        m.transaction_id = nil if m.transaction_id == 0
+      # none payment messages
+      m.transaction_id = nil if m.transaction_id == 0
 
-        # update each message using user_ids to most current user details if user_id exists
-        
-        # you could use from and to fields to do the reverse and set user_ids, but 
-        # 1. you run the risk of reassigning messages to others if someone else now has the number (we didnt update
-        # message history when you change number in the past. Now we do). Very minimal risk prior to v1.5.
-        # 2. Prior to v1.5, some customers signed up with rhombus number as phone number. DB data was checked and
-        # there were 2 results. Rows were deleted.
-        # 3. These doesnt clean up orphans completely since not all users sign up and some rhombus number were deleted.
-        # last orphan was may 10 2015
-        
-        # In the early days we had set user_id and user_id_to to 0
-        # if user doesnt exists based on phone or rhombus number, but set to nil
-        
-        if u = User.find_by(id: m.user_id) 
-          if u.is_customer?
-            m.from = u.phone_number 
-          elsif u.is_merchant? && u.rhombus_number.present?
-            m.from = u.rhombus_number 
-          end
-        elsif u = User.find_by(phone_number: m.from)
-          m.user_id = u.id 
-        elsif u = User.find_by(rhombus_number: m.from)
-          m.user_id = u.id 
-        else
-          m.user_id = nil
+      # update each message using user_ids to most current user details if user_id exists
+      
+      # you could use from and to fields to do the reverse and set user_ids, but 
+      # 1. you run the risk of reassigning messages to others if someone else now has the number (we didnt update
+      # message history when you change number in the past. Now we do). Very minimal risk prior to v1.5.
+      # 2. Prior to v1.5, some customers signed up with rhombus number as phone number. DB data was checked and
+      # there were 2 results. Rows were deleted.
+      # 3. These doesnt clean up orphans completely since not all users sign up and some rhombus number were deleted.
+      # last orphan was may 10 2015
+      
+      # In the early days we had set user_id and user_id_to to 0
+      # if user doesnt exists based on phone or rhombus number, but set to nil
+      
+      if u = User.find_by(id: m.user_id) 
+        if u.is_customer?
+          m.from = u.phone_number 
+        elsif u.is_merchant? && u.rhombus_number.present?
+          m.from = u.rhombus_number 
         end
-
-        if u = User.find_by(id: m.user_id_to) 
-          if u.is_customer?
-            m.to = u.phone_number 
-          elsif u.is_merchant? && u.rhombus_number.present?
-            m.to = u.rhombus_number 
-          end
-        elsif u = User.find_by(phone_number: m.to)
-          m.user_id_to = u.id 
-        elsif u = User.find_by(rhombus_number: m.to)
-          m.user_id_to = u.id 
-        else
-          m.user_id_to = nil
-        end   
-
-        m.save!
-        puts "moving on... \n"
+      elsif u = User.find_by(phone_number: m.from)
+        m.user_id = u.id 
+      elsif u = User.find_by(rhombus_number: m.from)
+        m.user_id = u.id 
+      else
+        m.user_id = nil
       end
+
+      if u = User.find_by(id: m.user_id_to) 
+        if u.is_customer?
+          m.to = u.phone_number 
+        elsif u.is_merchant? && u.rhombus_number.present?
+          m.to = u.rhombus_number 
+        end
+      elsif u = User.find_by(phone_number: m.to)
+        m.user_id_to = u.id 
+      elsif u = User.find_by(rhombus_number: m.to)
+        m.user_id_to = u.id 
+      else
+        m.user_id_to = nil
+      end   
+
+      puts m.changes.inspect if m.changed?
+      m.save!
+      puts "moving on... \n"
     end
-    sleep(2)
   end
 
 end

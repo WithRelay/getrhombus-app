@@ -1,5 +1,5 @@
 
-# TASK 11
+# TASK 11. tested
 
 # run after migrations since we need the people table
 # then run the migration below to remove the unwanted columns afterwards.
@@ -36,11 +36,14 @@ desc "Move merchant person data to people table"
 task :move_some_user_data_to_people_table => :environment do
   users = User.where(user_level: 1)
   puts "Going to update #{users.count} users"
+  count = 0
 
   ActiveRecord::Base.transaction do
     users.each do |u|
       puts "\n"
       if u.first_name.present? || u.last_name.present? 
+        count = count + 1
+        puts count
         puts "Update #{u.email}"
         person = Person.create!(first_name: u.first_name, last_name: u.last_name, role: '0', user_id: u.id)
         puts person.inspect

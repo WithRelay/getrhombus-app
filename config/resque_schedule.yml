@@ -5,6 +5,7 @@
 #  description: "This job runs our drip campaigns."
 #  queue: <%= Rails.env %>_drip_campaign_emails
 
+# Not implemented yet
 #weekly_activity_summary:
 #  cron: '0 11 * * 1 America/New_York' #“At 11am Eastern Time on Monday.”
 #  class: "WeeklyActivitySummaryJob"
@@ -27,6 +28,7 @@ pending_campaigns:
   description: "Checks for and queues today's upcoming campaigns"
   queue: <%= Rails.env %>_pending_campaigns
 
+# No longer needed but will leave
 #low_account_balance_alert:
 #  cron: '0 12 * * * America/New_York' # “At 12:00 every day”
 #  class: 'AccountBalanceAlertJob'
@@ -34,6 +36,7 @@ pending_campaigns:
 #  description: 'This job alert merchant if their account balance is less than $5'
 #  queue: <%= Rails.env %>_low_account_balance_alert
 
+# Not released yet
 #hosted_sms:
 #  every: 15m
 #  class: 'HostedSmsJob'

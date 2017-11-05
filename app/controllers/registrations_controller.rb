@@ -75,17 +75,17 @@ class RegistrationsController < Devise::RegistrationsController
     return msg
   end
 
-  def auto_recharge
-    if params['user']['auto_reload'] == '1'
-      auto_reload_amt = params['user']['auto_reload_amt']
-      current_user.update(auto_reload_amt: auto_reload_amt, auto_reload: true)
-      flash[:notice] = "Auto recharge enabled with $#{Toolbox::Decimal.cents_to_int_or_2dp(auto_reload_amt)}"
-    else
-      current_user.update(auto_reload: false)
-      flash[:notice] = "Auto recharge disabled"
-    end
-    redirect_to user_sms_usage_path
-  end
+  #def auto_recharge
+    #if params['user']['auto_reload'] == '1'
+      #auto_reload_amt = params['user']['auto_reload_amt']
+      #current_user.update(auto_reload_amt: auto_reload_amt, auto_reload: true)
+      #flash[:notice] = "Auto recharge enabled with $#{Toolbox::Decimal.cents_to_int_or_2dp(auto_reload_amt)}"
+    #else
+      #current_user.update(auto_reload: false)
+      #flash[:notice] = "Auto recharge disabled"
+    #end
+    #redirect_to user_sms_usage_path
+  #end
 
   def deactivate
     saas_sub = current_user.get_saas_subscription

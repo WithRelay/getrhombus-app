@@ -29,7 +29,7 @@ class Message < ActiveRecord::Base
           response = response.second
           num_segments = response.num_segments.to_i
           price = media_ary.blank? ? sms_price : merchant.sms_fee.outbound_mms
-          merchant.deduct_from_account_balance(price * num_segments)
+          #merchant.deduct_from_account_balance(price * num_segments)
           self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, 
                                   message_price: response.price, error_code: response.error_code, error_text: response.error_message,
                                   price_unit: response.price_unit, num_segments: num_segments, num_media: response.num_media, relay_price: price)
@@ -41,7 +41,7 @@ class Message < ActiveRecord::Base
         response = TextingService.send_sms_fibernetics(from, to, message, merchant.fn_subscriber_id)
         if response && response.code == 200 && response['response']['status'] == 'OK'
           num_segments = Message.num_of_segments(message)
-          merchant.deduct_from_account_balance(sms_price * num_segments)
+          #merchant.deduct_from_account_balance(sms_price * num_segments)
           self.update_attributes(status: "OK", num_segments: num_segments, relay_price: sms_price)          
         else
           ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env, response: response })
@@ -52,7 +52,7 @@ class Message < ActiveRecord::Base
         if response.first && response.second.code == 200 && response.second["messages"].first["status"] == "0"
           response = response.second
           num_segments = response['message-count'].to_i
-          merchant.deduct_from_account_balance(sms_price * num_segments)
+          #merchant.deduct_from_account_balance(sms_price * num_segments)
           self.update_attributes(status: response['messages'].first['status'], num_segments: num_segments, relay_price: sms_price,
                                   message_id: response['messages'].first['message-id'], error_text: response["error-text"],
                                   message_price: response['messages'].first['message-price'])

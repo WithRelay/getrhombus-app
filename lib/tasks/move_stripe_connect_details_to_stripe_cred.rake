@@ -1,5 +1,5 @@
 
-# TASK 6
+# TASK 6. Tested
 
 # 1. run migrations since we need the stripe cred table 
 
@@ -9,14 +9,14 @@ task :move_stripe_connect_details_to_standalone_stripe_cred => :environment do
     count = 0
     User.where(user_level: 1).each do |u|
       puts "\n"
-      count = count + 1
-      puts "#{count}"
       if u.stripe_access_token.present?
+        count = count + 1
+        puts "#{count}"
         puts "Update #{u.email}"
         s = StandaloneStripeCred.create!(secret: u.stripe_access_token, publishable_key: u.stripe_publishable_key,
-                                      account_id: u.uid, scope: u.stripe_scope, refresh_token: u.stripe_refresh_token,
-                                      user_id: u.id, livemode: u.livemode, transaction_fee_id: 2)
-        puts "#{s.id}"
+                                          account_id: u.uid, scope: u.stripe_scope, refresh_token: u.stripe_refresh_token,
+                                          user_id: u.id, livemode: u.livemode, transaction_fee_id: 2)
+        puts "cred id is => #{s.id}"
       end
       puts "Moving on \n"
     end

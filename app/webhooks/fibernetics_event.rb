@@ -54,6 +54,8 @@ class FiberneticsEvent
         relay_price: sms_price
       )
 
+      post_message_to_api_user if @merchant.is_api_user? && @merchant.api_cred.webhook_url.present?
+      
       # create or add to existing conversation, send to real time service
       if user.present?
         uid, uid_type = user.id, 'user'
@@ -64,9 +66,8 @@ class FiberneticsEvent
         OpenCnamData.find_record_or_get_intelligence_data(uid)
       end
 
-      post_message_to_api_user if @merchant.is_api_user? && @merchant.api_cred.webhook_url.present?
       Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
-      @merchant.deduct_from_account_balance(sms_price * num_segments)  
+      #@merchant.deduct_from_account_balance(sms_price * num_segments)  
     rescue ActiveRecord::RecordNotUnique => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In save_received_message", env: Rails.env, params: @params })
     rescue StandardError => exception

@@ -1,9 +1,11 @@
 
-# TASK 3
+# TASK 3. Tested
+
+# CANT REALLY TEST THIS SINCE CUSTOMER URI IS IN LIVE MDOE ONLY.
 
 desc "move customer to merchant customer"
 task :move_customer_to_merchant_customer_for_platform => :environment do
-  users = User.where(user_level: 0)
+  users = User.where("id > 1")
   puts "Going to update #{users.count} users"
 
   ActiveRecord::Base.transaction do
@@ -12,16 +14,18 @@ task :move_customer_to_merchant_customer_for_platform => :environment do
 
       if user.customer_uri.present?
         puts "#{user.customer_uri}"
-        re = TextingService.get_customer_card_id(user.customer_uri)
+        re = PaymentService.get_customer_card_id(user.customer_uri)
         if re.first
           puts "#{user.customer_uri} => #{re.first}"
           user.update!(card_id: re.first) 
         end
       end
 
-    	MerchantCustomer.find_or_create_by!(merchant_id: User.get_platform_acct_obj.id, customer_id: user.id, 
+    	merchant_customer = MerchantCustomer.find_or_create_by!(merchant_id: 1, customer_id: user.id, is_platform: 0,
                                platform_stripe_customer_id: (user.customer_uri.present? ? user.customer_uri : nil))
 
+      merchant_customer.update!(created_at: user.created_at, updated_at: user.updated_at)
+      puts merchant_customer.inspect
       puts "Created Merchant customer \n"
     end
   end

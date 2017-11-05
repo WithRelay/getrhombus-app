@@ -72,7 +72,7 @@
 //= require images.js.erb
 //= require demo
 //= require export_csv
-//= require sms-usage
+// require sms-usage
 //= require phone_number_formatter
 //= require location.js
 //= require stripe.js.erb

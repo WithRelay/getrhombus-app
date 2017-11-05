@@ -7,7 +7,9 @@ class MerchantContact < ActiveRecord::Base
     begin
       if merchant_id.present? && uid.present?
         # Always update the updated_at field so we know the last time the contact interacted with the merchant
-        find_or_create_by!(merchant_id: merchant_id, uid: uid, uid_type: uid_type).touch
+        re = find_or_create_by!(merchant_id: merchant_id, uid: uid, uid_type: uid_type)
+        re.touch
+        re
       end
     rescue StandardError => err
       false

@@ -382,6 +382,7 @@ class EmailingService
 
     def first_time_message_auto_response(user); end
 
+=begin # not in use anymore (might be temporary)
     def account_balance_alert(user)
       begin
         template_name = 'low-account-balance-template'
@@ -407,6 +408,7 @@ class EmailingService
       rescue StandardError => e
       end
     end
+=end
 
     # transaction notification to merchant
     def customer_transaction_detail(options={})
@@ -734,6 +736,7 @@ class EmailingService
       end
     end
 
+=begin # not in use anymore (might be temporary)
     def sms_credit_receipt(options = {})
       begin
         template_name = 'sms-credit-receipt-template'
@@ -768,6 +771,7 @@ class EmailingService
       rescue StandardError => e
       end
     end
+=end
 
     # send data for new message
     def unread_message_notification(to, options = {})

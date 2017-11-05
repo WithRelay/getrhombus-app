@@ -121,7 +121,7 @@ module AddTokenToUser
 
   def send_decline_text(message)
     msg_to_send = "We were unable to update your card info on Relay because: #{message}."
-    Conversation.find_or_create_conversation_for_message_and_send_publish(User.get_platform_acct_obj.rhombus_number, self, 'user', customer.id, msg_to_send)
+    Conversation.find_or_create_conversation_for_message_and_send_publish(User.get_platform_acct_obj, self, 'user', self.id, msg_to_send)
   end
 
 end

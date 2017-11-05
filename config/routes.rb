@@ -57,9 +57,9 @@ Rails.application.routes.draw  do
     resources :users, only: [] do
       devise_scope :user do
         post 'deactivate' => "registrations#deactivate"
-        post 'auto_recharge' => "registrations#auto_recharge"
+        #post 'auto_recharge' => "registrations#auto_recharge"
       end
-      get 'sms-usage'
+      #get 'sms-usage'
       get 'add-rhombus-number' => 'numbers#new'
       get 'verify-hosted-sms-order' => 'users#verify_hosted_sms_order'
       post 'verify_hosted_sms'

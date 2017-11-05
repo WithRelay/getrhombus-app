@@ -133,9 +133,9 @@ class User < ActiveRecord::Base
   def is_platform?; self.email == User.platform_email end
   def is_merchant?; self.user_level == 1 || is_platform? end
   def get_page_access_token; self.fb_pages.subscribed.last end
-  def self.platform_email; Rails.application.secrets.team_email end
+  def self.platform_email; '<redacted_email>' end #Rails.application.secrets.team_email end
   def self.get_platform_acct_obj; User.find_by(email: User.platform_email) end
-  def deduct_from_account_balance(amt); self.decrement!(:account_balance, amt.to_f) end
+  #def deduct_from_account_balance(amt); self.decrement!(:account_balance, amt.to_f) end
   def friendly_relay_number; self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number end
   def managed_account_is_verified?; stripe_creds.first.try(:legal_entity_verification).try(:[], 'status') == 'verified' end
 
@@ -190,8 +190,9 @@ class User < ActiveRecord::Base
 
     uid = generate_uid
     url = "#{url_helpers.new_user_registration_url}?referrer_uid=#{uid}"
-    self.attributes = { relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"] }
-    deduct_from_account_balance(NUMBER_PRICE)
+    self.update(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"])
+    
+    #deduct_from_account_balance(NUMBER_PRICE)
 
     #welcome_text = "Howdy! Wondering how to get started? Add or import your customers and contacts to start messaging them immediately. If you have any questions, message us here and a member of our team will be happy to help."
     #Conversation.find_or_create_conversation_for_message_and_send_publish(User.get_platform_acct_obj, self, 'user', self.id, welcome_text)

@@ -12,7 +12,9 @@ end
 
 # TASK 1. Tested
 
-# COPY OUT REFUNDS ID SO I CAN UPDATE AFTER RELEASE
+### TODO
+# 1. COPY OUT REFUNDS ID SO I CAN UPDATE AFTER RELEASE
+# 2. UPDATE PLATFORM ACCOUNT
 
 # run after all migrations to create alerts for users
 # SELECT * FROM users where business_phone = '' and user_level = 1

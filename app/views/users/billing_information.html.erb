@@ -12,7 +12,7 @@
 
         <label class="field-headers form-label settings" for="Business-Name">credit card information</label>
         <% if current_user.is_merchant? %>
-          <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Relay account see <%= link_to 'SMS/MMS usage', user_sms_usage_path(current_user), class: 'no-decoration' %>.
+          <label class="form-label paragraph" for="Card-Number-2">You will be charged every first day of your bill cycle, excluding the 14-day trial period. SMS & MMS usage will be deducted from the available balance in your selected plan.
           <br>
           <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
         <% end %>

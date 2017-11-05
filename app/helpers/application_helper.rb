@@ -24,7 +24,7 @@ module ApplicationHelper
                           'users-business_settings'=> 'Business Setting',
                           'users-integrations' => 'Integrations',
                           'users-managed_acct' => 'Manage Account',
-                          'users-sms_usage' => 'SMS Usage',
+                          #'users-sms_usage' => 'SMS Usage',
                           'lists-segments'=> 'Manage Segment',
                           'coupons-manage_coupons' => 'Manage Coupons',
                           'coupons-index' => 'Coupons',

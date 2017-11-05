@@ -60,10 +60,6 @@ module UsersHelper
     (current_user.exp_month.present? && current_user.exp_year.present?) ? "#{current_user.exp_month}/#{current_user.exp_year}" : ""
   end
 
-  def stripe_standalone_cred
-    current_user.standalone_stripe_cred
-  end
-
   def country_list
     CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }
   end
