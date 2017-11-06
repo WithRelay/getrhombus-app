@@ -76,7 +76,7 @@ var PriceSlider = new function() {
         <span class="customer-count-text-alt">Unlimited tickets</span></div>\
         <div class="price-table underline-div"></div>\
         <span class="customer-count-text-alt">15,000 SMS + Premium support included</span></div>\
-        <h1 class="plan-amount">$'+ amount +'/Month</h1>';
+        <h1 class="plan-amount plan-amount-margin">$'+ amount +'/month</h1>';
     } else {
       $('.pricing-table-button').text('Get Started').attr('href', "<%=  Rails.application.routes.url_helpers.new_user_registration_url %>");
       return '<div class="customer-count-text">\
@@ -84,7 +84,7 @@ var PriceSlider = new function() {
         <span class="customer-count-text-alt">tickets</span></div>\
         <div class="price-table underline-div"></div>\
         <span class="customer-count-text-alt">'+ smsCount +' SMS included</span></div>\
-        <h1 class="plan-amount">$'+ amount +'/Month</h1>';
+        <h1 class="plan-amount plan-amount-margin">$'+ amount +'/month</h1>';
     };
   };
 
