@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
   #before_action :check_current_user_and_path
   around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
-  before_filter :set_cache_headers
+  #before_filter :set_cache_headers
 
   def after_sign_in_path_for(resource)
     check_user_redirect || root_path
