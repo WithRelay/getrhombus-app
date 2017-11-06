@@ -1,25 +1,14 @@
 var PriceSlider = new function() {
 
   var pricingSlider, priceValueSpan, amount, selection; //currentAmount,
-  var plans = { 1: { amt: 0, min: 0, max: 100 },
-                2: { amt: 50, min: 101, max: 1000 },
-                3: { amt: 75, min: 1001, max: 2500 },
-                4: { amt: 90, min: 2501, max: 5000 },
-                5: { amt: 105, min: 5001, max: 7500 },
-                6: { amt: 120, min: 7501, max: 10000 },
-                7: { amt: 145, min: 10001, max: 15000 },
-                8: { amt: 195, min: 15001, max: 20000 },
-                9: { amt: 240, min: 20001, max: 25000 },
-                10: { amt: 295, min: 25001, max: 30000 },
-                11: { amt: 350, min: 30001, max: 35000 },
-                12: { amt: 400, min: 35001, max: 40000 },
-                13: { amt: 450, min: 40001, max: 45000 },
-                14: { amt: 500, min: 45001, max: 50000 },
-                15: { amt: 555, min: 50001, max: 60000 }
+  var plans = { 1: { amt: 50, min: 250, max: 250, smsCount:1000  },
+                2: { amt: 150, min: 251, max: 1000, smsCount:3000  },
+                3: { amt: 350, min: 1001, max: 5000, smsCount:7000  },
+                4: { amt: 700, min: 5001, max: 5050, smsCount:15000  }
               };
 
   var is_add_subscription_page = UtilFunctions.is_add_subscription_page();
-  if (is_add_subscription_page) delete plans[15];  
+  if (is_add_subscription_page) delete plans[15];
   var keys = Object.keys(plans);
 
   this.bind_slider = function() {
@@ -31,8 +20,8 @@ var PriceSlider = new function() {
       //currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0;
       if (pricingSlider) {
         var slider = new Powerange(pricingSlider, {
-          callback: displayValue, min: 100, max: is_add_subscription_page ? 50000 : 60000,
-          start: 100, step: 100, vertical: false, hideRange: true
+          callback: displayValue, min: 250, max: 5050,
+          start: 250, step: 50, vertical: false, hideRange: true
         });
       };
     };
@@ -75,24 +64,26 @@ var PriceSlider = new function() {
   function plan_range(customerCount) {
     for(var i = 0, len = keys.length; i < len; i++) {
       if (customerCount >= plans[keys[i]].min && customerCount <= plans[keys[i]].max) {
-        return [keys[i], planInfo(plans[keys[i]].amt)];
+        return [keys[i], planInfo(plans[keys[i]].amt, plans[keys[i]].smsCount)];
       };
     };
   };
 
-  function planInfo(amount) {
-    if (amount == 555) {
-      $('.pricing-table-button').text('Email Us').attr('href', "mailto:<%= Rails.application.secrets.team_email %>");
+  function planInfo(amount, smsCount) {
+    if (amount == 700) {
+      $('.pricing-table-button').text('Get Started').attr('href', "<%=  Rails.application.routes.url_helpers.new_user_registration_url %>");
       return '<div class="customer-count-text">\
-        <strong>50k+ or Premium support</strong></div>\
+        <span class="customer-count-text-alt">Unlimited tickets</span></div>\
         <div class="price-table underline-div"></div>\
-        <h1 class="plan-amount">Custom Pricing</h1>';
+        <span class="customer-count-text-alt">15,000 SMS + Premium support included</span></div>\
+        <h1 class="plan-amount">$'+ amount +'/Month</h1>';
     } else {
       $('.pricing-table-button').text('Get Started').attr('href', "<%=  Rails.application.routes.url_helpers.new_user_registration_url %>");
       return '<div class="customer-count-text">\
         <strong>'+ parseInt(pricingSlider.value).toLocaleString('en-US') +'</strong>\
-        <span class="customer-count-text-alt">customers</span></div>\
+        <span class="customer-count-text-alt">tickets</span></div>\
         <div class="price-table underline-div"></div>\
+        <span class="customer-count-text-alt">'+ smsCount +' SMS included</span></div>\
         <h1 class="plan-amount">$'+ amount +'/Month</h1>';
     };
   };
