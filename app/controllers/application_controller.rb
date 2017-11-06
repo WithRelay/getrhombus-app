@@ -1,14 +1,15 @@
 class ApplicationController < ActionController::Base
   include CheckUserProfile
-  
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
   #before_action :check_current_user_and_path
   around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
+  before_filter :set_cache_headers
 
   def after_sign_in_path_for(resource)
     check_user_redirect || root_path
@@ -48,7 +49,7 @@ class ApplicationController < ActionController::Base
   def redirect_to_404(message)
     redirect_to to_404_path, alert: message
   end
-  
+
   # for pinging states. Should avoid loading current_user
   def not_ping_controller_actions?
     ['offline_check', 'update_merchant_status'].exclude?(action_name)
@@ -78,6 +79,9 @@ class ApplicationController < ActionController::Base
       current_user: current_user
     }
   end
- 
 
+  def set_cache_headers
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    response.headers["Pragma"] = "no-cache"
+  end
 end
