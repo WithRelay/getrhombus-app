@@ -67,11 +67,11 @@ $(document).on('ready page:load', function() {
     }
   })
   .on('err.form.fv', function(e, data) {
-    //$('#send-campaign-users').removeAttr('disabled');
-    console.log('adasas')
+    if ($('#send-campaign-users').hasClass('no-pointer-events')) {
+      $('#send-campaign-users').removeClass('no-pointer-events').val('Save campaign');
+    };
   })
   .on('success.form.fv', function(e, data) {
-    e.preventDefault();
     if ($( '#sendTestCampaign' ).attr('active')) {
       $("#sendTestCampaign").attr('disabled', 'true');
       e.preventDefault();

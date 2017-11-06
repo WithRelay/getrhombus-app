@@ -22,11 +22,7 @@ $(document).on('ready page:load', function() {
 
   // checked-ish
   $("#send-campaign-users").click(function() {
-    this.disabled = true;
-    console.log('111111')
-    console.log($("#send-campaign-users").is(":disabled"))
-    //$('#send-campaign-users').attr('disabled', true);
-    //console.log($("#send-campaign-users").is(":disabled"))
+    $(this).addClass('no-pointer-events').val('Saving...');
     $('#campaignForm').formValidation('resetField', 'campaign[text]');
     $('#campaignForm').formValidation('resetField', 'campaign[name]');
   });
