@@ -24,6 +24,12 @@
 
   </head>
   <body style="<%= dynamic_pages_overflow_hidden %>" class="<%= add_body_class %>"> <%#= needed for conversations page body %>
+    <div class="banner">
+      <div class="banner-new">New</div>
+      <span class="banner-text">
+        Rhombus is now Relay. <a href="/" class="banner-link">Learn more</a> about our relaunch!
+      </span>
+    </div>
     <%= render 'shared/appcues' if current_user.try(:is_merchant?) %>
     <%= render_header_partial %>
     <%= render 'shared/flash_messages' %>
