@@ -24,7 +24,7 @@
 
   </head>
   <body style="<%= dynamic_pages_overflow_hidden %>" class="<%= add_body_class %>"> <%#= needed for conversations page body %>
-    <%= render 'shared/banner' %>
+    <%= render 'shared/banner' if unauthenticate_controller %>
     <%= render 'shared/appcues' if current_user.try(:is_merchant?) %>
     <%= render_header_partial %>
     <%= render 'shared/flash_messages' %>
@@ -32,7 +32,7 @@
     <%= yield %>
     <div id='user-details' data-user-info="<%= get_current_user_info %>" style='display: none;'></div>
     <%= render_footer_partial %>
-    <% if Rails.env == 'production' %>
+    <% if Rails.env.production? %>
         <%= render 'shared/smooch' %>
         <%= render 'shared/google_analytics' %>
     <% end %>

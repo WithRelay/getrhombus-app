@@ -54,9 +54,9 @@ module ApplicationHelper
     return render 'shared/authenticated_header' if setting_pages
     return render 'shared/docs_header' if relay_docs_pages || privacy_and_terms_pages
     return render 'shared/unauthenticate_header' if unauthenticate_controller && !restrict_static_pages
+    return render 'shared/messaging_header' if messaging_dashboard
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
     return render 'campaigns/campaign_header' if campaign_restrict_params
-    return render 'shared/messaging_header' if messaging_dashboard
   end
 
   def header_class
