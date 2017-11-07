@@ -1,20 +1,15 @@
 
 
-desc "switch rails logger to stdout"
-task :verbose => [:environment] do
-  Rails.logger = Logger.new(STDOUT)
-end
 
-desc "switch rails logger log level to debug"
-task :debug => [:environment, :verbose] do
-  Rails.logger.level = Logger::DEBUG
-end
+
+
+### TODOSSSSSSSSSS **********************
+# 1. FIX DUPLICATE IDS IN MESSAGES
+# 2. COPY OUT REFUNDS ID SO I CAN UPDATE AFTER RELEASE
+# 3. UPDATE PLATFORM EMAIL 
+
 
 # TASK 1. Tested
-
-### TODO
-# 1. COPY OUT REFUNDS ID SO I CAN UPDATE AFTER RELEASE
-# 2. UPDATE PLATFORM EMAIL 
 
 # run after all migrations to create alerts for users
 # SELECT * FROM users where business_phone = '' and user_level = 1
@@ -31,4 +26,17 @@ task :create_away_message_for_existing_teams => :environment do
       puts "created \n"
     end
   end
+end
+
+
+
+
+desc "switch rails logger to stdout"
+task :verbose => [:environment] do
+  Rails.logger = Logger.new(STDOUT)
+end
+
+desc "switch rails logger log level to debug"
+task :debug => [:environment, :verbose] do
+  Rails.logger.level = Logger::DEBUG
 end
