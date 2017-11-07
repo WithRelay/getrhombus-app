@@ -11,6 +11,7 @@ class MobileCampaign
     if @campaign.lists.first.contact?
       @recipients.each { |r| send_by_mobile(nil, r.uid_type, r.uid) }
     else
+      @recipients = @recipients.to_a
       customer_user_obj_list.each_with_index do |c, i| 
         @failure_recipients.push(@recipients.delete_at(i)) unless send_by_mobile(c, 'user', c.id)
       end
