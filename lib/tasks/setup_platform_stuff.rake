@@ -18,18 +18,19 @@ namespace :platform do
     platform_acct_id = User.get_platform_acct_obj.id
     livemode = Rails.env.production?
     Plan.create([
-      { id: 1, status: 1, amount: 0, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan A', statement_descriptor: 'Relay Platform', trial_period_days: 0, merchant_id: platform_acct_id },
-      { id: 2, status: 1, amount: 5000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan B', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
-      { id: 3, status: 1, amount: 7500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan C', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
-      { id: 4, status: 1, amount: 9000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan D', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 1, status: 1, amount: 5000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan A', statement_descriptor: 'Relay Platform', trial_period_days: 0, merchant_id: platform_acct_id },
+      { id: 2, status: 1, amount: 15000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan B', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 3, status: 1, amount: 35000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan C', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 4, status: 1, amount: 70000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan D', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
     ])
   end
 
   # 3
   desc "Setup stripe and sms fees"
   task :setup_stripe_and_sms_fees => :environment do
-    TransactionFee.create(id: 1, provider: 'stripe', fee_type: 0);
-    TransactionFee.create(id: 2, provider: 'stripe', provider_percent: '2.9');
+    TransactionFee.create(id: 1, provider: 'stripe', fee_type: 0); # platform
+    TransactionFee.create(id: 2, provider: 'stripe', provider_percent: '2.9'); # standalone
+    TransactionFee.create(id: 3, provider: 'stripe', platform_percent: '0.1'); # managed
     SmsFee.create(id: 1, provider: 'twilio');
   end
 

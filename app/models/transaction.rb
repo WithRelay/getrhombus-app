@@ -54,7 +54,6 @@ class Transaction < ActiveRecord::Base
       amount_less_fees = (@amt_with_taxes - @stripe_fee - @app_fee).round
 
       # charge # tested
-      # is this right for managed account?
       @stripe_res_ary = PaymentService.charge(@amt_with_taxes, amount_less_fees, merchant, customer, @msg, capture)
       @stripe_res = @stripe_res_ary.first
       puts @stripe_res_ary.inspect
