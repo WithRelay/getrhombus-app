@@ -24,6 +24,7 @@
 
   </head>
   <body style="<%= dynamic_pages_overflow_hidden %>" class="<%= add_body_class %>"> <%#= needed for conversations page body %>
+    <%= render 'shared/banner' %>
     <%= render 'shared/appcues' if current_user.try(:is_merchant?) %>
     <%= render_header_partial %>
     <%= render 'shared/flash_messages' %>
