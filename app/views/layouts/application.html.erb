@@ -34,7 +34,8 @@
     <%= render_footer_partial %>
     <% if Rails.env.production? %>
         <%= render 'shared/smooch' %>
-        <%= render 'shared/google_analytics' %>
+        <%= render 'shared/mixpanel_analytics' %>
+        <%= render 'shared/hubspot' %>
     <% end %>
   </body>
 

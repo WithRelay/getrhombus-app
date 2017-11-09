@@ -28,10 +28,10 @@ namespace :platform do
   # 3
   desc "Setup stripe and sms fees"
   task :setup_stripe_and_sms_fees => :environment do
-    TransactionFee.create(id: 1, provider: 'stripe', fee_type: 0); # platform
-    TransactionFee.create(id: 2, provider: 'stripe', provider_percent: '2.9'); # standalone
-    TransactionFee.create(id: 3, provider: 'stripe', platform_percent: '0.1'); # managed
-    SmsFee.create(id: 1, provider: 'twilio');
+    TransactionFee.create(id: 1, provider: 'stripe', fee_type: 0) # platform
+    TransactionFee.create(id: 2, provider: 'stripe', provider_percent: '2.9') # standalone
+    TransactionFee.create(id: 3, provider: 'stripe', platform_percent: '0.1') # managed
+    SmsFee.create(id: 1, provider: 'twilio')
   end
 
   #4
