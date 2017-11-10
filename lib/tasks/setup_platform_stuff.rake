@@ -1,7 +1,7 @@
 namespace :platform do
 
   # 1
-  ## Need production number
+  ## ****************** GET A PRODUCTION NUMBER ******************
   relay_number = Rails.env.production? ? '' : '<redacted_phone_number>'
   desc "Setup platform user"
   task :setup_user => :environment do

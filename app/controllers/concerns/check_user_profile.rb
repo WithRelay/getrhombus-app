@@ -1,8 +1,8 @@
 module CheckUserProfile
 
   def check_user_redirect(signin_signup = true)
-    return nil
-    path = nil
+    #return nil
+    #path = nil
     current_user.reload
     req_url = url_for controller: controller_name, action: action_name, only_path: true
     
