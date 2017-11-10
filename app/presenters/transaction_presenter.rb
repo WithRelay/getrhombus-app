@@ -7,7 +7,6 @@ class TransactionPresenter < BasePresenter
 
 
   def transaction_user_name
-    return @model.user.full_name if @model.user.full_name.present?
-    @model.user.email
+    @model.user.full_name
   end
 end
