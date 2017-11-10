@@ -133,7 +133,8 @@ class User < ActiveRecord::Base
   def is_platform?; self.email == User.platform_email end
   def is_merchant?; self.user_level == 1 || is_platform? end
   def get_page_access_token; self.fb_pages.subscribed.last end
-  def self.platform_email; '<redacted_email>' end #Rails.application.secrets.team_email end
+  #def self.platform_email; '<redacted_email>' end
+  def self.platform_email; Rails.application.secrets.team_email end 
   def self.get_platform_acct_obj; User.find_by(email: User.platform_email) end
   #def deduct_from_account_balance(amt); self.decrement!(:account_balance, amt.to_f) end
   def friendly_relay_number; self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number end
