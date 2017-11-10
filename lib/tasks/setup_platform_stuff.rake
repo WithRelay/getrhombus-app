@@ -21,9 +21,9 @@ namespace :platform do
     livemode = Rails.env.production?
     Plan.create([
       { id: 2, status: 1, amount: 5000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan A', statement_descriptor: 'Relay Platform', trial_period_days: 0, merchant_id: platform_acct_id },
-      { id: 21, status: 1, amount: 15000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan B', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 21, status: 1, amount: 15000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan P', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
       { id: 11, status: 1, amount: 35000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan C', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
-      { id: 20, status: 1, amount: 70000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan D', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 20, status: 1, amount: 70000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan O', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
     ])
   end
 
