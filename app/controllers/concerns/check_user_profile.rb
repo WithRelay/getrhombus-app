@@ -1,8 +1,8 @@
 module CheckUserProfile
 
+  V15_LAUNCH_DT = "November 13, 2017 01:00:00".freeze
+
   def check_user_redirect(signin_signup = true)
-    #return nil
-    #path = nil
     current_user.reload
     req_url = url_for controller: controller_name, action: action_name, only_path: true
     
@@ -13,6 +13,9 @@ module CheckUserProfile
         path = user_transactions_path(current_user) if signin_signup
       end
     else
+      is_old_merchant = current_user.created_at.in_time_zone('UTC').to_i <= V15_LAUNCH_DT.in_time_zone('UTC').to_i
+      return (signin_signup ? user_path(current_user) : nil) if is_old_merchant
+
       if current_user.org_name.blank?      
         path = user_add_profile_info_path(current_user) 
       elsif current_user.get_saas_subscription.blank? && !current_user.is_platform?

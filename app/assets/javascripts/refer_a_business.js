@@ -83,38 +83,33 @@ $(document).ready(function () {
               }
           },
           'referrer[phone]': {
-              validators: {
-                  callback: {
-                      callback: function (value, validator, $field) {
-                          if (value && PhoneNumberFormatter.isValid()) {
-                              return {
-                                  valid: true,    // or false
-                                  message: 'Valid number'
-                              }
-                          } else {
-                              return {
-                                  valid: false,    // or false
-                                  message: 'Enter a valid number'
-                              }
-                          }
-                      }
+            validators: {
+              callback: {
+                callback: function (value, validator, $field) {
+                  if (UtilFunctions.is_blank(value) || (UtilFunctions.is_present(value) && PhoneNumberFormatter.isValid())) {
+                    return {
+                      valid: true,    // or false
+                      message: 'Valid number'
+                    }
+                  } else {
+                    return {
+                      valid: false,    // or false
+                      message: 'Enter a valid number'
+                    }
                   }
+                }
               }
+            }
           }
       }
   })
   .on('success.form.fv', function(e, data) {
     PhoneNumberFormatter.set_phone_number();
-    if ($(this).attr('action').split('/').pop() !== 'refer_business') {
+    /*if ($(this).attr('action').split('/').pop() !== 'refer_business') {
       e.preventDefault();
       $("#referrer-submit").attr("disabled", true).val("Please wait...");
       referBusiness();
-    }
-  })
-  .on('submit.form.fv', function(e,data) {
-    if ($( "input[name='referrer[phone]']" ).val() === '') {
-      $('#referrerForm').formValidation('resetField', 'referrer[phone]');
-    }
+    };*/
   })
   // .on('err.validator.fv', function(e) {
   //   $('.help-block').hide();

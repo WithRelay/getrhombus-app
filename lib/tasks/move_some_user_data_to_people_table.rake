@@ -12,7 +12,7 @@
 =begin
   def change
     remove_column :users, :first_name
-    remove_column :users, :last_name
+    remove_column :users, :last_name   #### first_name error should go away once this column is gone. Check User.new in rails c
   end
 
  # some cleanup

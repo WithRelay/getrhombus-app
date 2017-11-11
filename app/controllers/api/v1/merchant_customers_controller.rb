@@ -17,7 +17,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
   def customer_csv
     begin
       status = 500
-      response = "CSV file uploaded"
+      response = "Your CSV file has been uploaded. This might take a while to complete."
       doc = current_user.documents.create(attachment: params['csv'])
       puts doc.errors.inspect
       puts doc.errors.full_messages.inspect
@@ -37,7 +37,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
 
   def create
     begin
-      status, error, response = 200, 'Something went wrong on our end.', 'User Added'
+      status, error, response = 200, 'Something went wrong on our end.', 'User added'
       ActiveRecord::Base.transaction do
         @customer = User.find_by(email: params[:user][:email])
 

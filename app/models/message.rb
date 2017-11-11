@@ -41,7 +41,7 @@ class Message < ActiveRecord::Base
         response = TextingService.send_sms_fibernetics(from, to, message, merchant.fn_subscriber_id)
         if response && response.code == 200 && response['response']['status'] == 'OK'
           num_segments = Message.num_of_segments(message)
-          #merchant.deduct_from_account_balance(sms_price * num_segments)
+          merchant.deduct_from_account_balance(sms_price * num_segments)
           self.update_attributes(status: "OK", num_segments: num_segments, relay_price: sms_price)          
         else
           ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env, response: response })

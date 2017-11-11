@@ -24,12 +24,17 @@ class ReferrersController < ApplicationController
 
   def create    
     @referrer = Referrer.new(referrer_params)
-    if @referrer.save
-      flash[:notice] = 'Referral was successful'
+    if User.exists?(email: @referrer.email)
+      flash[:error] = 'The referred email already exists.'
     else
-      flash[:error] = 'Referral failed'
+      if @referrer.save
+        flash[:notice] = 'Referral was successful'
+        EmailingService.referral_bonus_email(@referrer.email, 'there', current_user.first_name, User.profile_url_only(current_user))
+      else
+        flash[:error] = 'Referral failed'
+      end
     end
-    ##### send email to referrer and referree here..
+
     redirect_to user_refer_business_path
   end
 

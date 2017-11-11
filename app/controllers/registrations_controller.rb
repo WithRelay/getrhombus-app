@@ -24,7 +24,11 @@ class RegistrationsController < Devise::RegistrationsController
 
       redirect_to url || after_update_path_for(resource)
     else
-      flash[:error] = message.is_a?(Stripe::InvalidRequestError) ? set_flash_message[:error].message : set_flash_message[:error]
+      if message.present?
+        flash[:error] = message.is_a?(Stripe::InvalidRequestError) ? set_flash_message[:error].message : set_flash_message[:error]
+      else
+        flash[:error] = resource.errors.full_messages 
+      end
 
       clean_up_passwords resource
       set_minimum_password_length
@@ -75,17 +79,17 @@ class RegistrationsController < Devise::RegistrationsController
     return msg
   end
 
-  #def auto_recharge
-    #if params['user']['auto_reload'] == '1'
-      #auto_reload_amt = params['user']['auto_reload_amt']
-      #current_user.update(auto_reload_amt: auto_reload_amt, auto_reload: true)
-      #flash[:notice] = "Auto recharge enabled with $#{Toolbox::Decimal.cents_to_int_or_2dp(auto_reload_amt)}"
-    #else
-      #current_user.update(auto_reload: false)
-      #flash[:notice] = "Auto recharge disabled"
-    #end
-    #redirect_to user_sms_usage_path
-  #end
+  def auto_recharge
+    if params['user']['auto_reload'] == '1'
+      auto_reload_amt = params['user']['auto_reload_amt']
+      current_user.update(auto_reload_amt: auto_reload_amt, auto_reload: true)
+      flash[:notice] = "Auto recharge enabled with $#{Toolbox::Decimal.cents_to_int_or_2dp(auto_reload_amt)}"
+    else
+      current_user.update(auto_reload: false)
+      flash[:notice] = "Auto recharge disabled"
+    end
+    redirect_to user_sms_usage_path
+  end
 
   def deactivate
     saas_sub = current_user.get_saas_subscription

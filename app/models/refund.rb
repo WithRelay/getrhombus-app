@@ -29,7 +29,7 @@ class Refund < ActiveRecord::Base
         re = PaymentService.refund_charge(params, cred, is_platform)
 
         if re.first
-          fee = cred[:cred].created_at.in_time_zone(STRIPE_TZ) >= STRIPE_NO_FEES_REFUND_DATE.in_time_zone(STRIPE_TZ) ? txn.stripe_fee : 0
+          fee = cred[:cred].created_at.in_time_zone(STRIPE_TZ).to_i >= STRIPE_NO_FEES_REFUND_DATE.in_time_zone(STRIPE_TZ).to_i ? txn.stripe_fee : 0
           amt_refunded = Toolbox::Decimal.to_cents(txn.amount_with_taxes) - fee
           self.update(uri: re.first.id, time: re.first.created, reason: params[:reason], transaction_id: txn.id, amount_refunded: amt_refunded)
           send_refund_notification

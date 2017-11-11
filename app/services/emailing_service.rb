@@ -499,7 +499,7 @@ class EmailingService
                                   { "name" => "description", "content" => options[:description]},
                                   { "name" => "taxes_and_fees", "content" => options[:taxes_and_fees] },
                                   { "name" => "total", "content" => options[:total_amount] },
-                                  { "name" => "relay_number", "content" => options[:rhombus_number] },
+                                  { "name" => "relay_number", "content" => options[:relay_number] },
                                   { "name" => "merchant_email", "content" => options[:merchant].email },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
@@ -803,16 +803,17 @@ class EmailingService
       end
     end
 
-    def referral_bonus_email(email, referred_first_name, referrer_first_name)
+    def referral_bonus_email(email, referred_first_name, referrer_first_name, referrer_image_url)
       begin
         template_name = 'referrer-email-template'
         template_content = []
         message = { 'subject' => 'You were Referred to Relay',
          'global_merge_vars'=> [  { 'name' => 'referred_first_name', 'content' => referred_first_name },
                                   { 'name' => 'referrer_first_name', 'content' => referrer_first_name },
+                                  { 'name' => 'referrer_image_url', 'content' => referrer_image_url },
                                   { 'name' => 'relay_link', 'content' => url_helpers.root_url },
-                                  { 'name' => 'learn_more_link', 'content' => sign_up_link },
-                                  { 'name' => 'claim_referral_bonus_link', 'content' => url_helpers.root_url }
+                                  { 'name' => 'learn_more_link', 'content' => url_helpers.root_url },
+                                  { 'name' => 'claim_referral_bonus_link', 'content' => sign_up_link }
                                ],
          'merge_language' => 'handlebars',
          "to"=> [ { "email" => email } ],

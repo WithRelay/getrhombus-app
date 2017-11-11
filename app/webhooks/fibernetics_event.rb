@@ -67,7 +67,7 @@ class FiberneticsEvent
       end
 
       Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
-      #@merchant.deduct_from_account_balance(sms_price * num_segments)  
+      @merchant.deduct_from_account_balance(sms_price * num_segments)  
     rescue ActiveRecord::RecordNotUnique => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In save_received_message", env: Rails.env, params: @params })
     rescue StandardError => exception
