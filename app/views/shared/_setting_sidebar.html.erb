@@ -34,8 +34,10 @@
       <div class="left-nav-tab">Business</div>
     <% end %>
 
-    <%= link_to user_integrations_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-      <div class="left-nav-tab">Integrations</div>
+    <% if true %>
+      <%= link_to user_integrations_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+        <div class="left-nav-tab">Integrations</div>
+      <% end %>
     <% end %>
 
     <% if current_user.is_platform? %>

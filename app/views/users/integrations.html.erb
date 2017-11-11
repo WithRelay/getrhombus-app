@@ -3,7 +3,7 @@
   <div class="dash-content-container integrations settings w-clearfix">
     <h4 class="form-header">Integrations</h4>
     <div class="flex-underline form-header-underline"></div>
-<%
+<%#
 =begin %>
 
     <div class="integrations-row w-row">
@@ -27,7 +27,9 @@
         <% end %>
       </div>
     </div>
+
     <div class="flex-underline form-header-underline"></div>
+
     <div class="integrations-row w-row">
       <div class="w-clearfix w-col w-col-9">
         <img class="integration-partner-icon" src="/assets/twitter-logo.png" width="50">
@@ -44,35 +46,34 @@
         <%end%>
       </div>
     </div>
-    <div class="flex-underline form-header-underline"></div>
-<%
-=end %>
 
-    <% if true #current_user.is_platform? %>
-      <div class="integrations-row w-row">
-        <div class="w-clearfix w-col w-col-9">
-          <img class="integration-partner-icon" src="/assets/stripe.png" width="50">
-          <h4 class="integration-partner-name">Stripe</h4>
-          <p class="integration-description-paragraph">
-            Stripe is the best software platform for running an internet business. We handle billions of dollars every year for forward-thinking businesses around the world.
-          </p>
-        </div>
-        <div class="w-clearfix w-col w-col-3">
-          <% ssc = current_user.standalone_stripe_cred %>
-          <% if ssc %>
-            <%= link_to "Disconnect Stripe", user_remove_stripe_integration_path(current_user), id:'remove_stripe_integration', class: "button integrate-button w-button", data: { disable_with: 'Please wait...'} %>
-             <% if ssc.email.present? %>
-              <p class="integration-text">Connected to:
-                <span>
-                  <b><%= ssc.email %><b>
-                </span>
-              </p>
-            <% end %>
-          <% else %>
-            <%= link_to "Connect Stripe", user_stripe_connect_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
-          <%end%>
-        </div>
+    <div class="flex-underline form-header-underline"></div>
+
+    <div class="integrations-row w-row">
+      <div class="w-clearfix w-col w-col-9">
+        <img class="integration-partner-icon" src="/assets/stripe.png" width="50">
+        <h4 class="integration-partner-name">Stripe</h4>
+        <p class="integration-description-paragraph">
+          Stripe is the best software platform for running an internet business. We handle billions of dollars every year for forward-thinking businesses around the world.
+        </p>
       </div>
-    <% end %>
+      <div class="w-clearfix w-col w-col-3">
+        <% ssc = current_user.standalone_stripe_cred %>
+        <% if ssc %>
+          <%= link_to "Disconnect Stripe", user_remove_stripe_integration_path(current_user), id:'remove_stripe_integration', class: "button integrate-button w-button", data: { disable_with: 'Please wait...'} %>
+           <% if ssc.email.present? %>
+            <p class="integration-text">Connected to:
+              <span>
+                <b><%= ssc.email %><b>
+              </span>
+            </p>
+          <% end %>
+        <% else %>
+          <%= link_to "Connect Stripe", user_stripe_connect_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
+        <%end%>
+      </div>
+    </div>
+<%#
+=end %>
   </div>
 </div>
