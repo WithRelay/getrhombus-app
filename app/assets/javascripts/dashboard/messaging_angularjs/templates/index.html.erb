@@ -96,9 +96,11 @@
                     <div class="message-input-options-text"> &nbsp; Mark as done</div>
                   </a>
                   <div class="message-input-dropdown-underline underline-div"></div>
-                  <a class="message-input-box-option-buttons w-inline-block" ng-click="clickFilePicker()">
+                  
+                  <a class="message-input-box-option-buttons w-inline-block" ng-click="clickFilePicker()" ng-if="merchant.num_of_chars == 1500">
                     <div class="message-input-options-text"> &nbsp; &nbsp;Attach image</div>
                   </a>
+
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='openSavedRepliesDiv()'>
                     <div class="message-input-options-text"> &nbsp; &nbsp;Saved reply</div>
                   </a>
