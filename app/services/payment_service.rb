@@ -175,17 +175,13 @@ class PaymentService
     # returns array with refund status, error object
     def refund_charge(hash, cred, is_platform)
       begin
-        if is_platform || cred[:type] == 'managed'
-          # are the last two attrs ok for platform charges?
-          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], 
-                                     refund_application_fee: true, reverse_transfer: true)
+        if is_platform 
+          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], reverse_transfer: true)        
+        elsif cred[:type] == 'managed'
+          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], refund_application_fee: true, reverse_transfer: true)        
         else
-          re = Stripe::Refund.create({ charge: hash[:charge_id], reason: hash[:reason] }, 
-                                       { stripe_account: cred[:cred].account_id })
+          re = Stripe::Refund.create({ charge: hash[:charge_id], reason: hash[:reason] }, { stripe_account: cred[:cred].account_id })
         end
-
-        puts re.inspect
-        puts '--------------------------------------------------------'
         [re]
       rescue Stripe::StripeError => e
         ExceptionNotifier.notify_exception(e, data: { message: "From refund_charge", cred: cred, hash: hash, env: Rails.env })

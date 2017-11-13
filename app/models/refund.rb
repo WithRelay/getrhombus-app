@@ -56,7 +56,7 @@ class Refund < ActiveRecord::Base
       currency_symbol: '$',
       date: date.strftime('%B %d, %Y | %-I:%M%P'),
       amount: Toolbox::Decimal.to_int_or_2dp(amount_refunded.to_f/100),
-      user_email: customer_txn.user
+      user: customer_txn.user
     }
     EmailingService.refund_processed(options)
   end
