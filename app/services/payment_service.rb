@@ -184,13 +184,16 @@ class PaymentService
                                        refund_application_fee: true, reverse_transfer: true }, 
                                        { stripe_account: cred[:cred].account_id })
         end
+
+        puts re.inspect
+        puts '--------------------------------------------------------'
         [re]
       rescue Stripe::StripeError => e
-        ExceptionNotifier.notify_exception(e, data: { message: "From refund_charge", merchant: merchant, hash: hash, env: Rails.env })
+        ExceptionNotifier.notify_exception(e, data: { message: "From refund_charge", cred: cred, hash: hash, env: Rails.env })
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error]]
       rescue Exception => e
-        ExceptionNotifier.notify_exception(e, data: { message: "From refund_charge", merchant: merchant, hash: hash, env: Rails.env })
+        ExceptionNotifier.notify_exception(e, data: { message: "From refund_charge", cred: cred, hash: hash, env: Rails.env })
         [false, e]
       end
     end
