@@ -114,7 +114,7 @@ module AddTokenToUser
     if is_platform
       res = PaymentService.add_token_to_stripe_customer(hash)
     else
-      res = PaymentService.add_token_to_stripe_customer(hash, cred[:cred].account_id, platform_stripe_customer_id)
+      res = PaymentService.add_token_to_stripe_customer(hash, cred[:cred], platform_stripe_customer_id)
     end
     res
   end

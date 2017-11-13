@@ -203,8 +203,8 @@ class StripeEvent
           end
         end
       end
-    rescue Exception => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeEvent invoice_payment_succeeded", env: Rails.env,
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_payment_succeeded", env: Rails.env,
                                                             merchant: @team, data: @data, hash: @hash, customer: @customer })
     end
   end
@@ -349,8 +349,8 @@ class StripeEvent
     begin
       user_params = response_user_params.merge(bank_account_details)
       managed_account_user.update(user_params)
-    rescue => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In StripeEvent account_updated", env: Rails.env,
+    rescue => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent account_updated", env: Rails.env,
                                                             merchant: managed_account_user, data: @hash })
     end
   end

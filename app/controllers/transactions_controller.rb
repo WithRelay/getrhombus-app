@@ -40,7 +40,8 @@ class TransactionsController < ApplicationController
 
   def process_captured_payment
     begin
-      channel = session.delete(:channel); message = session.delete(:msg_id)    
+      message = session.delete(:msg_id)
+      channel = session.delete(:channel)   
       if message.present? && ["Message", "FbMessage"].include?(channel) 
         message = channel.constantize.find_by(id: message)
         merchant = User.find_by(id: message.try(:user_id_to))
