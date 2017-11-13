@@ -33,6 +33,38 @@ class TextingService
       end
     end
 
+    def list_numbers_nexmo
+      HTTParty.get('https://rest.nexmo.com/account/numbers/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/")
+    end
+
+    def release_number_nexmo(msisdn, country)
+      uri = URI.encode_www_form([["api_key", NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["msisdn", msisdn], ['country', country]])
+      HTTParty.post('https://rest.nexmo.com/number/cancel?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})
+    end
+
+    def buy_number_nexmo(country)
+      # search for a number on nexmo
+      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&size=1")
+      # check the response
+      if response.code == 200 && response["numbers"] != nil #.first["msisdn"] != ""
+        msisdn = response["numbers"].first["msisdn"]
+        response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "/" + msisdn)
+        
+        # check response
+        if response.code == 200
+          return msisdn
+        else
+          # Notify marketplace owner of failure
+          Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number purchase failed with response code #{response.code}").deliver_now
+          return "-"
+        end
+      else
+        # Notify marketplace owner of failure
+        Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number search failed").deliver_now
+        return "-"
+      end
+    end
+
     def send_sms(from, to, body, media_ary = [])
       begin
         from = "+" + from if from.chr != "+"
