@@ -1,12 +1,10 @@
 module CheckUserProfile
 
-  V15_LAUNCH_DT = "November 13, 2017 01:00:00".freeze
+  V15_LAUNCH_DT = "November 01, 2017 01:00:00".freeze
 
   def check_user_redirect(signin_signup = true)
     current_user.reload
     req_url = url_for controller: controller_name, action: action_name, only_path: true
-
-    return nil
     
     if current_user.is_customer?
       if current_user.has_valid_card?[:valid]
