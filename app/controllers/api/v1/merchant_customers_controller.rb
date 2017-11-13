@@ -10,6 +10,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
 
       render json: { data: customers }, status: 200
     rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In v1 merchant_customers index", env: Rails.env })      
       render json: { error: "Unable to find your Customers" }, status: 500
     end
   end

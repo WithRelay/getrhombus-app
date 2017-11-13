@@ -8,39 +8,47 @@ class StripeEvent
   end
 
   def subscription_trial_will_end
-    @data = Subscription.includes(merchant_customer: [:customer]).find_by(stripe_subscription_id: @hash[:id])
-    return unless @data
+    begin
+      @data = Subscription.includes(merchant_customer: [:customer]).find_by(stripe_subscription_id: @hash[:id])
+      return unless @data
 
-    # Email merchant of time left
-    trial_days_left = ((@hash[:trial_end] - Time.current.utc.to_i) / 1.days.to_f).ceil
-    # Free Trial Expiration Notice (11 days after sign-up)
-    EmailingService.free_trial_expiration_notice(@data.customer) if trial_days_left == 3
-    update_subscription_data
+      # Email merchant of time left
+      trial_days_left = ((@hash[:trial_end] - Time.current.utc.to_i) / 1.days.to_f).ceil
+      # Free Trial Expiration Notice (11 days after sign-up)
+      EmailingService.free_trial_expiration_notice(@data.customer) if trial_days_left == 3
+      update_subscription_data
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent subscription_trial_will_end", env: Rails.env, hash: @hash, data: @data })      
+    end
   end
 
   def customer_subscription_deleted
-    @data = Subscription.includes(merchant_customer: [:customer, :merchant], plan: []).find_by(stripe_subscription_id: @hash[:id])
-    return unless @data
+    begin
+      @data = Subscription.includes(merchant_customer: [:customer, :merchant], plan: []).find_by(stripe_subscription_id: @hash[:id])
+      return unless @data
 
-    user = @data.customer
-    if user.is_merchant?
-      if user.rhombus_number.present?
-        user.hosted_sms.blank? ? TextingService.release_number(user.rhombus_number) : ''
+      user = @data.customer
+      if user.is_merchant?
+        if user.rhombus_number.present?
+          user.hosted_sms.blank? ? TextingService.release_number(user.rhombus_number) : ''
+        end
+        user.update(rhombus_number: nil, rn_type: nil, rn_country: nil, rn_friendly_name: nil, status: 0)
+        #delete facebook integration here
+        EmailingService.exit_survey(user)
       end
-      user.update(rhombus_number: nil, rn_type: nil, rn_country: nil, rn_friendly_name: nil, status: 0)
-      #delete facebook integration here
-      EmailingService.exit_survey(user)
+      update_subscription_data
+
+      # Email about cancellation
+      options = cancelled_subscription_options(@data)
+      EmailingService.cancelled_subscription(options)
+      EmailingService.subscription_cancelled(options)
+
+      # LEAVE THIS FOR LATER
+      # subscribe merchant (rhombus platform saas customer) to next plan if present
+      # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_subscription_deleted", env: Rails.env, hash: @hash, data: @data })      
     end
-    update_subscription_data
-
-    # Email about cancellation
-    options = cancelled_subscription_options(@data)
-    EmailingService.cancelled_subscription(options)
-    EmailingService.subscription_cancelled(options)
-
-    # LEAVE THIS FOR LATER
-    # subscribe merchant (rhombus platform saas customer) to next plan if present
-    # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
   end
 
   def cancelled_subscription_options(subscription)
@@ -63,11 +71,15 @@ class StripeEvent
   # It also notifies us of changes from trial to active
   # You generally don't want to notify merchants or users in this method
   def customer_subscription_updated
-    @data = Subscription.includes(:plan).find_by(stripe_subscription_id: @hash[:id])
-    return unless @data
-    update_subscription_data
-    # Email admin about update
-    EmailingService.customer_subscription_updated(@data.plan_name, @data.id)
+    begin
+      @data = Subscription.includes(:plan).find_by(stripe_subscription_id: @hash[:id])
+      return unless @data
+      update_subscription_data
+      # Email admin about update
+      EmailingService.customer_subscription_updated(@data.plan_name, @data.id)
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_subscription_updated", env: Rails.env, hash: @hash, data: @data })      
+    end
   end
 
   # Most fields aren't important but we can resave data
@@ -113,11 +125,15 @@ class StripeEvent
   end
 
   def invoice_created
-    # invoice should not already exist but just in case stripe sends this multiple times
-    @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-    setup_invoice_data
-    # notify admin
-    EmailingService.invoice_created(@data) if @merchant_customer
+    begin
+      # invoice should not already exist but just in case stripe sends this multiple times
+      @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
+      setup_invoice_data
+      # notify admin
+      EmailingService.invoice_created(@data) if @merchant_customer
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_created", env: Rails.env, hash: @hash, data: @data })      
+    end
   end
 
   def setup_invoice_data
@@ -150,7 +166,7 @@ class StripeEvent
 
       if @team
         # retrieve charge details. test that charge exist. it doesnt exist for trialing subs
-        charge = PaymentService.retrieve_charge(@hash[:charge], @team) if @hash[:charge]
+        charge = PaymentService.retrieve_charge(@hash[:charge], @team, 'subscription') if @hash[:charge]
         charge = charge.try(:first)
 
         # a transaction should not already exist but we need to check if it does so we don't send out emails again
@@ -187,7 +203,7 @@ class StripeEvent
           end
         end
       end
-    rescue StandardError => exception
+    rescue Exception => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In StripeEvent invoice_payment_succeeded", env: Rails.env,
                                                             merchant: @team, data: @data, hash: @hash, customer: @customer })
     end
@@ -251,38 +267,46 @@ class StripeEvent
   end
 
   def invoice_payment_failed
-    # find invoice and update...invoice should already exist but if it doesn't, create a new one
-    @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-    setup_invoice_data
-    # notify customer
-    team = @data.team
-    date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(team.time_zone)
-    options = {
-      customer: @data.customer,
-      merchant_business_name: team.org_name,
-      merchant_email: team.email,
-      plan_name: @data.subscription.plan_name,
-      currency: @data.currency,
-      currency_symbol: '$',
-      frequency: @data.subscription.plan_interval_name,
-      failed_date: date.strftime('%B %d, %Y | %-I:%M%P'),
-      amount: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100)
-    }
-    EmailingService.subscription_failed(options)
+    begin
+      # find invoice and update...invoice should already exist but if it doesn't, create a new one
+      @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
+      setup_invoice_data
+      # notify customer
+      team = @data.team
+      date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(team.time_zone)
+      options = {
+        customer: @data.customer,
+        merchant_business_name: team.org_name,
+        merchant_email: team.email,
+        plan_name: @data.subscription.plan_name,
+        currency: @data.currency,
+        currency_symbol: '$',
+        frequency: @data.subscription.plan_interval_name,
+        failed_date: date.strftime('%B %d, %Y | %-I:%M%P'),
+        amount: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100)
+      }
+      EmailingService.subscription_failed(options)
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_payment_failed", env: Rails.env, hash: @hash, data: @data })      
+    end
   end
 
   def customer_source_updated
-    @source = @hash[:data][:object]
+    begin
+      @source = @hash[:data][:object]
 
-    # find customer
-    mc = MerchantCustomer.find_by(managed_stripe_customer_id: @source[:customer])
-    mc = MerchantCustomer.find_by(platform_stripe_customer_id: @source[:customer]) unless mc
+      # find customer
+      mc = MerchantCustomer.find_by(managed_stripe_customer_id: @source[:customer])
+      mc = MerchantCustomer.find_by(platform_stripe_customer_id: @source[:customer]) unless mc
 
-    if mc
-      @customer = mc.customer
-      update_customer_source
-      # notify admin only
-      EmailingService.customer_source_updated(@customer)
+      if mc
+        @customer = mc.customer
+        update_customer_source
+        # notify admin only
+        EmailingService.customer_source_updated(@customer)
+      end
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_source_updated", env: Rails.env, hash: @hash, source: @source })      
     end
   end
 

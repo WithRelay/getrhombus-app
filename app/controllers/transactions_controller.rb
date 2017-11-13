@@ -39,35 +39,47 @@ class TransactionsController < ApplicationController
   end
 
   def process_captured_payment
-    channel = session.delete(:channel); message = session.delete(:msg_id)    
-    if message.present? && ["Message", "FbMessage"].include?(channel) 
-      message = channel.constantize.find_by(id: message)
-      merchant = User.find_by(id: message.try(:user_id_to))
-      if message && message.transaction_id.blank? && merchant 
-        MessageParser.new.process_message(merchant, current_user, current_user.id, 'user', message, channel)
-      end      
+    begin
+      channel = session.delete(:channel); message = session.delete(:msg_id)    
+      if message.present? && ["Message", "FbMessage"].include?(channel) 
+        message = channel.constantize.find_by(id: message)
+        merchant = User.find_by(id: message.try(:user_id_to))
+        if message && message.transaction_id.blank? && merchant 
+          MessageParser.new.process_message(merchant, current_user, current_user.id, 'user', message, channel)
+        end      
+      end
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController process_captured_payment", env: Rails.env })      
     end
   end
 
   def capture
-    transaction = Transaction.includes(:team, :user).find(params[:id])
-    re = transaction.capture_uncaptured_txn
-    flash[ re.first ? :notice : :error ] = re.second
+    begin
+      transaction = Transaction.includes(:team, :user).find(params[:id])
+      re = transaction.capture_uncaptured_txn
+      flash[ re.first ? :notice : :error ] = re.second
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController capture", env: Rails.env, transaction: transaction })      
+    end
     redirect_to user_transactions_path(captured: 'false')
   end
 
   # generate user csv data
   def download_csv
-    render :template => "static_pages/to_404.html" and return if !current_user
-    t = Transaction.new
-    response = t.get_transactions_csv(current_user.id, current_user.is_merchant?, params[:txn_start_date], params[:txn_end_date])
-    if response
-      respond_to do |format|
-        format.csv { send_data response, filename: "relay_transactions_#{Time.current.strftime("%d-%b-%y")}.csv" }
+    begin
+      render :template => "static_pages/to_404.html" and return if !current_user
+      t = Transaction.new
+      response = t.get_transactions_csv(current_user.id, current_user.is_merchant?, params[:txn_start_date], params[:txn_end_date])
+      if response
+        respond_to do |format|
+          format.csv { send_data response, filename: "relay_transactions_#{Time.current.strftime("%d-%b-%y")}.csv" }
+        end
+      else
+        # use 500 page after it is built
+        render :template => "static_pages/to_404.html"
       end
-    else
-      # use 500 page after it is built
-      render :template => "static_pages/to_404.html"
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController download_csv", env: Rails.env })      
     end
   end
 
