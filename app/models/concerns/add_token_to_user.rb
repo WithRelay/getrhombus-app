@@ -42,6 +42,8 @@ module AddTokenToUser
           else
             res = [true]
           end
+          puts res.inspect
+          puts '-------------------------------------------------------------------------------------'
           break unless res.first
         end
       end
