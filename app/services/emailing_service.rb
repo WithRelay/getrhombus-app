@@ -962,7 +962,7 @@ class EmailingService
     # to platform only
     def invoice_created(invoice)
       begin
-        text = "Hi team, Invoice with id #{invoice.id} was created."
+        text = "Hi team, Invoice with id #{invoice.id} was created in #{Rails.env}."
         email_to_platform(text, 'Invoice Created')
       rescue StandardError => e
       end
