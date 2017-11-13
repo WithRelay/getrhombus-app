@@ -180,7 +180,7 @@ class PaymentService
           re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], 
                                      refund_application_fee: true, reverse_transfer: true)
         else
-          re = Stripe::Refund.create({ charge: hash[:charge_id], reason: hash[:reason], refund_application_fee: true }, 
+          re = Stripe::Refund.create({ charge: hash[:charge_id], reason: hash[:reason] }, 
                                        { stripe_account: cred[:cred].account_id })
         end
 
