@@ -2,10 +2,6 @@ class BasePresenter < SimpleDelegator
   include Rails.application.routes.url_helpers
   include PrettyDate
 
-  SYMBOL_TIMES = 1
-
-  private_constant :SYMBOL_TIMES
-
   # might need to send user and template for partials in here
   def initialize(model, view, user)
     @model, @view, @user = model, view, user
@@ -86,9 +82,7 @@ class BasePresenter < SimpleDelegator
 
   private
 
-  def show_empty_symbol
-    ('-' * SYMBOL_TIMES)
-  end
+  def show_empty_symbol; "-" end
 
   def find_user
     if @model.class == MerchantCustomer

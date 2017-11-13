@@ -17,8 +17,9 @@
     </div>
     <div class="w-col w-col-3">
       <div class="action w-clearfix">
-        <a class="actions status modal-loader customer-profile-refund-btn" modal-target= 'refund_customer_modal' data-txn-number="<%= transaction.txn_number %>"
-        data-txn-last4="<%= transaction.last4 %>">Refund</a>
+        <% if transaction.subscription_id.blank? %>
+          <a class="actions status modal-loader customer-profile-refund-btn" modal-target= 'refund_customer_modal' data-txn-number="<%= transaction.txn_number %>" data-txn-last4="<%= transaction.last4 %>">Refund</a>
+        <% end %>
       </div>
     </div>
   </div>

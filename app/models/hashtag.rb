@@ -46,21 +46,10 @@ class Hashtag < ActiveRecord::Base
     Plan.exists?(['merchant_id = ? and lower(name) = ?', merchant.id, "#{new_tag}"])    
   end
 
-  # caching needed for this
   def mentions_count
-    # because hashtag_id will exist in a transaction that was created by a text message. so avoid duplicates
-    # and some hashtag transactions wont have messages
-    
-    in_txns_not_in_msg_count = Hashtag.find_by_sql(["SELECT count(*) as count FROM transactions t LEFT JOIN messages m
-                                          on m.transaction_id = t.id
-                                          WHERE t.hashtag_id = ? and m.transaction_id IS NULL", self.id]).first.count
-    in_txns_not_in_fb_msg_count = Hashtag.find_by_sql(["SELECT count(*) as count FROM transactions t LEFT JOIN fb_messages f
-                                          on f.transaction_id = t.id
-                                          WHERE t.hashtag_id = ? and f.transaction_id IS NULL", self.id]).first.count
-    in_fb_msg_count = FbMessage.where(hashtag_id: self.id).count
-    in_msg_count = Message.where(hashtag_id: self.id).count
-
-    in_txns_not_in_msg_count + in_txns_not_in_fb_msg_count + in_fb_msg_count + in_msg_count
+    # because hashtag_id will exist in a txn created by a text message. so avoid duplicates and some tag txns wont have messages
+    # Transaction.where(hashtag_id: self.id).count, FbMessage.where(hashtag_id: self.id, transaction_id: nil).count
+    Message.where(hashtag_id: self.id).count
   end
 
   def is_mentioned?
