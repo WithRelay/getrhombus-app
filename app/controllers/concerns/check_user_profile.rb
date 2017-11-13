@@ -7,10 +7,10 @@ module CheckUserProfile
     req_url = url_for controller: controller_name, action: action_name, only_path: true
     
     if current_user.is_customer?
-      unless current_user.has_valid_card?[:valid]
-        path = build_user_link 
-      else 
+      if current_user.has_valid_card?[:valid]
         path = user_transactions_path(current_user) if signin_signup
+      else 
+        path = build_user_link
       end
     else
       is_old_merchant = current_user.created_at.in_time_zone('UTC').to_i <= V15_LAUNCH_DT.in_time_zone('UTC').to_i
