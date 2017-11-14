@@ -62,7 +62,7 @@ task :move_txns_table_to_one_row => :environment do
       puts "#{t.id} has no platform transaction"
     end
   end
-=end
+
   ActiveRecord::Base.transaction do
     # customer txns
     Transaction.where(id: [133, 134, 135, 136, 800, 801, 802, 803, 804, 805]).each do |t|
@@ -92,8 +92,8 @@ task :move_txns_table_to_one_row => :environment do
       txn.save!
     end
   end
-
-=begin
+=end
+#=begin
   platform_txns = Transaction.where(transaction_type: 0)
   
   ActiveRecord::Base.transaction do
@@ -115,7 +115,7 @@ task :move_txns_table_to_one_row => :environment do
     # delete all platform txns
     platform_txns.delete_all
   end
-=end
+#=end
 end
 
 ### NOTE the fee change....also recalculate the rate_percent
