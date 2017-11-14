@@ -3,12 +3,13 @@ namespace :platform do
   # 1
   desc "Setup platform user"
   task :setup_user => :environment do
-    user = User.new(id: 1, email: '<redacted_email>', 
-                    password: '<redacted_password>', user_level: 1, 
-                    phone_number: '<redacted_phone_number>', rhombus_number: Rails.application.secrets.twilio["number"], rn_type: 'local', rn_country: 'US',
-                    account_balance: 1000000, org_name: 'Relay', org_type: 'Company',
-                    org_category: 'Other', currency: 'USD', 
-                    custom_welcome: '', relay_uid: 'ewqr12wer')
+    user = User.find 1
+    user.attributes = { id: 1, email: '<redacted_email>', 
+                        password: '<redacted_password>', user_level: 1, 
+                        org_phone: '<redacted_phone_number>', rhombus_number: Rails.application.secrets.twilio["number"], rn_type: 'local', rn_country: 'US',
+                        account_balance: 1000000, org_name: 'Relay', org_type: 'Company',
+                        org_category: 'Other', currency: 'USD', 
+                        custom_welcome: '', relay_uid: 'ewqr12wer' }
     user.save(validate: false)
   end
 
