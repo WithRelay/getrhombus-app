@@ -7,7 +7,7 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
   ActiveRecord::Base.transaction do
     default_url = User.new.url_helpers.new_user_registration_url
     #User.all.each do |user|
-    User.where("id >= 1352").each do |user|
+    User.where("id >= 1668").each do |user|
       puts "\n #{user.email}"
       url, uid = nil, nil
       
@@ -22,10 +22,9 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
 
 =begin
  <redacted_email>
-iberruq9
+l67mwl3x
 #<BitlyError: RATE_LIMIT_EXCEEDED - '403'>
 
- 
 =end
 
         # test for one account and uncomment in production
