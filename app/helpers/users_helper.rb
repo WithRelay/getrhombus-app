@@ -84,7 +84,7 @@ module UsersHelper
               ticks: {
                 beginAtZero: true,
                 autoSkip: false,
-                minRotation: 0
+                minRotation: 30
               },
               time: {
                 unit: 'day',
