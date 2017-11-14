@@ -16,6 +16,7 @@ task :move_customer_to_merchant_customer_for_platform => :environment do
         puts "#{user.customer_uri}"
         re = PaymentService.get_customer_card_id(user.customer_uri)
         if re.first
+          # get last four, expirate dates, card name *************************************
           puts "#{user.customer_uri} => #{re.first}"
           user.update!(card_id: re.first) 
         end
