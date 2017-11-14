@@ -19,8 +19,8 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
         puts uid
         link = "#{default_url}?referrer_uid=#{uid}"
         # test for one account and uncomment in production
-        url = link + '1'
-        #url = UrlShortenerService.shorten_link(link)
+        #url = link + '1'
+        url = UrlShortenerService.shorten_link(link)
         puts url
         raise StandardError if !url || url == link
       end
