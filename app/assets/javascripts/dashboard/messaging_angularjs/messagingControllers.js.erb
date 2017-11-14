@@ -50,7 +50,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     // Scheduled Messages
     $scope.schedule_notification_btn = "Schedule notification";
-    $scope.customer_channel_list = [ { id: "0", title: 'SMS' } <%#, { id: '2', title: 'Facebook Messenger'} %>];
+    $scope.customer_channel_list = [ { id: "0", title: 'SMS' } /*, { id: '2', title: 'Facebook Messenger'} */];
     $scope.scheduled_message = { frequency_type: "1", text: '', repeat_days: '3', channel: $scope.customer_channel_list[0] };
 
     // Saved Replies

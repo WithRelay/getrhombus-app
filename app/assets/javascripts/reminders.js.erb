@@ -284,7 +284,11 @@ $(document).on('ready page:load', function() {
   };
 
   // checked
-  ApiController.prototype.sendRequest = function(data = '') {
+  ApiController.prototype.sendRequest = function(data) {
+    if (data === undefined) {
+      data = "";
+    }
+
     // assigning modal class for closing modal after response success
     // The variable has sigil $ because local variable inside ajax call are not accessible.
     // for more details http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
