@@ -526,7 +526,7 @@ class EmailingService
         template_name = 'refund-processed'
         template_content = []
         message = { "subject" => "Refund Processed",
-         "global_merge_vars"=> [  { "name" => "merchant_first_name", "content" => options[:merchant_first_name] || 'there' },
+         "global_merge_vars"=> [  { "name" => "customer_first_name", "content" => options[:user].first_name },
                                   { "name" => "merchant_business_name", "content" => options[:merchant_business_name] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "refund_date", "content" => options[:date] },

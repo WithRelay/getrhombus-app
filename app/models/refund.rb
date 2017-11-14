@@ -49,7 +49,6 @@ class Refund < ActiveRecord::Base
     merchant = customer_txn.team
     date = DateTime.strptime(time, '%s').in_time_zone(merchant.time_zone)
     options = {
-      merchant_first_name: merchant.first_name,
       merchant_business_name: merchant.org_name,
       merchant_email: merchant.email,
       currency: customer_txn.currency,

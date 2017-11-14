@@ -1,13 +1,11 @@
 namespace :platform do
 
   # 1
-  ## ****************** GET A PRODUCTION NUMBER ******************
-  relay_number = Rails.env.production? ? '' : '<redacted_phone_number>'
   desc "Setup platform user"
   task :setup_user => :environment do
     user = User.new(id: 1, email: '<redacted_email>', 
                     password: '<redacted_password>', user_level: 1, 
-                    phone_number: '<redacted_phone_number>', rhombus_number: relay_number, rn_type: 'local', rn_country: 'US',
+                    phone_number: '<redacted_phone_number>', rhombus_number: Rails.application.secrets.twilio["number"], rn_type: 'local', rn_country: 'US',
                     account_balance: 1000000, org_name: 'Relay', org_type: 'Company',
                     org_category: 'Other', currency: 'USD', 
                     custom_welcome: '', relay_uid: 'ewqr12wer')
@@ -15,15 +13,16 @@ namespace :platform do
   end
 
   # 2. Also create on stripe dashboard
+  #### NOTE ******************** MUST UPDATE EMAIL FIRST ***********************************
   desc "Setup platform saas plans"
   task :setup_saas_plans => :environment do
     platform_acct_id = User.get_platform_acct_obj.id
     livemode = Rails.env.production?
     Plan.create([
-      { id: 2, status: 1, amount: 5000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan A', statement_descriptor: 'Relay Platform', trial_period_days: 0, merchant_id: platform_acct_id },
-      { id: 21, status: 1, amount: 15000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan P', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
-      { id: 11, status: 1, amount: 35000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan C', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
-      { id: 20, status: 1, amount: 70000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Plan O', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 1, status: 1, amount: 5000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Lite', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 2, status: 1, amount: 15000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Basic', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 3, status: 1, amount: 35000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Business', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
+      { id: 4, status: 1, amount: 70000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Enterprise', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
     ])
   end
 
