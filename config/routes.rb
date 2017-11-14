@@ -66,7 +66,7 @@ Rails.application.routes.draw  do
       get 'add-subscription'
       get 'add-profile-info'
       get "business-settings"
-      get 'integrations'
+      #get 'integrations'
       get 'customer_csv_template'
       get 'remove_stripe_integration'
       get 'remove_twitter_integration'

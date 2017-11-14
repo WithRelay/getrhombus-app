@@ -6,8 +6,8 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
 
   ActiveRecord::Base.transaction do
     default_url = User.new.url_helpers.new_user_registration_url
-    #User.all.each do |user|
-    User.where("id >= 1985").each do |user|
+    User.all.each do |user|
+    #User.where("id >= 1985").each do |user|
       puts "\n #{user.email}"
       url, uid = nil, nil
       
@@ -29,7 +29,7 @@ t2syuap4
 
         # test for one account and uncomment in production
         #url = link + '1'
-        url = UrlShortenerService.shorten_link(link)
+        #url = UrlShortenerService.shorten_link(link)
         puts url
         raise StandardError if !url || url == link
       end

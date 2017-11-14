@@ -1,6 +1,6 @@
 module CheckUserProfile
 
-  V15_LAUNCH_DT = "November 01, 2017 01:00:00".freeze
+  #V15_LAUNCH_DT = "November 14, 2017 05:00:00".freeze
 
   def check_user_redirect(signin_signup = true)
     current_user.reload
@@ -13,8 +13,8 @@ module CheckUserProfile
         path = build_user_link
       end
     else
-      is_old_merchant = current_user.created_at.in_time_zone('UTC').to_i <= V15_LAUNCH_DT.in_time_zone('UTC').to_i
-      return (signin_signup ? user_path(current_user) : nil) if is_old_merchant
+      #is_old_merchant = current_user.created_at.in_time_zone('UTC').to_i <= V15_LAUNCH_DT.in_time_zone('UTC').to_i
+      return (signin_signup ? user_path(current_user) : nil) if current_user.id <= 2470
 
       if current_user.org_name.blank?      
         path = user_add_profile_info_path(current_user) 

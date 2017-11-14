@@ -50,7 +50,7 @@ task :move_txns_table_to_one_row => :environment do
   def amt_less_fees(amt, rate); (((1 - rate) * amt) - 0.3) end
   def stripe_fee(amt); ((0.029 * amt) + 0.3) end
 
-
+=begin
   Transaction.where(transaction_type: 1).each do |t|
     unless Transaction.find_by(transaction_type: 0, txn_uri: t.txn_uri)
       puts "#{t.id} has no platform transaction"
@@ -62,7 +62,7 @@ task :move_txns_table_to_one_row => :environment do
       puts "#{t.id} has no platform transaction"
     end
   end
-=begin
+=end
   ActiveRecord::Base.transaction do
     # customer txns
     Transaction.where(id: [133, 134, 135, 136, 800, 801, 802, 803, 804, 805]).each do |t|
@@ -93,7 +93,7 @@ task :move_txns_table_to_one_row => :environment do
     end
   end
 
-
+=begin
   platform_txns = Transaction.where(transaction_type: 0)
   
   ActiveRecord::Base.transaction do
