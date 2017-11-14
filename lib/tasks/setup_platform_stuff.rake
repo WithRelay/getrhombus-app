@@ -4,16 +4,17 @@ namespace :platform do
   desc "Setup platform user"
   task :setup_user => :environment do
     user = User.find 1
-    user.attributes = { id: 1, email: '<redacted_email>', 
+    user.attributes = { id: 1, email: Rails.application.secrets.team_email, 
                         password: '<redacted_password>', user_level: 1, 
-                        org_phone: '<redacted_phone_number>', rhombus_number: Rails.application.secrets.twilio["number"], rn_type: 'local', rn_country: 'US',
+                        org_phone: '<redacted_phone_number>', rhombus_number: Rails.application.secrets.twilio["number"], 
+                        rn_type: 'local', rn_country: 'US',
                         account_balance: 1000000, org_name: 'Relay', org_type: 'Company',
                         org_category: 'Other', currency: 'USD', 
                         custom_welcome: '', relay_uid: 'ewqr12wer' }
     user.save(validate: false)
   end
 
-  # 2. Also create on stripe dashboard
+  # 2. Also create on stripe dashboard - DONE
   #### NOTE ******************** MUST UPDATE EMAIL FIRST ***********************************
   desc "Setup platform saas plans"
   task :setup_saas_plans => :environment do

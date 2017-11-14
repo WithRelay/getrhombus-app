@@ -4,10 +4,10 @@
 
 
 ### TODOSSSSSSSSSS **********************
-# 1. FIX DUPLICATE IDS IN MESSAGES
+# 1. FIX DUPLICATE IDS IN MESSAGES - DONE
 # 2. COPY OUT REFUNDS ID SO I CAN UPDATE AFTER RELEASE
 # 3. UPDATE PLATFORM EMAIL 
-# 4. Get a production number
+# 4. Get a production number - DONE
 
 
 # TASK 1. Tested
