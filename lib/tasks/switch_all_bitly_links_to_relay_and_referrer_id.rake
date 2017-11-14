@@ -19,14 +19,6 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
         uid = user.generate_uid if uid.blank?
         puts uid
         link = "#{default_url}?referrer_uid=#{uid}"
-
-=begin
- <redacted_email>
-t2syuap4
-#<BitlyError: RATE_LIMIT_EXCEEDED - '403'>
-
-=end
-
         # test for one account and uncomment in production
         #url = link + '1'
         #url = UrlShortenerService.shorten_link(link)

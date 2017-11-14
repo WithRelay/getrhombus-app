@@ -21,8 +21,9 @@ drip_campaign_emails:
 #   description: "This job notifies customers of expired or soon-to-expire cards."
 #   queue: <%= Rails.env %>_card_expired_emails
 
+# every 15 mins to the hour, schedule all campaigns that should run that day
 pending_campaigns:
-  cron: '*/3 * * * *'
+  cron: '45 * * * *'
   class: 'PendingCampaignsJob'
   args:
   description: "Checks for and queues today's upcoming campaigns"
