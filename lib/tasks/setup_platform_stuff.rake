@@ -15,7 +15,7 @@ namespace :platform do
   end
 
   # 2. Also create on stripe dashboard - DONE
-  #### NOTE ******************** MUST UPDATE EMAIL FIRST ***********************************
+  #### NOTE ******************** MUST UPDATE EMAIL FIRST to team email ***********************************
   desc "Setup platform saas plans"
   task :setup_saas_plans => :environment do
     platform_acct_id = User.get_platform_acct_obj.id

@@ -5,15 +5,14 @@
 
 ### TODOSSSSSSSSSS **********************
 # 1. FIX DUPLICATE IDS IN MESSAGES - DONE
-# 2. COPY OUT REFUNDS ID SO I CAN UPDATE AFTER RELEASE
-# 3. UPDATE PLATFORM EMAIL 
+# 2. COPY OUT REFUNDS ID SO I CAN UPDATE AFTER RELEASE - DONE
+# 3. UPDATE PLATFORM EMAIL - DONE
 # 4. Get a production number - DONE
 
 
 # TASK 1. Tested
 
 # run after all migrations to create alerts for users
-# SELECT * FROM users where business_phone = '' and user_level = 1
 desc "Create away message"
 task :create_away_message_for_existing_teams => :environment do
   users = User.where(user_level: 1)

@@ -1,7 +1,7 @@
 
 # TASK 3. Tested
 
-# CANT REALLY TEST THIS SINCE CUSTOMER URI IS IN LIVE MDOE ONLY.
+# CANT REALLY TEST THIS SINCE CUSTOMER URI IS IN LIVE MODE ONLY.
 
 desc "move customer to merchant customer"
 task :move_customer_to_merchant_customer_for_platform => :environment do
@@ -21,7 +21,7 @@ task :move_customer_to_merchant_customer_for_platform => :environment do
         end
       end
 
-    	merchant_customer = MerchantCustomer.find_or_create_by!(merchant_id: 1, customer_id: user.id, is_platform: 0,
+    	merchant_customer = MerchantCustomer.where(merchant_id: 1, customer_id: user.id).first_or_create!(is_platform: 0,
                                platform_stripe_customer_id: (user.customer_uri.present? ? user.customer_uri : nil))
 
       merchant_customer.update!(created_at: user.created_at, updated_at: user.updated_at)
