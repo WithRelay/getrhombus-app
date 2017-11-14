@@ -40,7 +40,7 @@ class Transaction < ActiveRecord::Base
   scope :user_total_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions().only_captured_transactions()
                                                                                           .where(user_id: user_id, team_id: team_id).sum(:amount)) }
 
-  def process_payment(amt, merchant, customer, msg, hashtag, channel, source = 'text', capture = true)
+  def process_payment(amt, merchant, customer, msg, hashtag, channel, source, capture = true)
     begin
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) unless [:capture].include?(arg) }
 
@@ -64,22 +64,23 @@ class Transaction < ActiveRecord::Base
         return [true, "Transaction processed"]
       else
         # This should only run for text based payments. Dashboard payments is handled differently.
-        if @source == 'text'
-          # if it is a card decline, we text only customers. Merchant might not have textable number on file.
-          if customer.is_customer?
-            if @stripe_res_ary[3]
-              send_response("We're sorry your payment to #{merchant.org_name} failed because: #{@stripe_res_ary[2]}")
-            else
-              send_response("We're sorry your payment to #{merchant.org_name} failed. Please try again later.")
-            end
+        # if it is a card decline, we text only customers (text means customer initiated). Merchant might not have textable number on file.
+        if @source == 'text'          
+          if @stripe_res_ary[3] 
+            str = " because: #{@stripe_res_ary[2]}"
+            err_reason = @stripe_res_ary[2]
+          else 
+            str = ". Please try again later." 
+            err_reason = "of a system error"
           end
-          # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
+          send_response("We're sorry your payment to #{merchant.org_name} failed" + str)
+          send_payment_failure_email(err_reason, amt)
         end
         [false, @stripe_res_ary[2]]
       end
     rescue StandardError => err
+      send_payment_failure_email("of a system error", amt) if @source == 'text'
       ExceptionNotifier.notify_exception(err, data: { message: 'From process_payment in transaction.rb', res: @stripe_res_ary, env: Rails.env, self: self, merchant: merchant, customer: customer, amt: amt })
-      #send_payment_failure_email(err, false)  # should go out only for text payments
       [false, 'Something went wrong']
     end
   end
@@ -139,18 +140,17 @@ class Transaction < ActiveRecord::Base
     Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send, @channel, media)
   end
 
-  def send_payment_failure_email(err, to_merchant)
+  def send_payment_failure_email(reason, amt)
+    reason = reason.try(:downcase) || ''
+    reason = reason[0...-1] if reason[-1] == "."
+    reason.slice!('your')
+
     EmailingService.charge_failure_notification(
-      merchant_email: @merchant.email,
-      customer_email: @customer.email,
-      customer_phone: @customer.phone_number,
-      card_name: @customer.card_name,
-      last4: @customer.last4,
-      message: @msg,
-      org_phone: @merchant.org_phone,
-      rhombus_number: @merchant.friendly_relay_number,
-      reason: err,
-      to_merchant: to_merchant
+      merchant: @merchant, 
+      customer: @customer,
+      message: @msg, reason: reason.strip, 
+      currency_symbol: '$', amount: amt_in_decimal(amt),
+      currency: @merchant.currency.try(:downcase) || 'usd',
     )
   end
 

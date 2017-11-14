@@ -61,7 +61,7 @@ class Message < ActiveRecord::Base
           false
         end
       end
-    rescue StandardError => err
+    rescue Exception => err
       ExceptionNotifier.notify_exception(err, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env })
       false
     end

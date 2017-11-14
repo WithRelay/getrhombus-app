@@ -117,23 +117,23 @@ class EmailingService
 
     def charge_failure_notification(options = {})
       begin
-        recipient = (options[:to_merchant]) ? options[:merchant_email] : User.platform_email
-        template_name = 'charge-failure'
+        template_name = 'charge-failure-notification-template'
         template_content = []
         message = { "subject"=>"Charge Failure",
-         "global_merge_vars"=> [  { "name" => "customer_email", "content" => options[:customer_email] },
-                                  { "name" => "customer_phone", "content" => options[:customer_phone] },
-                                  { "name" => "card_name", "content" => options[:card_name] },
-                                  { "name" => "last4", "content" => options[:last4] },
+         "global_merge_vars"=> [  { "name" => "customer_email", "content" => options[:customer].email },
+                                  { "name" => "customer_phone", "content" => options[:customer].phone_number },
+                                  { "name" => "card_name", "content" => options[:customer].card_name },
+                                  { "name" => "last4", "content" => options[:customer].last4 },
                                   { "name" => 'message', "content" => options[:message] },
-                                  { "name" => 'merchant_email', "content" => options[:merchant_email] },
-                                  { "name" => "merchant_phone_number", "content" => options[:org_phone] },
-                                  { "name" => 'relay_number', "content" => options[:relay_number] },
-                                  { "name" => "reason", "content" => options[:reason].to_s },
-                                  { "name" => 'help_center_link', "content" => url_helpers.root_url },
+                                  { "name" => "reason", "content" => options[:reason] },
+                                  { "name" => "merch_first_name", "content" => options[:merchant].first_name },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => 'help_center_link', "content" => Rails.application.secrets.help_center_link },
                                   { "name" => 'email_link', "content" => EMAIL_US_LINK }],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => recipient } ],
+         "to"=> [ { "email" => options[:merchant].email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => 'Relay',
          "from_email" => User.platform_email
@@ -382,7 +382,6 @@ class EmailingService
 
     def first_time_message_auto_response(user); end
 
-=begin # not in use anymore (might be temporary)
     def account_balance_alert(user)
       begin
         template_name = 'low-account-balance-template'
@@ -392,7 +391,7 @@ class EmailingService
                                   { name: "current_balance", content: Toolbox::Decimal.to_int_or_2dp(user.account_balance) },
                                   { name: "recharge_account_link", content: url_helpers.user_sms_usage_url(user) },
                                   { name: "set_auto_recharge_link", content: url_helpers.user_sms_usage_url(user) },
-                                  { name: "help_center_link", content: url_helpers.root_url },
+                                  { name: "help_center_link", content: Rails.application.secrets.help_center_link },
                                   { name: "email_us_link", content: EMAIL_US_LINK }
                                ],
          "merge_language" => "handlebars",
@@ -408,7 +407,6 @@ class EmailingService
       rescue StandardError => e
       end
     end
-=end
 
     # transaction notification to merchant
     def customer_transaction_detail(options={})
@@ -534,7 +532,7 @@ class EmailingService
                                   { "name" => "refund_date", "content" => options[:date] },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => Rails.application.secrets.help_center_link },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:user]) },
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:user]) }
@@ -569,7 +567,7 @@ class EmailingService
                                   { "name" => "failed_date", "content" => options[:failed_date] },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => Rails.application.secrets.help_center_link },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "dashboard_link", "content" => url_helpers.user_url(options[:customer]) },
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:customer]) }
@@ -604,7 +602,7 @@ class EmailingService
                                   { "name" => "cancellation_date", "content" => options[:cancellation_date] },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => Rails.application.secrets.help_center_link },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:customer]) },
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:customer]) }
@@ -642,7 +640,7 @@ class EmailingService
                                   { "name" => "customer_full_name", "content" => options[:customer].full_name },
                                   { "name" => "email", "content" => options[:customer].email },
                                   { "name" => "phone", "content" => options[:customer].phone_number },
-                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => Rails.application.secrets.help_center_link },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "view_profile_link", "content" => url_helpers.user_merchant_customer_url(options[:merchant], options[:customer]) },
                                   { "name" => "message_customer_link", "content" => url_helpers.user_conversations_url(options[:merchant]) }
@@ -678,7 +676,7 @@ class EmailingService
                                   { "name" => "less_transaction_fees", "content" => options[:less_transaction_fees] },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => Rails.application.secrets.help_center_link },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "transaction_details_link", "content" => url_helpers.user_transactions_url(options[:merchant]) },
                                   { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:merchant]) }
@@ -717,7 +715,7 @@ class EmailingService
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   # { "name" => "pdf_download_link", "content" => url_helpers.root_url },
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:customer]) },
-                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => Rails.application.secrets.help_center_link },
                                   { "name" => "email_link", "content" => EMAIL_US_LINK },
                                   { "name" => "refer_business_link", "content" => url_helpers.user_refer_business_url(options[:customer]) }
                                ],
@@ -736,7 +734,6 @@ class EmailingService
       end
     end
 
-=begin # not in use anymore (might be temporary)
     def sms_credit_receipt(options = {})
       begin
         template_name = 'sms-credit-receipt-template'
@@ -753,7 +750,7 @@ class EmailingService
                                   { "name" => "previous_balance", "content" => options[:previous_balance] },
                                   { "name" => "current_balance", "content" => options[:current_balance] },
                                   { "name" => "billing_history_link", "content" => url_helpers.user_billing_information_url(options[:merchant]) },
-                                  { "name" => "help_center_link", "content" => url_helpers.root_url },
+                                  { "name" => "help_center_link", "content" => Rails.application.secrets.help_center_link },
                                   { "name" => "email_us_link", "content" => EMAIL_US_LINK },
                                   { "name" => "refer_a_business_link", "content" => url_helpers.user_refer_business_url(options[:merchant]) },
                                   { "name" => "auto_recharge_link", content: url_helpers.user_sms_usage_url(options[:merchant]) },
@@ -771,7 +768,6 @@ class EmailingService
       rescue StandardError => e
       end
     end
-=end
 
     # send data for new message
     def unread_message_notification(to, options = {})

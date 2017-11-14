@@ -284,7 +284,7 @@ class MessageParser
         end
       else     # tested   
         @new_txn = Transaction.new        
-        if @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, true).first
+        if @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, 'text', true).first
           @received_msg.update_column(:transaction_id, @new_txn.id)
           send_payment_responses
           publish_notification
