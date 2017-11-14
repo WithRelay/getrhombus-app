@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171107104256) do
+ActiveRecord::Schema.define(version: 20171114124625) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -736,40 +736,34 @@ ActiveRecord::Schema.define(version: 20171107104256) do
   create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "transaction_type",                   limit: 4
-    t.decimal  "amount",                                           precision: 8, scale: 2
-    t.decimal  "amount_with_taxes",                                precision: 8, scale: 2
-    t.string   "tax_percent",                        limit: 191
-    t.integer  "app_fee",                            limit: 4,                             default: 0
-    t.integer  "stripe_fee",                         limit: 4,                             default: 0
-    t.decimal  "amount_less_fees",                                 precision: 8, scale: 2
-    t.integer  "transaction_fee_id",                 limit: 4,                             default: 1
-    t.string   "txn_uri",                            limit: 191
-    t.string   "txn_number",                         limit: 191
-    t.string   "description",                        limit: 191
-    t.string   "status",                             limit: 191
-    t.string   "txn_available_at",                   limit: 191
-    t.string   "last4",                              limit: 191
-    t.string   "exp_month",                          limit: 191
-    t.string   "exp_year",                           limit: 191
-    t.string   "card_type",                          limit: 191
-    t.string   "card_name",                          limit: 191
-    t.string   "destination",                        limit: 191
-    t.integer  "referenced_user_id",                 limit: 4
-    t.string   "referenced_customer_transaction_id", limit: 191
-    t.integer  "user_id",                            limit: 4
-    t.text     "notes",                              limit: 65535
-    t.integer  "referenced_merchant_transaction_id", limit: 4
-    t.integer  "team_id",                            limit: 4
-    t.string   "currency",                           limit: 191
-    t.boolean  "captured",                           limit: 1,                             default: true
-    t.integer  "hashtag_id",                         limit: 4
-    t.integer  "subscription_id",                    limit: 4
+    t.decimal  "amount",                           precision: 8, scale: 2
+    t.decimal  "amount_with_taxes",                precision: 8, scale: 2
+    t.string   "tax_percent",        limit: 191
+    t.integer  "app_fee",            limit: 4,                             default: 0
+    t.integer  "stripe_fee",         limit: 4,                             default: 0
+    t.integer  "transaction_fee_id", limit: 4,                             default: 1
+    t.string   "txn_uri",            limit: 191
+    t.string   "txn_number",         limit: 191
+    t.string   "description",        limit: 191
+    t.string   "status",             limit: 191
+    t.string   "txn_available_at",   limit: 191
+    t.string   "last4",              limit: 191
+    t.string   "exp_month",          limit: 191
+    t.string   "exp_year",           limit: 191
+    t.string   "card_type",          limit: 191
+    t.string   "card_name",          limit: 191
+    t.string   "destination",        limit: 191
+    t.integer  "user_id",            limit: 4
+    t.text     "notes",              limit: 65535
+    t.integer  "team_id",            limit: 4
+    t.string   "currency",           limit: 191
+    t.boolean  "captured",           limit: 1,                             default: true
+    t.integer  "hashtag_id",         limit: 4
+    t.integer  "subscription_id",    limit: 4
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
-  add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
   add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree
   add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
@@ -836,7 +830,6 @@ ActiveRecord::Schema.define(version: 20171107104256) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_level",             limit: 4
-    t.string   "customer_uri",           limit: 191
     t.string   "card_id",                limit: 191
     t.string   "livemode",               limit: 191
     t.string   "last4",                  limit: 191
@@ -850,10 +843,6 @@ ActiveRecord::Schema.define(version: 20171107104256) do
     t.string   "org_category",           limit: 191
     t.string   "org_phone",              limit: 191
     t.string   "org_tax_id",             limit: 191
-    t.string   "street_address",         limit: 191
-    t.string   "city",                   limit: 191
-    t.string   "state_province",         limit: 191
-    t.string   "country",                limit: 191
     t.text     "description",            limit: 65535
     t.string   "use_rhombus_for",        limit: 191
     t.integer  "sms_fee_id",             limit: 4,                              default: 1
@@ -863,17 +852,7 @@ ActiveRecord::Schema.define(version: 20171107104256) do
     t.string   "rn_country",             limit: 191
     t.string   "fn_subscriber_id",       limit: 191
     t.string   "tax_percent",            limit: 191
-    t.string   "zip_code",               limit: 191
-    t.string   "provider",               limit: 191
-    t.string   "uid",                    limit: 191
-    t.string   "stripe_access_token",    limit: 191
-    t.string   "stripe_publishable_key", limit: 191
-    t.string   "stripe_scope",           limit: 191
-    t.string   "stripe_refresh_token",   limit: 191
-    t.string   "first_name",             limit: 191
-    t.string   "last_name",              limit: 191
     t.integer  "status",                 limit: 4,                              default: 1
-    t.string   "referrer_num",           limit: 191
     t.string   "url",                    limit: 191
     t.text     "custom_welcome",         limit: 65535
     t.string   "short_url",              limit: 191
