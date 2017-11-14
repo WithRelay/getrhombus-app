@@ -50,7 +50,7 @@ task :move_txns_table_to_one_row => :environment do
   def amt_less_fees(amt, rate); (((1 - rate) * amt) - 0.3) end
   def stripe_fee(amt); ((0.029 * amt) + 0.3) end
 
-=begin
+#=begin
   Transaction.where(transaction_type: 1).each do |t|
     unless Transaction.find_by(transaction_type: 0, txn_uri: t.txn_uri)
       puts "#{t.id} has no platform transaction"
@@ -86,7 +86,7 @@ task :move_txns_table_to_one_row => :environment do
       txn.save!
     end
   end
-=end
+#=end
 
   platform_txns = Transaction.where(transaction_type: 0)
   
@@ -130,4 +130,4 @@ end
 
 
 # NOTES
-# after rake task, some early transactions have incorrect stripe fees
+# After running rake task, we still have some early transactions have incorrect stripe fees. We might update this in the future
