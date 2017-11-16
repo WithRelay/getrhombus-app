@@ -39,7 +39,7 @@
   select * from transactions where transaction_type = 1 and id not in
   (select referenced_customer_transaction_id from transactions where transaction_type = 0)
 
-  #133, 134, 135, 136, 800, 801, 802, 803, 804, 805, 25604 customer txns with no matching platform txns
+  #133, 134, 135, 136, 800, 801, 802, 803, 804, 805, 25604, 79651 customer txns with no matching platform txns
   #73, 81, 87, 89, 25611 merchant txns with no matching platform txns
 =end
 
@@ -71,7 +71,7 @@ task :move_txns_table_to_one_row => :environment do
       t.save!
     end
 
-    Transaction.where(id: [25604]).each do |t|
+    Transaction.where(id: [25604, 79651]).each do |t|
       t.app_fee = app_fee(t.amount_with_taxes, 0.029)
       t.stripe_fee = Toolbox::Decimal.to_cents(stripe_fee(t.amount_with_taxes))
       t.save!

@@ -1,6 +1,6 @@
 module CheckUserProfile
 
-  #V15_LAUNCH_DT = "November 14, 2017 05:00:00".freeze
+  #V15_LAUNCH_DT = "November 16, 2017 05:00:00".freeze
 
   def check_user_redirect(signin_signup = true)
     current_user.reload
