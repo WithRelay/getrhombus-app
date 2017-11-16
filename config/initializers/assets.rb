@@ -11,6 +11,3 @@ Rails.application.config.assets.paths << Rails.root.join('app', 'assets', 'audio
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
-
-# added
-#Rails.application.config.assets.precompile += %w( normalize.css webflow.css relay-test.webflow.css )

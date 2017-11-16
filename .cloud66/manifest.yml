@@ -1,4 +1,7 @@
 production:
+  rails:
+    configuration:
+      asset_pipeline_precompile: true
   ruby:
     configuration:
       version: 2.2.3
