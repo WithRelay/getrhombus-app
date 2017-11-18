@@ -45,7 +45,6 @@ class NexmoEvent
       ExceptionNotifier.notify_exception(exception, data: { message: "In save_message", env: Rails.env, params: @params })
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In save_message", env: Rails.env, params: @params })
-      puts e.inspect
     end
   end
 
