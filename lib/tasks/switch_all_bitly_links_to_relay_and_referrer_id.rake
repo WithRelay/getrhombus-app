@@ -7,7 +7,7 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
   ActiveRecord::Base.transaction do
     default_url = User.new.url_helpers.new_user_registration_url  
     count = 0
-    
+
     User.all.each do |user| #User.where("id >= 1985").each do |user|
       
       puts "\n #{user.email}"
@@ -30,13 +30,14 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
         puts url
         raise StandardError if !url || url == link
 
-        if count == 99
-          count = 0
-          sleep 70
-        end
       end
 
       user.update!(short_url: url, relay_uid: uid)
+
+      if count == 99
+        count = 0
+        sleep 70
+      end
     end
 
 
