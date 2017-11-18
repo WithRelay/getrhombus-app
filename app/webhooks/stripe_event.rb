@@ -361,7 +361,10 @@ class StripeEvent
     end
   end
 
-  def managed_account_user; @stripe_cred.user end
+  def managed_account_user
+    return if @hash["id"] == "<redacted_stripe_account_id>"  # skip the platform's account
+    @stripe_cred.user 
+  end
 
   def response_user_params
     @account = Stripe::Account.retrieve(@hash[:id])
