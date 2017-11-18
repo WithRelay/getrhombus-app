@@ -36,7 +36,7 @@ module Rhombus
 
     # added
     config.active_job.queue_name_prefix = Rails.env
-
+=begin
     # added
     #unless Rails.env == 'development'
       Rails.application.config.middleware.use ExceptionNotification::Rack,
@@ -49,7 +49,7 @@ module Rhombus
         webhook_url: '<redacted_webhook_url>'
       }
     #end
-    
+=end
     # added
     I18n.enforce_available_locales = true
 
