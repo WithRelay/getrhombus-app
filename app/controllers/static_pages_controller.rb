@@ -19,6 +19,10 @@ class StaticPagesController < ApplicationController
     end
   end
 
+  def lb_ping
+    render nothing: true
+  end
+
   def xyz
     puts params
     render json: {}
