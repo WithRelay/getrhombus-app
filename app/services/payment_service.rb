@@ -78,7 +78,7 @@ class PaymentService
     def get_customer_card_id(customer_id)
       begin
         cu = Stripe::Customer.retrieve(customer_id)
-        [cu.sources.all.data.last.id]        
+        [cu.sources.all.data.last]        
       rescue Stripe::StripeError => e
         ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService retrieve_customer", customer_id: customer_id })
         [false, e]
