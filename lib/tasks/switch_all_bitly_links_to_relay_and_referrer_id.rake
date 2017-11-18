@@ -8,7 +8,7 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
     default_url = User.new.url_helpers.new_user_registration_url  
     count = 0
 
-    User.where("id > 622").each do |user| #User.where("id >= 1985").each do |user|
+    User.all.each do |user| #User.where("id >= 1985").each do |user|
       
       puts "\n #{user.email}"
            
@@ -25,7 +25,7 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
         # test for one account and uncomment in production
         # url = link + '1'
         # puts link
-        user.short_url = UrlShortenerService.shorten_link(link)
+        #user.short_url = UrlShortenerService.shorten_link(link)
         puts user.short_url
         raise StandardError if !user.short_url || user.short_url == link
       else
