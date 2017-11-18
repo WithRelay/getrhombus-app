@@ -46,6 +46,7 @@
 //= require pubnub/pubnub-angular.js
 //= require angular-inview
 //= require ng-animate-model-change
+//= require ng-file-upload
 //= require_tree ./dashboard/messaging_angularjs/templates
 //= require dashboard/messaging_angularjs/messagingFilters.js
 //= require dashboard/messaging_angularjs/messagingControllers.js
