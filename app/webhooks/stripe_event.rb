@@ -152,6 +152,8 @@ class StripeEvent
       end
 
       update_invoice_data
+    else
+      ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent setup_invoice_data", env: Rails.env, hash: @hash })      
     end
   end
 
@@ -161,10 +163,11 @@ class StripeEvent
       # stripe doesnt guarantee invoice event order
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
       setup_invoice_data
+      
       @team = @merchant_customer.try(:merchant)
-      @customer = @merchant_customer.customer
+      @customer = @merchant_customer.try(:customer)
 
-      if @team
+      if @team && @customer
         # retrieve charge details. test that charge exist. it doesnt exist for trialing subs
         charge = PaymentService.retrieve_charge(@hash[:charge], @team, 'subscription') if @hash[:charge]
         charge = charge.try(:first)
@@ -272,20 +275,23 @@ class StripeEvent
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
       setup_invoice_data
       # notify customer
-      team = @data.team
-      date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(team.time_zone)
-      options = {
-        customer: @data.customer,
-        merchant_business_name: team.org_name,
-        merchant_email: team.email,
-        plan_name: @data.subscription.plan_name,
-        currency: @data.currency,
-        currency_symbol: '$',
-        frequency: @data.subscription.plan_interval_name,
-        failed_date: date.strftime('%B %d, %Y | %-I:%M%P'),
-        amount: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100)
-      }
-      EmailingService.subscription_failed(options)
+      team = @merchant_customer.try(:merchant)
+
+      if team
+        date = DateTime.strptime(@data.date.to_s, '%s').in_time_zone(team.time_zone)
+        options = {
+          customer: @data.customer,
+          merchant_business_name: team.org_name,
+          merchant_email: team.email,
+          plan_name: @data.subscription.plan_name,
+          currency: @data.currency,
+          currency_symbol: '$',
+          frequency: @data.subscription.plan_interval_name,
+          failed_date: date.strftime('%B %d, %Y | %-I:%M%P'),
+          amount: Toolbox::Decimal.to_int_or_2dp(@data.total.to_f/100)
+        }
+        EmailingService.subscription_failed(options)
+      end
     rescue Exception => e
       ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_payment_failed", env: Rails.env, hash: @hash, data: @data })      
     end

@@ -38,7 +38,7 @@ module Rhombus
     config.active_job.queue_name_prefix = Rails.env
 
     # added
-    unless Rails.env == 'development'
+    #unless Rails.env == 'development'
       Rails.application.config.middleware.use ExceptionNotification::Rack,
       ignore_cascade_pass: false,
       email: {
@@ -48,7 +48,7 @@ module Rhombus
       slack: {
         webhook_url: '<redacted_webhook_url>'
       }
-    end
+    #end
     
     # added
     I18n.enforce_available_locales = true
@@ -58,6 +58,6 @@ module Rhombus
     config.active_record.raise_in_transactional_callbacks = true
 
     # added for newrelic
-    GC::Profiler.enable
+    # GC::Profiler.enable
   end
 end

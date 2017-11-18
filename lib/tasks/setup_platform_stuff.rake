@@ -15,10 +15,9 @@ namespace :platform do
   end
 
   # 2. Also create on stripe dashboard - DONE
-  #### NOTE ******************** MUST UPDATE EMAIL FIRST to team email ***********************************
   desc "Setup platform saas plans"
   task :setup_saas_plans => :environment do
-    platform_acct_id = User.get_platform_acct_obj.id
+    platform_acct_id = User.get_platform_acct_obj.id  # Must be right team email
     livemode = Rails.env.production?
     Plan.create([
       { id: 1, status: 1, amount: 5000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: livemode, name: 'Lite', statement_descriptor: 'Relay Platform', trial_period_days: 14, merchant_id: platform_acct_id },
