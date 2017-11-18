@@ -19,20 +19,19 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
       if user.is_merchant?
         count = count + 1
 
-        uid = user.relay_uid
-        uid = user.generate_uid if uid.blank?
-        puts uid
+        user.relay_uid = user.generate_uid if user.relay_uid
+        puts user.relay_uid
         link = "#{default_url}?referrer_uid=#{uid}"
         # test for one account and uncomment in production
         #url = link + '1'
         puts link
-        url = UrlShortenerService.shorten_link(link)
+        user.short_url = UrlShortenerService.shorten_link(link)
         puts url
         raise StandardError if !url || url == link
 
       end
 
-      user.update!(short_url: url, relay_uid: uid)
+      user.save!(validate: false)
 
       if count == 99
         count = 0
