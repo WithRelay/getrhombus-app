@@ -1,13 +1,7 @@
-production:
-  rails:
+production:  
+  load_balancer:
     configuration:
-      asset_pipeline_precompile: true
-  ruby:
-    configuration:
-      version: 2.2.3
-    load_balancer:
-      configuration:
-        balance: leastconn
+      httpchk: /lb_ping
 development:
   mysql:
     configuration:
