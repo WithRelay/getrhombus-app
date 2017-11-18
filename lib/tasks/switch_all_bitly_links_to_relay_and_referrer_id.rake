@@ -5,9 +5,11 @@ desc "switch all bitly links to relay and referrer_id"
 task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
 
   ActiveRecord::Base.transaction do
-    default_url = User.new.url_helpers.new_user_registration_url
-    User.all.each do |user|
-    #User.where("id >= 1985").each do |user|
+    default_url = User.new.url_helpers.new_user_registration_url  
+    count = 0
+    
+    User.all.each do |user| #User.where("id >= 1985").each do |user|
+      
       puts "\n #{user.email}"
       url, uid = nil, nil
       
@@ -15,18 +17,28 @@ task :switch_all_bitly_links_to_relay_and_referrer_uid => :environment do
       # Notify the new mexico guy
       
       if user.is_merchant?
+        count = count + 1
+
         uid = user.relay_uid
         uid = user.generate_uid if uid.blank?
         puts uid
         link = "#{default_url}?referrer_uid=#{uid}"
         # test for one account and uncomment in production
         #url = link + '1'
-        #url = UrlShortenerService.shorten_link(link)
+        puts link
+        url = UrlShortenerService.shorten_link(link)
         puts url
         raise StandardError if !url || url == link
+
+        if count == 99
+          count = 0
+          sleep 70
+        end
       end
 
       user.update!(short_url: url, relay_uid: uid)
     end
+
+
   end
 end
