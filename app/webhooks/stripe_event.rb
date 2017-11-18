@@ -353,18 +353,19 @@ class StripeEvent
 
   def account_updated
     begin
-      user_params = response_user_params.merge(bank_account_details)
-      managed_account_user.update(user_params)
+      if @hash["id"] == "<redacted_stripe_account_id>"  # skip the platform's account
+        ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent account_updated platform account", env: Rails.env, hash: @hash })      
+      else
+        user_params = response_user_params.merge(bank_account_details)
+        managed_account_user.update(user_params)
+      end
     rescue => e
       ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent account_updated", env: Rails.env,
                                                             merchant: managed_account_user, data: @hash })
     end
   end
 
-  def managed_account_user
-    return if @hash["id"] == "<redacted_stripe_account_id>"  # skip the platform's account
-    @stripe_cred.user 
-  end
+  def managed_account_user; @stripe_cred.user end
 
   def response_user_params
     @account = Stripe::Account.retrieve(@hash[:id])
