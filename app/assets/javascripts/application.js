@@ -47,9 +47,9 @@
 //= require angular-inview
 //= require ng-animate-model-change
 //= require_tree ./dashboard/messaging_angularjs/templates
-//= require dashboard/messaging_angularjs/messagingApp.js.erb
 //= require dashboard/messaging_angularjs/messagingFilters.js
 //= require dashboard/messaging_angularjs/messagingControllers.js
+//= require dashboard/messaging_angularjs/messagingApp.js.erb
 //= require dashboard/messaging_angularjs/messaging.js
 
 //= require notifications
