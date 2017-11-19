@@ -131,8 +131,9 @@ class Transaction < ActiveRecord::Base
   # tested
   def send_payment_responses(msg_to_send, media = [])
     send_response(msg_to_send, media)
-    EmailingService.customer_receipt(receipt_options)
-    EmailingService.customer_transaction_detail(receipt_options)
+    receipt_data = receipt_options
+    EmailingService.customer_receipt(receipt_data)
+    EmailingService.customer_transaction_detail(receipt_data)
   end
 
   # tested

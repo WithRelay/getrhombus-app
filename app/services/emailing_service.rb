@@ -495,7 +495,6 @@ class EmailingService
                                   { "name" => "payment_method", "content" => "Visa **** **** **** #{options[:last4]} (Expiry #{options[:exp_month]}/#{options[:exp_year]})" },
                                   { "name" => "amount", "content" => options[:amount] },
                                   { "name" => "description", "content" => options[:description]},
-                                  { "name" => "taxes_and_fees", "content" => options[:taxes_and_fees] },
                                   { "name" => "total", "content" => options[:total_amount] },
                                   { "name" => "relay_number", "content" => options[:relay_number] },
                                   { "name" => "merchant_email", "content" => options[:merchant].email },
