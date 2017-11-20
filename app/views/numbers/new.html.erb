@@ -12,7 +12,7 @@
               <option value="new-phone-number" selected>Use a new phone number</option>
             </select>
 
-            <div class="virtual-number-div hide">
+            <div class="virtual-number-div">
               <label class="form-label" for="Country-3">In what country would you like your number?</label>
               <%= f.select :rn_country,  options_for_select(twilio_countries, selected: 'US'), {}, class: 'dropdown w-select', id: "searchNumberCountry" %>
 
@@ -33,7 +33,7 @@
 
             </div>
 
-            <div class="hosted-number-div">
+            <div class="hosted-number-div hide">
               <label class="form-label" id="number-label">What is your current landline or toll-free number?</label>
               <input type="text" id='phone' class="form-control login phone text-field w-input" placeholder='Phone Number'>
 

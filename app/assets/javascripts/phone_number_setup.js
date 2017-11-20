@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+  console.log($('#hosted_sms_select').val())
+
   var searchNumBtn = $('#searchNumberBtn');
 
   var searchNumberCountry = $('#searchNumberCountry'), searchNumberType = $('#searchNumberType'),
