@@ -8,8 +8,8 @@
           <%= form_for('number', url: user_numbers_path(current_user), html: { method: :post, class: "w-clearfix", id: "search_number_form" }) do |f| %>
 
             <select class="dropdown w-select" data-name="Number Type" id="hosted_sms_select">
-              <option value="use-existing-landline">Use my existing landline or toll-free number</option>
-              <option value="new-phone-number">Use a new phone number</option>
+              <%#<option value="use-existing-landline">Use my existing landline or toll-free number</option>%>
+              <option value="new-phone-number" selected>Use a new phone number</option>
             </select>
 
             <div class="virtual-number-div hide">
