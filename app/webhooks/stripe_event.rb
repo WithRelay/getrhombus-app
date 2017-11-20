@@ -139,6 +139,7 @@ class StripeEvent
   def setup_invoice_data
     # Ensure all these exists else it isnt ours. They should.
     key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :managed_stripe_customer_id
+    
     @merchant_customer = MerchantCustomer.includes(:merchant, :customer).find_by(key => @hash[:customer])
 
     if @merchant_customer
