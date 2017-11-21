@@ -2,6 +2,7 @@ class StripeEvent
 
   # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
   def process_event(hash, type)
+    @params = hash
     @hash = hash[:data][:object] if hash[:data]
     @stripe_event_for = type
     self.send(string_method_name[hash[:type]]) if string_method_name[hash[:type]].present?
@@ -18,7 +19,7 @@ class StripeEvent
       EmailingService.free_trial_expiration_notice(@data.customer) if trial_days_left == 3
       update_subscription_data
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent subscription_trial_will_end", env: Rails.env, hash: @hash, data: @data })      
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent subscription_trial_will_end", env: Rails.env, hash: @hash, data: @data, params: @params })      
     end
   end
 
@@ -47,7 +48,7 @@ class StripeEvent
       # subscribe merchant (rhombus platform saas customer) to next plan if present
       # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_subscription_deleted", env: Rails.env, hash: @hash, data: @data })      
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_subscription_deleted", env: Rails.env, hash: @hash, data: @data, params: @params })      
     end
   end
 
@@ -78,7 +79,7 @@ class StripeEvent
       # Email admin about update
       EmailingService.customer_subscription_updated(@data.plan_name, @data.id)
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_subscription_updated", env: Rails.env, hash: @hash, data: @data })      
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_subscription_updated", env: Rails.env, hash: @hash, data: @data, params: @params })      
     end
   end
 
@@ -132,7 +133,7 @@ class StripeEvent
       # notify admin
       EmailingService.invoice_created(@data) if @merchant_customer
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_created", env: Rails.env, hash: @hash, data: @data })      
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_created", env: Rails.env, hash: @hash, data: @data, params: @params })      
     end
   end
 
@@ -154,7 +155,7 @@ class StripeEvent
 
       update_invoice_data
     else
-      ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent setup_invoice_data", env: Rails.env, hash: @hash })      
+      ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent setup_invoice_data", env: Rails.env, hash: @hash, params: @params })      
     end
   end
 
@@ -209,7 +210,7 @@ class StripeEvent
       end
     rescue Exception => e
       ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_payment_succeeded", env: Rails.env,
-                                                            merchant: @team, data: @data, hash: @hash, customer: @customer })
+                                                            merchant: @team, data: @data, hash: @hash, customer: @customer, params: @params })
     end
   end
 
@@ -294,7 +295,7 @@ class StripeEvent
         EmailingService.subscription_failed(options)
       end
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_payment_failed", env: Rails.env, hash: @hash, data: @data })      
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent invoice_payment_failed", env: Rails.env, hash: @hash, data: @data, params: @params })      
     end
   end
 
@@ -313,7 +314,7 @@ class StripeEvent
         EmailingService.customer_source_updated(@customer)
       end
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_source_updated", env: Rails.env, hash: @hash, source: @source })      
+      ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent customer_source_updated", env: Rails.env, hash: @hash, source: @source, params: @params })      
     end
   end
 
@@ -355,14 +356,14 @@ class StripeEvent
   def account_updated
     begin
       if @hash["id"] == "<redacted_stripe_account_id>"  # skip the platform's account
-        ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent account_updated platform account", env: Rails.env, hash: @hash })      
+        ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent account_updated platform account", env: Rails.env, hash: @hash, params: @params })      
       else
         user_params = response_user_params.merge(bank_account_details)
         managed_account_user.update(user_params)
       end
     rescue => e
       ExceptionNotifier.notify_exception(e, data: { message: "In StripeEvent account_updated", env: Rails.env,
-                                                            merchant: managed_account_user, data: @hash })
+                                                            merchant: managed_account_user, data: @hash, params: @params })
     end
   end
 
