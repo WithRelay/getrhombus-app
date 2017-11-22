@@ -101,7 +101,6 @@ class StripeEvent
   end
 
   def update_invoice_data
-    # user_id, team_id, coupon_id, subscription_id do not need to be set since they are immutable
     @data.date = @hash[:date]
     @data.total = @hash[:total]
     @data.subtotal = @hash[:subtotal]
@@ -146,6 +145,7 @@ class StripeEvent
     if @merchant_customer
       @data.team_id = @merchant_customer.merchant_id
       @data.customer_id = @merchant_customer.customer_id
+      @data.subscription_id = Subscription.find_by(stripe_subscription_id: @hash[:subscription]).try(:id)
 
       # update coupon_id
       if @hash[:discount].present?
