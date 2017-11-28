@@ -67,7 +67,9 @@ class FiberneticsEvent
       end
 
       Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
-      @merchant.deduct_from_account_balance(sms_price * num_segments) 
+      #@merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
+      MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
+      #@merchant.deduct_from_account_balance(sms_price * num_segments) 
        
     rescue ActiveRecord::RecordNotUnique => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In fibernetics save_received_message record not unique", env: Rails.env, params: @params })
