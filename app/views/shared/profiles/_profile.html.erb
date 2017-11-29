@@ -88,6 +88,7 @@
           <div class="left-column-text"><%= contact_or_customer %> since: <%= user_snapshot[:since][:date] %></div>
         </div>
         <%= render partial: 'shared/profiles/recent_activity', locals: { recent_activity: recent_activity } %>
+        <%= render partial: 'shared/profiles/plan_info', locals: { active_plan: @active_plan, current_subscription: @current_subscription } %>
       </div>
     </div>
     <div class="w-col w-col-5">

@@ -37,6 +37,7 @@ Rails.application.routes.draw  do
       end
       resources :subscriptions, only: [:index] do
         get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
+        post 'change_plan' => 'subscriptions#change_plan', on: :collection
       end
       get 'refer_business' => 'referrers#new'
     end
@@ -123,7 +124,7 @@ Rails.application.routes.draw  do
     resources :user_lists, only: [:index, :create]
     resources :saved_replies, only: [:index, :create]
     match 'messages/send' => 'messages#send_message', via: [:post]
-    
+
     resources :lists, only: [:create, :index, :update] do
       get 'check_list_name', on: :collection
     end
