@@ -41,10 +41,7 @@ class SubscriptionsController < ApplicationController
   def change_plan
     @plan = Plan.find params['plan_id']
     @current_subscription =Subscription.find params[:id]
-    if switch_subscription
-    else
-      flash[:error] = 'Something went wrong.'
-    end
+    switch_subscription
     redirect_to :back
   end
 
@@ -54,16 +51,13 @@ class SubscriptionsController < ApplicationController
       merchant_customer_id: @current_subscription.merchant_customer_id,
       quantity: @current_subscription.quantity
     )
-    if @current_subscription.cancel_subscription(current_user)
+    if @current_subscription.cancel_subscription
       new_subscription.create_subscription(team: current_user)
       # what should we have to do if subscription creation cancelled
       flash[:notice] = 'Subscription upgraded successfully.'
-      true
     else
       flash[:error] = 'Something went wrong.'
-      false
     end
-    false
   end
 end
 =begin

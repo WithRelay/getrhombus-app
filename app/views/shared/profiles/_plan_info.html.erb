@@ -14,7 +14,7 @@
         <div class="plan-info-left-column">Plan Amount</div>
       </div>
       <div class="right-column w-col w-col-7">
-        <div class="recent-activity-description"><%= present(active_plan).format_amount %></div>
+        <div class="recent-activity-description">$<%= present(active_plan).format_amount %></div>
       </div>
     </div>
     <div class="right-nav-row w-row">
@@ -27,12 +27,11 @@
     </div>
 
     <div class="right-nav-row w-row">
-      <%= form_for :subscription, url: change_plan_user_subscriptions_path(current_user), html: { class: 'w-clearfix' } do |f| %>
+      <%= form_for :subscription, url: change_plan_user_subscriptions_path(current_user), html: { class: 'segment-form fv-form fv-form-bootstrap' } do |f| %>
         <%= hidden_field_tag(:id, value = "#{@current_subscription.id}") %>
-        <%= select_tag 'plan_id', options_for_select(Plan.first(4).map{|p| ["#{p.name}", "#{p.id}"] }, @active_plan.id), class: "dropdown w-select" %>
-        <div class="w-col">
-          <%= f.submit 'Switch Plan', class: 'button w-button' %>
-        </div>
+        <label class="switch-plan-label">Select Plan to Switch</label>
+        <%= select_tag 'plan_id', options_for_select(Plan.first(4).map{|p| ["#{p.name} - $#{present(p).format_amount}", "#{p.id}"] unless p.id == @active_plan.id}.compact ), class: "plan-dropdown w-select" %>
+        <%= f.submit 'Switch Plan', class: 'button switch-plan-button w-button' %>
       <%end%>
     </div>
   </div>
