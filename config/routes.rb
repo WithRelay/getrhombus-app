@@ -37,7 +37,6 @@ Rails.application.routes.draw  do
       end
       resources :subscriptions, only: [:index] do
         get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
-        post 'change_plan' => 'subscriptions#change_plan', on: :collection
       end
       get 'refer_business' => 'referrers#new'
     end
@@ -49,6 +48,9 @@ Rails.application.routes.draw  do
       resources :coupons, only: [:index, :destroy]
       get 'manage-coupons' => 'coupons#manage_coupons'
       mount Resque::Server.new, :at => "/resque"
+      resources :subscriptions, only: [] do
+        post 'change_plan' => 'subscriptions#change_plan', on: :collection
+      end
     end
   end
 

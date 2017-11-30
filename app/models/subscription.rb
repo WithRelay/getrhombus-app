@@ -97,7 +97,7 @@ class Subscription < ActiveRecord::Base
 
   def cancel_subscription(at_period_end = false)
     begin
-      return false if self.canceled?
+      return true if self.canceled?
       res = PaymentService.cancel_subscription(self, at_period_end)
       if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
         true

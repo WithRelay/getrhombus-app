@@ -40,7 +40,7 @@ class SubscriptionsController < ApplicationController
 
   def change_plan
     @plan = Plan.find params['plan_id']
-    @current_subscription =Subscription.find params[:id]
+    @current_subscription = Subscription.find params[:id]
     switch_subscription
     redirect_to :back
   end
@@ -53,6 +53,8 @@ class SubscriptionsController < ApplicationController
     )
     if @current_subscription.cancel_subscription
       new_subscription.create_subscription(team: current_user)
+      # you need to check for returned boolean here
+
       # what should we have to do if subscription creation cancelled
       flash[:notice] = 'Subscription upgraded successfully.'
     else
@@ -60,6 +62,7 @@ class SubscriptionsController < ApplicationController
     end
   end
 end
+
 =begin
     ### FOR SUBSCRIPTION UPGRADE/DOWNGRADE. LEAVE THIS FOR LATER
 
@@ -86,7 +89,7 @@ end
       end
     end
 
-    def @plan.id
+    def get_plan_id
       plan = Plan.find_by(name: params[:subscription][:plan_name], merchant_id: User.get_platform_acct_obj.id)
       plan.id if plan
     end

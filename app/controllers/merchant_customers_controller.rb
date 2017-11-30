@@ -29,9 +29,12 @@ class MerchantCustomersController < ApplicationController
                                 .paginate(:page => params[:page], :per_page => PAGINATION_PER_PAGE)
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @merchant_customer.customer_id, 'user')
     @recent_activity = recent_activity
-    subscriptions = @merchant_customer.subscriptions
-    @current_subscription = subscriptions.last
-    @active_plan = @current_subscription.try(:plan)
+    
+    if current_user.is_platform?
+      @current_subscription = @merchant_customer.subscriptions.try(:last)
+      @active_plan = @current_subscription.try(:plan)
+    end
+    
     render_requested_format(@transactions)
   end
 
