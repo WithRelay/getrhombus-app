@@ -89,6 +89,7 @@ class Transaction < ActiveRecord::Base
     {
       merchant: team,
       customer: user,
+      text: notes,
       amount: txn_amount,
       transaction_id: txn_number,
       created_at: created_at.strftime('%B %d, %Y | %-I:%M%P'),
