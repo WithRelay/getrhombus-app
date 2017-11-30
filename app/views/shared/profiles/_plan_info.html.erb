@@ -1,0 +1,38 @@
+<% if current_user.is_platform? %>
+  <div class="customer-profile profile-info-wrapper">
+    <h1 class="dashboard-right-nav signup-box-subheading">PLAN INFO</h1>
+    <div class="right-nav-row w-row">
+      <div class="left-column w-col w-col-6">
+        <div class="plan-info-left-column">Plan name</div>
+      </div>
+      <div class="right-column w-col w-col-6">
+        <div class="recent-activity-description"><%= active_plan.name %></div>
+      </div>
+    </div>
+    <div class="right-nav-row w-row">
+      <div class="left-column w-col w-col-5">
+        <div class="plan-info-left-column">Plan Amount</div>
+      </div>
+      <div class="right-column w-col w-col-7">
+        <div class="recent-activity-description">$<%= present(active_plan).format_amount %></div>
+      </div>
+    </div>
+    <div class="right-nav-row w-row">
+      <div class="left-column w-col w-col-5">
+        <div class="plan-info-left-column">Next Billing</div>
+      </div>
+      <div class="right-column w-col w-col-7">
+        <div class="recent-activity-description"><%= '--' %></div>
+      </div>
+    </div>
+
+    <div class="right-nav-row w-row">
+      <%= form_for :subscription, url: change_plan_user_subscriptions_path(current_user), html: { class: 'segment-form fv-form fv-form-bootstrap' } do |f| %>
+        <%= hidden_field_tag(:id, value = "#{@current_subscription.id}") %>
+        <label class="switch-plan-label">Select Plan to Switch</label>
+        <%= select_tag 'plan_id', options_for_select(Plan.first(4).map{|p| ["#{p.name} - $#{present(p).format_amount}", "#{p.id}"] unless p.id == @active_plan.id}.compact ), class: "plan-dropdown w-select" %>
+        <%= f.submit 'Switch Plan', class: 'button switch-plan-button w-button' %>
+      <%end%>
+    </div>
+  </div>
+<%end%>

@@ -97,6 +97,7 @@ class Subscription < ActiveRecord::Base
 
   def cancel_subscription(at_period_end = false)
     begin
+      return false if self.canceled?
       res = PaymentService.cancel_subscription(self, at_period_end)
       if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
         true
@@ -154,6 +155,10 @@ class Subscription < ActiveRecord::Base
   def get_fees_schedule(merchant)
     fee_schedule = merchant.is_platform? ? TransactionFee.platform.first : merchant.get_stripe_cred[:cred].transaction_fee
     [fee_schedule.provider_percent.to_f, fee_schedule.provider_cents.to_f, fee_schedule.subscription_percent.to_f]
+  end
+
+  def canceled?
+    status == 'canceled'
   end
 
 =begin

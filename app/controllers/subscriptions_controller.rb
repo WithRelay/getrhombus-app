@@ -7,15 +7,15 @@ class SubscriptionsController < ApplicationController
   def index
     @plan = Plan.new
     if current_user.is_merchant?
-      @subscriptions = Subscription.includes(merchant_customer: [:customer], plan: [])                                  
-                                  .where('merchant_customers.merchant_id' => current_user.id)                                 
-                                  .where.not(status: 'canceled') 
+      @subscriptions = Subscription.includes(merchant_customer: [:customer], plan: [])
+                                  .where('merchant_customers.merchant_id' => current_user.id)
+                                  .where.not(status: 'canceled')
                                   .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
                                   .order(created_at: :desc)
     else
-      @subscriptions = Subscription.includes(merchant_customer: [:merchant], plan: [])                                  
-                                  .where('merchant_customers.customer_id' => current_user.id)                                 
-                                  .where.not(status: 'canceled') 
+      @subscriptions = Subscription.includes(merchant_customer: [:merchant], plan: [])
+                                  .where('merchant_customers.customer_id' => current_user.id)
+                                  .where.not(status: 'canceled')
                                   .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
                                   .order(created_at: :desc)
 
@@ -38,15 +38,28 @@ class SubscriptionsController < ApplicationController
     end
   end
 
+  def change_plan
+    @plan = Plan.find params['plan_id']
+    @current_subscription =Subscription.find params[:id]
+    switch_subscription
+    redirect_to :back
+  end
+
+  def switch_subscription
+    new_subscription = Subscription.new(
+      plan_id: @plan.id,
+      merchant_customer_id: @current_subscription.merchant_customer_id,
+      quantity: @current_subscription.quantity
+    )
+    if @current_subscription.cancel_subscription
+      new_subscription.create_subscription(team: current_user)
+      # what should we have to do if subscription creation cancelled
+      flash[:notice] = 'Subscription upgraded successfully.'
+    else
+      flash[:error] = 'Something went wrong.'
+    end
+  end
 end
-
-
-
-
-
-
-
-
 =begin
     ### FOR SUBSCRIPTION UPGRADE/DOWNGRADE. LEAVE THIS FOR LATER
 
@@ -73,7 +86,7 @@ end
       end
     end
 
-    def get_plan_id
+    def @plan.id
       plan = Plan.find_by(name: params[:subscription][:plan_name], merchant_id: User.get_platform_acct_obj.id)
       plan.id if plan
     end
