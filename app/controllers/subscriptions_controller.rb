@@ -52,11 +52,12 @@ class SubscriptionsController < ApplicationController
       quantity: @current_subscription.quantity
     )
     if @current_subscription.cancel_subscription
-      new_subscription.create_subscription(team: current_user)
-      # you need to check for returned boolean here
-
-      # what should we have to do if subscription creation cancelled
-      flash[:notice] = 'Subscription upgraded successfully.'
+      response = new_subscription.create_subscription(team: current_user)
+      if response.first
+        flash[:notice] = 'Plan switch successfully.'
+      else
+        flash[:error] = 'Plan switch failed.'
+      end
     else
       flash[:error] = 'Something went wrong.'
     end
