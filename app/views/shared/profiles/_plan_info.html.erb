@@ -21,7 +21,7 @@
       <div class="plan-info-left-column">Next Billing</div>
     </div>
     <div class="right-column w-col w-col-7">
-      <div class="recent-activity-description"><%= '--' %></div>
+      <div class="recent-activity-description"><%= present(current_subscription).next_billing %></div>
     </div>
   </div>
 
