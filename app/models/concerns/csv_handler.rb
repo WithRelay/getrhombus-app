@@ -28,7 +28,7 @@ module CSVHandler
 
   def get_csv_columns(is_merchant)
     return ["Date (#{Time.current.zone})", "transaction_number", "customer_email", "txn_amount", "txn_amount_less_fees", "card_name", "last4", "notes", "currency"] if is_merchant
-    ["Date #{Time.current.zone}", "transaction_number", "business_email", "business_name", "txn_amount", "card_name", "last4", "notes", "currency"]
+    ["Date #{Time.current.zone}", "transaction_number", "business_email", "business_org_name", "txn_amount", "card_name", "last4", "notes", "currency"]
   end
 
   def get_customer_csv_template

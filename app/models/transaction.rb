@@ -14,7 +14,7 @@ class Transaction < ActiveRecord::Base
 
   delegate :name, to: :hashtag, prefix: :item, allow_nil: true
   delegate :email, to: :user, prefix: :customer
-  delegate :email, :name, to: :team, prefix: :business
+  delegate :email, :org_name, to: :team, prefix: :business
 
   # Exclude refunded transactions, include subscriptions since these queries are read only
   # and include only captured transactions and reloads are included by default..right
