@@ -14,8 +14,10 @@ class Plan < ActiveRecord::Base
   validate :amount_greater_than_15000
 
   enum status: { inactive: 0, active: 1 }
+  scope :platform, -> { where(merchant_id: User.get_platform_acct_obj.id) }
 
-  INTERVAL = { "week_1" => "Weekly", 'week_2' => "Bi-weekly", "month_1" => "Monthly", 
+
+  INTERVAL = { "week_1" => "Weekly", 'week_2' => "Bi-weekly", "month_1" => "Monthly",
                'month_3' => "Every 3 months", 'month_6' => 'Every 6 months', 'year_1' => 'Yearly' }.freeze
 
   def create_plan(hash)
@@ -121,7 +123,7 @@ class Plan < ActiveRecord::Base
   # Creates a plan segment
   # This is called after a new plan is created.
   def create_plan_segment
-    List.create(name:self.name, user_id: self.merchant_id, segment: plan_segment_data(self.id), 
+    List.create(name:self.name, user_id: self.merchant_id, segment: plan_segment_data(self.id),
                 origin: List.origins[:system], list_type: List.list_types[:customer], campaign_type: List.campaign_types[:campaign])
   end
 

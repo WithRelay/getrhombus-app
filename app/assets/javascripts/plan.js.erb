@@ -142,6 +142,18 @@ $(document).ready(function() {
       });
   };
 
+  $('.switch-plan-button').click(function (evt) {
+    if (!$('.switch-plan-button').attr('switch')) {
+      FlashHandler.setConfirmationDialog(
+        '.switch-plan-button',
+        'Are you sure you want to switch the Plan?',
+        'Switch Plan',
+        'switch'
+      );
+      return false;
+    }
+  });
+
 });
 
 $(document).on('click', '.delete-plan', function(evt) {
@@ -157,3 +169,4 @@ $(document).on('click', '.delete-plan', function(evt) {
     return false;
   }
 });
+

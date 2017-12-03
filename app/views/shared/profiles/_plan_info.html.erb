@@ -21,16 +21,16 @@
       <div class="plan-info-left-column">Next Billing</div>
     </div>
     <div class="right-column w-col w-col-7">
-      <div class="recent-activity-description"><%= '--' %></div>
+      <div class="recent-activity-description"><%= present(current_subscription).next_billing %></div>
     </div>
   </div>
 
-  <div class="right-nav-row w-row">
+  <div class="right-nav-row w-row" id='objlists' data-object-type='plan'>
     <%= form_for :subscription, url: change_plan_user_subscriptions_path(current_user), html: { class: 'segment-form fv-form fv-form-bootstrap' } do |f| %>
       <%= hidden_field_tag(:id, value = "#{@current_subscription.id}") %>
       <label class="switch-plan-label">Select Plan to Switch</label>
-      <%= select_tag 'plan_id', options_for_select(Plan.first(4).map{|p| ["#{p.name} - $#{present(p).format_amount}", "#{p.id}"] unless p.id == @active_plan.id}.compact ), class: "plan-dropdown w-select" %>
-      <%= f.submit 'Switch Plan', class: 'button switch-plan-button w-button' %>
+      <%= select_tag 'plan_id', options_for_select(Plan.platform.map{|p| ["#{p.name} - $#{present(p).format_amount}", "#{p.id}"] unless p.id == @active_plan.id}.compact ), class: "plan-dropdown w-select" %>
+      <%= f.submit 'Switch Plan', class: 'button switch-plan-button w-button', id: 'switch-plan' %>
     <%end%>
   </div>
 </div>
