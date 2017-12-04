@@ -249,7 +249,7 @@ class User < ActiveRecord::Base
 
   def do_signup_stuff
     begin
-      if !self.is_platform? && self.customer_source.try(:[], :method) != "added"
+      if !self.is_platform? && self.customer_source.try(:[], :method).try(:exclude?, 'added')
         MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self)
       end
 
@@ -262,7 +262,9 @@ class User < ActiveRecord::Base
 
       GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
       GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
-      WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
+      unless self.customer_source.try(:[], :method).try(:include?, 'skip_email') # temp FN fix
+        WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
+      end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "From do_signup_stuff", self: self, env: Rails.env })
     end

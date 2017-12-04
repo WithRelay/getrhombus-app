@@ -3,10 +3,8 @@ class WelcomeEmailJob < ApplicationJob
 
   def perform(user, customer_source)
     begin
-      Resque.logger.debug 'job being settledddddddddddddddddddddd'
+      Resque.logger.debug 'WelcomeEmailJob'
       Resque.logger.debug customer_source.inspect
-      Resque.logger.debug 'job'
-      puts 'dasdasdsassssssssssssssssssssssssss'
 
       if user.is_merchant?
         Rails.logger.debug 'im here'
@@ -14,11 +12,10 @@ class WelcomeEmailJob < ApplicationJob
         EmailingService.welcome_email(user)
       elsif user.is_customer?
         if customer_source.present?
-          Rails.logger.debug 'im hereeeeeeeeeeeeeee'
+          Rails.logger.debug 'im here'
           sender = User.find_by(id: customer_source["id"])
 
-          if customer_source["method"] == 'added'
-            Rails.logger.debug 'im 2222222222222222222e'
+          if customer_source["method"] == 'added'            
             insert = (sender.first_name ? ", this is #{sender.first_name}" : '')
             text = "Hi#{insert} from #{sender.org_name}. You can now reach us on this number. If you have any questions or " + 
                     "will like to place an order, simply text us here."

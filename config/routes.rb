@@ -166,6 +166,8 @@ Rails.application.routes.draw  do
     end
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :merchant_customers,  path: :customers, only: [:index, :create]
+    resources :fongo_customers, path: 'fongo/customers' , only: [:create]
+    #get :fongo_customers, to: 'fongo_customers#create', path: 'fongo/customers'
     post '/customer_csv' => 'merchant_customers#customer_csv'
     resources :merchant_contacts,  path: :contacts, only: [:index]
     resources :demos, only: [:create]
