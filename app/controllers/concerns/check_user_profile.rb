@@ -14,7 +14,7 @@ module CheckUserProfile
       end
     else
       #is_old_merchant = current_user.created_at.in_time_zone('UTC').to_i <= V15_LAUNCH_DT.in_time_zone('UTC').to_i
-      return (signin_signup ? user_path(current_user) : nil) if current_user.id <= 2477
+      return (signin_signup ? user_path(current_user) : nil) if current_user.id <= 2477 && [712].exclude?(current_user.id)
 
       if current_user.org_name.blank?      
         path = user_add_profile_info_path(current_user) 
