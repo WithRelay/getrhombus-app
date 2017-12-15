@@ -1,5 +1,5 @@
 <div class="customer-profile dashboard-nav w-clearfix">
-  <% if params[:controller] == 'merchant_customers' && params[:action] == 'show' %>
+  <% if (params[:controller] == 'merchant_customers' || params[:controller] == 'merchant_contacts') && params[:action] == 'show' %>
     <div class="dashboard-logo-wrapper">
       <%= link_to user_path(current_user) do %>
         <%= image_tag('Relay-Transparent.png', width: 50, class: 'dashboard-logo') %>
