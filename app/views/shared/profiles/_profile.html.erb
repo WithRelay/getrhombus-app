@@ -1,4 +1,3 @@
-<%= render 'shared/loading' %>
 <div class="customer-profile dashboard-nav w-clearfix">
   <% if params[:controller] == 'merchant_customers' && params[:action] == 'show' %>
     <div class="dashboard-logo-wrapper">
@@ -88,7 +87,7 @@
           <div class="left-column-text"><%= contact_or_customer %> since: <%= user_snapshot[:since][:date] %></div>
         </div>
         <%= render partial: 'shared/profiles/recent_activity', locals: { recent_activity: recent_activity } %>
-        <% if current_user.is_platform? %>
+        <% if current_user.is_platform? && @active_plan.present? %>
           <%= render partial: 'shared/profiles/plan_info', locals: { active_plan: @active_plan, current_subscription: @current_subscription } %>
         <% end %>
       </div>
