@@ -72,7 +72,6 @@ class MessageParser
       elsif @customer.blank?            
         is_signup = is_signup?
         if is_signup                # tested
-          merchant_name_prompt = merchant.org_name.present? ? "to " + merchant.org_name : "through #{app_name}"
           short_link = UrlShortenerService.shorten_link("#{url_helpers.new_user_registration_url}?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           send_response("Hi there! You're really close to sending a payment #{merchant_name_prompt} via text. Follow the link to get set up: #{short_link}")
         elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
@@ -215,7 +214,7 @@ class MessageParser
           cant_override_tag_amt_message
         else
           # notify user and send sign in link with payment capture
-          send_response("Sorry we couldn't process your payment because: #{re[:text]}. Please follow this link #{sign_in_link} to add a card to your profile.")
+          send_response("Hi there, we weren't able to complete your payment #{merchant_name_prompt} because #{re[:text]}. But you can complete your payment by following this link #{sign_in_link} to add/update your card :)")       
         end
       elsif @amt_ary[1] == "cant_override_tag_amt"            # tested
         puts 'user but cant override_tag_amt'
@@ -232,7 +231,7 @@ class MessageParser
       else                                                    # tested
         puts 'no user and can override_tag_amt or charge tag default'
         url = UrlShortenerService.shorten_link(url_helpers.new_user_registration_url + "?captured_amt=#{@amt_ary[0]}&num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}&msg_id=#{@received_msg.id}&channel=#{@channel}")
-        send_response("Sorry we couldn't process your payment. Please follow this link #{url} to create an account and add a card to your profile.")          
+        send_response("Hi there, you're almost done completing your payment #{merchant_name_prompt}! First, follow this link #{url} to create an account and add a card to your profile :)")
       end
     end
     []
@@ -404,12 +403,13 @@ class MessageParser
   end
 
   def merchant_name; (@merchant.org_name.present? ? @merchant.org_name : app_name) end
+  def merchant_name_prompt; (@merchant.org_name.present? ? "to " + @merchant.org_name : "through #{app_name}") end
 
   def app_name; Rails.application.secrets.app['name'] end
 
   def is_platform?
     return false if @merchant.is_merchant? && !@merchant.is_platform?
-    send_response("Thanks for messaging us here at #{app_name}. This number does not accept payments, please check the business number you're trying to text a payment to and try again.")
+    send_response("Thanks for messaging us here at #{app_name}. This number does not accept payments. Please ask for the Relay number from the organization you are trying to text a payment to and resend your text.")
     true
   end
 

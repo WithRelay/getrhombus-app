@@ -10,6 +10,7 @@ Rails.application.routes.draw  do
   StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
+  get '/signup', to: redirect('/users/sign_up')
 
   # events/hooks routes
   #constraints subdomain: 'hooks' do

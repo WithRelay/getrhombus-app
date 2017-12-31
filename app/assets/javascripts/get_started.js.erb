@@ -53,13 +53,13 @@ $(document).ready(function () {
                   },
                   remote: {
                       type: 'GET',
-                      url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                      url: 'https://api.mailgun.net/v3/address/validate?callback=?',
                       crossDomain: true,
                       name: 'address',
                       data: {
                           // Registry a Mailgun account and get a free API key
                           // at https://mailgun.com/signup
-                          api_key: '<redacted_api_key>'
+                          api_key: '<redacted_api_key>'public_key"] %>'
                       },
                       dataType: 'jsonp',
                       validKey: 'is_valid',
