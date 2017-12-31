@@ -139,7 +139,7 @@ class PaymentService
               account: stripe_cred[:cred].account_id,
             }, 
             description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
-            statement_descriptor: merchant.org_name,
+            statement_descriptor: merchant.org_name[0..20],
           })
         end
 
