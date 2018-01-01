@@ -434,7 +434,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:merchant].email } ],
-         "bcc_address"=> User.platform_email,
+         #"bcc_address"=> User.platform_email,
          "from_name" => 'Relay',
          "from_email" => User.platform_email
         }
@@ -509,7 +509,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:customer].email } ],
-         "bcc_address"=> User.platform_email,
+         #"bcc_address"=> User.platform_email,
          "from_name" => 'Relay',
          "from_email" => User.platform_email,
          "headers" => {
