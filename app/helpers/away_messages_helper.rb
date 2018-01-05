@@ -19,13 +19,13 @@ module AwayMessagesHelper
     final_hour_minute = ''
     ct_hour_minute = []
     while (final_hour_minute != "12:30 #{time_am_pm}") do
-      minute = minute + 30
       if minute == 60
         minute = 0
         hour = hour + 1
       end
       final_hour_minute = minute == 0 ? "#{hour}:#{minute}0 #{time_am_pm}" : "#{hour}:#{minute} #{time_am_pm}"
       ct_hour_minute.push(final_hour_minute)
+      minute = minute + 30
     end
     ct_hour_minute
   end
