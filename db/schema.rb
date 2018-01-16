@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171114124625) do
+ActiveRecord::Schema.define(version: 20180116231211) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -551,6 +551,21 @@ ActiveRecord::Schema.define(version: 20171114124625) do
 
   add_index "next_plans", ["plan_id"], name: "index_next_plans_on_plan_id", using: :btree
 
+  create_table "numbers", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.string   "number",     limit: 191
+    t.string   "provider",   limit: 191
+    t.string   "type",       limit: 191
+    t.string   "country",    limit: 191
+    t.integer  "price",      limit: 4
+    t.boolean  "default",    limit: 1
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "numbers", ["number"], name: "index_numbers_on_number", using: :btree
+  add_index "numbers", ["user_id"], name: "index_numbers_on_user_id", using: :btree
+
   create_table "open_cnam_data", force: :cascade do |t|
     t.string   "name",         limit: 191
     t.string   "phone_number", limit: 191
@@ -873,4 +888,5 @@ ActiveRecord::Schema.define(version: 20171114124625) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
+  add_foreign_key "numbers", "users"
 end

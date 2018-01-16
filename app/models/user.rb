@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-
   extend UserProfile
   include CSVHandler
   include AddTokenToUser
@@ -10,7 +9,7 @@ class User < ActiveRecord::Base
   attr_accessor :area_code, :card_token, :page_specific_id
 
   NUMBER_PRICE, SIGNUP_EMAIL_DELAY, INCOMPLETE_SIGNUP_EMAIL_DELAY = 1, 120, 720
-  
+
   delegate :url_helpers, to: 'Rails.application.routes'
 
   # These validations cause issues with existing merchants who do not have the fields set. Need to revisit.
@@ -21,7 +20,7 @@ class User < ActiveRecord::Base
   # validates :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? && self.reset_password_token.blank? }
   # validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_customer? && self.reset_password_token.blank? }
   # validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' && self.reset_password_token.blank? }, on: :update
-  
+
   validates_presence_of :user_level, message: "Please select an account type", on: :create
   validate :phone_number_cannot_be_rhombus_number
 
@@ -121,6 +120,8 @@ class User < ActiveRecord::Base
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
 
+  has_many :numbers
+
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
@@ -134,7 +135,7 @@ class User < ActiveRecord::Base
   def is_merchant?; self.user_level == 1 || is_platform? end
   def get_page_access_token; self.fb_pages.subscribed.last end
   #def self.platform_email; '<redacted_email>' end
-  def self.platform_email; Rails.application.secrets.team_email end 
+  def self.platform_email; Rails.application.secrets.team_email end
   def self.get_platform_acct_obj; User.find_by(email: User.platform_email) end
   def deduct_from_account_balance(amt); self.decrement!(:account_balance, amt.to_f) end
   def friendly_relay_number; self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number end
@@ -193,7 +194,7 @@ class User < ActiveRecord::Base
     uid = generate_uid
     url = "#{url_helpers.new_user_registration_url}?referrer_uid=#{uid}"
     self.update(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"])
-    
+
     #deduct_from_account_balance(NUMBER_PRICE)
 
     #welcome_text = "Howdy! Wondering how to get started? Add or import your customers and contacts to start messaging them immediately. If you have any questions, message us here and a member of our team will be happy to help."
@@ -219,7 +220,7 @@ class User < ActiveRecord::Base
 
   def is_active_merchant?
     count = Transaction.where(team_id: self.id).count + MerchantCustomer.where(merchant_id: self.id).count
-            + Message.where("user_id = ? or user_id_to = ?", self.id, self.id).count 
+            + Message.where("user_id = ? or user_id_to = ?", self.id, self.id).count
             + FbMessage.where("user_id = ? or user_id_to = ?", self.id, self.id).count
     count > 0
   end
@@ -244,7 +245,8 @@ class User < ActiveRecord::Base
 
   def the_titleizer
     [:url, :custom_welcome, :org_name].each { |a| self[a].try(:strip!) }
-    self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
+    return if self.card_name.blank?
+    self.card_name = self.card_name.strip.titleize
   end
 
   def do_signup_stuff
@@ -270,9 +272,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  #def validates_person_full_message
-    # leave out. but this code needs to be changed
-    #errors.add(:full_name, 'is required') if self.people[0].try(:full_name).present?
-  #end
-
+  # def validates_person_full_message
+  #   leave out. but this code needs to be changed
+  #   errors.add(:full_name, 'is required') if self.people[0].try(:full_name).present?
+  # end
 end
