@@ -1,9 +1,10 @@
 $(document).on('ready page:load', function() {
 
   // checked
-  // var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option> <option value="3">Email</option>';
-  var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option>';
-  var dropDownOption = { 'sms': [ '0', 'SMS'], 'messenger': ['2', 'Facebook Messenger'], 'email': ['3', 'Email'] };
+  var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option>';// <option value="3">Email</option>';
+  
+  var contact_list_dropdown_option = { 'sms': [['0', 'SMS'], ['1', 'MMS']], 'messenger': [['2', 'Facebook Messenger']] }; //, 'email': ['3', 'Email'] }; // could with custom attrs?
+  
   // For edit action, get lists data for preloading text input
   var ajax_data, campaign_list_field = $('#campaign-list'), campaign_list = campaign_list_field.data("list-data");
 
@@ -97,16 +98,16 @@ $(document).on('ready page:load', function() {
     // you cannot change the channel of an existing campaign
     if (!is_campaign_saved()) {
       if (list_obj && list_obj.list_type == 'contact') {
-        var listOption = dropDownOption[list_obj.channel];
-        if (listOption) {
-          var newHtmlContent = '<option value="'+ listOption[0] + '" >' +  listOption[1]  + "</option>";
+        var listOptions = contact_list_dropdown_option[list_obj.channel];
+        if (listOptions) {
+          var newHtmlContent = '';          
+          $.each(listOptions, function (index, val) {
+            newHtmlContent += '<option value="'+ val[0] + '" >' +  val[1]  + "</option>";
+          });          
           $('#campaign-channel').html(newHtmlContent);
         };
       } else {
-        var value = $('#campaign-channel').val()
-        $('#campaign-channel').html(htmlContent);
-        $('#campaign-channel').val(value);
-        return
+        return $('#campaign-channel').html(htmlContent);
       }
     };
     $('#campaign-channel').change();
