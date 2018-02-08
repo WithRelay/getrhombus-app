@@ -103,7 +103,10 @@ $(document).on('ready page:load', function() {
           $('#campaign-channel').html(newHtmlContent);
         };
       } else {
-        return $('#campaign-channel').html(htmlContent);
+        var value = $('#campaign-channel').val()
+        $('#campaign-channel').html(htmlContent);
+        $('#campaign-channel').val(value);
+        return
       }
     };
     $('#campaign-channel').change();
