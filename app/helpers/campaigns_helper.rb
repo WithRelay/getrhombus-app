@@ -3,8 +3,8 @@ module CampaignsHelper
   def channel_list(campaign, list)
     # Switching between channels is probably dangerous for persisted campaigns
     # Ex: Email content can't become sms
-    channel_list = { SMS: 0, MMS: 1, Email: 3 } #, 'Facebook Messenger' => 2 }
-
+    # channel_list = { SMS: 0, MMS: 1, Email: 3 } #, 'Facebook Messenger' => 2 }
+    channel_list = { SMS: 0, MMS: 1 }
     if campaign.persisted?
       { format_campaign_channel(campaign.channel) => get_channel_enum_value(campaign.channel) }
     elsif list.present? && campaign.invalid? && list[0].contact?
@@ -20,7 +20,8 @@ module CampaignsHelper
   end
 
   def format_campaign_channel(channel)
-    return 'SMS' if channel == 'sms' || channel == 'mms'
+    return 'SMS' if channel == 'sms'
+    return 'MMS' if channel == 'mms'
     return 'Email' if channel == 'email'
     'Facebook Messenger'
   end

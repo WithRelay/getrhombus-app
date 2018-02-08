@@ -1,7 +1,8 @@
 $(document).on('ready page:load', function() {
 
   // checked
-  var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option> <option value="3">Email</option>';
+  // var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option> <option value="3">Email</option>';
+  var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option>';
   var dropDownOption = { 'sms': [ '0', 'SMS'], 'messenger': ['2', 'Facebook Messenger'], 'email': ['3', 'Email'] };
   // For edit action, get lists data for preloading text input
   var ajax_data, campaign_list_field = $('#campaign-list'), campaign_list = campaign_list_field.data("list-data");
