@@ -8,7 +8,7 @@
 
             <%= profile_image_color(profile, true) %>
             <div class="shrink-text table-text">
-              <%= link_to profile[:full_name], user_merchant_customer_path(current_user, merchant_contact), class: "non-underline-link" %>
+              <%= link_to profile[:full_name], user_merchant_contact_path(current_user, merchant_contact), class: "non-underline-link" %>
             </div>
           </div>
           <div class="cb check-box-column">
