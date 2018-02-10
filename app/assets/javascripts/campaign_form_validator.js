@@ -2,9 +2,9 @@ $(document).on('ready page:load', function() {
 
   // checked
   var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option>';// <option value="3">Email</option>';
-  
+
   var contact_list_dropdown_option = { 'sms': [['0', 'SMS'], ['1', 'MMS']], 'messenger': [['2', 'Facebook Messenger']] }; //, 'email': ['3', 'Email'] }; // could with custom attrs?
-  
+
   // For edit action, get lists data for preloading text input
   var ajax_data, campaign_list_field = $('#campaign-list'), campaign_list = campaign_list_field.data("list-data");
 
@@ -97,18 +97,21 @@ $(document).on('ready page:load', function() {
   function createDynamicDropdown(list_obj) {
     // you cannot change the channel of an existing campaign
     if (!is_campaign_saved()) {
-      if (list_obj && list_obj.list_type == 'contact') {
-        var listOptions = contact_list_dropdown_option[list_obj.channel];
-        if (listOptions) {
-          var newHtmlContent = '';          
-          $.each(listOptions, function (index, val) {
-            newHtmlContent += '<option value="'+ val[0] + '" >' +  val[1]  + "</option>";
-          });          
-          $('#campaign-channel').html(newHtmlContent);
-        };
-      } else {
-        return $('#campaign-channel').html(htmlContent);
-      }
+      // if (list_obj && list_obj.list_type == 'contact') {
+      //   var listOptions = contact_list_dropdown_option[list_obj.channel];
+      //   if (listOptions) {
+      //     var newHtmlContent = '';
+      //     $.each(listOptions, function (index, val) {
+      //       newHtmlContent += '<option value="'+ val[0] + '" >' +  val[1]  + "</option>";
+      //     });
+      //     $('#campaign-channel').html(newHtmlContent);
+      //   };
+      // } else {
+      //   return $('#campaign-channel').html(htmlContent);
+      // }
+      var value = $('#campaign-channel').val();
+      $('#campaign-channel').html(newHtmlContent);
+      $('#campaign-channel').val(value);
     };
     $('#campaign-channel').change();
   };
