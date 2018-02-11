@@ -23,4 +23,25 @@ class Api::V1::MerchantContactsController < Api::V1::BaseController
     
   end
 
+  def contact_csv
+    begin
+      status = 500
+      response = "Your CSV file has been uploaded. This might take a while to complete."
+      doc = current_user.documents.create(attachment: params['csv'])
+      puts doc.errors.inspect
+      puts doc.errors.full_messages.inspect
+      if doc.errors.full_messages.blank?
+        CsvContactImportJob.perform_later(current_user, doc)
+        status = 200
+      else
+        response = doc.errors.full_messages
+      end
+    rescue StandardError => exception
+      response = 'Unable to upload customer csv'
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In v1 merchant_contacts contact_csv_upload", env: Rails.env })      
+    end
+
+    render json: { response: response }, status: status
+  end
+
 end

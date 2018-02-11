@@ -40,6 +40,15 @@ module CSVHandler
     end
   end
 
+  def get_contact_csv_template
+    attributes = ['first_name', 'last_name', 'email', 'phone_number', 'street_address', 'city', 'state_province', 'country', 'postal_code']
+    default_text = ['John', 'Smith', '<redacted_email>', '<redacted_phone_number>', '2 Neverland Place', 'Boston', 'MA', 'US', '12345']
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      csv << default_text
+    end
+  end
+
   # https://andrew.coffee/blog/skipping-blank-lines-in-ruby-csv-parsing.html
   # http://technicalpickles.com/posts/parsing-csv-with-ruby/
   def upload_customer_csv(file_path)
@@ -161,6 +170,129 @@ module CSVHandler
       response
     rescue StandardError => e
       ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv third exception block", env: Rails.env, self: self })
+      ['File Upload', ["Something went wrong on our end."]]
+    end
+  end
+
+  #modify
+  def upload_contact_csv(file_path)
+    begin
+      response, headers_checked, error_hash = [], false, {}
+
+      CSV::Converters[:blank_to_nil] = lambda do |field|
+        field && field.blank? ? nil : field
+      end
+
+      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code]
+      file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+      file_headers = file_data.headers
+
+      file_data.each do |row|
+        error = false
+
+        # Validate headers
+        if !headers_checked
+          if headers.length != file_headers.length
+            response.push(['The File Headers', ["Unable to proceed because the number of headers are incorrect."]])
+            break
+          end
+
+          if headers.to_set != file_headers.to_set
+            response.push(["The File Headers", ["Unable to proceed because the headers are incorrect."]])
+            break
+          end
+
+          headers_checked = true
+        end
+
+        row = row.to_hash
+        @contact = User.find_by(phone_number: row[:phone_number])
+
+        if @contact.blank?
+          # don't process the dummy data we put in the template file
+          if row[:email].present? && row[:email] != '<redacted_email>'
+            error_hash[row[:email]] = []
+
+            begin
+              # Validate number
+              valid_num = TextingService.number_lookup(row[:phone_number])
+              if valid_num.present?
+                row[:phone_number] = valid_num[0]
+                uid, uid_type = valid_num, 'phone_number'
+                MerchantContact.add_or_update_merchant_contact(valid_num, uid, uid_type)
+                OpenCnamData.find_record_or_get_intelligence_data(uid)
+              else
+                error_hash[row[:phone_number]].push('Phone number is invalid.')
+                error = true
+              end
+
+              # set user_level and password
+              row[:user_level] = 0
+              row[:password] = Toolbox::StringGen.generate_random_string(8)
+
+              # validate user data against db
+              if error
+                @contact = User.new(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
+                @contact.valid?
+              else
+                ActiveRecord::Base.transaction do
+                  @contact = User.new(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
+                  @contact.customer_source = { id: self.id, method: 'added', temp_password: row[:password] }
+                  @contact.save!
+
+                  if @contact.persisted? && (row[:first_name] || row[:last_name])
+                    person = @contact.people.create(first_name: row[:first_name], last_name: row[:last_name]) 
+                    if person.persisted? && (row[:street_address] || row[:city] || row[:postal_code] || row[:state_province] || row[:country])
+                      person.create_address(street_address: row[:street_address], city: row[:city], postal_code: row[:postal_code], 
+                                             state_province: row[:state_province], country: row[:country])
+                    end
+                  end
+                end
+              end
+
+              # check for @contact errors
+              if @contact.errors.messages.present? || error
+                @contact.errors.messages.each do |k,v|
+                  v.each { |r| error_hash[row[:email]].push("#{k}".humanize + " #{r}.") }
+                end
+                error = true
+              else
+                uid, uid_type = valid_num, 'phone_number'
+                MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj, @contact)
+                MerchantContact.add_or_update_merchant_contact(self, @contact)
+                Referrer.save_referrer_with_uid(self.relay_uid, @contact.id)
+              end
+            rescue ActiveRecord::RecordNotUnique => e
+              ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv first exception block", env: Rails.env, self: self })
+              msg = e.original_exception.message
+              error_hash[row[:email]].push("Phone number is already in use.") if msg.include?('index_users_on_phone_number')
+              error_hash[row[:email]].push("Email is already in use.") if msg.include?('index_users_on_email')
+              error = true
+            rescue StandardError => e
+              ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv second exception block", env: Rails.env, self: self })
+              error = true
+              error_hash[row[:email]].push("Something went wrong on our end.")
+            end
+
+            error_hash.delete(row[:email]) unless error
+          end
+        else
+          MerchantCustomer.add_or_update_me
+          MerchantCustomer.add_or_update_merchant_customer(self, @contact) if @contact.is_customer?
+        end
+      end
+
+      # change hash to array
+      error_hash.each do |key, value|
+        ary = []
+        value.each { |v| ary.push(v) }          
+        response.push([key, ary])  
+      end
+      puts 'are there any errors?'
+      puts response.inspect
+      response
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv third exception block", env: Rails.env, self: self })
       ['File Upload', ["Something went wrong on our end."]]
     end
   end

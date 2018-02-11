@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   include ManagedAccountActions
   include DashboardData
 
-  before_action :set_notifications, except: [:show, :customer_csv_template, :add_card_info, :add_subscription, :add_rhombus_number,
+  before_action :set_notifications, except: [:show, :customer_csv_template, :contact_csv_template, :add_card_info, :add_subscription, :add_rhombus_number,
                                              :add_profile_info, :remove_twitter_integration, :remove_stripe_integration, :verify_hosted_sms_order]
 
   def show

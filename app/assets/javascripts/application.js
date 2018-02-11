@@ -106,6 +106,7 @@
 //= require resource_actions
 //= require away_messages
 //= require csv_upload
+//= require contacts_csv_upload
 //= require perfect-scrollbar
 //= require capture
 //= require visibility_changed

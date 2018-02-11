@@ -122,7 +122,7 @@ module ApplicationHelper
   end
 
   def csv_actions
-    csv_actions = ['transactions-download_csv', 'subscriptions-download_csv', 'users-customer_csv_template']
+    csv_actions = ['transactions-download_csv', 'subscriptions-download_csv', 'users-customer_csv_template', 'users-contact_csv_template']
     csv_actions.include?(params_controller_action)
   end
 
