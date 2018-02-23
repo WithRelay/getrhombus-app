@@ -70,6 +70,7 @@ Rails.application.routes.draw  do
       get "business-settings"
       #get 'integrations'
       get 'customer_csv_template'
+      get 'contact_csv_template'
       get 'remove_stripe_integration'
       get 'remove_twitter_integration'
       get 'fb_pages/remove_integration'
@@ -170,6 +171,8 @@ Rails.application.routes.draw  do
     resources :fongo_customers, path: 'fongo/customers' , only: [:create]
     #get :fongo_customers, to: 'fongo_customers#create', path: 'fongo/customers'
     post '/customer_csv' => 'merchant_customers#customer_csv'
+    #move
+    post '/contact_csv' => 'merchant_contacts#contact_csv'
     resources :merchant_contacts,  path: :contacts, only: [:index]
     resources :demos, only: [:create]
     resources :conversations, only: [:index, :show] do

@@ -86,4 +86,17 @@ module AdditionalUserActions
     end
   end
 
+  def contact_csv_template
+    render :template => "static_pages/to_404.html" and return if !current_user
+    response = current_user.get_contact_csv_template
+    if response
+      respond_to do |format|
+        format.csv { send_data response, filename: "contact_template.csv" }
+      end
+    else
+      # use 500 page after it is built
+      render :template => "static_pages/to_404.html"
+    end
+  end
+
 end

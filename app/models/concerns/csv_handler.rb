@@ -40,6 +40,16 @@ module CSVHandler
     end
   end
 
+  def get_contact_csv_template
+    attributes = ['phone_number']
+    default_text = ['<redacted_phone_number>', '<redacted_phone_number>']
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      csv << [default_text.first]
+      csv << [default_text.second]
+    end
+  end
+
   # https://andrew.coffee/blog/skipping-blank-lines-in-ruby-csv-parsing.html
   # http://technicalpickles.com/posts/parsing-csv-with-ruby/
   def upload_customer_csv(file_path)
@@ -82,7 +92,7 @@ module CSVHandler
 
             begin
               # Validate number
-              valid_num = TextingService.number_lookup(row[:phone_number])
+              valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
               if valid_num.present?
                 row[:phone_number] = valid_num[0]
               else
@@ -165,5 +175,79 @@ module CSVHandler
     end
   end
 
+  def upload_contact_csv(file_path)
+    begin
+      response, headers_checked, error_hash = [], false, {}
+
+      CSV::Converters[:blank_to_nil] = lambda do |field|
+        field && field.blank? ? nil : field
+      end
+
+      headers = [:phone_number]
+      file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+      file_headers = file_data.headers
+
+      file_data.each do |row|
+        error = false
+
+        # Validate headers
+        if !headers_checked
+          if headers.length != file_headers.length
+            response.push(['The File Headers', ["Unable to proceed because the number of headers are incorrect."]])
+            break
+          end
+
+          if headers.to_set != file_headers.to_set
+            response.push(["The File Headers", ["Unable to proceed because the headers are incorrect."]])
+            break
+          end
+
+          headers_checked = true
+        end
+
+        row = row.to_hash        
+        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+        
+        row[:phone_number] = valid_num[0] if valid_num.present?
+        error_hash[row[:phone_number]] = []
+
+        if valid_num.present?
+          # check if a customer type user already has this number
+          @customer = User.find_by(phone_number: row[:phone_number])
+          
+          if @customer.blank?
+            begin            
+              MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
+              MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
+              OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
+            rescue StandardError => e
+              error = true
+              ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv first exception block", env: Rails.env, self: self })
+              error_hash[row[:phone_number]].push("Something went wrong on our end.")
+            end
+
+            error_hash.delete(row[:phone_number]) unless error
+          else
+            MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+          end
+        else
+          error_hash[row[:phone_number]].push('Phone number is invalid.')
+        end
+      end
+
+      # change hash to array
+      error_hash.each do |key, value|
+        ary = []
+        value.each { |v| ary.push(v) }          
+        response.push([key, ary])  
+      end
+      puts 'are there any errors?'
+      puts response.inspect
+      response
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv second exception block", env: Rails.env, self: self })
+      ['File Upload', ["Something went wrong on our end."]]
+    end
+  end
 
 end

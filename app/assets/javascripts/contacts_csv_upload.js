@@ -1,6 +1,6 @@
 $(document).ready(function () {
-  if ($(".merchant_customers.index").length) {
-    var file, button = $('#csv-upload-button'),
+  if ($(".merchant_contacts.index").length) {
+    var file, button = $('#contacts-csv-upload-button'),
         file_picker_obj = document.getElementById('csv-file-select');
 
     $('#csv-file-select-btn').click(function() {
@@ -50,7 +50,7 @@ $(document).ready(function () {
 
     function send_payload(payload) {
       var xhr = new XMLHttpRequest(); // Set up the request.
-      xhr.open('POST', '/v1/customer_csv', true); // Open the connection.
+      xhr.open('POST', '/v1/contact_csv', true); // Open the connection.
       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
       xhr.onload = function() {
         if (xhr.readyState === 4) {
@@ -60,15 +60,16 @@ $(document).ready(function () {
             status_type = 'notice';
           };
           FlashHandler.setFlashMessage(JSON.parse(xhr.responseText).response, status_type);
-          button.text("Import customers").prop('disabled', false);
+          button.text("Import contacts").prop('disabled', false);
         }
       };
 
       xhr.onerror = function(e) {
         FlashHandler.setFlashMessage('Unable to upload csv file.', 'error');
-        button.text("Import customers").prop('disabled', false);
+        button.text("Import contacts").prop('disabled', false);
       };
       xhr.send(payload); // Send the Data.
     };
   }
 });
+  
