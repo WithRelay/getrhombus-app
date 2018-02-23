@@ -22,7 +22,7 @@
     <%= csrf_meta_tags %>
 
   </head>
-  <body style="<%= dynamic_pages_overflow_hidden %>" class="<%= add_body_class %>"> <%#= needed for conversations page body %>
+  <body style="<%= dynamic_pages_overflow_hidden %>" class="<%= add_body_class %> <%= controller.controller_name %> <%= controller.action_name %>"> <%#= needed for conversations page body %>
     <%= render 'shared/banner' if unauthenticate_controller %>
     <%#= render 'shared/appcues' if current_user.try(:is_merchant?) %>
     <%= render_header_partial %>

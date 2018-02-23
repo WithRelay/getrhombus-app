@@ -1,11 +1,12 @@
 $(document).ready(function () {
+  if ($(".merchant_contacts.index").length) {
     var file, button = $('#contacts-csv-upload-button'),
         file_picker_obj = document.getElementById('csv-file-select');
-  
+
     $('#csv-file-select-btn').click(function() {
       $('#csv-file-select').click();
     });
-  
+
     $('#csv-file-select').change(function() {
       file = this.files; // Get the selected files from the input.
       if (file && file.length) {
@@ -23,21 +24,21 @@ $(document).ready(function () {
           }
         }
       }
-  
-    //   reset_file_picker();
+
+      reset_file_picker();
     });
-  
+
     function reset_file_picker() {
       file = null;
       file_picker_obj.value = "";
       $('#csv-file-name').text('No file chosen');
     }
-  
+
     // http://blog.teamtreehouse.com/uploading-files-ajax
     // but modified to send just one file.
     button.click(function(e) {
       e.preventDefault();
-  
+
       if (file) {
         button.text("Uploading...").prop('disabled', true);
         var formData = new FormData(); // Create a new FormData object.
@@ -46,7 +47,7 @@ $(document).ready(function () {
       }
     });
     // end csv file upload
-  
+
     function send_payload(payload) {
       var xhr = new XMLHttpRequest(); // Set up the request.
       xhr.open('POST', '/v1/contact_csv', true); // Open the connection.
@@ -62,13 +63,13 @@ $(document).ready(function () {
           button.text("Import contacts").prop('disabled', false);
         }
       };
-  
+
       xhr.onerror = function(e) {
         FlashHandler.setFlashMessage('Unable to upload csv file.', 'error');
         button.text("Import contacts").prop('disabled', false);
       };
       xhr.send(payload); // Send the Data.
     };
-  
-  });
+  }
+});
   
