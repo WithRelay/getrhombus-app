@@ -110,7 +110,7 @@ $(document).on('ready page:load', function() {
       //   return $('#campaign-channel').html(htmlContent);
       // }
       var value = $('#campaign-channel').val();
-      $('#campaign-channel').html(newHtmlContent);
+      $('#campaign-channel').html(htmlContent);
       $('#campaign-channel').val(value);
     };
     $('#campaign-channel').change();
