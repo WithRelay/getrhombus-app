@@ -74,7 +74,8 @@ class MessageParser
         if is_signup                # tested
           short_link = UrlShortenerService.shorten_link("#{url_helpers.new_user_registration_url}?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           send_response("Hi there! You're really close to sending a payment #{merchant_name_prompt} via text. Follow the link to get set up: #{short_link}")
-        elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
+        # enable welcome unless explicitly disabled
+        elsif @merchant.alert && @merchant.alert.enable_welcome? && custom_welcome @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
           ### Taking this out for now.
           first_name_str = '' #(@merchant.first_name.present?) ? "my name is #{@merchant.first_name}, " : ''
           custom_welcome = "Hi there, " + first_name_str + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #pizza"
