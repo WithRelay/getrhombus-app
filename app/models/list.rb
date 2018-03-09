@@ -35,11 +35,15 @@ class List < ActiveRecord::Base
       else
         class_name.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)
       end
-
     else
-      class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")
-                .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
-                .paginate(page: page, per_page: PAGINATION_PER_PAGE)
+      if page == 0
+        class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")
+                  .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
+      else
+        class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")
+                  .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
+                  .paginate(page: page, per_page: PAGINATION_PER_PAGE)
+      end
     end
   end
 
