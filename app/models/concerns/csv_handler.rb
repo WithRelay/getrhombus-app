@@ -175,7 +175,6 @@ module CSVHandler
     end
   end
 
-=begin
   def upload_contact_csv(file_path)
     begin
       response, headers_checked, error_hash = [], false, {}
@@ -257,9 +256,9 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end
-
-   def upload_contact_csv(file_path)
+  
+=begin
+  def upload_contact_csv(file_path)
     begin  
       merchant = User.find 2626    
       merchant.lists.create([
@@ -293,5 +292,6 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
+=end
 
 end
