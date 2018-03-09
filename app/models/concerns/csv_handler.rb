@@ -175,6 +175,7 @@ module CSVHandler
     end
   end
 
+=begin
   def upload_contact_csv(file_path)
     begin
       response, headers_checked, error_hash = [], false, {}
@@ -251,6 +252,42 @@ module CSVHandler
       puts 'are there any errors?'
       puts response.inspect
       response
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv second exception block", env: Rails.env, self: self })
+      ['File Upload', ["Something went wrong on our end."]]
+    end
+  end
+=end
+
+   def upload_contact_csv(file_path)
+    begin  
+      merchant = User.find 2626    
+      merchant.lists.create([
+        { name: 'Facebook Leads', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
+        { name: 'Hang up on Machine', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
+        { name: 'Live Answer No Survey', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
+        { name: 'Live Answer With Survey', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
+        { name: 'NoAnswer', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
+      ])
+
+      CSV::Converters[:blank_to_nil] = lambda do |field|
+        field && field.blank? ? nil : field
+      end
+
+      file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+
+      file_data.each do |row|
+        
+        row = row.to_hash          
+        row[:phone_number] = row[:phone_number].to_s.squish
+        row[:seg] = row[:seg].to_s.squish
+
+        mc = MerchantContact.find_by(merchant_id: 2626, uid: row[:phone_number])    
+        if mc
+          list = List.find_by(user_id: 2626, name: row[:seg])
+          list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact")
+        end   
+      end
     rescue StandardError => e
       ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv second exception block", env: Rails.env, self: self })
       ['File Upload', ["Something went wrong on our end."]]
