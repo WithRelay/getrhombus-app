@@ -1,11 +1,11 @@
 
 # 1. run task first
 
-desc 'Move all phone numbers from User to Number table'
-task move_phone_number_from_user_to_number: :environment do
+desc 'Move all relay numbers from Users to Numbers table'
+task move_relay_number_from_users_to_numbers_table: :environment do
   provider = 'nexmo'
   
-  User.find_each do |u|
+  User.where(user_level: 1).each do |u|
     provider = 'nexmo'
 
     if u.rn_type.present?
