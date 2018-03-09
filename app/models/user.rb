@@ -143,7 +143,7 @@ class User < ActiveRecord::Base
 
   #def friendly_relay_number; self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number end
   # A default number must always exists for active accounts
-  def rhombus_number; self.default_number.try(:number) end   # uncomment after removing columns
+  def rhombus_number; self.default_number.try(:number) end 
   def friendly_relay_number
     dn = self.default_number
     dn.friendly_name.present? ? dn.friendly_name : dn.number 

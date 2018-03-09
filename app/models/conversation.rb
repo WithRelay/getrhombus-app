@@ -82,7 +82,7 @@ class Conversation < ActiveRecord::Base
 	end
 
   # uid can be user id, phone number or messenger id
-  def self.send_message(conv, team, msg, channel, source, media = [], from)
+  def self.send_message(conv, team, msg, channel, source, media = [], from = nil)
     begin
       #from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
       from = (channel == "FbMessage") ? team.get_page_access_token : from || conv.get_from_number
