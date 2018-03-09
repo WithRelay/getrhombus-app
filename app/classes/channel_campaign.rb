@@ -31,7 +31,7 @@ module ChannelCampaign
 
     def get_recipients
       return [{ email: @campaign.user.email }] if @campaign.test?
-      @campaign.lists.first.get_mcs             # relationally campaigns can have more lists...but not in practice
+      @campaign.lists.first.get_mcs(0)             # relationally campaigns can have more lists...but not in practice
     end
 
     def email_fallback
