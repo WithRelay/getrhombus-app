@@ -30,7 +30,7 @@ class List < ActiveRecord::Base
       self.segment['merchant_id'] = self.user_id
       self.segment["time"] = Time.current.beginning_of_day.utc - self.segment['base_val'].to_i.days if self.segment['base_val'].present?
 
-      if page = 0
+      if page == 0
         class_name.find_by_sql(send(self.segment['base_query'], self.segment))
       else
         class_name.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)
