@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180116231211) do
+ActiveRecord::Schema.define(version: 20180309050117) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -555,7 +555,7 @@ ActiveRecord::Schema.define(version: 20180116231211) do
     t.string   "friendly_name",             limit: 191
     t.string   "provider",                  limit: 191, default: "twilio"
     t.string   "fibernetics_subscriber_id", limit: 191
-    t.string   "type",                      limit: 191
+    t.string   "number_type",               limit: 191
     t.string   "country",                   limit: 191
     t.integer  "price",                     limit: 4,   default: 100
     t.boolean  "default",                   limit: 1,   default: false

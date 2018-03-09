@@ -25,7 +25,7 @@ class Message < ActiveRecord::Base
       number = merchant.numbers.find_by(number: from)
 
       #if merchant.rn_type.present?      # twilio
-      if number.type.present?      # twilio
+      if number.number_type.present?      # twilio
         response = TextingService.send_sms(from, to, message, media_ary)
         if response.first
           response = response.second

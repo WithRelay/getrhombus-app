@@ -14,7 +14,7 @@ task move_relay_number_from_users_to_numbers_table: :environment do
       provider = 'fibernetics'
     end
 
-    u.numbers.create(number: u.rhombus_number, friendly_name: u.rn_friendly_name, type: u.rn_type, country: u.rn_country, 
+    u.numbers.create(number: u.rhombus_number, friendly_name: u.rn_friendly_name, number_type: u.rn_type, country: u.rn_country, 
                       default: true, provider: provider, fibernetics_subscriber_id: u.fn_subscriber_id)
   end
 end
