@@ -27,9 +27,14 @@ class MobileCampaign
     User.where(id: user_ids)
   end
 
+
   def send_by_mobile(customer, uid_type, uid)
     Conversation.find_or_create_conversation_for_message_and_send_publish(@campaign.user, customer, uid_type, uid, @campaign.text, @channel, media_ary, 'campaign')
   end
+
+  # 1. get number of messages per number (round up)
+  # 2. build hash of number and count sent...once count exceeded, remove from hash.
+
 
   def media_ary
     @campaign.images.attachment
