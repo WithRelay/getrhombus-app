@@ -1,5 +1,5 @@
 
-
+### Task no longer usable because of multi-numbers
 # TASK 2. Tested
 
 desc "get friendly names for rhombus numbers"

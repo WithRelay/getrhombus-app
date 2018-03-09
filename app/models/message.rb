@@ -22,8 +22,10 @@ class Message < ActiveRecord::Base
       user = user.try(:id)
       self.update_attributes(user_id: merchant.id, user_id_to: user, from: from, to: to, text: message)
       sms_price = merchant.sms_fee.outbound_sms
+      number = merchant.numbers.find_by(number: from)
 
-      if merchant.rn_type.present?      # twilio
+      #if merchant.rn_type.present?      # twilio
+      if number.type.present?      # twilio
         response = TextingService.send_sms(from, to, message, media_ary)
         if response.first
           response = response.second
@@ -37,8 +39,9 @@ class Message < ActiveRecord::Base
           ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env, response: response })
           false
         end
-      elsif merchant.fn_subscriber_id.present?   #  fibernetics
-        response = TextingService.send_sms_fibernetics(from, to, message, merchant.fn_subscriber_id)
+      #elsif merchant.fn_subscriber_id.present?   #  fibernetics
+      elsif number.fibernetics_subscriber_id.present?   #  fibernetics
+        response = TextingService.send_sms_fibernetics(from, to, message, number.fibernetics_subscriber_id)
         if response && response.code == 200 && response['response']['status'] == 'OK'
           num_segments = Message.num_of_segments(message)
           merchant.deduct_from_account_balance(sms_price * num_segments)

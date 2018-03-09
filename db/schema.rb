@@ -38,16 +38,15 @@ ActiveRecord::Schema.define(version: 20180116231211) do
 
   create_table "alerts", force: :cascade do |t|
     t.boolean  "send_alert",  limit: 1,     default: false
-    t.integer  "interval",    limit: 4,     default: 15
-    t.boolean  "include_sms", limit: 1,     default: false
     t.text     "sms_numbers", limit: 65535
     t.text     "emails",      limit: 65535
+    t.boolean  "include_sms", limit: 1,     default: false
+    t.integer  "interval",    limit: 4,     default: 15
     t.integer  "user_id",     limit: 4
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
   end
 
-  add_index "alerts", ["user_id"], name: "fk_rails_6637a8d260", using: :btree
   add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
 
   create_table "api_creds", force: :cascade do |t|
@@ -432,10 +431,10 @@ ActiveRecord::Schema.define(version: 20180116231211) do
     t.datetime "updated_at",                                   null: false
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_d904f32fa0", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_25311528f3", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_2fe0fa30e5", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_ca7e31fd1d", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_4b9e37b92a", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_54cf68b000", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
@@ -488,7 +487,6 @@ ActiveRecord::Schema.define(version: 20180116231211) do
   end
 
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
-  add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_customer_id", using: :btree
   add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_uid", using: :btree
 
   create_table "merchant_customers", force: :cascade do |t|
@@ -552,15 +550,17 @@ ActiveRecord::Schema.define(version: 20180116231211) do
   add_index "next_plans", ["plan_id"], name: "index_next_plans_on_plan_id", using: :btree
 
   create_table "numbers", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.string   "number",     limit: 191
-    t.string   "provider",   limit: 191
-    t.string   "type",       limit: 191
-    t.string   "country",    limit: 191
-    t.integer  "price",      limit: 4
-    t.boolean  "default",    limit: 1
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.integer  "user_id",                   limit: 4
+    t.string   "number",                    limit: 191
+    t.string   "friendly_name",             limit: 191
+    t.string   "provider",                  limit: 191, default: "twilio"
+    t.string   "fibernetics_subscriber_id", limit: 191
+    t.string   "type",                      limit: 191
+    t.string   "country",                   limit: 191
+    t.integer  "price",                     limit: 4,   default: 100
+    t.boolean  "default",                   limit: 1,   default: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
   end
 
   add_index "numbers", ["number"], name: "index_numbers_on_number", using: :btree
@@ -591,6 +591,7 @@ ActiveRecord::Schema.define(version: 20180116231211) do
     t.string   "business_name",  limit: 191
   end
 
+  add_index "people", ["stripe_file_id"], name: "index_people_on_stripe_file_id", using: :btree
   add_index "people", ["user_id"], name: "index_people_on_user_id", using: :btree
 
   create_table "plans", force: :cascade do |t|
@@ -730,10 +731,8 @@ ActiveRecord::Schema.define(version: 20180116231211) do
     t.datetime "updated_at",                                     null: false
   end
 
-  add_index "subscriptions", ["coupon_id"], name: "fk_rails_56c77d859b", using: :btree
   add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
   add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
-  add_index "subscriptions", ["plan_id"], name: "fk_rails_4506bac28d", using: :btree
   add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
   create_table "transaction_fees", force: :cascade do |t|
@@ -756,7 +755,7 @@ ActiveRecord::Schema.define(version: 20180116231211) do
     t.string   "tax_percent",        limit: 191
     t.integer  "app_fee",            limit: 4,                             default: 0
     t.integer  "stripe_fee",         limit: 4,                             default: 0
-    t.integer  "transaction_fee_id", limit: 4,                             default: 1
+    t.integer  "transaction_fee_id", limit: 4
     t.string   "txn_uri",            limit: 191
     t.string   "txn_number",         limit: 191
     t.string   "description",        limit: 191
@@ -772,15 +771,14 @@ ActiveRecord::Schema.define(version: 20180116231211) do
     t.text     "notes",              limit: 65535
     t.integer  "team_id",            limit: 4
     t.string   "currency",           limit: 191
-    t.boolean  "captured",           limit: 1,                             default: true
     t.integer  "hashtag_id",         limit: 4
     t.integer  "subscription_id",    limit: 4
+    t.boolean  "captured",           limit: 1,                             default: true
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
-  add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree
   add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
@@ -888,5 +886,4 @@ ActiveRecord::Schema.define(version: 20180116231211) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
-  add_foreign_key "numbers", "users"
 end

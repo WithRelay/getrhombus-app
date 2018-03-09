@@ -56,9 +56,11 @@ class WebhooksController < ApplicationController
       elsif action_name == 'stripe_events' || action_name == 'fibernetics_events'
          @merchant = User.get_platform_acct_obj
       elsif action_name == 'twilio_events'
-        @merchant = User.includes(:sms_fee).find_by(rhombus_number: params[:To].gsub('+', ''))
+        #@merchant = User.includes(:sms_fee).find_by(rhombus_number: params[:To].gsub('+', ''))
+        @merchant = Number.includes(user: :sms_fee).find_by(number: params[:To].gsub('+', '')).try(:user)
       elsif action_name == 'nexmo_events'
-        @merchant = User.includes(:sms_fee).find_by(rhombus_number: params[:to])
+        #@merchant = User.includes(:sms_fee).find_by(rhombus_number: params[:to])
+        @merchant = Number.includes(user: :sms_fee).find_by(number: params[:to]).try(:user)
       end
 
       ((render nothing: true) and return) if @merchant.blank? && params['hub.mode'].nil?

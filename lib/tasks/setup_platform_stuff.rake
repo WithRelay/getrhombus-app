@@ -1,6 +1,8 @@
 namespace :platform do
 
+
   # 1
+  ### Task no longer usable because of multi-numbers
   desc "Setup platform user"
   task :setup_user => :environment do
     user = User.find 1

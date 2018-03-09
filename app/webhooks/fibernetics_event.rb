@@ -4,7 +4,9 @@ class FiberneticsEvent
     # Parameters: {"userId"=>"+<redacted_phone_number>", "signature"=>"203554682", "message"=>"new_messages"}
     @params = params
     @to = params[:userId].gsub('+', '')
-    @merchant = User.includes(:api_cred, :sms_fee).find_by(rhombus_number: @to)
+    #@merchant = User.includes(:api_cred, :sms_fee).find_by(rhombus_number: @to)
+    @number = Number.includes(user: [:sms_fee, :api_cred]).find_by(number: @to)
+    @merchant = @number.try(:user)
     get_message if @merchant
   end
 
@@ -23,7 +25,8 @@ class FiberneticsEvent
 =end
 
   def get_message
-    re = TextingService.get_sms_fibernetics(@to, @params[:signature].to_i - 1, @merchant.fn_subscriber_id)
+    #re = TextingService.get_sms_fibernetics(@to, @params[:signature].to_i - 1, @merchant.fn_subscriber_id)
+    re = TextingService.get_sms_fibernetics(@to, @params[:signature].to_i - 1, @number.fibernetics_subscriber_id)
     if re && re.code == 200 && re['response']['status'] == "OK"
       data = re['response']['messages']['message']
       data = [data] unless data.is_a? Array

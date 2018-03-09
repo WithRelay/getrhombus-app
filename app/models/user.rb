@@ -6,7 +6,8 @@ class User < ActiveRecord::Base
 
   attr_accessor :phone, :msg_id, :captured_amt, :referrer
   attr_accessor :channel, :referrer_uid, :tos_acceptance, :customer_source
-  attr_accessor :area_code, :card_token, :page_specific_id
+  attr_accessor :card_token, :page_specific_id
+  #attr_accessor :area_code, :rn_country, :rn_type # These accessors aren't needed anymore
 
   NUMBER_PRICE, SIGNUP_EMAIL_DELAY, INCOMPLETE_SIGNUP_EMAIL_DELAY = 1, 120, 720
 
@@ -120,6 +121,7 @@ class User < ActiveRecord::Base
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
 
+  has_one :default_number, -> { where(default: 1) }, class_name: 'Number'
   has_many :numbers
 
   before_validation :the_titleizer
@@ -138,7 +140,17 @@ class User < ActiveRecord::Base
   def self.platform_email; Rails.application.secrets.team_email end
   def self.get_platform_acct_obj; User.find_by(email: User.platform_email) end
   def deduct_from_account_balance(amt); self.decrement!(:account_balance, amt.to_f) end
+
+
+  ##### change
   def friendly_relay_number; self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number end
+  # A default number must always exists for active accounts
+  #def rhombus_number; self.default_number.try(:number) end   # uncomment after removing columns
+  #def friendly_relay_number
+   # dn = self.default_number
+    #dn.friendly_name.present? ? dn.friendly_name : dn.number 
+  #end
+  
   def managed_account_is_verified?; stripe_creds.first.try(:legal_entity_verification).try(:[], 'status') == 'verified' end
 
   def full_name
@@ -193,7 +205,11 @@ class User < ActiveRecord::Base
 
     uid = generate_uid
     url = "#{url_helpers.new_user_registration_url}?referrer_uid=#{uid}"
-    self.update(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"])
+
+    #### change
+    #self.update(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"])
+    self.update(relay_uid: uid, short_url: url)
+    self.numbers.create(number: number[0], friendly_name: number[1], type: params["rn_type"], country: params["rn_country"], default: true)
 
     #deduct_from_account_balance(NUMBER_PRICE)
 
@@ -226,15 +242,23 @@ class User < ActiveRecord::Base
   end
 
   def create_fibernetics_subscriber
-    re = TextingService.create_fibernetics_subscriber(self.rhombus_number)
-    self.update_columns(fn_subscriber_id: re, rn_friendly_name: nil, rn_type: nil, rn_country: nil) if re
+    #re = TextingService.create_fibernetics_subscriber(self.rhombus_number)
+    #self.update_columns(fn_subscriber_id: re, rn_friendly_name: nil, rn_type: nil, rn_country: nil) if re
+
+    user_numbers = self.numbers
+    user_numbers.each do |un|
+      re = TextingService.create_fibernetics_subscriber(un.number)
+      un.update_columns(fibernetics_subscriber_id: re) if re
+    end
   end
 
   private
 
+  #### Change
   # Some users sign up with Relay numbers
   def phone_number_cannot_be_rhombus_number
-    if self.phone_number.present? && User.exists?(rhombus_number: self.phone_number)
+    #if self.phone_number.present? && User.exists?(rhombus_number: self.phone_number)
+    if self.phone_number.present? && Number.unscoped.exists?(number: self.phone_number)
       errors.add(:phone_number, "can't be a Relay number. Please enter your phone number.")
     end
   end

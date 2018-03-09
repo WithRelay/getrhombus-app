@@ -84,7 +84,8 @@ class Conversation < ActiveRecord::Base
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, source, media = [])
     begin
-      from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
+      #from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
+      from = (channel == "FbMessage") ? team.get_page_access_token : conv.get_from_number
 
       if conv.uid_type == "user"
         customer = conv.user
@@ -126,6 +127,14 @@ class Conversation < ActiveRecord::Base
       ExceptionNotifier.notify_exception(exception, data: { message: "In conversations.rb send_message", env: Rails.env, conv: conv, team: team, msg: msg, to: to })
       false
     end
+  end
+
+  def get_from_number
+    team = self.merchant
+    last_message = ConversationRef.includes(:textable).where(conversation_id: self.id).try(:textable)
+    return team.rhombus_number unless last_message  # Ex. Merchant texting customer for the first time
+    from = last_message.user_id == team.id ? last_message.from : last_message.to     # inbound/outbound logic
+    Number.unscoped.exists?(user_id: team.id, number: from) ? from : team.rhombus_number    # check that merchant still owns the number else use default
   end
 
   # when sending by platform on behalf of platform or merchant like automated messages, campaigns (excludes sending from dashboard)

@@ -15,7 +15,8 @@ class HostedSmsService
       begin
         if HostedSms.exists?(user_id: user.id, phone_number: params[:phone_number])
           [false, 'A hosted sms request has been issued for this number']
-        elsif User.exists?(rhombus_number: params[:phone_number].gsub('+', ''))
+        #elsif User.exists?(rhombus_number: params[:phone_number].gsub('+', ''))
+        elsif Number.unscoped.exists?(number: params[:phone_number].gsub('+', ''))
           [false, 'This number is already in use']
         else
           @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)

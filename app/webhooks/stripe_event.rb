@@ -30,10 +30,19 @@ class StripeEvent
 
       user = @data.customer
       if user.is_merchant?
-        if user.rhombus_number.present?
-          user.hosted_sms.blank? ? TextingService.release_number(user.rhombus_number) : ''
-        end
-        user.update(rhombus_number: nil, rn_type: nil, rn_country: nil, rn_friendly_name: nil, status: 0)
+        #if user.rhombus_number.present?
+         # user.hosted_sms.blank? ? TextingService.release_number(user.rhombus_number) : ''
+        #end
+        #user.update(rhombus_number: nil, rn_type: nil, rn_country: nil, rn_friendly_name: nil, status: 0)
+
+        user_numbers = user.numbers
+        if user_numbers.present?
+          if user.hosted_sms.blank?
+            user_numbers.each { |un| TextingService.release_number(un.number) }
+            user_numbers.destroy_all
+          end
+        end        
+        user.update(status: 0)
         #delete facebook integration here
         EmailingService.exit_survey(user)
       end
