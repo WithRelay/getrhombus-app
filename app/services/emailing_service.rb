@@ -981,7 +981,7 @@ class EmailingService
       begin
         str = ''
         response.each do |r|
-          str = r[0].to_s + " had these errors: "
+          str = str + r[0].to_s + " had these errors: "
           r[1].each { |a| str = str + a + " " }
           str += " --------- "
         end
