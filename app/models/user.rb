@@ -209,7 +209,7 @@ class User < ActiveRecord::Base
     #### change
     #self.update(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"])
     self.update(relay_uid: uid, short_url: url)
-    self.numbers.create(number: number[0], friendly_name: number[1], type: params["rn_type"], country: params["rn_country"], default: true)
+    self.numbers.create(number: number[0], friendly_name: number[1], number_type: params["rn_type"], country: params["rn_country"], default: true)
 
     #deduct_from_account_balance(NUMBER_PRICE)
 
