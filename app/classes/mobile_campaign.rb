@@ -9,7 +9,7 @@ class MobileCampaign
 
     # currently only works for countries (u.s, canada) whose area codes are in position 1--3
     # also doesn't localize to country
-    @recipients_per_number = (@recipients.count/(@merchant.numbers.count.to_f)).ceil
+    @recipients_per_number = (@recipients.length/(@merchant.numbers.count.to_f)).ceil
     @number_area_code_hash = @merchant.numbers.map { |n| [n.number, n.number[1..3]] }.to_h
     @number_send_count_hash = @merchant.numbers.map { |n| [n.number, 0] }.to_h
   end

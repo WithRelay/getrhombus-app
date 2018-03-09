@@ -59,4 +59,10 @@ class List < ActiveRecord::Base
     ])
   end
 
+  def x
+    class_name = self.customer? ? MerchantCustomer : MerchantContact
+    class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")
+                  .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
+  end
+
 end
