@@ -246,6 +246,8 @@ module CSVHandler
         value.each { |v| ary.push(v) }          
         response.push([key, ary])  
       end
+
+      EmailingService.csv_upload_failure(response)
       puts 'are there any errors?'
       puts response.inspect
       response

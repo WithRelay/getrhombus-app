@@ -976,6 +976,20 @@ class EmailingService
       end
     end
 
+    # to platform only
+    def csv_upload_failure(response)
+      begin
+        str = ''
+        response.each do |r|
+          str = r[0].to_s + " had these errors: "
+          r[1].each { |a| str = str + a + " " }
+          str += " --------- "
+        end
+        email_to_platform(str, 'CSV Upload Errors')
+      rescue StandardError => e
+      end
+    end
+
     def email_to_platform(text, subject)
       message_hash = { html: text, from_name: 'Email From Relay',
                        subject: subject,
