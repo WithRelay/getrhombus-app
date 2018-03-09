@@ -82,10 +82,10 @@ class Conversation < ActiveRecord::Base
 	end
 
   # uid can be user id, phone number or messenger id
-  def self.send_message(conv, team, msg, channel, source, media = [])
+  def self.send_message(conv, team, msg, channel, source, media = [], from)
     begin
       #from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
-      from = (channel == "FbMessage") ? team.get_page_access_token : conv.get_from_number
+      from = (channel == "FbMessage") ? team.get_page_access_token : from || conv.get_from_number
 
       if conv.uid_type == "user"
         customer = conv.user
@@ -138,9 +138,9 @@ class Conversation < ActiveRecord::Base
   end
 
   # when sending by platform on behalf of platform or merchant like automated messages, campaigns (excludes sending from dashboard)
-  def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel = 'Message', media = [], source = 'platform')
+  def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel = 'Message', media = [], source = 'platform', from = nil)
     re = find_or_create_conversation(team.id, uid_type, uid)
-    msg_ary = send_message(re, team, msg_to_send, channel, source, media)
+    msg_ary = send_message(re, team, msg_to_send, channel, source, media, from)
     if msg_ary
       RealtimeStreamService.messages(re, msg_ary.third, customer, msg_ary.second)
       msg_ary.first[:id]
