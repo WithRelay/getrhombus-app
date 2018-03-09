@@ -19,16 +19,13 @@ class MobileCampaign
     if @campaign.lists.first.contact?
       @recipients.each do |r|
 
-#=begin
         if @channel == 'Message'
           number = @number_area_code_hash.key(r.uid[1..3])                        # find number to use by area code of recipient number
           number = @number_send_count_hash.first.first unless number              # if no match above, grab first merchant number
         end
-#=end
 
         send_by_mobile(nil, r.uid_type, r.uid, number, number) 
 
-#=begin
         if @channel == 'Message'
           @number_send_count_hash[number] = @number_send_count_hash[number] + 1   # increase counter
           if @number_send_count_hash[number] == @recipients_per_number            # check that max send per number hasnt been exceeded else remove from hashes
@@ -36,22 +33,19 @@ class MobileCampaign
             @number_send_count_hash.delete(number)
           end
         end
-#=end
 
       end
     else
       @recipients = @recipients.to_a
       customer_user_obj_list.each_with_index do |c, i| 
-
-#=begin        
+     
         if @channel == 'Message'
           number = @number_area_code_hash.key(c.phone_number[1..3])                 # find number to use by area code of recipient number
           number = @number_send_count_hash.first.first unless number                # if no match above, grab first merchant number
         end
-#=end  
+
         @failure_recipients.push(@recipients.delete_at(i)) unless send_by_mobile(c, 'user', c.id, number)
 
-#=begin
         if @channel == 'Message'
           @number_send_count_hash[number] = @number_send_count_hash[number] + 1     # increase counter
           if @number_send_count_hash[number] == @recipients_per_number              # check that max send per number hasnt been exceeded else remove from hashes
@@ -59,9 +53,8 @@ class MobileCampaign
             @number_send_count_hash.delete(number)
           end
         end
-#=end
-      end
 
+      end
     end
 
     { recipients: @recipients, retry_list: @failure_recipients }

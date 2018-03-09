@@ -94,7 +94,7 @@ module CSVHandler
               # Validate number
               valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
               if valid_num.present?
-                row[:phone_number] = valid_num[0]
+                row[:phone_number] = valid_num.first
               else
                 error_hash[row[:email]].push('Phone number is invalid.')
                 error = true
@@ -206,29 +206,34 @@ module CSVHandler
         end
 
         row = row.to_hash        
-        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''), true)
         
-        row[:phone_number] = valid_num[0] if valid_num.present?
+        row[:phone_number] = valid_num.first if valid_num.present?
         error_hash[row[:phone_number]] = []
 
-        if valid_num.present?
-          # check if a customer type user already has this number
-          @customer = User.find_by(phone_number: row[:phone_number])
-          
-          if @customer.blank?
-            begin            
-              MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
-              MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
-              OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
-            rescue StandardError => e
-              error = true
-              ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv first exception block", env: Rails.env, self: self })
-              error_hash[row[:phone_number]].push("Something went wrong on our end.")
-            end
 
-            error_hash.delete(row[:phone_number]) unless error
+        if valid_num.present?
+          if valid_num.fourth == "mobile"
+            # check if a customer type user already has this number
+            @customer = User.find_by(phone_number: row[:phone_number])
+            
+            if @customer.blank?
+              begin            
+                MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
+                MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
+                #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
+              rescue StandardError => e
+                error = true
+                ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv first exception block", env: Rails.env, self: self })
+                error_hash[row[:phone_number]].push("Something went wrong on our end.")
+              end
+
+              error_hash.delete(row[:phone_number]) unless error
+            else
+              MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+            end
           else
-            MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+            error_hash[row[:phone_number]].push('Phone number is not a mobile number.')
           end
         else
           error_hash[row[:phone_number]].push('Phone number is invalid.')
