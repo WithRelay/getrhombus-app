@@ -1,10 +1,5 @@
 class MobileCampaign
 
-  # 1. get number of messages per number (round up)
-  # 2. build hash of key -> number and value -> area code
-  # 3. build hash of key -> number and value -> count sent... 
-  # 4. once count exceeded, remove from both hashes.
-
   def initialize(campaign, recipients)
     @campaign = campaign
     @merchant = @campaign.user
