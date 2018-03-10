@@ -146,7 +146,8 @@ class User < ActiveRecord::Base
   def rhombus_number; self.default_number.try(:number) end 
   def friendly_relay_number
     dn = self.default_number
-    dn.try(:friendly_name).present? ? dn.friendly_name : dn.number 
+    return '' unless dn
+    dn.friendly_name.present? ? dn.friendly_name : dn.number 
   end
 
   def managed_account_is_verified?; stripe_creds.first.try(:legal_entity_verification).try(:[], 'status') == 'verified' end
