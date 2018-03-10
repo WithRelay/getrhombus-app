@@ -24,7 +24,7 @@ class MobileCampaign
           number = @number_send_count_hash.first.first unless number              # if no match above, grab first merchant number
         end
 
-        send_by_mobile(nil, r.uid_type, r.uid, number, number) 
+        send_by_mobile(nil, r.uid_type, r.uid, number) 
 
         if @channel == 'Message'
           @number_send_count_hash[number] = @number_send_count_hash[number] + 1   # increase counter
