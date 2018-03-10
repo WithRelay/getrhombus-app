@@ -91,8 +91,10 @@ class Campaign < ActiveRecord::Base
   end
 
   def send_now_campaign
-    SendNowCampaignJob.set(queue: send_now_queue).perform_now(self.id) if !reminder_campaign?
-    SendNowCampaignJob.set(queue: send_now_queue).perform_now(self.id) if reminder_campaign?
+    #SendNowCampaignJob.set(queue: send_now_queue).perform_now(self.id) if !reminder_campaign?
+    #SendNowCampaignJob.set(queue: send_now_queue).perform_now(self.id) if reminder_campaign?
+    SendNowCampaignJob.set(queue: send_now_queue).perform_later(self.id) if !reminder_campaign?
+    SendNowCampaignJob.set(queue: send_now_queue).perform_later(self.id) if reminder_campaign?
   end
 
   def pending_queue
