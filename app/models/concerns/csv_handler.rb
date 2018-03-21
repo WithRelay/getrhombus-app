@@ -175,7 +175,7 @@ module CSVHandler
     end
   end
 
-=begin
+#=begin
   def upload_contact_csv(file_path)
     begin
       response, headers_checked, error_hash = [], false, {}
@@ -258,14 +258,14 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end 
+#=end 
 
-#=begin
+=begin
   def upload_contact_csv(file_path)
     begin  
       merchant = User.find 712
 
-=begin
+#=begin
       merchant.lists.create([
         { name: 'Facebook Leads', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
         { name: 'Hang up on Machine', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
@@ -273,7 +273,7 @@ module CSVHandler
         { name: 'Live Answer With Survey', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
         { name: 'NoAnswer', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
       ])
-=end
+#=end
   
       CSV::Converters[:blank_to_nil] = lambda do |field|
         field && field.blank? ? nil : field
@@ -303,6 +303,6 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-#=end
+=end
 
 end
