@@ -175,6 +175,7 @@ module CSVHandler
     end
   end
 
+=begin
   def upload_contact_csv(file_path)
     begin
       response, headers_checked, error_hash = [], false, {}
@@ -257,13 +258,14 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-  
-=begin
+=end 
+
+#=begin
   def upload_contact_csv(file_path)
     begin  
       merchant = User.find 712
 
-#=begin
+=begin
       merchant.lists.create([
         { name: 'Facebook Leads', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
         { name: 'Hang up on Machine', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
@@ -271,8 +273,8 @@ module CSVHandler
         { name: 'Live Answer With Survey', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
         { name: 'NoAnswer', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
       ])
-#=end
-
+=end
+  
       CSV::Converters[:blank_to_nil] = lambda do |field|
         field && field.blank? ? nil : field
       end
@@ -280,22 +282,27 @@ module CSVHandler
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
 
       file_data.each do |row|
-        
         row = row.to_hash          
         row[:phone_number] = row[:phone_number].to_s.squish
         row[:seg] = row[:seg].to_s.squish
+        
+        # check if a customer type user already has this number
+        customer = User.find_by(phone_number: row[:phone_number])    
+        
+        if customer.blank?
+          mc = MerchantContact.find_by(merchant_id: 712, uid: row[:phone_number])    
+          if mc
+            list = List.find_by(user_id: 712, name: row[:seg])
+            list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact")
+          end   
+        end
 
-        mc = MerchantContact.find_by(merchant_id: 712, uid: row[:phone_number])    
-        if mc
-          list = List.find_by(user_id: 712, name: row[:seg])
-          list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact")
-        end   
       end
     rescue StandardError => e
       ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv second exception block", env: Rails.env, self: self })
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end
+#=end
 
 end
