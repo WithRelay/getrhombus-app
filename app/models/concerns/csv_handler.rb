@@ -230,6 +230,7 @@ module CSVHandler
 
               error_hash.delete(row[:phone_number]) unless error
             else
+              MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
               MerchantCustomer.add_or_update_merchant_customer(self, @customer)
             end
           else
@@ -260,7 +261,9 @@ module CSVHandler
 =begin
   def upload_contact_csv(file_path)
     begin  
-      merchant = User.find 2626    
+      merchant = User.find 712
+
+#=begin
       merchant.lists.create([
         { name: 'Facebook Leads', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
         { name: 'Hang up on Machine', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
@@ -268,6 +271,7 @@ module CSVHandler
         { name: 'Live Answer With Survey', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
         { name: 'NoAnswer', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
       ])
+#=end
 
       CSV::Converters[:blank_to_nil] = lambda do |field|
         field && field.blank? ? nil : field
@@ -281,9 +285,9 @@ module CSVHandler
         row[:phone_number] = row[:phone_number].to_s.squish
         row[:seg] = row[:seg].to_s.squish
 
-        mc = MerchantContact.find_by(merchant_id: 2626, uid: row[:phone_number])    
+        mc = MerchantContact.find_by(merchant_id: 712, uid: row[:phone_number])    
         if mc
-          list = List.find_by(user_id: 2626, name: row[:seg])
+          list = List.find_by(user_id: 712, name: row[:seg])
           list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact")
         end   
       end
