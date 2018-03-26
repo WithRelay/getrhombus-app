@@ -184,14 +184,15 @@ module CSVHandler
         field && field.blank? ? nil : field.to_s.squish
       end
 
-      #headers = [:phone_number]
+      
       # for brian
-      headers = [:phone_number, :first_name, :last_name, :organization, :email]
+      # headers = [:phone_number, :first_name, :last_name, :organization, :email]
+      headers = [:phone_number]
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
       file_headers = file_data.headers
 
       # for brian
-      list = self.lists.create({ name: 'Lead List', channel: 0, origin: 0, list_type: 1, campaign_type: 0 }) unless List.exists?(user_id: self.id, name: 'Lead List')
+      # list = self.lists.create({ name: 'Lead List', channel: 0, origin: 0, list_type: 1, campaign_type: 0 }) unless List.exists?(user_id: self.id, name: 'Lead List')
 
       file_data.each do |row|
         error = false
@@ -226,13 +227,13 @@ module CSVHandler
             if @customer.blank?
               begin            
                 MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
-                #MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)                
+                MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)                
                 #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
 
                 # for brian
-                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)                
-                list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact") if mc
-                MerchantContact.where(uid: row[:phone_number]).update_all(email: row[:email].try(:downcase), first_name: row[:first_name], last_name: row[:last_name], organization: row[:organization])
+                # mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)                
+                # list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact") if mc
+                # MerchantContact.where(uid: row[:phone_number]).update_all(email: row[:email].try(:downcase), first_name: row[:first_name], last_name: row[:last_name], organization: row[:organization])
                 
               rescue StandardError => e
                 error = true
