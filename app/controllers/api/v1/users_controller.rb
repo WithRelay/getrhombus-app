@@ -21,7 +21,7 @@ class Api::V1::UsersController < Api::V1::BaseController
       from merchant_contacts mc
       inner join fb_creds on fb_creds.page_specific_id = mc.uid
       where merchant_id = ? and uid_type = 'fb_page' and is_customer = false and
-      (lower(name) like concat('%', ?, '%') or lower(email) like concat('%', ?, '%')))
+      (lower(name) like concat('%', ?, '%') or lower(fb_creds.email) like concat('%', ?, '%')))
 
       union all
 
