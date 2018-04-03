@@ -100,7 +100,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           $scope.open_conversations_count = data.count;
           if (first_call) {
             $scope.setup_pubnub();          
-            $scope.selectConversation(data);
+            $timeout(function() { $scope.selectConversation(data); });
           };
         }, function(data) {
           console.log('unable to retrieve your conversations');
