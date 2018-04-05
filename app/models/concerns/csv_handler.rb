@@ -175,7 +175,7 @@ module CSVHandler
     end
   end
 
-=begin
+#=begin
   def upload_contact_csv(file_path)
     begin
       headers_checked, error_hash = false, {}
@@ -269,8 +269,9 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end 
+#=end 
 
+=begin
   # for 100k uploads
   def upload_contact_csv(file_path)
     begin
@@ -363,6 +364,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
+=end
 
 =begin
   def upload_contact_csv(file_path)
