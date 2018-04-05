@@ -175,24 +175,26 @@ module CSVHandler
     end
   end
 
-#=begin
+=begin
   def upload_contact_csv(file_path)
     begin
-      response, headers_checked, error_hash = [], false, {}
+      headers_checked, error_hash = false, {}
 
       CSV::Converters[:blank_to_nil] = lambda do |field|
         field && field.blank? ? nil : field.to_s.squish
       end
 
-      
       # for brian
       # headers = [:phone_number, :first_name, :last_name, :organization, :email]
+      #
+
       headers = [:phone_number]
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
       file_headers = file_data.headers
 
       # for brian
       # list = self.lists.create({ name: 'Lead List', channel: 0, origin: 0, list_type: 1, campaign_type: 0 }) unless List.exists?(user_id: self.id, name: 'Lead List')
+      #
 
       file_data.each do |row|
         error = false
@@ -200,12 +202,12 @@ module CSVHandler
         # Validate headers
         if !headers_checked
           if headers.length != file_headers.length
-            response.push(['The File Headers', ["Unable to proceed because the number of headers are incorrect."]])
+            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the number of headers are incorrect."] }
             break
           end
 
           if headers.to_set != file_headers.to_set
-            response.push(["The File Headers", ["Unable to proceed because the headers are incorrect."]])
+            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the headers are incorrect."] }
             break
           end
 
@@ -213,14 +215,18 @@ module CSVHandler
         end
 
         row = row.to_hash        
-        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''), true)
-        
-        row[:phone_number] = valid_num.first if valid_num.present?
-        error_hash[row[:phone_number]] = []
-
+        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+        linetype = nil
 
         if valid_num.present?
-          if valid_num.fourth == "mobile"
+          row[:phone_number] = valid_num.first 
+          linetype = EveryoneApiService.line_type(row[:phone_number])
+        end
+
+        error_hash[row[:phone_number]] = { linetype: '', errors: [] }
+
+        if valid_num.present?
+          if linetype == "mobile"
             # check if a customer type user already has this number
             @customer = User.find_by(phone_number: row[:phone_number])
             
@@ -234,43 +240,129 @@ module CSVHandler
                 # mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)                
                 # list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact") if mc
                 # MerchantContact.where(uid: row[:phone_number]).update_all(email: row[:email].try(:downcase), first_name: row[:first_name], last_name: row[:last_name], organization: row[:organization])
-                
+                #
+
               rescue StandardError => e
                 error = true
                 ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv first exception block", env: Rails.env, self: self })
-                error_hash[row[:phone_number]].push("Something went wrong on our end.")
+                error_hash[row[:phone_number]][:errors].push("Something went wrong on our end.")
               end
-
-              error_hash.delete(row[:phone_number]) unless error
             else
               MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
               MerchantCustomer.add_or_update_merchant_customer(self, @customer)
             end
+            error_hash.delete(row[:phone_number]) unless error
           else
-            error_hash[row[:phone_number]].push('Phone number is not a mobile number.')
+            error_hash[row[:phone_number]][:linetype] = linetype || ''
           end
         else
-          error_hash[row[:phone_number]].push('Phone number is invalid.')
+          error_hash[row[:phone_number]][:errors].push('Phone number is invalid.')
         end
       end
 
-      # change hash to array
-      error_hash.each do |key, value|
-        ary = []
-        value.each { |v| ary.push(v) }          
-        response.push([key, ary])  
-      end
-
-      EmailingService.csv_upload_failure(response)
+      EmailingService.csv_upload_failure(error_hash) if error_hash.present?
       puts 'are there any errors?'
-      puts response.inspect
-      response
+      puts error_hash.inspect
+      error_hash
     rescue StandardError => e
       ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv second exception block", env: Rails.env, self: self })
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-#=end 
+=end 
+
+  # for 100k uploads
+  def upload_contact_csv(file_path)
+    begin
+      headers_checked, error_hash = false, {}
+      count1, count2, number_count = 1, 1, 0
+
+      CSV::Converters[:blank_to_nil] = lambda do |field|
+        field && field.blank? ? nil : field.to_s.squish
+      end
+
+      headers = [:phone_number]
+      file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+      file_headers = file_data.headers
+
+      file_data.each do |row|
+        error = false
+
+        # Validate headers
+        if !headers_checked
+          if headers.length != file_headers.length
+            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the number of headers are incorrect."] }
+            break
+          end
+
+          if headers.to_set != file_headers.to_set
+            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the headers are incorrect."] }
+            break
+          end
+
+          headers_checked = true
+        end
+
+        row = row.to_hash        
+        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+        linetype = nil
+
+        if valid_num.present?
+          row[:phone_number] = valid_num.first 
+          linetype = EveryoneApiService.line_type(row[:phone_number])
+        end
+
+        error_hash[row[:phone_number]] = { linetype: '', errors: [] }
+
+        if valid_num.present?
+          if linetype == "mobile"
+            # check if a customer type user already has this number
+            @customer = User.find_by(phone_number: row[:phone_number])
+            
+            if @customer.blank?
+              begin            
+                number_count = number_count + 1
+                MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
+                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)    
+                #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
+
+                lname = "Test Group #{count1}-#{count2}"
+                count2 = count2 + 1 if (number_count % 5000) == 0
+                if (number_count % 20000) == 0
+                  count1 = count1 + 1
+                  count2 = 1
+                end
+                
+                l = List.find_by(name: lname, user_id: self.id)
+                l = self.lists.create(name: lname, channel: 0, origin: 0, list_type: 1, campaign_type: 0) unless l
+                UserList.find_or_create_by(list_id: l.id, customer_contact_id: mc.id, customer_contact_type: "MerchantContact") if mc
+              rescue StandardError => e
+                error = true
+                ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv first exception block", env: Rails.env, self: self })
+                error_hash[row[:phone_number]][:errors].push("Something went wrong on our end.")
+              end
+            else
+              MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
+              MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+            end
+            error_hash.delete(row[:phone_number]) unless error
+          else
+            error_hash[row[:phone_number]][:linetype] = linetype || ''
+          end
+        else
+          error_hash[row[:phone_number]][:errors].push('Phone number is invalid.')
+        end
+      end
+
+      EmailingService.csv_upload_failure(error_hash) if error_hash.present?
+      puts 'are there any errors?'
+      puts error_hash.inspect
+      error_hash
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv second exception block", env: Rails.env, self: self })
+      ['File Upload', ["Something went wrong on our end."]]
+    end
+  end
 
 =begin
   def upload_contact_csv(file_path)

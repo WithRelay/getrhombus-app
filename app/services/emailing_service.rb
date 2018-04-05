@@ -979,22 +979,36 @@ class EmailingService
     # to platform only
     def csv_upload_failure(response)
       begin
-        str = ''
-        response.each do |r|
-          str = str + r[0].to_s + " had these errors: "
-          r[1].each { |a| str = str + a + " " }
-          str += " --------- "
+        require 'csv'
+        
+        csv_string = CSV.generate do |csv|
+          csv << ['target', 'linetype', 'errors']
+          ary = Array.new
+          response.each do |k,v|
+            ary.push(k)
+            ary.push(v[:linetype])
+            v[:errors].each { |e| ary.push(e) }
+            csv << ary
+            ary.clear
+          end
         end
-        email_to_platform(str, 'CSV Upload Errors')
+
+        attachment_hash = { attachments: [ { content: Base64.encode64(csv_string),
+                                             name: "file.csv",
+                                             type: "text/csv" } ] }
+
+        email_to_platform("See Attached", 'CSV Upload Errors', attachment_hash)
       rescue StandardError => e
       end
     end
 
-    def email_to_platform(text, subject)
+    def email_to_platform(text, subject, attachment = nil)
       message_hash = { html: text, from_name: 'Email From Relay',
                        subject: subject,
                        to: [ { "email" => User.platform_email } ]
                      }
+
+      message_hash.merge!(attachment) if attachment
       send_email_campaign(message_hash, true)
     end
 
