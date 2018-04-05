@@ -57,7 +57,8 @@ task :load_rmgsite_data => :environment do
     fn = "(" + number[1..3] + ") " + number[4..6] + "-" + number[7..10]
     u.numbers.create(number: number, country: 'CA', provider: 'fibernetics', default: default, friendly_name: fn)
   end
-
+end
+=begin
   desc "load numbers from file"
   task :load_numbers_from_file => :environment do
     require 'csv'
@@ -83,3 +84,4 @@ task :load_rmgsite_data => :environment do
     puts ary.length
     
   end
+=end
