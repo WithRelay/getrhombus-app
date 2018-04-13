@@ -5,10 +5,10 @@
         
     csv_string = CSV.generate do |csv|
       csv << ['Phone Number', 'Response', 'Segment', 'Timestamp (ET)']
-      count = 1
+      count = 0
       List.where(user_id: 2626, segment: nil).each do |l|
-        UserList.where(id: l.id, customer_contact_type: 'MerchantContact').each do |ul|
-          mc = MerchantContact.find_by(id: ul.customer_contact_id, uid_type: 'phone_number', is_customer: 0)
+        UserList.where(list_id: l.id, customer_contact_type: 'MerchantContact').each do |ul|
+          mc = MerchantContact.find_by(id: ul.customer_contact_id, is_customer: 0)
           if mc
             messages = Message.where(from: mc.uid, user_id_to: 2626).where("created_at > '2018-03-15 00:00:00'") 
             messages.each do |m| 
