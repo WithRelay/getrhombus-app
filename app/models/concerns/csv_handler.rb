@@ -175,7 +175,7 @@ module CSVHandler
     end
   end
 
-#=begin
+=begin
   def upload_contact_csv(file_path)
     begin
       headers_checked, error_hash = false, {}
@@ -269,14 +269,14 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-#=end 
+=end 
 
-=begin
+#=begin
   # for 100k uploads
   def upload_contact_csv(file_path)
     begin
       headers_checked, error_hash = false, {}
-      count1, count2, number_count = 1, 1, 0
+      count1, count2, number_count = 6, 1, 0
 
       CSV::Converters[:blank_to_nil] = lambda do |field|
         field && field.blank? ? nil : field.to_s.squish
@@ -364,7 +364,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end
+#=end
 
 =begin
   def upload_contact_csv(file_path)
