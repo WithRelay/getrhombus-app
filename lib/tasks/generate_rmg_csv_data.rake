@@ -10,10 +10,12 @@
         UserList.where(list_id: l.id, customer_contact_type: 'MerchantContact').each do |ul|
           mc = MerchantContact.find_by(id: ul.customer_contact_id, is_customer: 0)
           if mc
-            messages = Message.where(from: mc.uid, user_id_to: 2626).where("created_at > '2018-04-17 16:29:29'") 
+            #messages = Message.where(from: mc.uid, user_id_to: 2626).where("created_at > '2018-04-17 16:29:29'") 
+            messages = Message.where(from: mc.uid, user_id_to: 2626).where("id > 2000") 
             messages.each do |m| 
               csv << [m.from, m.text, l.name, m.created_at.strftime("%Y-%m-%d %I:%M:%S")] 
-              puts (count + 1)
+              count = count + 1
+              puts count
             end
           end
         end
