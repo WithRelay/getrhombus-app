@@ -77,10 +77,10 @@ class MessageParser
         # enable welcome unless explicitly disabled
         elsif @merchant.alert && @merchant.alert.enable_welcome? && @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
           ### Taking this out for now.
-          first_name_str = '' #(@merchant.first_name.present?) ? "my name is #{@merchant.first_name}, " : ''
-          custom_welcome = "Hi there, " + first_name_str + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #pizza"
-          custom_welcome = @merchant.custom_welcome unless @merchant.custom_welcome.blank?
-          send_response(custom_welcome)
+          #first_name_str = '' #(@merchant.first_name.present?) ? "my name is #{@merchant.first_name}, " : ''
+          #custom_welcome = "Hi there, " + first_name_str + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #pizza"
+          #custom_welcome = @merchant.custom_welcome unless @merchant.custom_welcome.blank?
+          #send_response(custom_welcome)
         end 
       elsif @customer.present? && is_signup?                     # tested
         re = @customer.has_valid_card?
