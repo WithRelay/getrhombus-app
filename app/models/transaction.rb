@@ -13,7 +13,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :subscription
 
   delegate :name, to: :hashtag, prefix: :item, allow_nil: true
-  delegate :email, to: :user, prefix: :customer
+  delegate :email, :phone_number, to: :user, prefix: :customer
   delegate :email, :org_name, to: :team, prefix: :business
 
   # Exclude refunded transactions, include subscriptions since these queries are read only
