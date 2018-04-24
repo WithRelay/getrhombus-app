@@ -7,7 +7,7 @@ class WebhooksController < ApplicationController
       # Verify the event by fetching it from Stripe
       #if PaymentService.retrieve_charge(type=='platform', ) params[:id] == event[:id]
 
-      #Parameters: {"id"=>"evt_1BQKYz20Ob4OYBly52WgQpDE", "object"=>"event", "account"=>"<redacted_stripe_account_id>", 
+      #Parameters: {"id"=>"evt_1BQKYz20Ob4OYBly52WgQpDE", "object"=>"event", "account"=>"<redacted_stripe_account_id>",
       #type = (request.original_fullpath.include? 'platform') ? 'platform' : 'connect'
       type = (request.original_fullpath.include? 'platform' || params[:account] == "<redacted_stripe_account_id>") ? 'platform' : 'connect'
       StripeEvent.new.process_event(params, type)
@@ -43,9 +43,16 @@ class WebhooksController < ApplicationController
     begin
       FiberneticsEvent.new.process_event(params)
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In webhooks controller fibernetics_events", env: Rails.env })
+      ExceptionNotifier.notify_exception(
+        exception,
+        env: request.env,
+        data: {
+          message: 'In webhooks controller fibernetics_events',
+          env: Rails.env
+        }
+      )
     end
-    render nothing: true
+    render nothing: true, status: :ok
   end
 
   private

@@ -93,5 +93,4 @@ class FiberneticsEvent
       ExceptionNotifier.notify_exception(exception, data: { message: "In post_message_for_api_user standard error", env: Rails.env, params: @params })
     end
   end
-
 end
