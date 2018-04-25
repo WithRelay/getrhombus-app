@@ -28,7 +28,7 @@ class MessageParser
 
       if !@amt_ary[0] && @amt_ary[1].present?  #tested
         # puts 'invalid payment intent'
-        send_response('We noticed you tried to send a payment. Please resend it in this format: +Amount followed by item name. Ex. +5 Pizza.') 
+        send_response('We noticed you tried to send a payment. Please resend it in this format: +Amount followed by item name. Ex. +5 #Pizza.') 
         return
       end
 
