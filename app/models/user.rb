@@ -223,6 +223,7 @@ class User < ActiveRecord::Base
 
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
+    # this will return false positives for merchants who have changed subscriptions
     platform_merchant.try(:subscriptions).try(:includes, :plan).try(:last)
   end
 
