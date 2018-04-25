@@ -40,18 +40,7 @@ class WebhooksController < ApplicationController
   end
 
   def fibernetics_events
-    begin
-      FiberneticsEvent.new.process_event(params)
-    rescue StandardError => exception
-      ExceptionNotifier.notify_exception(
-        exception,
-        env: request.env,
-        data: {
-          message: 'In webhooks controller fibernetics_events',
-          env: Rails.env
-        }
-      )
-    end
+    FiberneticsEventProcessJob.perform_later(params)
     render nothing: true, status: :ok
   end
 
