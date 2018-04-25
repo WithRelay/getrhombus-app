@@ -289,7 +289,7 @@ class MessageParser
           @received_msg.update_column(:transaction_id, @new_txn.id)
           send_payment_responses
           publish_notification
-          send_relay_tips
+          #send_relay_tips
         end
       end
     end
