@@ -175,7 +175,7 @@ module CSVHandler
     end
   end
 
-#=begin
+=begin
   def upload_contact_csv(file_path)
     begin
       headers_checked, error_hash = false, {}
@@ -269,20 +269,22 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-#=end 
+=end 
 
-=begin
+#=begin
   # for 100k uploads
   def upload_contact_csv(file_path)
     begin
       headers_checked, error_hash = false, {}
-      count1, count2, number_count = 1, 1, 0
+      #count1, count2, number_count = 1, 1, 0
+      count1, number_count = 1, 0
 
       CSV::Converters[:blank_to_nil] = lambda do |field|
         field && field.blank? ? nil : field.to_s.squish
       end
 
-      headers = [:phone_number]
+      #headers = [:phone_number]
+      headers = [:phone_number, :seg]
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
       file_headers = file_data.headers
 
@@ -327,12 +329,14 @@ module CSVHandler
                 mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)    
                 #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
 
-                lname = "Test Group #{count1}-#{count2}"
-                count2 = count2 + 1 if (number_count % 5000) == 0
-                if (number_count % 20000) == 0
-                  count1 = count1 + 1
-                  count2 = 1
-                end
+                #lname = "Test Group #{count1}-#{count2}"
+                lname = (row[:seg] || "My List") + "-" + count1.to_s
+                #count2 = count2 + 1 if (number_count % 5000) == 0
+                count1 = count1 + 1 if (number_count % 5000) == 0
+                #if (number_count % 20000) == 0
+                  #count1 = count1 + 1
+                  #count2 = 1
+                #end
                 
                 l = List.find_by(name: lname, user_id: self.id)
                 l = self.lists.create(name: lname, channel: 0, origin: 0, list_type: 1, campaign_type: 0) unless l
@@ -364,7 +368,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end
+#=end
 
 =begin
   def upload_contact_csv(file_path)
