@@ -1,5 +1,4 @@
 class ApplicationJob < ActiveJob::Base
-  
   before_perform do |job|
     ActiveRecord::Base.clear_active_connections!
   end
@@ -9,5 +8,4 @@ class ApplicationJob < ActiveJob::Base
     # send team email here
     puts exception.inspect
   end
-
 end
