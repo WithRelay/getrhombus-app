@@ -175,7 +175,7 @@ module CSVHandler
     end
   end
 
-#=begin
+=begin
   def upload_contact_csv(file_path)
     begin
       headers_checked, error_hash = false, {}
@@ -269,7 +269,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-#=end 
+=end 
 
 =begin
   # for 100k uploads
@@ -414,5 +414,103 @@ module CSVHandler
     end
   end
 =end
+
+#=begin
+  # option to add segment in file
+  def upload_contact_csv(file_path)
+    begin
+      headers_checked, error_hash = false, {}
+
+      CSV::Converters[:blank_to_nil] = lambda do |field|
+        field && field.blank? ? nil : field.to_s.squish
+      end
+
+      # for brian
+      # headers = [:phone_number, :first_name, :last_name, :organization, :email]
+      #
+
+      headers = [:phone_number, :group]
+      file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+      file_headers = file_data.headers
+
+      file_data.each do |row|
+        error = false
+
+        # Validate headers
+        if !headers_checked
+          if headers.length != file_headers.length
+            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the number of headers are incorrect."] }
+            break
+          end
+
+          if headers.to_set != file_headers.to_set
+            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the headers are incorrect."] }
+            break
+          end
+
+          headers_checked = true
+        end
+
+        row = row.to_hash        
+        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+        linetype = nil
+
+        if valid_num.present?
+          row[:phone_number] = valid_num.first 
+          linetype = EveryoneApiService.line_type(row[:phone_number])
+        end
+
+        error_hash[row[:phone_number]] = { linetype: '', errors: [] }
+
+        if valid_num.present?
+          if linetype == "mobile"
+            # check if a customer type user already has this number
+            @customer = User.find_by(phone_number: row[:phone_number])
+            
+            if @customer.blank?
+              begin            
+                MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
+                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
+                #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
+                self.create_list_and_user_list(row[:group], mc, 1)
+              rescue StandardError => e
+                error = true
+                ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv first exception block", env: Rails.env, self: self })
+                error_hash[row[:phone_number]][:errors].push("Something went wrong on our end.")
+              end
+            else
+              MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
+              mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+              self.create_list_and_user_list(row[:group], mc, 0)
+            end
+            error_hash.delete(row[:phone_number]) unless error
+          else
+            error_hash[row[:phone_number]][:linetype] = linetype || ''
+          end
+        else
+          error_hash[row[:phone_number]][:errors].push('Phone number is invalid.')
+        end
+      end
+
+      EmailingService.csv_upload_failure(error_hash) if error_hash.present?
+      puts 'are there any errors?'
+      puts error_hash.inspect
+      error_hash
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv second exception block", env: Rails.env, self: self })
+      ['File Upload', ["Something went wrong on our end."]]
+    end
+  end
+#=end 
+
+  def create_list_and_user_list(group, mc, list_type)
+    if group.present?
+      lname = group.to_s.squish
+      lname = lname + " with Accounts" if list_type == 0  # this line isnt always required
+      list = List.find_by(name: lname, user_id: self.id)
+      list = self.lists.create(name: lname, channel: 0, origin: 0, list_type: list_type, campaign_type: 0) unless list
+      UserList.find_or_create_by(list_id: list.id, customer_contact_id: mc.id, customer_contact_type: mc.class.name) if mc
+    end
+  end
 
 end
