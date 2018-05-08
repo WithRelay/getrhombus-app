@@ -41,12 +41,12 @@ module CSVHandler
   end
 
   def get_contact_csv_template
-    attributes = ['phone_number']
-    default_text = ['<redacted_phone_number>', '<redacted_phone_number>']
+    attributes = ['phone_number', 'group']
+    default_text = ['<redacted_phone_number>', '<redacted_phone_number>', 'Group A', 'Group B']
     CSV.generate(headers: true) do |csv|
       csv << attributes
-      csv << [default_text.first]
-      csv << [default_text.second]
+      csv << [default_text.first, default_text.third]
+      csv << [default_text.second, default_text.fourth]
     end
   end
 

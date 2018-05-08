@@ -352,6 +352,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
         if ((text_to_send == '') || (text_to_send.length > $scope.merchant.num_of_chars)) {
           FlashHandler.setFlashMessage('Enter up to ' + $scope.merchant.num_of_chars + ' characters.', 'error');
+          $scope.is_sending = false;
         } else {
           var conversation_id = $scope.selected_conversation.id;
           conversationService.sendConversationMessage(conversation_id, text_to_send, $scope.getSendChannel())
