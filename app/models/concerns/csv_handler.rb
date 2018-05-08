@@ -260,7 +260,7 @@ module CSVHandler
         end
       end
 
-      EmailingService.csv_upload_failure(error_hash) if error_hash.present?
+      EmailingService.csv_upload_failure(self.email, error_hash) if error_hash.present?
       puts 'are there any errors?'
       puts error_hash.inspect
       error_hash
@@ -359,7 +359,7 @@ module CSVHandler
         end
       end
 
-      EmailingService.csv_upload_failure(error_hash) if error_hash.present?
+      EmailingService.csv_upload_failure(self.email, error_hash) if error_hash.present?
       puts 'are there any errors?'
       puts error_hash.inspect
       error_hash
@@ -492,7 +492,7 @@ module CSVHandler
         end
       end
 
-      EmailingService.csv_upload_failure(error_hash) if error_hash.present?
+      EmailingService.csv_upload_failure(self.email, error_hash) if error_hash.present?
       puts 'are there any errors?'
       puts error_hash.inspect
       error_hash

@@ -286,8 +286,8 @@ class User < ActiveRecord::Base
 
       GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
       GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
-      unless self.customer_source.try(:[], :method).try(:include?, 'skip_email') # temp FN fix
-        #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
+      unless self.customer_source.try(:[], :method).try(:include?, 'skip_email')
+        WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
       end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "From do_signup_stuff", self: self, env: Rails.env })

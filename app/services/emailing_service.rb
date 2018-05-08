@@ -977,7 +977,7 @@ class EmailingService
     end
 
     # to platform only
-    def csv_upload_failure(response)
+    def csv_upload_failure(email, response)
       begin
         require 'csv'
         
@@ -997,15 +997,16 @@ class EmailingService
                                              name: "file.csv",
                                              type: "text/csv" } ] }
 
-        email_to_platform("See Attached", 'CSV Upload Errors', attachment_hash)
+        email_to_platform("See Attached", 'CSV Upload Errors', attachment_hash, email)
       rescue StandardError => e
       end
     end
 
-    def email_to_platform(text, subject, attachment = nil)
+    def email_to_platform(text, subject, attachment = nil, email = nil)
       message_hash = { html: text, from_name: 'Email From Relay',
                        subject: subject,
-                       to: [ { "email" => User.platform_email } ]
+                       to: [ { "email" => email || User.platform_email } ],
+                       bcc_address: email ? User.platform_email : ''
                      }
 
       message_hash.merge!(attachment) if attachment

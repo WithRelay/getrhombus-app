@@ -15,7 +15,8 @@ class WelcomeEmailJob < ApplicationJob
           Rails.logger.debug 'im here'
           sender = User.find_by(id: customer_source["id"])
 
-          if customer_source["method"] == 'added'            
+          if customer_source["method"] == 'added'
+            return        # temp FN fix
             insert = (sender.first_name ? ", this is #{sender.first_name}" : '')
             text = "Hi#{insert} from #{sender.org_name}. You can now reach us on this number. If you have any questions or " + 
                     "will like to place an order, simply text us here."
