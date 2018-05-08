@@ -7,7 +7,7 @@
     <a class="close-modal update-close-modals" data-parent='import-customers-div' href="#"></a>
   </div>
   <div class="modal-instruction-wrapper">
-    <p class="modal-paragraph">To import your contacts, use this <%= link_to 'template file', user_contact_csv_template_path(format: :csv), class: 'template-link' %> and format your customers' information as specified in the template example.</p>
+    <p class="modal-paragraph">To import your contacts, use this <%= link_to 'template file', user_contact_csv_template_path(format: :csv), class: 'template-link' %> and format your customers' information as specified in the template example. <br> <br> Need help with an upload or have custom data, please email the file to <redacted_email> for assistance.</p>
   </div><a class="button file-upload w-button" href="#" id='csv-file-select-btn'>Choose file from computer</a>
   <div class="file-name" id='csv-file-name'>No file chosen.</div>
   <input type="file" accept=".csv, text/csv, application/vnd.ms-excel" id='csv-file-select' class="hide" />
