@@ -165,7 +165,7 @@ class TextingService
         { error: "Twilio cannot provision the number." }
       rescue StandardError => err
         ExceptionNotifier.notify_exception(err, data: { message: "In texting service search_number", params: params, env: Rails.env })
-        { error: e.message }
+        { error: err.message }
       end
     end
 
