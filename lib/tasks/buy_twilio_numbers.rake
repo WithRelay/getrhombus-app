@@ -4,9 +4,10 @@
 
 desc "buy twilio numbers"
 task :buy_twilio_numbers => :environment do
-  u = User.where(id: 2826)
+  u = User.find 2826
   
   #### must remove config in twilio
+  #<redacted_phone_number>
   u.numbers.delete_all
 
   params = { query: '609', country: "US", type: "mobile" }
