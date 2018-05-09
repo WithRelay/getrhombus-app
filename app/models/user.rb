@@ -197,17 +197,19 @@ class User < ActiveRecord::Base
     false
   end
 
-  def buy_number(params)
+  def buy_number(params, default = true, with_uid = true)
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
     EmailingService.hosted_sms_progress_notice(self, number.try(:second)) if self.hosted_sms.present?
     return false unless number
 
-    uid = generate_uid
-    url = "#{url_helpers.new_user_registration_url}?referrer_uid=#{uid}"
+    if with_uid
+      uid = generate_uid
+      url = "#{url_helpers.new_user_registration_url}?referrer_uid=#{uid}"
+      #self.update(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"])
+      self.update(relay_uid: uid, short_url: url)
+    end
 
-    #self.update(relay_uid: uid, rhombus_number: number[0], rn_friendly_name: number[1], short_url: url, rn_type: params["rn_type"], rn_country: params["rn_country"])
-    self.update(relay_uid: uid, short_url: url)
-    self.numbers.create(number: number[0], friendly_name: number[1], number_type: params["rn_type"], country: params["rn_country"], default: true)
+    self.numbers.create(number: number[0], friendly_name: number[1], number_type: params["rn_type"], country: params["rn_country"], default: default)
 
     #deduct_from_account_balance(NUMBER_PRICE)
 
