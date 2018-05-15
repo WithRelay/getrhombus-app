@@ -11,7 +11,7 @@ task :buy_nexmo_numbers => :environment do
   country = "US"
   pattern = "1269"
 
-  65.times do |i|
+  60.times do |i|
     
     res = TextingService.buy_number_nexmo(country, pattern)
     default = i == 0 ? 1 : 0
