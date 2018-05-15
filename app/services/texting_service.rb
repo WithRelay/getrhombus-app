@@ -41,9 +41,10 @@ class TextingService
       HTTParty.post('https://rest.nexmo.com/number/cancel?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})
     end
 
-    def buy_number_nexmo(country)
+    def buy_number_nexmo(country, pattern)
       # search for a number on nexmo
-      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&size=1")
+      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" + 
+                                NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&size=1&pattern=#{pattern}")
       # check the response
       if response.code == 200 && response["numbers"] != nil #.first["msisdn"] != ""
         msisdn = response["numbers"].first["msisdn"]
