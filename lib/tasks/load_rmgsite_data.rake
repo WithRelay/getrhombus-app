@@ -1,54 +1,84 @@
 
 desc "load rmgsite data"
 task :load_rmgsite_data => :environment do
-  ary = [<redacted_phone_number>, <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>, <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>, <redacted_phone_number>,
-<redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  ary = [
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>,
+        <redacted_phone_number>
 ]
 
 
-  u = User.find 2817
+  u = User.find 2746
+  
+  u.numbers.delete_all
+
   ary.each_with_index do |number, i|
     number = "1" + number.to_s.gsub(/\s+/, "")
     default = i == 0 ? 1 : 0
@@ -57,6 +87,8 @@ task :load_rmgsite_data => :environment do
     u.numbers.create(number: number, country: 'CA', provider: 'fibernetics', default: default, friendly_name: fn)
   end
 end
+
+
 =begin
   desc "load numbers from file"
   task :load_numbers_from_file => :environment do
@@ -83,4 +115,56 @@ end
     puts ary.length
     
   end
+=end
+
+
+
+=begin
+  #rmg's second account
+
+  ary = [<redacted_phone_number>, <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>, <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>, <redacted_phone_number>,
+  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,  <redacted_phone_number>,
+  ] 
 =end
