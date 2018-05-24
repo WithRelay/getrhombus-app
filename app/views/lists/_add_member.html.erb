@@ -1,14 +1,20 @@
-<div class="customer-dash sub-nav-bar">
-  <div class="list-members sub-nav-options-wrapper w-clearfix">
+<div class='customer-dash sub-nav-bar'>
+  <div class='list-members sub-nav-options-wrapper w-clearfix'>
 
-    <div class="customer-count shrink-text"><%= @list_members.total_entries %> <span class="sub-nav-sub-text">in <%= @list.name %> <%= @list.is_segment? ? 'Segment' : 'List' %></span>
+    <div class='customer-count shrink-text'><%= @list_members.total_entries %> <span class='sub-nav-sub-text'>in <%= @list.name %> <%= @list.is_segment? ? 'Segment' : 'List' %></span>
     </div>
     <% unless @list.is_segment? %>
-      <div class="default-sub_header-field-form-div list-members">
+      <div class='default-sub_header-field-form-div list-members'>
         <%= form_for 'lists', url: add_member_user_list_path(current_user, @list), html: { class: 'add-to-list-form w-clearfix' } do |f| %>
-          <%= f.text_field :member_id, class: "add-to-list-field w-input", placeholder: "Add more members to list" %>
-          <%= f.text_field :list_type, class: "w-hidden", value: @list.list_type %>
+          <%= f.text_field :member_id, class: 'add-to-list-field w-input', placeholder: 'Add more members to list' %>
+          <%= f.text_field :list_type, class: 'w-hidden', value: @list.list_type %>
           <%= f.submit 'Update List'.html_safe, class: 'sub-nav-button w-button' %>
+        <% end %>
+      </div>
+      <div class='search-sub_header-field-form-div'>
+        <%= form_tag(user_list_path(current_user, @list), :method => 'get', id: 'search-form') do %>
+          <%= phone_field_tag :search, params[:search], placeholder: 'Search Member', type: 'phone', class: 'add-to-list-field w-input' %>
+          <%= submit_tag 'Search', class: 'sub-nav-button w-button' %>
         <% end %>
       </div>
     <% end %>

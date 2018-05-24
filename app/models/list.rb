@@ -1,5 +1,5 @@
 class List < ActiveRecord::Base
-  
+
   include SegmentQueries
 
   belongs_to :user
@@ -9,7 +9,7 @@ class List < ActiveRecord::Base
   has_many :campaign_recipients
   has_many :user_lists, dependent: :destroy
   has_many :campaigns, through: :campaign_lists
-  
+
   validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }, unless: lambda { reminder? }
 
   enum channel: [:sms, :messenger]          # default channel for contacts based list/segments since contacts come from a specific channel
@@ -21,8 +21,22 @@ class List < ActiveRecord::Base
     self.segment.present?
   end
 
+  def search_members(phone, page = 1)
+    class_name = customer? ? MerchantCustomer : MerchantContact
+    join_clause = "inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id"
+    if customer?
+      MerchantCustomer.joins(:customer, join_clause)
+                      .where("user_lists.list_id = #{id} AND users.phone_number LIKE '%#{phone}%' AND users.user_level = 0")
+                      .paginate(page: page, per_page: PAGINATION_PER_PAGE)
+    else
+      MerchantContact.joins(join_clause)
+                     .where("uid LIKE '%#{phone}%' AND uid_type = 'phone_number' AND user_lists.list_id = #{id}")
+                     .paginate(page: page, per_page: PAGINATION_PER_PAGE)
+    end
+  end
+
   # Gets the merchant customers or merchant contacts that belong to a standard list or segment
-  def get_mcs(page=1)
+  def get_mcs(page = 1)
     page = page.present? ? page : 1
     class_name = self.customer? ? MerchantCustomer : MerchantContact
 
@@ -30,13 +44,13 @@ class List < ActiveRecord::Base
       self.segment['merchant_id'] = self.user_id
       self.segment["time"] = Time.current.beginning_of_day.utc - self.segment['base_val'].to_i.days if self.segment['base_val'].present?
 
-      if page == 0
+      if page.zero?
         class_name.find_by_sql(send(self.segment['base_query'], self.segment))
       else
         class_name.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)
       end
     else
-      if page == 0
+      if page.zero?
         class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")
                   .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
       else

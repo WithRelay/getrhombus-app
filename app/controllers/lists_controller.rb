@@ -25,18 +25,19 @@ class ListsController < ApplicationController
 
   def show
     if @list
-      @list_members = @list.get_mcs(params[:page])
-
-      # segment
-      if @list.is_segment?
-        @new_customer = User.new
-        @selected_segment_id = @list.id
-        @list_type = @list.list_type
-        if @list.contact?
-          @uid_type = @list.sms? ? 'phone_number' : 'fb_page'
-          @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
-        end
+      if params[:search].present? && params[:commit].to_s.casecmp('search').zero?
+        @list_members = @list.search_members(params[:search], params[:page])
+      else
+        @list_members = @list.get_mcs(params[:page])
       end
+      # segment
+      return unless @list.is_segment?
+      @new_customer = User.new
+      @selected_segment_id = @list.id
+      @list_type = @list.list_type
+      return unless @list.contact?
+      @uid_type = @list.sms? ? 'phone_number' : 'fb_page'
+      @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
     end
 
     if @list_members.blank?
