@@ -25,13 +25,13 @@ class List < ActiveRecord::Base
     class_name = customer? ? MerchantCustomer : MerchantContact
     join_clause = "inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id"
     if customer?
-      MerchantCustomer.joins(:customer, join_clause)
-                      .where("user_lists.list_id = #{id} AND users.phone_number LIKE '%#{phone}%' AND users.user_level = 0")
-                      .paginate(page: page, per_page: PAGINATION_PER_PAGE)
+      class_name.joins(:customer, join_clause)
+                .where("user_lists.list_id = #{id} AND users.phone_number LIKE '%#{phone}%' AND users.user_level = 0")
+                .paginate(page: page, per_page: PAGINATION_PER_PAGE)
     else
-      MerchantContact.joins(join_clause)
-                     .where("uid LIKE '%#{phone}%' AND uid_type = 'phone_number' AND user_lists.list_id = #{id}")
-                     .paginate(page: page, per_page: PAGINATION_PER_PAGE)
+      class_name.joins(join_clause)
+                 .where("uid LIKE '%#{phone}%' AND uid_type = 'phone_number' AND user_lists.list_id = #{id}")
+                 .paginate(page: page, per_page: PAGINATION_PER_PAGE)
     end
   end
 
@@ -44,13 +44,13 @@ class List < ActiveRecord::Base
       self.segment['merchant_id'] = self.user_id
       self.segment["time"] = Time.current.beginning_of_day.utc - self.segment['base_val'].to_i.days if self.segment['base_val'].present?
 
-      if page.zero?
+      if page == 0
         class_name.find_by_sql(send(self.segment['base_query'], self.segment))
       else
         class_name.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)
       end
     else
-      if page.zero?
+      if page == 0
         class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")
                   .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
       else
