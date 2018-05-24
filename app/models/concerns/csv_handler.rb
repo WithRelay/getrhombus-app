@@ -147,7 +147,7 @@ module CSVHandler
               else
                 MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
                 mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer)
-                self.create_list_and_user_list(row[:group], mc, 0) if mc.try(:id).present?
+                self.create_list_and_user_list(row[:group], mc, 0)
                 Referrer.save_referrer_with_uid(self.relay_uid, @customer.id)
               end
             rescue ActiveRecord::RecordNotUnique => e
@@ -167,7 +167,7 @@ module CSVHandler
         else
           if @customer.is_customer?
             mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer) 
-            self.create_list_and_user_list(row[:group], mc, 0) if mc.try(:id).present?
+            self.create_list_and_user_list(row[:group], mc, 0)
           end
         end
       end
@@ -519,7 +519,7 @@ module CSVHandler
 #=end 
 
   def create_list_and_user_list(group, mc, list_type)
-    if group.present?
+    if group.present? && mc.try(:id).present?
       lname = group.to_s.squish
       lname = lname + " with Accounts" if list_type == 0  # this line isnt always required
       list = List.find_by(name: lname, user_id: self.id)
