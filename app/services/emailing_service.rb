@@ -997,7 +997,31 @@ class EmailingService
                                              name: "file.csv",
                                              type: "text/csv" } ] }
 
-        email_to_platform("See Attached", 'CSV Upload Errors', attachment_hash, email)
+        email_to_platform("See Attached", 'Contact CSV Upload Errors', attachment_hash, email)
+      rescue StandardError => e
+      end
+    end
+
+    def customer_csv_upload_failure(email, response)
+      begin
+        require 'csv'
+        
+        csv_string = CSV.generate do |csv|
+          csv << ['target', 'errors']
+          ary = Array.new
+          response.each do |k,v|
+            ary.push(k)
+            v.each { |e| ary.push(e) }
+            csv << ary
+            ary.clear
+          end
+        end
+
+        attachment_hash = { attachments: [ { content: Base64.encode64(csv_string),
+                                             name: "file.csv",
+                                             type: "text/csv" } ] }
+
+        email_to_platform("See Attached", 'Customer CSV Upload Errors', attachment_hash, email)
       rescue StandardError => e
       end
     end

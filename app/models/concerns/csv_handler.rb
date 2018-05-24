@@ -93,8 +93,16 @@ module CSVHandler
             begin
               # Validate number
               valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+
               if valid_num.present?
                 row[:phone_number] = valid_num.first
+                # check number type
+                linetype = EveryoneApiService.line_type(row[:phone_number])
+                if linetype != "mobile"
+                  linetype_str = linetype ? " It's a #{linetype}." : ''
+                  error_hash[row[:email]].push("Phone number is not a mobile number.#{linetype_str}")
+                  error = true
+                end
               else
                 error_hash[row[:email]].push('Phone number is invalid.')
                 error = true
@@ -138,7 +146,8 @@ module CSVHandler
                 error = true
               else
                 MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
-                MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+                mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+                self.create_list_and_user_list(row[:group], mc, 0) if mc.try(:id).present?
                 Referrer.save_referrer_with_uid(self.relay_uid, @customer.id)
               end
             rescue ActiveRecord::RecordNotUnique => e
@@ -156,9 +165,14 @@ module CSVHandler
             error_hash.delete(row[:email]) unless error
           end
         else
-          MerchantCustomer.add_or_update_merchant_customer(self, @customer) if @customer.is_customer?
+          if @customer.is_customer?
+            mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer) 
+            self.create_list_and_user_list(row[:group], mc, 0) if mc.try(:id).present?
+          end
         end
       end
+
+      EmailingService.customer_csv_upload_failure(self.email, error_hash) if error_hash.present?
 
       # change hash to array
       error_hash.each do |key, value|
@@ -166,6 +180,7 @@ module CSVHandler
         value.each { |v| ary.push(v) }          
         response.push([key, ary])  
       end
+      
       puts 'are there any errors?'
       puts response.inspect
       response
