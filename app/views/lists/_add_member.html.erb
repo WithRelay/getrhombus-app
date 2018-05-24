@@ -13,7 +13,7 @@
       </div>
       <div class='search-sub_header-field-form-div'>
         <%= form_tag(user_list_path(current_user, @list), :method => 'get', id: 'search-form') do %>
-          <%= phone_field_tag :search, params[:search], placeholder: 'Search Member', type: 'phone', class: 'add-to-list-field w-input' %>
+          <%= phone_field_tag :search, params[:search], placeholder: 'Search with Phone Number', type: 'phone', class: 'add-to-list-field w-input' %>
           <%= submit_tag 'Search', class: 'sub-nav-button w-button' %>
         <% end %>
       </div>
