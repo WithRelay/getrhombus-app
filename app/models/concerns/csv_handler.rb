@@ -32,8 +32,8 @@ module CSVHandler
   end
 
   def get_customer_csv_template
-    attributes = ['first_name', 'last_name', 'email', 'phone_number', 'street_address', 'city', 'state_province', 'country', 'postal_code']
-    default_text = ['John', 'Smith', '<redacted_email>', '<redacted_phone_number>', '2 Neverland Place', 'Boston', 'MA', 'US', '12345']
+    attributes = ['first_name', 'last_name', 'email', 'phone_number', 'street_address', 'city', 'state_province', 'country', 'postal_code', 'group']
+    default_text = ['John', 'Smith', '<redacted_email>', '<redacted_phone_number>', '2 Neverland Place', 'Boston', 'MA', 'US', '12345', 'Awesome People']
     CSV.generate(headers: true) do |csv|
       csv << attributes
       csv << default_text
@@ -60,7 +60,7 @@ module CSVHandler
         field && field.blank? ? nil : field
       end
 
-      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code]
+      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code, :group]
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
       file_headers = file_data.headers
 
@@ -156,8 +156,14 @@ module CSVHandler
               error_hash[row[:email]].push("Phone number is already in use.") if msg.include?('index_users_on_phone_number')
               error_hash[row[:email]].push("Email is already in use.") if msg.include?('index_users_on_email')
               error = true
-            rescue StandardError => e
+            rescue ActiveRecord::RecordInvalid => e
               ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv second exception block", env: Rails.env, self: self })
+              e.record.errors.messages.each do |k,v|
+                v.each { |r| error_hash[row[:email]].push("#{k}".humanize + " #{r}.") }
+              end
+              error = true
+            rescue StandardError => e
+              ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv third exception block", env: Rails.env, self: self })
               error = true
               error_hash[row[:email]].push("Something went wrong on our end.")
             end
