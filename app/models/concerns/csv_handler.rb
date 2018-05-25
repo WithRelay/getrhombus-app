@@ -70,12 +70,12 @@ module CSVHandler
         # Validate headers
         if !headers_checked
           if headers.length != file_headers.length
-            response.push(['The File Headers', ["Unable to proceed because the number of headers are incorrect."]])
+            error_hash['The File Headers'] = ["Unable to proceed because the headers are incorrect. Please see template file."]
             break
           end
 
           if headers.to_set != file_headers.to_set
-            response.push(["The File Headers", ["Unable to proceed because the headers are incorrect."]])
+            error_hash['The File Headers'] = ["Unable to proceed because the headers are incorrect. Please see template file."]
             break
           end
 
@@ -181,15 +181,15 @@ module CSVHandler
       EmailingService.customer_csv_upload_failure(self.email, error_hash) if error_hash.present?
 
       # change hash to array
-      error_hash.each do |key, value|
-        ary = []
-        value.each { |v| ary.push(v) }          
-        response.push([key, ary])  
-      end
+      #error_hash.each do |key, value|
+        #ary = []
+        #value.each { |v| ary.push(v) }          
+        #response.push([key, ary])  
+      #end
       
       puts 'are there any errors?'
-      puts response.inspect
-      response
+      puts error_hash.inspect
+      error_hash
     rescue StandardError => e
       ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv third exception block", env: Rails.env, self: self })
       ['File Upload', ["Something went wrong on our end."]]
@@ -460,12 +460,12 @@ module CSVHandler
         # Validate headers
         if !headers_checked
           if headers.length != file_headers.length
-            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the number of headers are incorrect."] }
+            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the number of headers are incorrect. Please see template file."] }
             break
           end
 
           if headers.to_set != file_headers.to_set
-            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the headers are incorrect."] }
+            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the headers are incorrect. Please see template file."] }
             break
           end
 
