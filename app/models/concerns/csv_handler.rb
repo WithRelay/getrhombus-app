@@ -156,6 +156,7 @@ module CSVHandler
               error_hash[row[:email]].push("Phone number is already in use.") if msg.include?('index_users_on_phone_number')
               error_hash[row[:email]].push("Email is already in use.") if msg.include?('index_users_on_email')
               error = true
+            # phone number could be taken even if email isnt
             rescue ActiveRecord::RecordInvalid => e
               ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv second exception block", env: Rails.env, self: self })
               e.record.errors.messages.each do |k,v|
@@ -529,7 +530,7 @@ module CSVHandler
       lname = group.to_s.squish
       lname = lname + " with Accounts" if list_type == 0  # this line isnt always required
       list = List.find_by(name: lname, user_id: self.id)
-      list = self.lists.create(name: lname, channel: 0, origin: 0, list_type: list_type, campaign_type: 0) unless list
+      list = self.lists.create(name: lname, channel: (list_type == 0 ? nil : 0), origin: 0, list_type: list_type, campaign_type: 0) unless list
       UserList.find_or_create_by(list_id: list.id, customer_contact_id: mc.id, customer_contact_type: mc.class.name) if mc
     end
   end
