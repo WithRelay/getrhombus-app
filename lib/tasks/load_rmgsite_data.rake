@@ -280,7 +280,6 @@ task :load_rmgsite_data => :environment do
 <redacted_phone_number>,
 <redacted_phone_number>,
 <redacted_phone_number>,
-<redacted_phone_number>,
 <redacted_phone_number>
 ]
 
