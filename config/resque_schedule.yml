@@ -3,7 +3,7 @@ drip_campaign_emails:
   class: "DripCampaignJob"
   args:
   description: "This job runs our drip campaigns."
-  queue: <%= Rails.env %>_drip_campaign_emails
+  queue: drip_campaign_emails
 
 # Not implemented yet
 #weekly_activity_summary:
@@ -11,7 +11,7 @@ drip_campaign_emails:
 #  class: "WeeklyActivitySummaryJob"
 #  args:
 #  description: "This job send weekly activity summary."
-#  queue: <%= Rails.env %>_weekly_activity_summary
+#  queue: weekly_activity_summary
 
 # card_expired_emails:
 #   cron: "0 12 * * * America/New_York"
@@ -19,7 +19,7 @@ drip_campaign_emails:
 #   class: "CardExpiredJob"
 #   args:
 #   description: "This job notifies customers of expired or soon-to-expire cards."
-#   queue: <%= Rails.env %>_card_expired_emails
+#   queue: card_expired_emails
 
 # every 15 mins to the hour, schedule all campaigns that should run that day
 pending_campaigns:
@@ -27,14 +27,14 @@ pending_campaigns:
   class: 'PendingCampaignsJob'
   args:
   description: "Checks for and queues today's upcoming campaigns"
-  queue: <%= Rails.env %>_pending_campaigns
+  queue: pending_campaigns
 
 low_account_balance_alert:
   cron: '0 12 * * * America/New_York' # “At 12:00 every day”
   class: 'AccountBalanceAlertJob'
   args:
   description: 'This job alert merchant if their account balance is less than $5'
-  queue: <%= Rails.env %>_low_account_balance_alert
+  queue: low_account_balance_alert
 
 # Not released yet
 #hosted_sms:
@@ -42,4 +42,4 @@ low_account_balance_alert:
 #  class: 'HostedSmsJob'
 #  args:
 #  description: 'Update response of the hosted sms service'
-#  queue: <%= Rails.env %>_hosted_sms
+#  queue: hosted_sms
