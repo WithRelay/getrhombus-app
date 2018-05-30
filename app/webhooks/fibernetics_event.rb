@@ -13,24 +13,35 @@ class FiberneticsEvent
   private
 
 =begin
-  #<HTTParty::Response:0xb5120b0 
-  parsed_response={"response"=>{"status"=>"OK", "last_server_message_id"=>"203556561", 
+  #<HTTParty::Response:0xb5120b0
+  parsed_response={"response"=>{"status"=>"OK", "last_server_message_id"=>"203556561",
   "messages"=>{"message"=>
-  [{"id"=>"203554682", "to"=>"+<redacted_phone_number>", "from"=>"+<redacted_phone_number>", "body"=>"Hello", "timestamp"=>"2017-10-17 04:16:08.000 UTC"}, 
+  [{"id"=>"203554682", "to"=>"+<redacted_phone_number>", "from"=>"+<redacted_phone_number>", "body"=>"Hello", "timestamp"=>"2017-10-17 04:16:08.000 UTC"},
   {"id"=>"203556560", "to"=>"+<redacted_phone_number>", "from"=>"+<redacted_phone_number>", "body"=>"Yes", "timestamp"=>"2017-10-17 04:41:52.000 UTC"}]
-  }}}, 
-  @response=#<Net::HTTPOK 200 OK readbody=true>, 
-  @headers={"cache-control"=>["private"], "content-length"=>["544"], "content-type"=>["text/xml"], "server"=>["Microsoft-IIS/7.5"], 
+  }}},
+  @response=#<Net::HTTPOK 200 OK readbody=true>,
+  @headers={"cache-control"=>["private"], "content-length"=>["544"], "content-type"=>["text/xml"], "server"=>["Microsoft-IIS/7.5"],
   "x-aspnet-version"=>["4.0.30319"], "x-powered-by"=>["ASP.NET"], "date"=>["Tue, 17 Oct 2017 04:41:58 GMT"], "connection"=>["close"]}>
 =end
 
   def get_message
-    #re = TextingService.get_sms_fibernetics(@to, @params[:signature].to_i - 1, @merchant.fn_subscriber_id)
-    re = TextingService.get_sms_fibernetics(@to, @params[:signature].to_i - 1, @number.fibernetics_subscriber_id)
-    if re && re.code == 200 && re['response']['status'] == "OK"
-      data = re['response']['messages']['message']
-      data = [data] unless data.is_a? Array
-      data.each { |m| save_received_message(m) }
+    begin
+      #re = TextingService.get_sms_fibernetics(@to, @params[:signature].to_i - 1, @merchant.fn_subscriber_id)
+      re = TextingService.get_sms_fibernetics(@to, @params[:signature].to_i - 1, @number.fibernetics_subscriber_id)
+      if re && re.code == 200 && re['response']['status'] == "OK"
+        data = re['response']['messages']['message']
+        data = [data] unless data.is_a? Array
+        data.each { |m| save_received_message(m) }
+      end
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(
+        exception,
+        env: request.env,
+        data: {
+          message: 'Get message in FiberneticsEvent',
+          env: Rails.env
+        }
+      )
     end
   end
 
@@ -41,9 +52,9 @@ class FiberneticsEvent
 
       @phone_number = data['from'].gsub('+', '')
       @timestamp = data['timestamp']
-      user = User.find_by(phone_number: @phone_number)      
-      num_segments = Message.num_of_segments(data["body"])     
-      sms_price = @merchant.sms_fee.inbound_sms 
+      user = User.find_by(phone_number: @phone_number)
+      num_segments = Message.num_of_segments(data["body"])
+      sms_price = @merchant.sms_fee.inbound_sms
 
       @message = Message.create!(
         to: @to,
@@ -58,7 +69,7 @@ class FiberneticsEvent
       )
 
       post_message_to_api_user if @merchant.is_api_user? && @merchant.api_cred.webhook_url.present?
-      
+
       # create or add to existing conversation, send to real time service
       if user.present?
         uid, uid_type = user.id, 'user'
@@ -72,8 +83,8 @@ class FiberneticsEvent
       Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
       #@merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
       MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
-      #@merchant.deduct_from_account_balance(sms_price * num_segments) 
-       
+      #@merchant.deduct_from_account_balance(sms_price * num_segments)
+
     rescue ActiveRecord::RecordNotUnique => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In fibernetics save_received_message record not unique", env: Rails.env, params: @params })
     rescue ActiveRecord::RecordInvalid => exception
@@ -93,5 +104,4 @@ class FiberneticsEvent
       ExceptionNotifier.notify_exception(exception, data: { message: "In post_message_for_api_user standard error", env: Rails.env, params: @params })
     end
   end
-
 end
