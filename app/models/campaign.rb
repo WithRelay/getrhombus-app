@@ -97,15 +97,14 @@ class Campaign < ActiveRecord::Base
 
   def pending_queue
     if reminder_campaign?
-      queue = self.recurring? ? '_recurring_reminders' : '_one_time_reminders'
+      self.recurring? ? 'recurring_reminders' : 'one_time_reminders'
     else
-      queue = self.recurring? ? '_recurring_campaigns' : '_one_time_campaigns'
+      self.recurring? ? 'recurring_campaigns' : 'one_time_campaigns'
     end
-    Rails.env + queue
   end
 
   def send_now_queue
-    Rails.env + (reminder_campaign? ? "_send_now_reminders" : "_send_now_campaigns")
+    reminder_campaign? ? "send_now_reminders" : "send_now_campaigns"
   end
 
   private
