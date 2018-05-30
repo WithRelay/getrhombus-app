@@ -3,7 +3,7 @@ class WeeklyActivitySummaryJob
   include DashboardData
   extend UserProfile
 
-  @queue = Rails.env + "_weekly_activity_summary"
+  @queue = "weekly_activity_summary"
 
   class << self
 

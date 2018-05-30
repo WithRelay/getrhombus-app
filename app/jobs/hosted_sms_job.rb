@@ -1,6 +1,6 @@
 # Hosted Sms Job
 class HostedSmsJob
-  @queue = Rails.env + '_hosted_sms'
+  @queue = 'hosted_sms'
 
   def self.perform
     ActiveRecord::Base.clear_active_connections!

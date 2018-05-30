@@ -1,14 +1,10 @@
 class CardExpiredJob
-
-  @queue = Rails.env + "_card_expired"
+  @queue = "card_expired"
 
   def self.perform
     ActiveRecord::Base.clear_active_connections!
-
-    
     # if we get mysql has gone away errors..see resque task
     #ActiveRecord::Base.clear_active_connections!
-    
     User.all.each do |user|
       # time.now.in_time_zone format year month is > card date then notify
       if false
@@ -16,5 +12,4 @@ class CardExpiredJob
       end
     end
   end
-
 end

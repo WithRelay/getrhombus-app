@@ -11,7 +11,7 @@ class TextingService
   TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
   TWILIO_RELAY_APP_SID = Rails.application.secrets.twilio["relay_app_sid"]
 
-  #FIBERNETICS_PN = "<redacted_phone_number>" in Test end most likely.
+  #FIBERNETICS_PN = "<redacted_phone_number>" # For GetRhombus key
   FIBERNETICS_API_KEY = Rails.application.secrets.fibernetics["key"]
   FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics["secret"]
 

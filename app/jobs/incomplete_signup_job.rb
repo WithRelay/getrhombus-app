@@ -10,5 +10,4 @@ class IncompleteSignupJob < ApplicationJob
                                                             merchant: user })
     end
   end
-
 end

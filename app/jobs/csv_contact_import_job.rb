@@ -1,5 +1,5 @@
 class CsvContactImportJob < ApplicationJob
-  @queue = Rails.env + "_csv_contact_import"
+  queue_as :csv_contact_import
 
   def perform(merchant, file)
     begin
@@ -8,6 +8,4 @@ class CsvContactImportJob < ApplicationJob
     rescue StandardError => e
     end
   end
-
 end
-  

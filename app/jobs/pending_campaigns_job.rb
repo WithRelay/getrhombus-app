@@ -1,6 +1,6 @@
 class PendingCampaignsJob
 
-  @queue = Rails.env + "_pending_campaigns"
+  @queue = "pending_campaigns"
   
   def self.perform
     ActiveRecord::Base.clear_active_connections!

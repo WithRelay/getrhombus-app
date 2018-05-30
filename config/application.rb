@@ -35,7 +35,8 @@ module Rhombus
     # config.i18n.default_locale = :de
 
     # added
-    config.active_job.queue_name_prefix = Rails.env
+    #config.active_job.queue_name_prefix = Rails.env
+
 #=begin
     # added
     #unless Rails.env == 'development'
@@ -50,6 +51,7 @@ module Rhombus
       }
     #end
 #=end
+
     # added
     I18n.enforce_available_locales = true
 
