@@ -60,7 +60,7 @@ class DripCampaignJob
         EmailingService.three_month_followup(user)
       # First-time Message Auto-response (100 days)
       elsif diff_in_days == 100
-        EmailingService.first_time_mesasge_auto_response(user)
+        EmailingService.first_time_message_auto_response(user)
       end
 
     end
