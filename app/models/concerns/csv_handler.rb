@@ -293,7 +293,7 @@ module CSVHandler
   end
 =end 
 
-=begin
+#=begin
   # for 100k uploads
   def upload_contact_csv(file_path)
     begin
@@ -306,7 +306,7 @@ module CSVHandler
       end
 
       #headers = [:phone_number]
-      headers = [:phone_number, :seg]
+      headers = [:phone_number, :group]
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
       file_headers = file_data.headers
 
@@ -352,17 +352,14 @@ module CSVHandler
                 #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
 
                 #lname = "Test Group #{count1}-#{count2}"
-                lname = (row[:seg] || "My List") + "-" + count1.to_s
+                lname = (row[:group] || "My List") + "-" + count1.to_s
                 #count2 = count2 + 1 if (number_count % 5000) == 0
                 count1 = count1 + 1 if (number_count % 5000) == 0
                 #if (number_count % 20000) == 0
                   #count1 = count1 + 1
                   #count2 = 1
                 #end
-                
-                l = List.find_by(name: lname, user_id: self.id)
-                l = self.lists.create(name: lname, channel: 0, origin: 0, list_type: 1, campaign_type: 0) unless l
-                UserList.find_or_create_by(list_id: l.id, customer_contact_id: mc.id, customer_contact_type: "MerchantContact") if mc
+                self.create_list_and_user_list(lname, mc, 1)
               rescue StandardError => e
                 error = true
                 ExceptionNotifier.notify_exception(e, data: { message: "In upload_contact_csv first exception block", env: Rails.env, self: self })
@@ -371,6 +368,7 @@ module CSVHandler
             else
               MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
               MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+              self.create_list_and_user_list(row[:group], mc, 0)
             end
             error_hash.delete(row[:phone_number]) unless error
           else
@@ -390,7 +388,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end
+#=end
 
 =begin
   def upload_contact_csv(file_path)
@@ -437,7 +435,7 @@ module CSVHandler
   end
 =end
 
-#=begin
+=begin
   # option to add segment in file
   def upload_contact_csv(file_path)
     begin
@@ -523,7 +521,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-#=end 
+=end 
 
   def create_list_and_user_list(group, mc, list_type)
     if group.present? && mc.try(:id).present?
