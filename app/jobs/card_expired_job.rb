@@ -1,5 +1,5 @@
 class CardExpiredJob
-  @queue = Rails.env + "_card_expired"
+  @queue = "card_expired"
 
   def self.perform
     ActiveRecord::Base.clear_active_connections!

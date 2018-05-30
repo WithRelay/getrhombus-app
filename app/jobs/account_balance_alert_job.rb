@@ -1,5 +1,5 @@
 class AccountBalanceAlertJob
-  @queue = Rails.env + "_low_account_balance_alert"
+  @queue = "low_account_balance_alert"
 
   def self.perform
     ActiveRecord::Base.clear_active_connections!

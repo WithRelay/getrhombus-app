@@ -1,6 +1,6 @@
 class DripCampaignJob
 
-  @queue = Rails.env + "_drip_campaigns"
+  @queue = "drip_campaigns"
 
   def self.perform
     ActiveRecord::Base.clear_active_connections!
