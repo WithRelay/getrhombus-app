@@ -293,7 +293,7 @@ module CSVHandler
   end
 =end 
 
-#=begin
+=begin
   # for 100k uploads
   def upload_contact_csv(file_path)
     begin
@@ -388,7 +388,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-#=end
+=end
 
 =begin
   def upload_contact_csv(file_path)
@@ -435,7 +435,7 @@ module CSVHandler
   end
 =end
 
-=begin
+#=begin
   # option to add segment in file
   def upload_contact_csv(file_path)
     begin
@@ -521,7 +521,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end 
+#=end 
 
   def create_list_and_user_list(group, mc, list_type)
     if group.present? && mc.try(:id).present?
