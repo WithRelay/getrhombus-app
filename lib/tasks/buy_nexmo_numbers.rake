@@ -28,9 +28,8 @@ task :buy_nexmo_numbers => :environment do
 
 
   # toll free provisioning
-  users = User.where(id: [7890, 7891])
+  users = User.where(id: [7892, 7893])
   # 7889, 7890, 7891, 7892, 7893
-  #<redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>
   country = "US"
   pattern = ""
   size = 45
@@ -46,7 +45,7 @@ task :buy_nexmo_numbers => :environment do
 
         if res
           fn = "(" + res[1..3] + ") " + res[4..6] + "-" + res[7..10]
-          u.numbers.create(number: res, friendly_name: fn, country: n["country"], default: default)
+          u.numbers.create(number: res, friendly_name: fn, country: n["country"], default: default, provider: 'nexmo', price: '210')
           TextingService.update_nexmo_number(n["country"], n["msisdn"], "tel", "<redacted_phone_number>")
         end
       end
