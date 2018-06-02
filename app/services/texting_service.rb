@@ -41,7 +41,20 @@ class TextingService
       HTTParty.post('https://rest.nexmo.com/number/cancel?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})
     end
 
-    def buy_number_nexmo(country, pattern)
+    def search_number_nexmo(country, pattern, size = 1, type = 'mobile-lvn')
+      # search for a number on nexmo
+      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" +
+                                NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&pattern=#{pattern}&size=#{size}&type=#{type}")
+      # check the response
+      response.code == 200 && response["numbers"] ? response["numbers"] : nil
+    end
+
+    def buy_number_nexmo(country, msisdn)
+      response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "/" + msisdn)
+      response.code == 200 ? msisdn : nil
+    end
+
+    def search_and_buy_number_nexmo(country, pattern)
       # search for a number on nexmo
       response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" +
                                 NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&size=1&pattern=#{pattern}")
@@ -65,21 +78,21 @@ class TextingService
       end
     end
 
-    def update_nexmo_number(country, msisdn, application_id)
+    def update_nexmo_number(country, msisdn, voice_callback_type, voice_callback_value)
       begin
         client = Nexmo::Client.new(
           api_key: NEXMO_API_KEY, api_secret: NEXMO_API_SECRET
         )
         client.numbers.update(
           country: country, msisdn: msisdn,
-          voice_callback_type: 'app',
-          voice_callback_value: application_id
+          voice_callback_type: voice_callback_type, # sip, tel, or app
+          voice_callback_value: voice_callback_value # A SIP URI, telephone number or Application ID
         )
       rescue StandardError => err
         ExceptionNotifier.notify_exception(err,
           data: {
             message: 'In texting service update_nexmo_number',
-            from: from, to: to, body: body, media_ary: media_ary, env: Rails.env
+            msisdn: msisdn, env: Rails.env
           }
         )
       end

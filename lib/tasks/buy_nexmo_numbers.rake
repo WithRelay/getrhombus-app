@@ -4,6 +4,8 @@
 
 desc "buy nexmo numbers"
 task :buy_nexmo_numbers => :environment do
+  
+=begin
   u = User.find 2746
   
   u.numbers.delete_all
@@ -13,7 +15,7 @@ task :buy_nexmo_numbers => :environment do
 
   60.times do |i|
     
-    res = TextingService.buy_number_nexmo(country, pattern)
+    res = TextingService.search_and_buy_number_nexmo(country, pattern)
     default = i == 0 ? 1 : 0
 
     if res.to_s.length > 5
@@ -22,8 +24,34 @@ task :buy_nexmo_numbers => :environment do
     end
 
   end
-  
-  
+=end
+
+
+  # toll free provisioning
+  users = User.where(id: [7889])#, 7890, 7891, 7892, 7893])
+  #<redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>
+  country = "US"
+  pattern = ""
+  size = 45
+  type = "landline-toll-free"
+
+  users.each do |u|
+    u.numbers.delete_all
+    numbers = TextingService.search_number_nexmo(country, pattern, size, type)
+    if numbers
+      numbers.each_with_index do |n, i|
+        res = TextingService.buy_number_nexmo(n["country"], n["msisdn"])
+        default = i == 0 ? 1 : 0
+
+        if res
+          fn = "(" + res[1..3] + ") " + res[4..6] + "-" + res[7..10]
+          u.numbers.create(number: res, friendly_name: fn, country: n["country"], default: default)
+          TextingService.update_nexmo_number(n["country"], n["msisdn"], "tel", "<redacted_phone_number>")
+        end
+      end
+    end
+  end
+
 end
 
 
