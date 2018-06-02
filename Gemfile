@@ -5,10 +5,11 @@ gem 'rails', '4.2.0'
 
 gem 'mysql2', '~> 0.3.18'
 
-gem "httparty"
+gem 'httparty'
+gem 'nexmo'
 
 # For authentication
-gem "devise"
+gem 'devise'
 
 # resque
 gem 'resque', :require => "resque/server"
