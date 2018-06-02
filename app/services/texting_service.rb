@@ -43,13 +43,13 @@ class TextingService
 
     def buy_number_nexmo(country, pattern)
       # search for a number on nexmo
-      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" + 
+      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" +
                                 NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&size=1&pattern=#{pattern}")
       # check the response
       if response.code == 200 && response["numbers"] != nil #.first["msisdn"] != ""
         msisdn = response["numbers"].first["msisdn"]
         response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "/" + msisdn)
-        
+
         # check response
         if response.code == 200
           return msisdn
@@ -65,10 +65,30 @@ class TextingService
       end
     end
 
+    def update_nexmo_number(country, msisdn, application_id)
+      begin
+        client = Nexmo::Client.new(
+          api_key: NEXMO_API_KEY, api_secret: NEXMO_API_SECRET
+        )
+        client.numbers.update(
+          country: country, msisdn: msisdn,
+          voice_callback_type: 'app',
+          voice_callback_value: application_id
+        )
+      rescue StandardError => err
+        ExceptionNotifier.notify_exception(err,
+          data: {
+            message: 'In texting service update_nexmo_number',
+            from: from, to: to, body: body, media_ary: media_ary, env: Rails.env
+          }
+        )
+      end
+    end
+
     def send_sms(from, to, body, media_ary = [])
       begin
-        from = "+" + from if from.chr != "+"
-        to = "+" + to if to.chr != "+"
+        from = '+' + from if from.chr != '+'
+        to = '+' + to if to.chr != '+'
 
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         data = { from: from, to: to, body: body, application_sid: TWILIO_RELAY_APP_SID }
@@ -85,8 +105,8 @@ class TextingService
 
     def send_sms_fibernetics(from, to, body, subscriber_id)
       begin
-        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], 
-                                    ["phone_number", from], ["to", to], ["message", body], ['subscriber_id', subscriber_id] ])        
+        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET],
+                                    ["phone_number", from], ["to", to], ["message", body], ['subscriber_id', subscriber_id] ])
         return HTTParty.post("https://smssend.fongo.com/Send.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
       rescue Timeout::Error => err
         ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber timeout", from: from, to: to, body: body, env: Rails.env })
@@ -98,8 +118,8 @@ class TextingService
 
     def get_sms_fibernetics(phone_number, since_id, subscriber_id)
       begin
-        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], 
-                                    ["phone_number", phone_number], ["since_id", since_id], ['subscriber_id', subscriber_id] ])        
+        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET],
+                                    ["phone_number", phone_number], ["since_id", since_id], ['subscriber_id', subscriber_id] ])
         return HTTParty.post("https://smsfetch.fongo.com/FetchMessageHandler.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
       rescue Timeout::Error => err
         ExceptionNotifier.notify_exception(err, data: { message: "In get_sms_fibernetics timeout", phone_number: phone_number })
