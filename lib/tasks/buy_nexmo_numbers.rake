@@ -28,7 +28,7 @@ task :buy_nexmo_numbers => :environment do
 
 
   # toll free provisioning
-  users = User.where(id: [7890, 7891, 7892, 7893])
+  users = User.where(id: [7890, 7891])
   # 7889, 7890, 7891, 7892, 7893
   #<redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>, <redacted_phone_number>
   country = "US"
