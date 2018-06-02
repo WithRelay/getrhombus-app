@@ -10,12 +10,11 @@ task :send_rmg_message_data => :environment do
   require 'csv'
         
   csv_string = CSV.generate do |csv|
-    csv << ['Call Display', 'Phone Number', 'Response', 'Timestamp (ET)']
+    csv << ['Call Display', 'Phone Number', 'Response', 'Timestamp (ET)', 'ID']
     count = 0
 
-    messages = Message.where(user_id_to: user_id)#.where("id > 288990") 
-    messages.each do |m| 
-      csv << [m.to, m.from, m.text, m.created_at.strftime("%Y-%m-%d %H:%M:%S")] 
+    Message.where(user_id_to: user_id).each do |m| 
+      csv << [m.to, m.from, m.text, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id] 
       count = count + 1
       puts count
     end

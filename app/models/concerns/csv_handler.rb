@@ -96,23 +96,29 @@ module CSVHandler
 
               if valid_num.present?
                 row[:phone_number] = valid_num.first
+                
+                # disable number type check
                 # check number type
-                linetype = EveryoneApiService.line_type(row[:phone_number])
-                if linetype != "mobile"
-                  linetype_str = linetype ? " It's a #{linetype}." : ''
-                  error_hash[row[:email]].push("Phone number is not a mobile number.#{linetype_str}")
-                  error = true
-                end
+                # linetype = EveryoneApiService.line_type(row[:phone_number])
+                # if linetype != "mobile"
+                    #linetype_str = linetype ? " It's a #{linetype}." : ''
+                    #error_hash[row[:email]].push("Phone number is not a mobile number.#{linetype_str}")
+                    #error = true
+                #end
+
               else
                 error_hash[row[:email]].push('Phone number is invalid.')
                 error = true
               end
 
+
+              # disable email validation
               # Validate email
-              unless EmailValidatorService.verify_email(row[:email])
-                error_hash[row[:email]].push('Email is invalid.')
-                error = true
-              end
+              # unless EmailValidatorService.verify_email(row[:email])
+                  #error_hash[row[:email]].push('Email is invalid.')
+                  #error = true
+              # end
+
 
               # set user_level and password
               row[:user_level] = 0
@@ -473,17 +479,20 @@ module CSVHandler
 
         row = row.to_hash        
         valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
-        linetype = nil
+        # disable number type check
+        # linetype = nil
 
         if valid_num.present?
           row[:phone_number] = valid_num.first 
-          linetype = EveryoneApiService.line_type(row[:phone_number])
+          # disable number type check
+          # linetype = EveryoneApiService.line_type(row[:phone_number])
         end
 
         error_hash[row[:phone_number]] = { linetype: '', errors: [] }
 
         if valid_num.present?
-          if linetype == "mobile"
+          # disable number type check
+          if true # linetype == "mobile"
             # check if a customer type user already has this number
             @customer = User.find_by(phone_number: row[:phone_number])
             

@@ -9,12 +9,14 @@ class MobileCampaign
 
     # currently only works for countries (u.s, canada) whose area codes are in position 1--3
     # also doesn't localize to country
-    @recipients_per_number = (@recipients.length/(@merchant.numbers.count.to_f)).ceil
-    @number_area_code_hash = @merchant.numbers.map { |n| [n.number, n.number[1..3]] }.to_h
-    @number_send_count_hash = @merchant.numbers.map { |n| [n.number, 0] }.to_h
+    # USE THIS WITH OLD_SEND_CAMPAIGN
+    # @recipients_per_number = (@recipients.length/(@merchant.numbers.count.to_f)).ceil
+    # @number_area_code_hash = @merchant.numbers.map { |n| [n.number, n.number[1..3]] }.to_h
+    # @number_send_count_hash = @merchant.numbers.map { |n| [n.number, 0] }.to_h
+    @merchant_numbers = @merchant.numbers.pluck(:number).cycle
   end
 
-  def send_campaign
+  def old_send_campaign
     number = nil
     if @campaign.lists.first.contact?
       @recipients.each do |r|
@@ -54,6 +56,21 @@ class MobileCampaign
           end
         end
 
+      end
+    end
+
+    { recipients: @recipients, retry_list: @failure_recipients }
+  end
+
+  def send_campaign
+    if @campaign.lists.first.contact?
+      @recipients.each do |r|
+        send_by_mobile(nil, r.uid_type, r.uid, @merchant_numbers.next) 
+      end
+    else
+      @recipients = @recipients.to_a
+      customer_user_obj_list.each_with_index do |c, i| 
+        @failure_recipients.push(@recipients.delete_at(i)) unless send_by_mobile(c, 'user', c.id, @merchant_numbers.next)
       end
     end
 
