@@ -10,13 +10,13 @@
     puts uls.inspect
 
     if uls.present?
-      messages = Message.joins("LEFT JOIN merchant_contacts mc ON mc.uid = messages.to")
-                  .where("mc.id in (#{uls.join(',')}) and mc.is_customer = 0 and messages.user_id in (#{user_ids.join(',')}) and messages.to is null")
-                  .pluck(:from)
+      numbers = MerchantContact.joins("LEFT JOIN messages ON merchant_contacts.uid = messages.to")
+                  .where("merchant_contacts.id in (#{uls.join(',')}) and merchant_contacts.is_customer = 0 and messages.user_id in (#{user_ids.join(',')}) and messages.to is null")
+                  .pluck(:uid)
     
       csv_string = CSV.generate do |csv|
         csv << ['Phone Number']
-        messages.each { |number| csv << [number] }
+        numbers.each { |number| csv << [number] }
       end
       
       attachment_hash = { attachments: [ { content: Base64.encode64(csv_string),
