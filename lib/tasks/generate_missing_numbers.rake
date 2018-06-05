@@ -5,14 +5,14 @@
 
     user_ids = [7732, 7889, 7890, 7891, 7892, 7893]
     lists = List.where(user_id: user_ids, segment: nil).pluck(:id)
-    puts lists.inspect
     uls = UserList.where(list_id: lists, customer_contact_type: 'MerchantContact').pluck(:customer_contact_id)
-    puts uls.inspect
 
     if uls.present?
       numbers = MerchantContact.joins("LEFT JOIN messages ON merchant_contacts.uid = messages.to")
-                  .where("merchant_contacts.id in (#{uls.join(',')}) and merchant_contacts.is_customer = 0 and messages.user_id in (#{user_ids.join(',')}) and messages.to is null")
+                  .where("merchant_contacts.id in (#{uls.join(',')}) and merchant_contacts.is_customer = 0 and messages.user_id in (#{user_ids.join(',')}) and messages.id is null")
                   .pluck(:uid)
+
+      puts numbers.inspect
     
       csv_string = CSV.generate do |csv|
         csv << ['Phone Number']

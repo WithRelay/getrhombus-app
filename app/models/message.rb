@@ -105,12 +105,35 @@ class Message < ActiveRecord::Base
     end
   end
 
-  def x
-    uls = [1,2,3]
-    user_ids = [1,2,3]
-    Message.joins("LEFT JOIN merchant_contacts mc ON mc.uid = messages.to")
-                  .where("mc.id in (#{uls.join(',')}) and mc.is_customer = 0 and messages.user_id in (#{user_ids.join(",")}) and messages.to is null")
-                  .pluck(:from)
+  def x(id_ary = [])
+    user_ids = id_ary.present? ? id_ary : [7732, 7889, 7890, 7891, 7892, 7893]
+
+    user_ids.each do |u_id|    
+      
+      csv_string = CSV.generate do |csv|
+        csv << ['Phone Number', 'Response', 'Segment', 'Timestamp (ET)', 'ID']
+        #count = 0
+        List.where(user_id: u_id, segment: nil).each do |l|
+          UserList.where(list_id: l.id, customer_contact_type: 'MerchantContact').each do |ul|
+            mc = MerchantContact.find_by(id: ul.customer_contact_id, is_customer: 0)
+            if mc
+              messages = Message.where(from: mc.uid, user_id_to: u_id)
+              messages.each do |m| 
+                csv << [m.from, m.text, l.name, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id] 
+                #count = count + 1
+                #puts count
+              end
+            end
+          end
+        end
+      end
+
+      attachment_hash = { attachments: [ { content: Base64.encode64(csv_string),
+                                            name: "file.csv",
+                                            type: "text/csv" } ] }
+
+      EmailingService.email_to_platform("See Attached for User ID #{u_id}", 'RMG Data', attachment_hash)
+    end
   end
 
 end
