@@ -17,9 +17,9 @@
                                           and is_customer = 0 
                       and uid not in 
                       ( 
-                        ( select `to` as uid from messages where user_id in (#{user_ids.join(',')}) )
-                          union
-                        ( select `from` as uid from messages where user_id_to in (#{user_ids.join(',')}) )
+                        select `to` as uid from messages where user_id in (#{user_ids.join(',')}) 
+                        UNION ALL
+                        select `from` as uid from messages where user_id_to in (#{user_ids.join(',')})
                       )")
 
       puts numbers.inspect
