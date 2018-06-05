@@ -85,6 +85,7 @@ module CSVHandler
         row = row.to_hash
         @customer = User.find_by(email: row[:email])
 
+
         if @customer.blank?
           # don't process the dummy data we put in the template file
           if row[:email].present? && row[:email] != '<redacted_email>'
@@ -96,6 +97,14 @@ module CSVHandler
 
               if valid_num.present?
                 row[:phone_number] = valid_num.first
+
+                @customer = User.find_by(phone_number: row[:phone_number])
+                if @customer.present?
+                  MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
+                  mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+                  self.create_list_and_user_list(row[:group], mc, 0)
+                  next
+                end
                 
                 # disable number type check
                 # check number type
@@ -164,13 +173,13 @@ module CSVHandler
               error = true
             # phone number could be taken even if email isnt
             rescue ActiveRecord::RecordInvalid => e
-              ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv second exception block", env: Rails.env, self: self })
+              ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv second exception block", env: Rails.env, self: self, row: row })
               e.record.errors.messages.each do |k,v|
                 v.each { |r| error_hash[row[:email]].push("#{k}".humanize + " #{r}.") }
               end
               error = true
             rescue StandardError => e
-              ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv third exception block", env: Rails.env, self: self })
+              ExceptionNotifier.notify_exception(e, data: { message: "In upload_customer_csv third exception block", env: Rails.env, self: self, row: row })
               error = true
               error_hash[row[:email]].push("Something went wrong on our end.")
             end
