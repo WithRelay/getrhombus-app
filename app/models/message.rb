@@ -105,4 +105,12 @@ class Message < ActiveRecord::Base
     end
   end
 
+  def x
+    uls = [1,2,3]
+    user_ids = [1,2,3]
+    Message.joins("LEFT JOIN merchant_contacts mc ON mc.uid = messages.to")
+                  .where("mc.id in (#{uls.join(',')}) and mc.is_customer = 0 and messages.user_id in (#{user_ids.join(",")}) and messages.to is null")
+                  .pluck(:from)
+  end
+
 end
