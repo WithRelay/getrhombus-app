@@ -8,7 +8,7 @@
       csv_string = CSV.generate do |csv|
         csv << ['Phone Number', 'Response', 'Segment', 'Timestamp (ET)', 'ID']
         #count = 0
-        List.where(user_id: user_id, segment: nil).where("id < 707").each do |l|
+        List.where(user_id: user_id, segment: nil).each do |l|
           UserList.where(list_id: l.id, customer_contact_type: 'MerchantContact').each do |ul|
             mc = MerchantContact.find_by(id: ul.customer_contact_id, is_customer: 0)
             if mc
