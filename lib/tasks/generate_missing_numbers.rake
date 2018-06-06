@@ -16,7 +16,9 @@
                                                 select `from` as uid from messages where user_id_to in (#{user_ids_str}) 
                                               ) as t
                                                 right join merchant_contacts on t.uid = merchant_contacts.uid
-                                                where merchant_contacts.merchant_id in (#{user_ids_str}) and t.uid is null
+                                                where merchant_contacts.merchant_id in (#{user_ids_str}) 
+                                                and merchant_contacts.is_customer = 0
+                                                and t.uid is null
                                                 group by merchant_contacts.uid")
 
 
