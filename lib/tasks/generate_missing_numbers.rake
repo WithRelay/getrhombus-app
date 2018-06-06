@@ -12,7 +12,7 @@
       user_ids_str = user_ids.join(',')
       mcs = MerchantContact.find_by_sql("select merchant_contacts.uid from
                                               ( select `to` as uid from messages where user_id in (#{user_ids_str}) 
-                                                  UNION
+                                                  UNION ALL
                                                 select `from` as uid from messages where user_id_to in (#{user_ids_str}) 
                                               ) as t
                                                 right join merchant_contacts on t.uid = merchant_contacts.uid
