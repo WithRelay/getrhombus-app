@@ -20,7 +20,7 @@ class NexmoEvent
         user_id: user.try(:id),
         user_id_to: @merchant.id,
         message_id: @message_id,
-        text: @params[:text].strip,
+        text: @params[:text].try(:strip),
         num_segments: num_segments,
         message_timestamp: @params["message-timestamp"],
         relay_price: sms_price
