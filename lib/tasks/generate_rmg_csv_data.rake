@@ -6,16 +6,18 @@
     [2626].each do |user_id|    
       
       csv_string = CSV.generate do |csv|
-        csv << ['Phone Number', 'Response', 'Segment', 'Timestamp (ET)', 'Message ID', 'List ID']
+        csv << ['Phone Number', 'Response', 'Segment', 'Campaign', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID']
         #count = 0
         List.where(user_id: user_id, segment: nil).each do |l|
+          cl = CampaignList.where(list_id: l.id).last
+          c = Campaign.find_by(id: cl.campaign_id)
           UserList.where(list_id: l.id, customer_contact_type: 'MerchantContact').each do |ul|
             mc = MerchantContact.find_by(id: ul.customer_contact_id, is_customer: 0)
             if mc
               messages = Message.where(user_id_to: user_id, from: mc.uid).where("created_at > '2018-06-08 00:00:00'") 
               #messages = Message.where(user_id_to: user_id, from: mc.uid)#.where("id > 288990") 
               messages.each do |m| 
-                csv << [m.from, m.text, l.name, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id, l.id] 
+                csv << [m.from, m.text, l.name, c.name, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id, l.id, c.id] 
                 #count = count + 1
                 #puts count
               end
