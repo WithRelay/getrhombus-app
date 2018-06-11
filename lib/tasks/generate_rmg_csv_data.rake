@@ -10,14 +10,14 @@
         #count = 0
         List.where(user_id: user_id, segment: nil).each do |l|
           cl = CampaignList.where(list_id: l.id).last
-          c = Campaign.find_by(id: cl.campaign_id)
+          c = Campaign.find_by(id: cl.campaign_id) if cl
           UserList.where(list_id: l.id, customer_contact_type: 'MerchantContact').each do |ul|
             mc = MerchantContact.find_by(id: ul.customer_contact_id, is_customer: 0)
             if mc
               messages = Message.where(user_id_to: user_id, from: mc.uid).where("created_at > '2018-06-08 00:00:00'") 
               #messages = Message.where(user_id_to: user_id, from: mc.uid)#.where("id > 288990") 
               messages.each do |m| 
-                csv << [m.from, m.text, l.name, c.name, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id, l.id, c.id] 
+                csv << [m.from, m.text, l.name, c.try(:name), m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id, l.id, c.try(:id)] 
                 #count = count + 1
                 #puts count
               end
