@@ -487,7 +487,13 @@ module CSVHandler
         end
 
         row = row.to_hash        
-        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+        
+        # temporarily disable this
+        #valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+        row_num = row[:phone_number].to_s.gsub(/\D/, '')
+        row_num = "1" + row_num if row_num.chr != "1"
+        valid_num = [row_num]
+
         # disable number type check
         # linetype = nil
 
