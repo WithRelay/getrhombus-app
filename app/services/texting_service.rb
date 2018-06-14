@@ -210,8 +210,11 @@ class TextingService
         number = client.lookups.v1.phone_numbers(num).fetch(with_carrier)
         return [number.phone_number[1..-1], number.country_code, number.national_format, number.try(:carrier).try(:[], "type")]
       rescue Twilio::REST::TwilioError => err
-      rescue StandardError => err
+      rescue Exception => err
       end
+      puts err.inspect
+      puts err.try(:message)
+      puts "error logging here"
       ExceptionNotifier.notify_exception(err, data: { message: "In texting service number_lookup", num: num, env: Rails.env })
       false
     end
