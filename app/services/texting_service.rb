@@ -122,9 +122,9 @@ class TextingService
                                     ["phone_number", from], ["to", to], ["message", body], ['subscriber_id', subscriber_id] ])
         return HTTParty.post("https://smssend.fongo.com/Send.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
       rescue Timeout::Error => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber timeout", from: from, to: to, body: body, env: Rails.env })
+        ExceptionNotifier.notify_exception(err, data: { message: "In send_sms_fibernetics timeout", from: from, to: to, body: body, env: Rails.env })
       rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber", from: from, to: to, body: body, env: Rails.env })
+        ExceptionNotifier.notify_exception(err, data: { message: "In send_sms_fibernetics", from: from, to: to, body: body, env: Rails.env })
       end
       nil
     end
@@ -212,10 +212,8 @@ class TextingService
       rescue Twilio::REST::TwilioError => err
       rescue Exception => err
       end
-      puts err.inspect
-      puts err.try(:message)
-      puts "error logging here"
-      ExceptionNotifier.notify_exception(err, data: { message: "In texting service number_lookup", num: num, env: Rails.env })
+      #puts err.inspect
+      ExceptionNotifier.notify_exception(err, data: { message: "In texting service number_lookup", num: num, env: Rails.env, info: err.try(:message) })
       false
     end
 

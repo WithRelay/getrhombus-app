@@ -497,7 +497,6 @@ module CSVHandler
         # disable number type check
         # linetype = nil
 
-=begin
         if valid_num.present?
           row[:phone_number] = valid_num.first 
           # disable number type check
@@ -535,7 +534,6 @@ module CSVHandler
         else
           error_hash[row[:phone_number]][:errors].push('Phone number is invalid.')
         end
-=end
       end
 
       EmailingService.csv_upload_failure(self.email, error_hash) if error_hash.present?
