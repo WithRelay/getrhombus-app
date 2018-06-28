@@ -7,31 +7,34 @@ desc "generate response rates"
 task :generate_response_rates => :environment do
   require 'csv'
 
-  count = 0
-  campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: 282) # OPC: Message 2 (June 10)
-  
-  csv_string = CSV.generate do |csv|
-    csv << ['Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
-  
-    if campaign.try(:user_lists).present?
-      campaign.user_lists.each do |ul|
-        outbound = Message.find_by("user_id = ? and `messages`.`to` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc)
-        inbound = Message.find_by("user_id_to` = ? and `messages`.`from` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc)
+  [316, 317, 322, 323, 327, 328, 329, 330, 331, 332, 335, 336].each do |cid|
 
-        out_time = outbound.try(:created_at)
-        in_time = inbound.try(:created_at)
-        time_diff = out_time && in_time ? ((in_time - out_time) / 60) : ''
+    count = 0
+    campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
+    
+    csv_string = CSV.generate do |csv|
+      csv << ['Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
+    
+      if campaign.try(:user_lists).present?
+        campaign.user_lists.each do |ul|
+          outbound = Message.find_by("user_id = ? and `messages`.`to` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc)
+          inbound = Message.find_by("user_id_to` = ? and `messages`.`from` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc)
 
-        csv << [outbound.try(:from), inbound.try(:from), outbound.try(:text), inbound.try(:text), out_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), in_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), time_diff]
+          out_time = outbound.try(:created_at)
+          in_time = inbound.try(:created_at)
+          time_diff = out_time && in_time ? ((in_time - out_time) / 60) : ''
 
-        count = count + 1
-        puts count
+          csv << [outbound.try(:from), inbound.try(:from), outbound.try(:text), inbound.try(:text), out_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), in_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), time_diff]
+
+          count = count + 1
+          puts count
+        end
       end
     end
-  end
 
-  attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "file.csv", type: "text/csv" } ] }
-  EmailingService.email_to_platform("See Attached for Campaign - #{campaign.name}", 'RMG Data', attachment_hash)
+    attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "#{campaign.name}.csv", type: "text/csv" } ] }
+    EmailingService.email_to_platform("See Attached for Campaign - #{campaign.name}", 'RMG Data', attachment_hash)
+  end
 end
 
 
