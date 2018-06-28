@@ -17,8 +17,8 @@ task :generate_response_rates => :environment do
     
       if campaign.try(:user_lists).present?
         campaign.user_lists.each do |ul|
-          outbound = Message.find_by("user_id = ? and `messages`.`to` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc)
-          inbound = Message.find_by("user_id_to` = ? and `messages`.`from` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc)
+          outbound = Message.where("user_id = ? and `messages`.`to` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc).first
+          inbound = Message.where("user_id_to` = ? and `messages`.`from` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc).first
 
           out_time = outbound.try(:created_at)
           in_time = inbound.try(:created_at)
