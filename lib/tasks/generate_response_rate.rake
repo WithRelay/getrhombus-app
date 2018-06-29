@@ -8,7 +8,7 @@ task :generate_response_rates => :environment do
   require 'csv'
 
   #[316, 317, 322, 323, 327, 328, 329, 330, 331, 332, 335, 336].each do |cid|
-  [355].each do |cid|
+  [337,338,341,342,343,344,345,346,347,348].each do |cid|
 
     count = 0
     campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
