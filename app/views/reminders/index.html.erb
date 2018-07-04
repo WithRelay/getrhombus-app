@@ -69,7 +69,7 @@
         </div>
 
         <% if @reminders_today.present? && @reminders_today.next_page %>
-          <div id="load_more_reminders_today" class="show_more load-more-wrapper" data-loading-text="Loding more reminders" >
+          <div id="load_more_reminders_today" class="show_more load-more-wrapper" data-loading-text="Loading more reminders" >
             <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
           </div>
         <% end %>
@@ -89,7 +89,7 @@
       </div>
 
       <% if @reminders_tomorrow.present? && @reminders_tomorrow.next_page %>
-        <div id="load_more_reminders_tomorrow" class="show_more load-more-wrapper" data-loading-text="Loding more reminders" >
+        <div id="load_more_reminders_tomorrow" class="show_more load-more-wrapper" data-loading-text="Loading more reminders" >
           <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
         </div>
       <% end %>
@@ -108,7 +108,7 @@
       </div>
 
       <% if @reminders_upcoming.present? && @reminders_upcoming.next_page %>
-        <div id="load_more_reminders_upcoming" class="show_more load-more-wrapper" data-loading-text="Loding more reminders" >
+        <div id="load_more_reminders_upcoming" class="show_more load-more-wrapper" data-loading-text="Loading more reminders" >
           <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
         </div>
       <% end %>
