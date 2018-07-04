@@ -1,9 +1,5 @@
 class CampaignPresenter < BasePresenter
 
-  def count_recipient
-    @model.lists.count
-  end
-
   def campaign_name
     "#{@model.name} (#{@model.status})"
   end
