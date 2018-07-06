@@ -252,7 +252,7 @@ task :buy_nexmo_numbers => :environment do
     u.numbers.delete_all
     total = u.numbers.count
 
-    while total < max_total
+    while (total < max_total && User.find(1).email == "<redacted_email>")
       numbers = TextingService.search_number_nexmo(country, pattern, size, type)
 
       if numbers
