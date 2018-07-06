@@ -258,7 +258,7 @@ task :buy_nexmo_numbers => :environment do
       if numbers
         numbers.each_with_index do |n, i|
           total = u.numbers.count
-          if !(ary.include?(n.to_i)) && (total < max_total)
+          if !(ary.include?(n["msisdn"].to_i)) && (total < max_total)
 
             res = TextingService.buy_number_nexmo(n["country"], n["msisdn"])
             default = i == 0 ? 1 : 0
