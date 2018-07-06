@@ -244,28 +244,38 @@ task :buy_nexmo_numbers => :environment do
   # 7889, 7890, 7891, 7892, 7893
   country = "US"
   pattern = ""
-  size = 45
+  size = 100
   type = "landline-toll-free"
+  max_total = 101
 
   users.each do |u|
     u.numbers.delete_all
-    numbers = TextingService.search_number_nexmo(country, pattern, size, type)
-    if numbers
-      numbers.each_with_index do |n, i|
-        if !(ary.include?(n.to_i)) && u.numbers.count < 101
+    total = u.numbers.count
 
-          res = TextingService.buy_number_nexmo(n["country"], n["msisdn"])
-          default = i == 0 ? 1 : 0
+    while total < max_total
+      numbers = TextingService.search_number_nexmo(country, pattern, size, type)
 
-          if res
-            fn = "(" + res[1..3] + ") " + res[4..6] + "-" + res[7..10]
-            u.numbers.create(number: res, friendly_name: fn, country: n["country"], default: default, provider: 'nexmo', price: '210')
-            #TextingService.update_nexmo_number(n["country"], n["msisdn"], "tel", "<redacted_phone_number>")
+      if numbers
+        numbers.each_with_index do |n, i|
+          total = u.numbers.count
+          if !(ary.include?(n.to_i)) && (total < max_total)
+
+            res = TextingService.buy_number_nexmo(n["country"], n["msisdn"])
+            default = i == 0 ? 1 : 0
+
+            if res
+              fn = "(" + res[1..3] + ") " + res[4..6] + "-" + res[7..10]
+              u.numbers.create(number: res, friendly_name: fn, country: n["country"], default: default, provider: 'nexmo', price: '210')
+              #TextingService.update_nexmo_number(n["country"], n["msisdn"], "tel", "<redacted_phone_number>")
+            end
           end
-        end
 
+        end
       end
+
+      total = u.numbers.count
     end
+    
   end
 
 end
