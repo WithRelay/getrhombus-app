@@ -243,7 +243,7 @@ task :buy_nexmo_numbers => :environment do
   users = User.where(id: [13098])
   # 7889, 7890, 7891, 7892, 7893
   country = "US"
-  pattern = ""
+  pattern = "1877"
   size = 100
   type = "landline-toll-free"
   max_total = 101
