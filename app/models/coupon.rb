@@ -7,12 +7,12 @@ class Coupon < ActiveRecord::Base
   attr_accessor :coupon_type
   validates_presence_of :name
   validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
-  
+
   validates_presence_of :duration
-  
+
   validates_presence_of :duration_in_months, if: lambda { self.duration == "repeating" }
   validates :duration_in_months, numericality: { allow_blank: true, greater_than: 0, only_integer: true }
-  
+
   validates_presence_of :percent_off, if: lambda { self.amount_off.blank? }
   validates :percent_off, numericality: { allow_blank: true, greater_than: 0, less_than: 101, only_integer: true }
 
@@ -38,7 +38,7 @@ class Coupon < ActiveRecord::Base
       self.user_id = hash[:team].id
       self.currency = hash[:team].currency
       return false if !self.save
-      
+
       hash.delete(:team)
 
       res = PaymentService.create_coupon(hash)
@@ -47,7 +47,7 @@ class Coupon < ActiveRecord::Base
       else
         ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In create_coupon", env: Rails.env, res: res, hash: hash, self: self })
         self.delete_coupon # if StandardError happens in create_coupon after Stripe was called or update fails above
-        false        
+        false
       end
 
     rescue StandardError => e

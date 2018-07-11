@@ -161,6 +161,14 @@ class Subscription < ActiveRecord::Base
     status == 'canceled'
   end
 
+  def coupon_discount
+    # coupon amount calculated here
+    return 0 if coupon.blank?
+    return coupon.amount_off/100 if coupon.amount_off.present?
+    plan_amt = plan.amount
+    ((coupon.percent_off/100.to_f * plan_amt).round(2))/100
+  end
+
 =begin
   def unused_amount
     plan = self.plan
