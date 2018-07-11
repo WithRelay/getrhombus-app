@@ -15,7 +15,7 @@ task :generate_response_rates => :environment do
     campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
     
     csv_string = CSV.generate do |csv|
-      csv << ['Campaign Name', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
+      csv << ['Campaign Name', 'Campaign Text', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
     
       if campaign.try(:user_lists).present?
         campaign.user_lists.each do |ul|
@@ -26,7 +26,7 @@ task :generate_response_rates => :environment do
           in_time = inbound.try(:created_at)
           time_diff = out_time && in_time ? ((in_time - out_time) / 60) : ''
 
-          csv << [campaign.name, outbound.try(:from), inbound.try(:from), outbound.try(:text), inbound.try(:text), out_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), in_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), time_diff]
+          csv << [campaign.name, campaign.text, outbound.try(:from), inbound.try(:from), outbound.try(:text), inbound.try(:text), out_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), in_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), time_diff]
 
           count = count + 1
           puts count
