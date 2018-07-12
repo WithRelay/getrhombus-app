@@ -143,11 +143,11 @@ class User < ActiveRecord::Base
 
   #def friendly_relay_number; self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number end
   # A default number must always exists for active accounts
-  def rhombus_number; self.default_number.try(:number) end 
+  def rhombus_number; self.default_number.try(:number) end
   def friendly_relay_number
     dn = self.default_number
     return '' unless dn
-    dn.friendly_name.present? ? dn.friendly_name : dn.number 
+    dn.friendly_name.present? ? dn.friendly_name : dn.number
   end
 
   def managed_account_is_verified?; stripe_creds.first.try(:legal_entity_verification).try(:[], 'status') == 'verified' end
@@ -172,13 +172,12 @@ class User < ActiveRecord::Base
     # platform acct is identified as standalone account but it really isnt
     # merchants could have a standalone account (prior to v1.5) and a managed account
     # managed account takes priority
-
-     return { type: 'standalone', cred: {} } if self.is_platform?
-     cred = self.stripe_creds   # check for managed account first, we support just one account for now
-     return { type: 'managed', cred: cred.first } if cred.present?
-     cred = self.standalone_stripe_cred  # check for standalone ... this is legacy
-     return { type: 'standalone', cred: cred } if cred.present?
-     { type: nil, cred: nil }  # has no payment account
+    return { type: 'standalone', cred: {} } if self.is_platform?
+    cred = self.stripe_creds   # check for managed account first, we support just one account for now
+    return { type: 'managed', cred: cred.first } if cred.present?
+    cred = self.standalone_stripe_cred  # check for standalone ... this is legacy
+    return { type: 'standalone', cred: cred } if cred.present?
+    { type: nil, cred: nil }  # has no payment account
   end
 
   def can_accept_payments?(skip_check_managed_acct_status = false)

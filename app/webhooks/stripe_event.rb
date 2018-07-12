@@ -164,7 +164,7 @@ class StripeEvent
 
       update_invoice_data
     else
-      ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent setup_invoice_data", env: Rails.env, hash: @hash, params: @params })
+      ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent setup_invoice_data, MerchantCustomer not found with #{key.to_s}: #{@hash[:customer]}", env: Rails.env, hash: @hash, params: @params })
     end
   end
 

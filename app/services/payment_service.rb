@@ -9,9 +9,9 @@ class PaymentService
         if hash[:card_token].blank?
           # platform should already have customer source at this point, it is only for a merchant that it can be blank
           # should be card_id here if customer has several card... but for now just the id works
-          
+
           # token creation raises error if it fails
-          # I believe this should be created off platform stripe customer id??? 
+          # I believe this should be created off platform stripe customer id???
           hash[:card_token] = Stripe::Token.create({ customer: platform_stripe_customer_id },
                                                    { stripe_account: cred.account_id } ).id
         end
@@ -24,13 +24,13 @@ class PaymentService
             # create on managed account
             cu = Stripe::Customer.create({email: hash[:email], source: hash[:card_token]}, { stripe_account: cred.account_id })
           end
-        else 
+        else
           if hash[:platform_customer]
             cu = Stripe::Customer.retrieve(hash[:stripe_customer_id])
           else
             cu = Stripe::Customer.retrieve(hash[:stripe_customer_id], { stripe_account: cred.account_id })
           end
-          
+
           cu.email = hash[:email]
           cu.source = hash[:card_token]
           cu.save
@@ -73,12 +73,12 @@ class PaymentService
         [false, e]
       end
     end
-    
+
     # for platform only
     def get_customer_card_id(customer_id)
       begin
         cu = Stripe::Customer.retrieve(customer_id)
-        [cu.sources.all.data.last]        
+        [cu.sources.all.data.last]
       rescue Stripe::StripeError => e
         ExceptionNotifier.notify_exception(e, data: { message: "From PaymentService retrieve_customer", customer_id: customer_id })
         [false, e]
@@ -87,23 +87,23 @@ class PaymentService
         [false, e]
       end
     end
-    
+
     def charge(amount_with_taxes, amt_less_fees, merchant, customer, msg, capture)
       begin
         stripe_cred = merchant.get_stripe_cred
         currency = merchant.currency ? merchant.currency : "usd"
 
-        # the platform always has a platform stripe_customer_id for a user making payment 
+        # the platform always has a platform stripe_customer_id for a user making payment
         merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
 
         puts "putting stripe cred"
         puts stripe_cred
 
         # 1. need to backward support merchant's with standalone connect stripe_account
-        # 2. platform account is identified as a standalone account. For charging merchants or regular customers. 
+        # 2. platform account is identified as a standalone account. For charging merchants or regular customers.
         # 3. managed accounts
 
-        if stripe_cred[:type] == 'standalone'     
+        if stripe_cred[:type] == 'standalone'
           unless merchant.is_platform?
             # token creation raises error if it fails
             token = Stripe::Token.create({ customer: merchant_customer.platform_stripe_customer_id },
@@ -112,32 +112,32 @@ class PaymentService
             re = Stripe::Charge.create({
               source: token.id,
               currency: currency,
-              amount: amount_with_taxes, 
-              metadata: { "message" => msg },              
+              amount: amount_with_taxes,
+              metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
             }, { stripe_account: stripe_cred[:cred].account_id })
           else
             re = Stripe::Charge.create({
               capture: capture,
               currency: currency,
-              amount: amount_with_taxes, 
+              amount: amount_with_taxes,
               metadata: { "message" => msg },
               customer: merchant_customer.platform_stripe_customer_id,
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
               #statement_descriptor: '', # should already be on our stripe account, can still set this here.
             })
           end
-        elsif stripe_cred[:type] == 'managed'         
+        elsif stripe_cred[:type] == 'managed'
           re = Stripe::Charge.create({
             capture: capture,
-            currency: currency, 
+            currency: currency,
             amount: amount_with_taxes,
             metadata: { "message" => msg },
             customer: merchant_customer.platform_stripe_customer_id,
             destination: {
-              amount: amt_less_fees, 
+              amount: amt_less_fees,
               account: stripe_cred[:cred].account_id,
-            }, 
+            },
             description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
             statement_descriptor: merchant.org_name[0..20],
           })
@@ -160,7 +160,7 @@ class PaymentService
     # return array with txn status, error object, notify customer/merchant
     def capture_charge(charge_id, merchant)
       begin
-        charge_ary = retrieve_charge(charge_id, merchant)  
+        charge_ary = retrieve_charge(charge_id, merchant)
         return charge_ary unless charge_ary.first
         [charge_ary.first.capture]
       rescue Stripe::StripeError => e
@@ -175,10 +175,10 @@ class PaymentService
     # returns array with refund status, error object
     def refund_charge(hash, cred, is_platform)
       begin
-        if is_platform 
-          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], reverse_transfer: true)        
+        if is_platform
+          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], reverse_transfer: true)
         elsif cred[:type] == 'managed'
-          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], refund_application_fee: true, reverse_transfer: true)        
+          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason], refund_application_fee: true, reverse_transfer: true)
         else
           re = Stripe::Refund.create({ charge: hash[:charge_id], reason: hash[:reason] }, { stripe_account: cred[:cred].account_id })
         end
@@ -224,7 +224,7 @@ class PaymentService
         if subscription.merchant.is_platform?
           sbtn = Stripe::Subscription.retrieve(subscription.stripe_subscription_id)
         else
-          sbtn = Stripe::Subscription.retrieve(subscription.stripe_subscription_id, 
+          sbtn = Stripe::Subscription.retrieve(subscription.stripe_subscription_id,
                   { stripe_account: subscription.merchant.get_stripe_cred[:cred].account_id })
         end
         [true, sbtn.delete(at_period_end: at_period_end)] # cancel at period end for saas sub
@@ -243,11 +243,11 @@ class PaymentService
           sbtn = Stripe::Subscription.retrieve(subscription.stripe_subscription_id)
           sbtn.coupon = coupon_id
         else
-          sbtn = Stripe::Subscription.retrieve(subscription.stripe_subscription_id, 
+          sbtn = Stripe::Subscription.retrieve(subscription.stripe_subscription_id,
                     { stripe_account: subscription.merchant.get_stripe_cred[:cred].account_id })
           sbtn.coupon = coupon_id
         end
-        
+
         sbtn.save
       rescue Stripe::StripeError => e
         ExceptionNotifier.notify_exception(e, data: { message: "In PaymentService update_subscription", env: Rails.env, subscription: subscription })
@@ -296,7 +296,7 @@ class PaymentService
 
     def update_plan(plan_id, hash, cred, platform)
       begin
-        plan_id = plan_id.to_s      
+        plan_id = plan_id.to_s
         if platform
           p = Stripe::Plan.retrieve(plan_id)
         else
@@ -358,14 +358,17 @@ class PaymentService
         false
       end
     end
-    
+
     def retrieve_charge(charge_id, merchant, transaction_type = 'transaction')
       begin
         cred = merchant.get_stripe_cred
         if merchant.is_platform? || (cred[:type] == 'managed' && transaction_type == 'transaction')
           re = Stripe::Charge.retrieve(charge_id)
-        else
+        elsif cred[:cred].try(:account_id).present?
           re = Stripe::Charge.retrieve(charge_id, { stripe_account: cred[:cred].account_id })
+        else
+          re = false
+          ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In PaymentService retrieve_charge with cred: #{cred}", env: Rails.env, charge_id: charge_id, merchant: merchant })
         end
         [re]
       rescue Stripe::StripeError => e
@@ -383,13 +386,13 @@ class PaymentService
     # that's in index postion 1
     def stripe_country_list
       {
-        #AU: ["Australia",''], AT: ["Austria",''], BE: ["Belgium", ''], 
-        CA: ["Canada", ''], 
+        #AU: ["Australia",''], AT: ["Austria",''], BE: ["Belgium", ''],
+        CA: ["Canada", ''],
         #DK: ["Denmark", ''], FI: ["Finland", ''], FR: ["France", ''],
         #DE: ["Germany", ''], HK: ["Hong Kong", '-'], IE: ['Ireland', ''],
         #IT: ['Italy', ''], LU: ['Luxembourg', ''], NL: ['Netherlands', ''], NO: ["Norway", ''],
         #PT: ['Portugal', ''], SG: ['Singapore', '-'], #JP: 'Japan',
-        #ES: ["Spain", ''], SE: ["Sweden", ''], GB: ["United Kingdom", ''], 
+        #ES: ["Spain", ''], SE: ["Sweden", ''], GB: ["United Kingdom", ''],
         US: ["United States", '']
       }
     end
