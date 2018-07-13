@@ -69,6 +69,7 @@ Rails.application.routes.draw  do
       get 'add-profile-info'
       get "business-settings"
       #get 'integrations'
+      get 'rules'
       get 'customer_csv_template'
       get 'contact_csv_template'
       get 'remove_stripe_integration'
