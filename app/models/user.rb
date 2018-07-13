@@ -49,6 +49,7 @@ class User < ActiveRecord::Base
   belongs_to :sms_fee
   has_one :hosted_sms
   has_one :api_cred
+  has_many :rules
   has_many :reminders, -> { where campaign_type: Campaign.campaign_types[:reminder_campaign] }
 
   # this block is for customizing build method for user.campaign which allow also to save list
