@@ -7,9 +7,8 @@ desc "generate response rates"
 task :generate_response_rates => :environment do
   require 'csv'
 
-  #[316, 317, 322, 323, 327, 328, 329, 330, 331, 332, 335, 336].each do |cid|
-  [580,310,329,335,312,402,547,576,315,316,327,331,337,343,347,356,678,406,573,577,317,328,332,338,344,348,357,679,421,574,578,
-    311,322,341,345,353,399,401,536,575,579,323,330,336,342,346,355].sort.each do |cid|
+  [399, 401, 402, 406, 421, 536, 
+    547, 573, 574, 575, 576, 577, 578, 579, 580, 678, 679].each do |cid|
 
     count = 0
     campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
