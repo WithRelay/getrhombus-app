@@ -36,18 +36,28 @@ ActiveRecord::Schema.define(version: 20180713231414) do
 
   add_index "addresses", ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id", using: :btree
 
+  create_table "adjective_animals", force: :cascade do |t|
+    t.string   "channel_name", limit: 191
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "adjective_animals", ["channel_name"], name: "index_adjective_animals_on_channel_name", unique: true, using: :btree
+
   create_table "alerts", force: :cascade do |t|
     t.boolean  "send_alert",     limit: 1,     default: false
-    t.text     "sms_numbers",    limit: 65535
-    t.text     "emails",         limit: 65535
-    t.boolean  "include_sms",    limit: 1,     default: false
     t.integer  "interval",       limit: 4,     default: 15
     t.boolean  "enable_welcome", limit: 1,     default: true
+    t.boolean  "include_sms",    limit: 1,     default: false
+    t.text     "sms_numbers",    limit: 65535
+    t.text     "emails",         limit: 65535
     t.integer  "user_id",        limit: 4
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
+    t.boolean  "always_on",      limit: 1,     default: false
   end
 
+  add_index "alerts", ["user_id"], name: "fk_rails_6637a8d260", using: :btree
   add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
 
   create_table "api_creds", force: :cascade do |t|
@@ -60,6 +70,7 @@ ActiveRecord::Schema.define(version: 20180713231414) do
   add_index "api_creds", ["key", "secret"], name: "index_api_creds_on_key_and_secret", using: :btree
   add_index "api_creds", ["key"], name: "index_api_creds_on_key", unique: true, using: :btree
   add_index "api_creds", ["secret"], name: "index_api_creds_on_secret", unique: true, using: :btree
+  add_index "api_creds", ["user_id"], name: "index_api_creds_on_user_id", using: :btree
 
   create_table "away_messages", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -119,6 +130,7 @@ ActiveRecord::Schema.define(version: 20180713231414) do
   create_table "campaign_recipients", force: :cascade do |t|
     t.integer  "campaign_id",           limit: 4
     t.integer  "list_id",               limit: 4
+    t.integer  "status",                limit: 4
     t.integer  "channel",               limit: 4
     t.string   "customer_contact_type", limit: 191
     t.integer  "customer_contact_id",   limit: 4
@@ -189,6 +201,9 @@ ActiveRecord::Schema.define(version: 20180713231414) do
     t.boolean  "is_resolved", limit: 1,   default: false
   end
 
+  add_index "conversations", ["merchant_id"], name: "index_conversations_on_merchant_id", using: :btree
+  add_index "conversations", ["uid"], name: "index_conversations_on_uid", using: :btree
+
   create_table "coupons", force: :cascade do |t|
     t.integer  "user_id",            limit: 4
     t.string   "stripe_coupon_id",   limit: 191
@@ -227,6 +242,18 @@ ActiveRecord::Schema.define(version: 20180713231414) do
   end
 
   add_index "documents", ["user_id"], name: "index_documents_on_user_id", using: :btree
+
+  create_table "elvanto_creds", force: :cascade do |t|
+    t.integer  "user_id",       limit: 4
+    t.text     "access_token",  limit: 65535
+    t.datetime "expires_in"
+    t.text     "refresh_token", limit: 65535
+    t.boolean  "active",        limit: 1
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "elvanto_creds", ["user_id"], name: "index_elvanto_creds_on_user_id", using: :btree
 
   create_table "fb_creds", force: :cascade do |t|
     t.string   "email",            limit: 191
@@ -432,10 +459,10 @@ ActiveRecord::Schema.define(version: 20180713231414) do
     t.datetime "updated_at",                                   null: false
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_25311528f3", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_d904f32fa0", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_4b9e37b92a", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_54cf68b000", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_2fe0fa30e5", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_ca7e31fd1d", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
@@ -494,6 +521,7 @@ ActiveRecord::Schema.define(version: 20180713231414) do
   end
 
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
+  add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_customer_id", using: :btree
   add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_uid", using: :btree
 
   create_table "merchant_customers", force: :cascade do |t|
@@ -504,6 +532,7 @@ ActiveRecord::Schema.define(version: 20180713231414) do
     t.integer  "is_platform",                 limit: 4
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
+    t.string   "elvanto_person_id",           limit: 191
   end
 
   add_index "merchant_customers", ["customer_id"], name: "index_merchant_customers_on_customer_id", using: :btree
@@ -582,6 +611,13 @@ ActiveRecord::Schema.define(version: 20180713231414) do
   end
 
   add_index "open_cnam_data", ["phone_number"], name: "index_open_cnam_data_on_phone_number", unique: true, using: :btree
+
+  create_table "optout_lists", force: :cascade do |t|
+    t.string   "uid",        limit: 191
+    t.string   "phone",      limit: 191
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "people", force: :cascade do |t|
     t.string   "first_name",     limit: 191
@@ -662,6 +698,7 @@ ActiveRecord::Schema.define(version: 20180713231414) do
     t.text     "text",           limit: 65535
     t.string   "rule_type",      limit: 191
     t.integer  "message_length", limit: 4
+    t.text     "response",       limit: 65535
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
@@ -677,6 +714,37 @@ ActiveRecord::Schema.define(version: 20180713231414) do
   end
 
   add_index "saved_replies", ["user_id"], name: "index_saved_replies_on_user_id", using: :btree
+
+  create_table "slack_channels", force: :cascade do |t|
+    t.integer  "slack_cred_id",       limit: 4
+    t.string   "slack_channel_name",  limit: 191
+    t.string   "slack_channel_id",    limit: 191
+    t.integer  "conversation_id",     limit: 4
+    t.integer  "adjective_animal_id", limit: 4
+    t.boolean  "selected",            limit: 1
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+    t.boolean  "is_relay",            limit: 1,   default: false
+  end
+
+  add_index "slack_channels", ["adjective_animal_id"], name: "index_slack_channels_on_adjective_animal_id", using: :btree
+  add_index "slack_channels", ["conversation_id"], name: "index_slack_channels_on_conversation_id", unique: true, using: :btree
+  add_index "slack_channels", ["slack_channel_id"], name: "index_slack_channels_on_slack_channel_id", using: :btree
+  add_index "slack_channels", ["slack_cred_id"], name: "index_slack_channels_on_slack_cred_id", using: :btree
+
+  create_table "slack_creds", force: :cascade do |t|
+    t.integer  "user_id",         limit: 4
+    t.text     "access_token",    limit: 65535
+    t.string   "slack_user_id",   limit: 191
+    t.string   "slack_team_name", limit: 191
+    t.string   "slack_team_id",   limit: 191
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "slack_creds", ["slack_team_id"], name: "index_slack_creds_on_slack_team_id", using: :btree
+  add_index "slack_creds", ["slack_user_id"], name: "index_slack_creds_on_slack_user_id", using: :btree
+  add_index "slack_creds", ["user_id"], name: "index_slack_creds_on_user_id", using: :btree
 
   create_table "sms_fees", force: :cascade do |t|
     t.string   "provider",     limit: 191
@@ -749,8 +817,10 @@ ActiveRecord::Schema.define(version: 20180713231414) do
     t.datetime "updated_at",                                     null: false
   end
 
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_56c77d859b", using: :btree
   add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
   add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_4506bac28d", using: :btree
   add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
   create_table "transaction_fees", force: :cascade do |t|
@@ -773,7 +843,7 @@ ActiveRecord::Schema.define(version: 20180713231414) do
     t.string   "tax_percent",        limit: 191
     t.integer  "app_fee",            limit: 4,                             default: 0
     t.integer  "stripe_fee",         limit: 4,                             default: 0
-    t.integer  "transaction_fee_id", limit: 4
+    t.integer  "transaction_fee_id", limit: 4,                             default: 1
     t.string   "txn_uri",            limit: 191
     t.string   "txn_number",         limit: 191
     t.string   "description",        limit: 191
@@ -789,14 +859,15 @@ ActiveRecord::Schema.define(version: 20180713231414) do
     t.text     "notes",              limit: 65535
     t.integer  "team_id",            limit: 4
     t.string   "currency",           limit: 191
+    t.boolean  "captured",           limit: 1,                             default: true
     t.integer  "hashtag_id",         limit: 4
     t.integer  "subscription_id",    limit: 4
-    t.boolean  "captured",           limit: 1,                             default: true
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree
   add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree

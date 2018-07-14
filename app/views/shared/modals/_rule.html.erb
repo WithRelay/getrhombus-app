@@ -1,0 +1,22 @@
+<div class="create-saved-reply-form-wrapper w-clearfix modal-background" id="new-rule-div">
+  <p class="modal-content-description">Create New Rule</p>
+  <div class="segment-modal underline-div"></div>
+  <div class="rule-form">
+    <%= form_for(rule, url: v1_rules_path, :html => { class: 'rule-form', :id => "rule-form", data: { name: 'email-form-8' } } ) do |f| %>
+      <div class="form-group col-xs-6">
+        <%= f.text_field :text, placeholder: 'Text', id: 'rule-text', class: 'form-control text-field w-input', data: { name: 'Rule Text' } %>
+      </div>
+      <div class="form-group col-xs-6">
+        <%= f.select :rule_type, options_for_select({ "message contains only 'text' " => 'contains_only_text', "message contains 'text'" => 'contains_text', "message contains 'text' and message length is less than X" => 'contains_text_and_length_is_less_than_x' }), {}, id: "rule-type", class: "form-control rule-type dropdown w-select", prompt: 'Select rule' %>
+      </div>
+      <div class='form-group col-xs-6' id='message-length-box' style='display:none'>
+        <%= f.text_field :message_length, id: "message-length", class: "form-control text-field w-input", placeholder: "Length", data: { name: 'Rule Message Length' } %>
+      </div>
+      <div class="form-group col-xs-6">
+        <%= f.text_area :response, placeholder: 'Set response' , id: 'rule-response', class: 'form-control text-field w-input', data: { name: 'Rule Response' } %>
+      </div>
+      <%= f.button "Save", class: 'button send-saved-reply w-button', id: 'send-rule' %>
+      <%= f.button "Cancel", id: 'rule-cancel', class: "button cancel-saved-reply w-button update-close-modals", data:{ parent: 'new-rule'} %>
+    <%end%>
+  </div>
+</div>

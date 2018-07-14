@@ -6,17 +6,17 @@ class TransactionsController < ApplicationController
   before_action :set_notifications, except: [:index, :capture, :download_csv]
   respond_to :html
 
-  load_and_authorize_resource  
+  load_and_authorize_resource
 
   def index
     if current_user.is_merchant?
       set_notifications
       where_str = "team_id = #{current_user.id}"
     else
-      process_captured_payment 
+      process_captured_payment
       where_str = "user_id = #{current_user.id}"
     end
-    
+
     if params[:captured] == "false"
       @transactions = Transaction.includes(:user, :hashtag).where(where_str).only_uncaptured_transactions()
                                .where("created_at >= ?", Time.zone.at(7.days.ago))
@@ -34,23 +34,23 @@ class TransactionsController < ApplicationController
                                   .order(created_at: :desc)
     end
 
-    @authorized_txns = params[:captured] == "false" ? true : false 
+    @authorized_txns = params[:captured] == "false" ? true : false
     @transactions.present? ? render_requested_format(@transactions) : render(:empty_transaction)
   end
 
   def process_captured_payment
     begin
       message = session.delete(:msg_id)
-      channel = session.delete(:channel)   
-      if message.present? && ["Message", "FbMessage"].include?(channel) 
+      channel = session.delete(:channel)
+      if message.present? && ["Message", "FbMessage"].include?(channel)
         message = channel.constantize.find_by(id: message)
         merchant = User.find_by(id: message.try(:user_id_to))
-        if message && message.transaction_id.blank? && merchant 
+        if message && message.transaction_id.blank? && merchant
           MessageParser.new.process_message(merchant, current_user, current_user.id, 'user', message, channel)
-        end      
+        end
       end
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController process_captured_payment", env: Rails.env })      
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController process_captured_payment", env: Rails.env })
     end
   end
 
@@ -60,7 +60,7 @@ class TransactionsController < ApplicationController
       re = transaction.capture_uncaptured_txn
       flash[ re.first ? :notice : :error ] = re.second
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController capture", env: Rails.env, transaction: transaction })      
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController capture", env: Rails.env, transaction: transaction })
     end
     redirect_to user_transactions_path(captured: 'false')
   end
@@ -80,7 +80,7 @@ class TransactionsController < ApplicationController
         render :template => "static_pages/to_404.html"
       end
     rescue Exception => e
-      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController download_csv", env: Rails.env })      
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: "In TransactionsController download_csv", env: Rails.env })
     end
   end
 

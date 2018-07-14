@@ -85,6 +85,7 @@
 //= require account_setting
 //= require jquery.lightbox_me
 //= require custom_lightbox
+//= require rules
 //= require saved_replies
 //= require custom_trumbowyg_plugin
 //= require campaigns

@@ -5,6 +5,7 @@ class CreateRules < ActiveRecord::Migration
       t.text :text
       t.string :rule_type
       t.integer :message_length
+      t.text :response
 
       t.timestamps null: false
     end

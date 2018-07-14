@@ -15,6 +15,8 @@ class Message < ActiveRecord::Base
 
   belongs_to :user
 
+  after_commit :run_rules
+
   # For sending and saving all outbound text messages
   def send_and_save_message(merchant, user, from, to, message, media_ary = [])
     begin
@@ -32,7 +34,7 @@ class Message < ActiveRecord::Base
           num_segments = response.num_segments.to_i
           price = media_ary.blank? ? sms_price : merchant.sms_fee.outbound_mms
           #merchant.deduct_from_account_balance(price * num_segments)
-          self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, 
+          self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated,
                                   message_price: response.price, error_code: response.error_code, error_text: response.error_message,
                                   price_unit: response.price_unit, num_segments: num_segments, num_media: response.num_media, relay_price: price)
         else
@@ -45,7 +47,7 @@ class Message < ActiveRecord::Base
         if response && response.code == 200 && response['response']['status'] == 'OK'
           num_segments = Message.num_of_segments(message)
           merchant.deduct_from_account_balance(sms_price * num_segments)
-          self.update_attributes(status: "OK", num_segments: num_segments, relay_price: sms_price)          
+          self.update_attributes(status: "OK", num_segments: num_segments, relay_price: sms_price)
         else
           ExceptionNotifier.notify_exception(StandardError.new, data: { message: "From send_and_save_message, unable to send message", from: from, to: to, text: message, env: Rails.env, response: response })
           false
@@ -108,8 +110,8 @@ class Message < ActiveRecord::Base
   def x(id_ary = [])
     user_ids = id_ary.present? ? id_ary : [7732, 7889, 7890, 7891, 7892, 7893]
 
-    user_ids.each do |u_id|    
-      
+    user_ids.each do |u_id|
+
       csv_string = CSV.generate do |csv|
         csv << ['Phone Number', 'Response', 'Segment', 'Timestamp (ET)', 'ID']
         #count = 0
@@ -118,8 +120,8 @@ class Message < ActiveRecord::Base
             mc = MerchantContact.find_by(id: ul.customer_contact_id, is_customer: 0)
             if mc
               messages = Message.where(from: mc.uid, user_id_to: u_id)
-              messages.each do |m| 
-                csv << [m.from, m.text, l.name, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id] 
+              messages.each do |m|
+                csv << [m.from, m.text, l.name, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id]
                 #count = count + 1
                 #puts count
               end
@@ -136,4 +138,20 @@ class Message < ActiveRecord::Base
     end
   end
 
+  def run_rules
+    return unless user_id_to.blank? && inbound?
+    merchant = User.find_by(id: user_id_to)
+    return if merchant.try(:rules).blank?
+    RulesEngineJob.perform_later(id)
+  end
+
+  def inbound?
+    user = User.find_by(id: user_id_to)
+    return false unless user.present? && user.is_merchant?
+    if user_id.present?
+      MerchantCustomer.where(merchant_id: user_id_to, customer_id: user_id).exists?
+    else
+      MerchantContact.where(merchant_id: user_id_to, uid_type: 'phone_number').exists?
+    end
+  end
 end

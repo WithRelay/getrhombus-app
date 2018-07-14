@@ -93,6 +93,7 @@ Rails.application.routes.draw  do
       resources :alerts, only: [:update]
       get 'notifications' => 'alerts#edit'
       resources :saved_replies
+      resources :rules
       resources :merchant_contacts, path: :contacts, only: [:index, :show]
       resources :merchant_customers, path: :customers, only: [:index, :show]
       get 'segments' => 'lists#segments'
@@ -128,6 +129,7 @@ Rails.application.routes.draw  do
     resources :api_creds, only: [:create]
     resources :user_lists, only: [:index, :create]
     resources :saved_replies, only: [:index, :create]
+    resources :rules, only: [:create]
     match 'messages/send' => 'messages#send_message', via: [:post]
 
     resources :lists, only: [:create, :index, :update] do

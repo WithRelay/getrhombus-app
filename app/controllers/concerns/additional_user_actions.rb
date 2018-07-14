@@ -1,7 +1,7 @@
 module AdditionalUserActions
   extend ActiveSupport::Concern
 
-  [:verify_hosted_sms_order, :add_subscription, :add_card_info, :billing_information, :integrations, :rules].each do |method_name|
+  [:verify_hosted_sms_order, :add_subscription, :add_card_info, :billing_information, :integrations].each do |method_name|
     send :define_method, method_name do
       # do nothing
     end
@@ -10,6 +10,10 @@ module AdditionalUserActions
   def add_profile_info
     @user = current_user
     @user.people = [@user.people.first || Person.new]
+  end
+
+  def rules
+    @rules = current_user.rules
   end
 
   def business_settings
