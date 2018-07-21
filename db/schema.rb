@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180704130937) do
+ActiveRecord::Schema.define(version: 20180713051652) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -35,6 +35,14 @@ ActiveRecord::Schema.define(version: 20180704130937) do
   end
 
   add_index "addresses", ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id", using: :btree
+
+  create_table "adjective_animals", force: :cascade do |t|
+    t.string   "channel_name", limit: 191
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "adjective_animals", ["channel_name"], name: "index_adjective_animals_on_channel_name", unique: true, using: :btree
 
   create_table "alerts", force: :cascade do |t|
     t.boolean  "send_alert",     limit: 1,     default: false
@@ -60,6 +68,7 @@ ActiveRecord::Schema.define(version: 20180704130937) do
   add_index "api_creds", ["key", "secret"], name: "index_api_creds_on_key_and_secret", using: :btree
   add_index "api_creds", ["key"], name: "index_api_creds_on_key", unique: true, using: :btree
   add_index "api_creds", ["secret"], name: "index_api_creds_on_secret", unique: true, using: :btree
+  add_index "api_creds", ["user_id"], name: "index_api_creds_on_user_id", using: :btree
 
   create_table "away_messages", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -188,6 +197,9 @@ ActiveRecord::Schema.define(version: 20180704130937) do
     t.string   "uid_type",    limit: 191
     t.boolean  "is_resolved", limit: 1,   default: false
   end
+
+  add_index "conversations", ["merchant_id"], name: "index_conversations_on_merchant_id", using: :btree
+  add_index "conversations", ["uid"], name: "index_conversations_on_uid", using: :btree
 
   create_table "coupons", force: :cascade do |t|
     t.integer  "user_id",            limit: 4
@@ -666,6 +678,37 @@ ActiveRecord::Schema.define(version: 20180704130937) do
   end
 
   add_index "saved_replies", ["user_id"], name: "index_saved_replies_on_user_id", using: :btree
+
+  create_table "slack_channels", force: :cascade do |t|
+    t.integer  "slack_cred_id",       limit: 4
+    t.string   "slack_channel_name",  limit: 191
+    t.string   "slack_channel_id",    limit: 191
+    t.integer  "conversation_id",     limit: 4
+    t.integer  "adjective_animal_id", limit: 4
+    t.boolean  "selected",            limit: 1
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+    t.boolean  "is_relay",            limit: 1,   default: false
+  end
+
+  add_index "slack_channels", ["adjective_animal_id"], name: "index_slack_channels_on_adjective_animal_id", using: :btree
+  add_index "slack_channels", ["conversation_id"], name: "index_slack_channels_on_conversation_id", unique: true, using: :btree
+  add_index "slack_channels", ["slack_channel_id"], name: "index_slack_channels_on_slack_channel_id", using: :btree
+  add_index "slack_channels", ["slack_cred_id"], name: "index_slack_channels_on_slack_cred_id", using: :btree
+
+  create_table "slack_creds", force: :cascade do |t|
+    t.integer  "user_id",         limit: 4
+    t.text     "access_token",    limit: 65535
+    t.string   "slack_user_id",   limit: 191
+    t.string   "slack_team_name", limit: 191
+    t.string   "slack_team_id",   limit: 191
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "slack_creds", ["slack_team_id"], name: "index_slack_creds_on_slack_team_id", using: :btree
+  add_index "slack_creds", ["slack_user_id"], name: "index_slack_creds_on_slack_user_id", using: :btree
+  add_index "slack_creds", ["user_id"], name: "index_slack_creds_on_user_id", using: :btree
 
   create_table "sms_fees", force: :cascade do |t|
     t.string   "provider",     limit: 191
