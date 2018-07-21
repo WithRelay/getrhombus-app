@@ -29,7 +29,7 @@ $(document).ready(function () {
 
   // no spaces
   $('#coupon-name').on('input', function() { this.value = this.value.replace(/\s+/g, ''); });
-  $('#hashtag_tag').on('input', function() { $(this).val('#'+ this.value.replace(/[^a-z0-9]/gi,'')); });
+  $('#hashtag_tag').on('input', function() { $(this).val('#'+ this.value.replace(/[^a-z0-9é]/gi,'')); });
 
   // Positive integer only
   $('#duration-in-months, #max-redemptions, #subscription_quantity').on('input', function(){
@@ -139,7 +139,7 @@ $(document).ready(function () {
           },
           callback: {
             callback: function (value, validator, $field) {
-              if (/#(?![0-9]+\b)([a-zA-Z0-9]{1,30})/.test(value)) {
+              if (/#(?![0-9]+\b)([a-zA-Z0-9é]{1,30})/.test(value)) {
                 return {
                   valid: true,
                   //message: ''
