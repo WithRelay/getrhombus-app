@@ -153,7 +153,7 @@ class Conversation < ActiveRecord::Base
   # When sending by platform on behalf of platform or merchant FOR CAMPAIGNS ONLY
   # The main difference with method above is that it doesn't stream to dashboard. Streaming a 5000 recipient campaign to dashboard can make the conversations page really busy
   # Note Customer parameter not needed
-  def self.find_or_create_conversation_for_message_and_send(team, customer, uid_type, uid, msg_to_send, channel = 'Message', media = [], source = 'platform', from = nil)
+  def self.find_or_create_conversation_for_message_and_send(team, uid_type, uid, msg_to_send, channel = 'Message', media = [], source = 'platform', from = nil)
     re = find_or_create_conversation(team.id, uid_type, uid)
     msg_ary = send_message(re, team, msg_to_send, channel, source, media, from)
     msg_ary ? msg_ary.first[:id] : false
