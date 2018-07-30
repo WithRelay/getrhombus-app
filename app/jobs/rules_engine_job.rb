@@ -26,7 +26,7 @@ class RulesEngineJob < ApplicationJob
             break
           end
         when 'starts_with_text_and_length_is_less_than_x'
-          if message_text.starts_with?(rule_text) && message_text.size < rule.message_length
+          if message_text.starts_with?(rule_text) && message_text.size < (rule.message_length + 1)
             send_response(response)
             break
           end
@@ -41,7 +41,7 @@ class RulesEngineJob < ApplicationJob
             break
           end
         when 'contains_text_and_length_is_less_than_x'
-          if message_text.include?(rule_text) && message_text.size < rule.message_length
+          if message_text.include?(rule_text) && message_text.size  < (rule.message_length + 1)
             send_response(response)
             break
           end
