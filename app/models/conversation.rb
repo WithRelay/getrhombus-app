@@ -168,7 +168,7 @@ class Conversation < ActiveRecord::Base
   # find or create conversation and attach new message
   def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread, source)
     conv = find_or_create_conversation(team_id, uid_type, uid)
-    is_new_conv = conv.conversation_refs.exists?
+    is_new_conv = !conv.conversation_refs.exists?
     conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread, source: source)
 
     # Basically, customer, merchant and platform messages should change conversation status to open
