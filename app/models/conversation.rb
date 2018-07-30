@@ -137,7 +137,8 @@ class Conversation < ActiveRecord::Base
     Number.unscoped.exists?(user_id: team.id, number: from) ? from : team.rhombus_number    # check that merchant still owns the number else use default
   end
 
-  # when sending by platform on behalf of platform or merchant like automated messages, campaigns (excludes sending from dashboard)
+  # When sending by platform on behalf of platform or merchant FOR automated (platform triggered), 3rd party app messages (Slack) and configured messages (Rules)
+  # Excludes sending from dashboard and campaigns
   def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel = 'Message', media = [], source = 'platform', from = nil)
     re = find_or_create_conversation(team.id, uid_type, uid)
     msg_ary = send_message(re, team, msg_to_send, channel, source, media, from)
@@ -149,6 +150,15 @@ class Conversation < ActiveRecord::Base
     end
   end
 
+  # When sending by platform on behalf of platform or merchant FOR CAMPAIGNS ONLY
+  # The main difference with method above is that it doesn't stream to dashboard. Streaming a 5000 recipient campaign to dashboard can make the conversations page really busy
+  # Note Customer parameter not needed
+  def self.find_or_create_conversation_for_message_and_send(team, customer, uid_type, uid, msg_to_send, channel = 'Message', media = [], source = 'platform', from = nil)
+    re = find_or_create_conversation(team.id, uid_type, uid)
+    msg_ary = send_message(re, team, msg_to_send, channel, source, media, from)
+    msg_ary ? msg_ary.first[:id] : false
+  end
+
   # when receiving
   def self.find_or_create_conversation_for_message_and_publish(team, customer, uid_type, uid, msg_instance, unread)
     re = find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread, 'customer')
@@ -158,10 +168,17 @@ class Conversation < ActiveRecord::Base
   # find or create conversation and attach new message
   def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread, source)
     conv = find_or_create_conversation(team_id, uid_type, uid)
+    is_new_conv = conv.conversation_refs.exists?
     conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread, source: source)
 
-    # basically, only customer and merchant messages should start new conversations
-    conv.update(is_resolved: false, updated_at: conv_ref.created_at) if ['customer', 'merchant'].include?(source)
+    # Basically, customer, merchant and platform messages should change conversation status to open
+    # Campaign should leave as is or close if it creates the convesation
+    if ['campaign'].include?(source) && is_new_conv
+      conv.update(is_resolved: true, updated_at: conv_ref.created_at)
+    elsif ['customer', 'merchant', 'platform'].include?(source)
+      conv.update(is_resolved: false, updated_at: conv_ref.created_at)
+    end
+
     update_conversation_resolution(team_id, conv.id, conv_ref.id, source)
     [conv, conv_ref]
   end

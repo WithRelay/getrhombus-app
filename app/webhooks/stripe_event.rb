@@ -41,7 +41,7 @@ class StripeEvent
             user_numbers.each { |un| TextingService.release_number(un.number) }
             user_numbers.destroy_all
           end
-        end        
+        end
         user.update(status: 0)
         #delete facebook integration here
         EmailingService.exit_survey(user)
@@ -164,7 +164,7 @@ class StripeEvent
 
       update_invoice_data
     else
-      ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent setup_invoice_data", env: Rails.env, hash: @hash, params: @params })
+      ExceptionNotifier.notify_exception(StandardError.new, data: { message: "In StripeEvent setup_invoice_data, MerchantCustomer not found with #{key.to_s}: #{@hash[:customer]}", env: Rails.env, hash: @hash, params: @params })
     end
   end
 
@@ -236,7 +236,7 @@ class StripeEvent
       description: @sbtn.description,
       currency: @sbtn.plan_currency,
       less_transaction_fees: @txn.txn_amount_less_fees,
-      amount: @txn.txn_amount,
+      amount: @txn.txn_amount - @sbtn.coupon_discount,
       currency_symbol: '$'
     }
     EmailingService.new_merchant_customer_subscription(options)
@@ -255,7 +255,7 @@ class StripeEvent
       description: @sbtn.description,
       currency: @sbtn.plan_currency,
       amount_less_fees: @txn.txn_amount_less_fees,
-      amount: @txn.txn_amount,
+      amount: @txn.txn_amount - @sbtn.coupon_discount,
       currency_symbol: '$'
     }
     EmailingService.merchant_subscription_notification(options)

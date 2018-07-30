@@ -5,7 +5,7 @@ class FiberneticsEvent
     @params = params
     @to = params[:userId].gsub('+', '')
     #@merchant = User.includes(:api_cred, :sms_fee).find_by(rhombus_number: @to)
-    @number = Number.includes(user: [:sms_fee, :api_cred]).find_by(number: @to)
+    @number = Number.includes(user: [:sms_fee, :api_cred, :rules]).find_by(number: @to)
     @merchant = @number.try(:user)
     get_message if @merchant
   end
@@ -84,7 +84,8 @@ class FiberneticsEvent
       #@merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
       MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
       #@merchant.deduct_from_account_balance(sms_price * num_segments)
-
+      RulesEngineJob.perform_later(@message.id) if @merchant.rules.present?
+      
     rescue ActiveRecord::RecordNotUnique => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In fibernetics save_received_message record not unique", env: Rails.env, params: @params })
     rescue ActiveRecord::RecordInvalid => exception

@@ -85,7 +85,7 @@ class MobileCampaign
   end
 
   def send_by_mobile(customer, uid_type, uid, from)
-    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, customer, uid_type, uid, @campaign.text, @channel, media_ary, 'campaign', from)
+    Conversation.find_or_create_conversation_for_message_and_send(@merchant, uid_type, uid, @campaign.text, @channel, media_ary, 'campaign', from)
   end
 
   def media_ary

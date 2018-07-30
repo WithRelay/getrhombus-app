@@ -23,6 +23,7 @@ module ApplicationHelper
                           'plans-index' => 'Manage Plans',
                           'users-business_settings'=> 'Business Setting',
                           'users-integrations' => 'Integrations',
+                          'users-rules' => 'Rules',
                           'users-managed_acct' => 'Manage Account',
                           #'users-sms_usage' => 'SMS Usage',
                           'lists-segments'=> 'Manage Segment',
@@ -133,7 +134,7 @@ module ApplicationHelper
   def setting_pages
     settings_action = ['users-billing_information', 'users-account_settings',
                        'alerts-edit', 'plans-index','users-business_settings',
-                       'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
+                       'users-integrations', 'users-rules', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
                        'coupons-manage_coupons', 'referrers-new', 'fb_pages-index',
                        'away_messages-show', 'api_creds-show']
     settings_action.include?(params_controller_action)

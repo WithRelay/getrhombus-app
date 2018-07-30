@@ -28,10 +28,10 @@ class TwilioEvent
       num_segments = @params[:NumSegments].to_i
 
       if num_media > 0
-        mms_price = @merchant.sms_fee.inbound_mms 
+        mms_price = @merchant.sms_fee.inbound_mms
         price, price_multiplier = mms_price, mms_price * num_media
       else
-        sms_price = @merchant.sms_fee.inbound_sms 
+        sms_price = @merchant.sms_fee.inbound_sms
         price, price_multiplier = sms_price, sms_price * num_segments
       end
 
@@ -74,8 +74,9 @@ class TwilioEvent
 
       Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
       @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
-      MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')    
-      #@merchant.deduct_from_account_balance(price_multiplier) 
+      MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
+      #@merchant.deduct_from_account_balance(price_multiplier)
+      RulesEngineJob.perform_later(@message.id) if @merchant.rules.present?
 
     rescue ActiveRecord::RecordNotUnique => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In twilio save_received_message record not unique", env: Rails.env, params: @params })

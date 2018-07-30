@@ -1,0 +1,52 @@
+<%= render 'shared/back_to_dashboard' %>
+<div class="dashboard-body settings" id='objlists' data-object-type='rules'>
+  <div class="dash-content-container integrations settings w-clearfix">
+    <div>
+      <a class="sub-nav-button w-button modal-loader new-rule-button" href="#" modal-target= "new-rule"><strong> &nbsp; Create New Rule&nbsp;</strong></a>
+    </div>
+    <h4 class="form-header">Rules</h4>
+    <div class="flex-underline form-header-underline"></div>
+    <% if @rules.present? %>
+      <div class="w-row">
+        <div class="w-col w-col-2">
+          <div class="settings-row-text">Text</div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="settings-row-text">Condition</div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="settings-row-text">Message Length</div>
+        </div>
+        <div class="w-col w-col-4">
+          <div class="settings-row-text">Response</div>
+        </div>
+      </div>
+      <% @rules.each do |rule| %>
+        <div class="w-row">
+          <div class="w-col w-col-2">
+            <div class="settings-row-text"><%= rule.text %></div>
+          </div>
+          <div class="w-col w-col-2">
+            <div class="settings-row-text"><%= rule.rule_type %></div>
+          </div>
+          <div class="w-col w-col-2">
+            <div class="settings-row-text"><%= rule.message_length %></div>
+          </div>
+          <div class="w-col w-col-4">
+            <div class="settings-row-text"><%= rule.response %></div>
+          </div>
+          <div class="w-col w-col-2">
+            <%= link_to 'Delete Rule', user_rule_path(current_user, rule), method: :delete, class: "button settings-table-row w-button delete-rule rule#{rule.id}" %>
+          </div>
+        </div>
+
+      <% end %>
+    <% else %>
+      <p>No rules</p>
+    <% end %>
+  </div>
+</div>
+
+<div class='modal-background w-hidden modal-body new-rule' id ='new-rule' >
+  <%= render partial: 'shared/modals/rule', locals: { rule: Rule.new }  %>
+</div>

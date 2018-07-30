@@ -40,6 +40,7 @@ class NexmoEvent
       @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
       MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
       #@merchant.deduct_from_account_balance(sms_price * num_segments)      
+      RulesEngineJob.perform_later(@message.id) if @merchant.rules.present?
 
     rescue ActiveRecord::RecordNotUnique => exception
       ExceptionNotifier.notify_exception(exception, data: { message: "In save_message record not unique", env: Rails.env, params: @params })

@@ -12,6 +12,10 @@ module AdditionalUserActions
     @user.people = [@user.people.first || Person.new]
   end
 
+  def rules
+    @rules = current_user.rules
+  end
+
   def business_settings
     current_user.address ||= Address.new
   end

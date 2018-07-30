@@ -479,7 +479,7 @@ class EmailingService
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
-        puts e.inspect        
+        puts e.inspect
       end
     end
 
@@ -731,7 +731,7 @@ class EmailingService
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"        
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
         puts e.inspect
       end
@@ -980,7 +980,7 @@ class EmailingService
     def csv_upload_failure(email, response)
       begin
         require 'csv'
-        
+
         csv_string = CSV.generate do |csv|
           csv << ['target', 'linetype', 'errors']
           ary = Array.new
@@ -1005,7 +1005,7 @@ class EmailingService
     def customer_csv_upload_failure(email, response)
       begin
         require 'csv'
-        
+
         csv_string = CSV.generate do |csv|
           csv << ['target', 'errors']
           ary = Array.new
