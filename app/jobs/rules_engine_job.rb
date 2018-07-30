@@ -74,8 +74,13 @@ class RulesEngineJob < ApplicationJob
 
   def send_response(response_text)
     customer = @message.user
-    uid, uid_type = @message.from, 'phone_number'
-    uid, uid_type = customer.id, 'user' if customer.present?
+    if customer.present?
+      uid = customer.id
+      uid_type = 'user'
+    else
+      uid = @message.from
+      uid_type = 'phone_number'
+    end
     Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, customer, uid_type, uid, response_text, 'Message', [], 'platform', @message.to)
   end
 end
