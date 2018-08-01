@@ -73,6 +73,7 @@ class RulesEngineJob < ApplicationJob
   end
 
   def send_response(response_text)
+    # while rules soon after an inbound message. It might be better to search for user by phone number instead of id.
     customer = @message.user
     if customer.present?
       uid = customer.id
