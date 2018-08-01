@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180713231414) do
+ActiveRecord::Schema.define(version: 20180801062405) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -934,6 +934,7 @@ ActiveRecord::Schema.define(version: 20180713231414) do
     t.boolean  "auto_reload",            limit: 1,                              default: false
     t.integer  "auto_reload_amt",        limit: 4,                              default: 2000
     t.string   "relay_uid",              limit: 191
+    t.boolean  "enable_payment",         limit: 1,                              default: true
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
