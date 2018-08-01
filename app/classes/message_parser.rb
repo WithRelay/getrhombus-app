@@ -15,7 +15,9 @@ class MessageParser
 
       # tested
       @received_msg.text = @received_msg.text.strip
-      @amt_ary = @merchant.enable_payment ? check_for_payment : []
+      data = check_for_payment  # this needs to always run so we can process tags
+      # added this because this text was sending response - Message rejected (wrong password) (Request from +<redacted_phone_number> at 20:06:46 31-Jul-18)
+      @amt_ary = @merchant.enable_payment ? data : []
       # puts @amt_ary.inspect
       # is_old_format = (@amt_ary[0] && @amt_ary[1] == "$")
 
