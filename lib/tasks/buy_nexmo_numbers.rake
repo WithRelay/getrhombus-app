@@ -297,14 +297,14 @@ task :buy_nexmo_numbers => :environment do
   size = 100
   type = "mobile-lvn" #"landline-toll-free"
   max_total = 51                                # <<<<-------------------
-  index = 2 
+  #index = 2 
 
   users.each do |u|
     u.numbers.delete_all
     total = u.numbers.count
 
     while (total < max_total && User.find(1).email == "<redacted_email>")
-      numbers = TextingService.search_number_nexmo(country, pattern, size, type, index)
+      numbers = TextingService.search_number_nexmo(country, pattern, size, type)
 
       if numbers
         numbers.each_with_index do |n, i|
