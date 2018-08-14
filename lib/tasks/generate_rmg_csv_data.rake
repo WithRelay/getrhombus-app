@@ -32,7 +32,7 @@
     end
 =end
 
-    [2626].each do |user_id|    
+    [13912].each do |user_id|    
       
       csv_string = CSV.generate do |csv|
         count = 0
