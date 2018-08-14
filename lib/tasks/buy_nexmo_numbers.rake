@@ -290,20 +290,21 @@ task :buy_nexmo_numbers => :environment do
 
 
   # toll free provisioning
-  users = User.where(id: [13912])
+  users = User.where(id: [14821])               # <<<<-------------------
   # 7889, 7890, 7891, 7892, 7893
-  country = "US"
-  pattern = "1877"
+  country = "CA"
+  pattern = "1819"                              # <<<<-------------------
   size = 100
-  type = "landline-toll-free"
-  max_total = 51
+  type = "mobile-lvn" #"landline-toll-free"
+  max_total = 51                                # <<<<-------------------
+  index = 2 
 
   users.each do |u|
     u.numbers.delete_all
     total = u.numbers.count
 
     while (total < max_total && User.find(1).email == "<redacted_email>")
-      numbers = TextingService.search_number_nexmo(country, pattern, size, type)
+      numbers = TextingService.search_number_nexmo(country, pattern, size, type, index)
 
       if numbers
         numbers.each_with_index do |n, i|
