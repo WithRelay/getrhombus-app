@@ -78,15 +78,65 @@ task :load_rmgsite_data => :environment do
       <redacted_phone_number>,
       <redacted_phone_number>,
       <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
+      <redacted_phone_number>,
       <redacted_phone_number>
   ]
 
   u = User.find 14822
-  u.numbers.delete_all
+  #u.numbers.delete_all
   ary.each_with_index do |number, i|
     #number = "1" + number.to_s.gsub(/\s+/, "")
     number = number.to_s
-    default = i == 0 ? 1 : 0
+    default = 0 # i == 0 ? 1 : 0
     #default = 0
     fn = "(" + number[1..3] + ") " + number[4..6] + "-" + number[7..10]
     u.numbers.create(number: number, country: 'CA', provider: 'fibernetics', default: default, friendly_name: fn)
