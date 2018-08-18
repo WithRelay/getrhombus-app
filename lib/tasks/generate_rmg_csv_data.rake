@@ -37,7 +37,7 @@
       csv_string = CSV.generate do |csv|
         count = 0
         csv << ['Phone Number', 'Response', 'Segment', 'Campaign', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID']
-        campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [2413, 2414, 2415, 2416, 2418, 2419], user_id)
+        campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [2420,2421], user_id)
 
         campaigns.each do |campaign|
           if campaign.try(:user_lists).present?
