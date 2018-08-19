@@ -32,12 +32,12 @@
     end
 =end
 
-    [14821, 14825].each do |user_id|    
+    [14821, 14822, 14825].each do |user_id|    
       
       csv_string = CSV.generate do |csv|
         count = 0
         csv << ['Phone Number', 'Response', 'Segment', 'Campaign', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID']
-        campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [2420,2421], user_id)
+        campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [2420..2429], user_id)
 
         campaigns.each do |campaign|
           if campaign.try(:user_lists).present?
