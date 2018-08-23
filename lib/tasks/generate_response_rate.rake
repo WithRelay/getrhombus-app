@@ -299,7 +299,7 @@ task :generate_response_rates => :environment do
       #count = 0
       campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
       
-      if campaign.try(:user_lists).present?
+      if campaign.try(:user_lists).present? && campaign.user_lists.first.try(:customer_contact).try(:uid).present?
         campaign.user_lists.each do |ul|
           if ul.customer_contact.uid.present?
             outbound = Message.where("user_id = ? and `messages`.`to` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc).first
