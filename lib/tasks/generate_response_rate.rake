@@ -8,69 +8,6 @@ task :generate_response_rates => :environment do
   require 'csv'
 
   ary = [
-    2516,
-    2517,
-    2518,
-    2519,
-    2520,
-    2521,
-    2522,
-    2523,
-    2524,
-    2525,
-    2526,
-    2527,
-    2528,
-    2529,
-    2530,
-    2531,
-    2532,
-    2533,
-    2534,
-    2535,
-    2536,
-    2537,
-    2538,
-    2539,
-    2540,
-    2541,
-    2542,
-    2543,
-    2544,
-    2545,
-    2546,
-    2547,
-    2548,
-    2549,
-    2550,
-    2551,
-    2552,
-    2553,
-    2554,
-    2555,
-    2556,
-    2557,
-    2558,
-    2559,
-    2560,
-    2561,
-    2562,
-    2563,
-    2564,
-    2565,
-    2566,
-    2567,
-    2568,
-    2569,
-    2570,
-    2571,
-    2573,
-    2574,
-    2575,
-    2576,
-    2577,
-    2578,
-    2579,
     2580,
     2581,
     2582,
@@ -198,6 +135,102 @@ task :generate_response_rates => :environment do
   attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "QFs.csv", type: "text/csv" } ] }
   EmailingService.email_to_platform("QF Campaigns", 'RMG Data', attachment_hash)
 
+  ary = [
+    2516,
+    2517,
+    2518,
+    2519,
+    2520,
+    2521,
+    2522,
+    2523,
+    2524,
+    2525,
+    2526,
+    2527,
+    2528,
+    2529,
+    2530,
+    2531,
+    2532,
+    2533,
+    2534,
+    2535,
+    2536,
+    2537,
+    2538,
+    2539,
+    2540,
+    2541,
+    2542,
+    2543,
+    2544,
+    2545,
+    2546,
+    2547,
+    2548,
+    2549,
+    2550,
+    2551,
+    2552,
+    2553,
+    2554,
+    2555,
+    2556,
+    2557,
+    2558,
+    2559,
+    2560,
+    2561,
+    2562,
+    2563,
+    2564,
+    2565,
+    2566,
+    2567,
+    2568,
+    2569,
+    2570,
+    2571,
+    2573,
+    2574,
+    2575,
+    2576,
+    2577,
+    2578,
+    2579
+  ]
+    
+  csv_string = CSV.generate do |csv|
+    csv << ['Campaign Name', 'Campaign Text', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
+    
+    ary.each do |cid|
+
+      #count = 0
+      campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
+      
+      if campaign.try(:user_lists).present? && campaign.user_lists.first.try(:customer_contact_type) == 'MerchantContact'
+        campaign.user_lists.each do |ul|
+          if ul.customer_contact.uid.present?
+            outbound = Message.where("user_id = ? and `messages`.`to` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc).first
+            inbound = Message.where("user_id_to = ? and `messages`.`from` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc).first
+
+            out_time = outbound.try(:created_at)
+            in_time = inbound.try(:created_at)
+            time_diff = out_time && in_time ? ((in_time - out_time) / 60) : ''
+
+            csv << [campaign.name, campaign.text, outbound.try(:from), inbound.try(:from), outbound.try(:text), inbound.try(:text), out_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), in_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), time_diff]
+
+            #count = count + 1
+            #puts count
+          end
+        end
+      end
+    end
+  end
+
+  attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "QFs.csv", type: "text/csv" } ] }
+  EmailingService.email_to_platform("QF Campaigns", 'RMG Data', attachment_hash)
 
   ary = [
     1324,
@@ -262,7 +295,42 @@ task :generate_response_rates => :environment do
     2450,
     2451,
     2452,
-    2453,
+    2453
+  ]
+
+  csv_string = CSV.generate do |csv|
+    csv << ['Campaign Name', 'Campaign Text', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
+    
+    ary.each do |cid|
+
+      #count = 0
+      campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
+      
+      if campaign.try(:user_lists).present? && campaign.user_lists.first.try(:customer_contact_type) == 'MerchantContact'
+        campaign.user_lists.each do |ul|
+          if ul.customer_contact.uid.present?
+            outbound = Message.where("user_id = ? and `messages`.`to` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc).first
+            inbound = Message.where("user_id_to = ? and `messages`.`from` = ? and created_at > ?", campaign.user_id, ul.customer_contact.uid, campaign.created_at).order(id: :asc).first
+
+            out_time = outbound.try(:created_at)
+            in_time = inbound.try(:created_at)
+            time_diff = out_time && in_time ? ((in_time - out_time) / 60) : ''
+
+            csv << [campaign.name, campaign.text, outbound.try(:from), inbound.try(:from), outbound.try(:text), inbound.try(:text), out_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), in_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), time_diff]
+
+            #count = count + 1
+            #puts count
+          end
+        end
+      end
+    end
+  end
+
+  attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "QFs.csv", type: "text/csv" } ] }
+  EmailingService.email_to_platform("QF Campaigns", 'RMG Data', attachment_hash)
+
+
+  ary = [
     2454,
     2455,
     2456,
