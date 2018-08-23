@@ -1035,6 +1035,8 @@ class EmailingService
 
       message_hash.merge!(attachment) if attachment
       send_email_campaign(message_hash, true)
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e, data: { message: "In email to platform", env: Rails.env, params: message_hash } )
     end
 
     def send_weekly_mail(options = {})
