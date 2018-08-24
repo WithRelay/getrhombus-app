@@ -308,13 +308,10 @@ task :generate_response_rates => :environment do
 =end  
   
   ary.each do |a|
-    csv_string = ''
-
-    a.each do |cid|
-
-      csv_string = CSV.generate do |csv|
-        csv << ['Campaign Name', 'Campaign Text', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
-        #count = 0
+    csv_string = CSV.generate do |csv|
+      csv << ['Campaign Name', 'Campaign Text', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
+      
+      a.each do |cid|
         campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
         
         if campaign.try(:user_lists).present? && campaign.user_lists.first.try(:customer_contact_type) == 'MerchantContact'
@@ -330,13 +327,10 @@ task :generate_response_rates => :environment do
 
                 csv << [campaign.name, campaign.text, outbound.try(:from), inbound.try(:from), outbound.try(:text), inbound.try(:text), out_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), in_time.try(:strftime, "%Y-%m-%d %H:%M:%S"), time_diff]
               end
-              #count = count + 1
-              #puts count
             end
           end
         end
       end
-
     end
 
     attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "QFs.csv", type: "text/csv" } ] }
