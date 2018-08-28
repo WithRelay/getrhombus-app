@@ -276,7 +276,7 @@ task :generate_response_rates => :environment do
     ]
   ]
 
-=begin
+#=begin
   ary.each do |cid|
 
     count = 0
@@ -305,8 +305,10 @@ task :generate_response_rates => :environment do
     attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "#{campaign.name}.csv", type: "text/csv" } ] }
     EmailingService.email_to_platform("See Attached for Campaign - #{campaign.name}", 'RMG Data', attachment_hash, "<redacted_email>")
   end
-=end  
+#=end  
   
+  
+=begin
   ary.each do |a|
     csv_string = CSV.generate do |csv|
       csv << ['Campaign Name', 'Campaign Text', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
@@ -336,7 +338,7 @@ task :generate_response_rates => :environment do
     attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "QFs.csv", type: "text/csv" } ] }
     EmailingService.email_to_platform("QF Campaigns", 'RMG Data', attachment_hash)
   end
-
+=end
 
 end
 
