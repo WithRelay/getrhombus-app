@@ -276,6 +276,8 @@ task :generate_response_rates => :environment do
     ]
   ]
 
+  ary = Campaign.where(user_id: 12570).pluck(:id)
+
 #=begin
   ary.each do |cid|
 
