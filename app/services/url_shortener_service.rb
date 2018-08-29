@@ -33,7 +33,7 @@ class UrlShortenerService
         headers = { 'content_type' => 'application/json', 'authorization' => Rails.application.secrets.shortcm["token"] }
 
         res = HTTParty.post("https://api.short.cm/links", body: values, headers: headers) 
-        res.code == 200 ? link = "#{SHORTENER_URL}/#{res.parsed_response['path']}" : (raise StandardError.new("short.cm returned #{res.code}"))
+        res.code == 200 ? link = res.parsed_response['shortURL'] : (raise StandardError.new("short.cm returned #{res.code}"))
       rescue StandardError => error
         ExceptionNotifier.notify_exception(error, data: { message: "In shorten_link", env: Rails.env, link: link })
       ensure
