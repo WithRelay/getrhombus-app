@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180801062405) do
+ActiveRecord::Schema.define(version: 20180822104647) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -552,8 +552,11 @@ ActiveRecord::Schema.define(version: 20180801062405) do
     t.integer  "hashtag_id",        limit: 4
   end
 
+  add_index "messages", ["created_at"], name: "index_messages_on_created_at", using: :btree
+  add_index "messages", ["from"], name: "index_messages_on_from", using: :btree
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
   add_index "messages", ["message_id"], name: "index_messages_on_message_id", unique: true, using: :btree
+  add_index "messages", ["to"], name: "index_messages_on_to", using: :btree
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
   add_index "messages", ["user_id_to"], name: "index_messages_on_user_id_to", using: :btree

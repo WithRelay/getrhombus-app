@@ -3,28 +3,47 @@
 <div class="dashboard-body">
   <div class="table-wrapper">
     <div class="transaction-summary-wrapper">
+      
+
       <div class="transaction-summary-row w-row">
-        <div class="w-col w-col-4">
-          <div class="transaction-summary-cell transcation-count">
-            <h1 class="total-customer-count"><%= transactions[0].length %></h1>
-            <h4 class="count-description"> &nbsp; Transactions Today</h4>
-            <h4 class="count-description transaction-count"><%= transactions_change %></h4>
+        <% if current_user.is_merchant? %>
+          <div class="w-col w-col-4">
+            <div class="transaction-summary-cell transcation-count">
+              <h1 class="total-customer-count"><%= transactions[0].length %></h1>
+              <h4 class="count-description"> &nbsp; Transactions Today</h4>
+              <h4 class="count-description transaction-count"><%= transactions_change %></h4>
+            </div>
           </div>
-        </div>
-        <div class="w-col w-col-4">
-          <div class="transaction-summary-cell">
-            <h1 class="total-customer-count">$<%= number_with_delimiter("#{Toolbox::Decimal.to_int_or_2dp(transactions_total_amount)}", delimiter: ',') %></h1>
-            <h4 class="count-description"> &nbsp; Total Collected</h4>
-            <h4 class="count-description transaction-count"><%= transactions_total_amount_change %></h4>
+          <div class="w-col w-col-4">
+            <div class="transaction-summary-cell">
+              <h1 class="total-customer-count">$<%= number_with_delimiter("#{Toolbox::Decimal.to_int_or_2dp(transactions_total_amount)}", delimiter: ',') %></h1>
+              <h4 class="count-description"> &nbsp; Total Collected</h4>
+              <h4 class="count-description transaction-count"><%= transactions_total_amount_change %></h4>
+            </div>
           </div>
-        </div>
-        <div class="w-col w-col-4">
-          <div class="transaction-summary-cell">
-            <h1 class="total-customer-count">$<%= number_with_delimiter("#{Toolbox::Decimal.to_int_or_2dp(transactions_net_sales)}", delimiter: ',') %></h1>
-            <h4 class="count-description"> &nbsp; Net Sales</h4>
-            <h4 class="count-description transaction-count"><%= transactions_net_sales_change %></h4>
+          <div class="w-col w-col-4">
+            <div class="transaction-summary-cell">
+              <h1 class="total-customer-count">$<%= number_with_delimiter("#{Toolbox::Decimal.to_int_or_2dp(transactions_net_sales)}", delimiter: ',') %></h1>
+              <h4 class="count-description"> &nbsp; Net Sales</h4>
+              <h4 class="count-description transaction-count"><%= transactions_net_sales_change %></h4>
+            </div>
           </div>
-        </div>
+        <% else %>
+          <div class="w-col w-col-6">
+            <div class="transaction-summary-cell transcation-count">
+              <h1 class="total-customer-count"><%= transactions[0].length %></h1>
+              <h4 class="count-description"> &nbsp; Transactions Today</h4>
+              <h4 class="count-description transaction-count"><%= transactions_change %></h4>
+            </div>
+          </div>
+          <div class="w-col w-col-6">
+            <div class="transaction-summary-cell">
+              <h1 class="total-customer-count">$<%= number_with_delimiter("#{Toolbox::Decimal.to_int_or_2dp(transactions_total_amount)}", delimiter: ',') %></h1>
+              <h4 class="count-description"> &nbsp; Total Amount</h4>
+              <h4 class="count-description transaction-count"><%= transactions_total_amount_change %></h4>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="row-wrapper transactions">
