@@ -1,7 +1,6 @@
 <script src="https://cdn.smooch.io/smooch.min.js"></script>
 <script> 
-  Smooch.init({
-		appToken: 'ddyyvvc40qpng4xozw3ymhwce',
+  Smooch.init({appId: Rails.application.secrets.smooch["app_id"]}).then(function() {
     <% if current_user %>
       email: "<%= current_user.email %>",
       userId: "<%= current_user.email %>",
@@ -12,5 +11,5 @@
       last_sign_in: "<%= current_user.last_sign_in_at %>",
       org_name: "<%= current_user.org_name %>"
     <% end %>
-	});
+  });
 </script>
