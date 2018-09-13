@@ -61,10 +61,11 @@ module CSVHandler
       end
 
       headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code, :group]
-      file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+      file_data = CSV.read(file_path, encoding: 'ISO-8859-1', headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
                       .encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
       file_headers = file_data.headers
 
+      return
       file_data.each do |row|
         error = false
 
