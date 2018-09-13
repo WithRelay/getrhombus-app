@@ -62,6 +62,7 @@ module CSVHandler
 
       headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code, :group]
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+                      .encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
       file_headers = file_data.headers
 
       file_data.each do |row|
@@ -105,7 +106,7 @@ module CSVHandler
                   self.create_list_and_user_list(row[:group], mc, 0)
                   next
                 end
-                
+
                 # disable number type check
                 # check number type
                 # linetype = EveryoneApiService.line_type(row[:phone_number])
@@ -144,9 +145,9 @@ module CSVHandler
                   @customer.save!
 
                   if @customer.persisted? && (row[:first_name] || row[:last_name])
-                    person = @customer.people.create(first_name: row[:first_name], last_name: row[:last_name]) 
+                    person = @customer.people.create(first_name: row[:first_name], last_name: row[:last_name])
                     if person.persisted? && (row[:street_address] || row[:city] || row[:postal_code] || row[:state_province] || row[:country])
-                      person.create_address(street_address: row[:street_address], city: row[:city], postal_code: row[:postal_code], 
+                      person.create_address(street_address: row[:street_address], city: row[:city], postal_code: row[:postal_code],
                                              state_province: row[:state_province], country: row[:country])
                     end
                   end
@@ -188,7 +189,7 @@ module CSVHandler
           end
         else
           if @customer.is_customer?
-            mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer) 
+            mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer)
             self.create_list_and_user_list(row[:group], mc, 0)
           end
         end
@@ -199,10 +200,10 @@ module CSVHandler
       # change hash to array
       #error_hash.each do |key, value|
         #ary = []
-        #value.each { |v| ary.push(v) }          
-        #response.push([key, ary])  
+        #value.each { |v| ary.push(v) }
+        #response.push([key, ary])
       #end
-      
+
       puts 'are there any errors?'
       puts error_hash.inspect
       error_hash
@@ -251,12 +252,12 @@ module CSVHandler
           headers_checked = true
         end
 
-        row = row.to_hash        
+        row = row.to_hash
         valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
         linetype = nil
 
         if valid_num.present?
-          row[:phone_number] = valid_num.first 
+          row[:phone_number] = valid_num.first
           linetype = EveryoneApiService.line_type(row[:phone_number])
         end
 
@@ -266,15 +267,15 @@ module CSVHandler
           if linetype == "mobile"
             # check if a customer type user already has this number
             @customer = User.find_by(phone_number: row[:phone_number])
-            
+
             if @customer.blank?
-              begin            
+              begin
                 MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
-                MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)                
+                MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
                 #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
 
                 # for brian
-                # mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)                
+                # mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
                 # list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact") if mc
                 # MerchantContact.where(uid: row[:phone_number]).update_all(email: row[:email].try(:downcase), first_name: row[:first_name], last_name: row[:last_name], organization: row[:organization])
                 #
@@ -306,7 +307,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-=end 
+=end
 
 =begin
   # for 100k uploads
@@ -343,12 +344,12 @@ module CSVHandler
           headers_checked = true
         end
 
-        row = row.to_hash        
+        row = row.to_hash
         valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
         linetype = nil
 
         if valid_num.present?
-          row[:phone_number] = valid_num.first 
+          row[:phone_number] = valid_num.first
           linetype = EveryoneApiService.line_type(row[:phone_number])
         end
 
@@ -358,12 +359,12 @@ module CSVHandler
           if linetype == "mobile"
             # check if a customer type user already has this number
             @customer = User.find_by(phone_number: row[:phone_number])
-            
+
             if @customer.blank?
-              begin            
+              begin
                 number_count = number_count + 1
                 MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
-                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)    
+                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
                 #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
 
                 #lname = "Test Group #{count1}-#{count2}"
@@ -407,7 +408,7 @@ module CSVHandler
 
 =begin
   def upload_contact_csv(file_path)
-    begin  
+    begin
       merchant = User.find 712
 
 #=begin
@@ -419,7 +420,7 @@ module CSVHandler
         { name: 'NoAnswer', channel: 0, origin: 0, list_type: 1, campaign_type: 0 },
       ])
 #=end
-  
+
       CSV::Converters[:blank_to_nil] = lambda do |field|
         field && field.blank? ? nil : field
       end
@@ -427,19 +428,19 @@ module CSVHandler
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
 
       file_data.each do |row|
-        row = row.to_hash          
+        row = row.to_hash
         row[:phone_number] = row[:phone_number].to_s.squish
         row[:seg] = row[:seg].to_s.squish
-        
+
         # check if a customer type user already has this number
-        customer = User.find_by(phone_number: row[:phone_number])    
-        
+        customer = User.find_by(phone_number: row[:phone_number])
+
         if customer.blank?
-          mc = MerchantContact.find_by(merchant_id: 712, uid: row[:phone_number])    
+          mc = MerchantContact.find_by(merchant_id: 712, uid: row[:phone_number])
           if mc
             list = List.find_by(user_id: 712, name: row[:seg])
             list.user_lists.create!(customer_contact_id: mc.id, customer_contact_type: "MerchantContact")
-          end   
+          end
         end
 
       end
@@ -486,8 +487,8 @@ module CSVHandler
           headers_checked = true
         end
 
-        row = row.to_hash        
-        
+        row = row.to_hash
+
         # if you need to temporarily disable twilio validation
         valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
         # row_num = row[:phone_number].to_s.gsub(/\D/, '')
@@ -498,7 +499,7 @@ module CSVHandler
         # linetype = nil
 
         if valid_num.present?
-          row[:phone_number] = valid_num.first 
+          row[:phone_number] = valid_num.first
           # disable number type check
           # linetype = EveryoneApiService.line_type(row[:phone_number])
         end
@@ -510,9 +511,9 @@ module CSVHandler
           if true # linetype == "mobile"
             # check if a customer type user already has this number
             @customer = User.find_by(phone_number: row[:phone_number])
-            
+
             if @customer.blank?
-              begin            
+              begin
                 MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
                 mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
                 #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
@@ -545,7 +546,7 @@ module CSVHandler
       ['File Upload', ["Something went wrong on our end."]]
     end
   end
-#=end 
+#=end
 
   def create_list_and_user_list(group, mc, list_type)
     if group.present? && mc.try(:id).present?
