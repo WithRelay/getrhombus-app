@@ -40,7 +40,7 @@
         #campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", (3488..3368).to_a, user_id)
 
 
-        campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [3938, 3939, 3940, 3942, 3943], user_id)
+        campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [4133, 4134, 4135, 4136, 4137], user_id)
 
         campaigns.each do |campaign|
           if campaign.try(:user_lists).present?
