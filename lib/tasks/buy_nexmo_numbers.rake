@@ -296,13 +296,13 @@ task :buy_nexmo_numbers => :environment do
   # 7889, 7890, 7891, 7892, 7893
   country = "CA"
   pattern = "1506"                              # <<<<-------------------
-  size = 40
+  size = 100
   type = "mobile-lvn" #"landline-toll-free"
-  max_total = 31                              # <<<<-------------------
+  max_total = 100                              # <<<<-------------------
   #index = 2
 
   users.each do |u|
-    u.numbers.delete_all
+    #u.numbers.delete_all
     total = u.numbers.count
 
     while (total < max_total && User.find(1).email == "<redacted_email>")
