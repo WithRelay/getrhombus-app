@@ -32,7 +32,7 @@
     end
 =end
 
-    [13098, 2626].each do |user_id|
+    [21565, 21406].each do |user_id|
 
       csv_string = CSV.generate do |csv|
         count = 0
@@ -40,7 +40,7 @@
         #campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", (4617..4685).to_a, user_id)
 
 
-        campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [5872, 5873, 5874, 5875, 5877, 5776, 5777], user_id)
+        campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [5912, 5913, 5876, 5878, 5879, 5880, 5881, 5882, 5883, 5884, 5885, 5886], user_id)
 
         campaigns.each do |campaign|
           if campaign.try(:user_lists).present?
