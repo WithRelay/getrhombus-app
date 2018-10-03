@@ -2,6 +2,7 @@
 
 fibernetics_worker: bundle exec rake resque:work QUEUE=fibernetics_event $RAILS_ENV TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7
 rules_worker: bundle exec rake resque:work QUEUE=rules $RAILS_ENV TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7
+campaign_data: bundle exec rake resque:work QUEUE=campaign_data $RAILS_ENV TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7
 one_time_campaigns_worker: bundle exec rake resque:work QUEUE=one_time_campaigns $RAILS_ENV TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7
 pending_campaigns_worker: bundle exec rake resque:work QUEUE=pending_campaigns $RAILS_ENV TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7
 recurring_campaigns_worker: bundle exec rake resque:work QUEUE=recurring_campaigns $RAILS_ENV TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7

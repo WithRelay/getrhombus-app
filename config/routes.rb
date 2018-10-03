@@ -143,6 +143,7 @@ Rails.application.routes.draw  do
 
     resources :campaigns, only: [] do
       member do
+        get 'data'
         patch 'change_status'
         delete 'delete_campaign'
         delete 'images/:image_id' => 'campaigns#image_delete'

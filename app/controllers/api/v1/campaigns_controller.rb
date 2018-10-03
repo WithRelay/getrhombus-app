@@ -1,5 +1,10 @@
 class Api::V1::CampaignsController < Api::V1::BaseController
 
+  def data
+    CampaignDataJob.set(queue: 'campaign_data').perform_later(params[:id])
+    render json: { notice: 'Request submitted' }, status: 200
+  end
+
   def image_delete
     image_ref = find_image_ref(imageable_type: 'Campaign', image_id: params[:image_id])
     image_ref.delete if image_ref
@@ -36,11 +41,11 @@ class Api::V1::CampaignsController < Api::V1::BaseController
     begin
       status = 500
       campaign = current_user.campaigns.build(campaign_params, image_params)
-      
+
       if campaign.save(validate: false)
         status = 200
         flash_msg = { notice: 'Test Email Sent' }
-        # we can send object to active jobs but it is not good to send complex object to active jobs. 
+        # we can send object to active jobs but it is not good to send complex object to active jobs.
         # http://chriskottom.com/blog/2015/11/bulletproof-rails-background-jobs/
         SendNowCampaignJob.set(queue: campaign.send_now_queue).perform_now(campaign.id)
       else
@@ -49,7 +54,7 @@ class Api::V1::CampaignsController < Api::V1::BaseController
     rescue StandardError => e
       flash_msg = { error: 'Unable to send test email' }
     end
-    
+
     campaign.destroy
     render json: flash_msg, status: status
   end
