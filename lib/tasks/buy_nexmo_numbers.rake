@@ -292,14 +292,14 @@ task :buy_nexmo_numbers => :environment do
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [21565])             # <<<<-------------------
+  users = User.where(id: [22422, 22423, 22424, 22425, 22426, 22427, 22476])             # <<<<-------------------
   # 7889, 7890, 7891, 7892, 7893
   country = 'CA'
-  pattern = '1403'                             # <<<<-------------------
-  size = 50
+  pattern = '1613'                             # <<<<-------------------
+  size = 5
   type = "mobile-lvn"
   # type = 'landline-toll-free'
-  max_total = 50                             # <<<<-------------------
+  max_total = 3                             # <<<<-------------------
   # index = 2
 
   users.each do |u|
@@ -315,7 +315,8 @@ task :buy_nexmo_numbers => :environment do
           if !(ary.include?(n['msisdn'].to_i)) && (total < max_total)
             puts n['msisdn'].inspect
             res = TextingService.buy_number_nexmo(n['country'], n['msisdn'])
-            default = i == 0 ? 1 : 0
+            #default = i == 0 ? 1 : 0
+            default = 0
 
             if res
               fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
@@ -330,6 +331,7 @@ task :buy_nexmo_numbers => :environment do
     end
   end
 
+=begin
   ary = []
   # toll free provisioning
   users = User.where(id: [21565])             # <<<<-------------------
@@ -409,4 +411,6 @@ task :buy_nexmo_numbers => :environment do
       total = u.numbers.count
     end
   end
+
+=end
 end
