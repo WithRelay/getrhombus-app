@@ -206,6 +206,7 @@ GEM
     multi_json (1.12.2)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
+    mustache (1.0.5)
     mysql2 (0.3.21)
     naught (1.1.0)
     newrelic_rpm (3.18.0.329)
@@ -420,6 +421,7 @@ DEPENDENCIES
   jquery-rails
   koala
   mandrill-api
+  mustache
   mysql2 (~> 0.3.18)
   newrelic_rpm
   nexmo
