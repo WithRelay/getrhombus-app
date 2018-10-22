@@ -55,7 +55,9 @@ class Campaign
 
   showHideEditor: (element)->
     if isEmailChecked(element)
+      $('.sms-mms-sender-header').hide()
       $('.emailSubject').show()
+      $('.emailSubject').css('margin-top', '50px')
       $('#sendTestCampaign').show()
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
@@ -65,6 +67,7 @@ class Campaign
     else if isMmsChecked(element) || isFacebookMessengerChecked(element)
       this.showFileBrowser()
       $('.emailSubject').hide()
+      $('.sms-mms-sender-header').show()
       trumbowygSetting(false, @textArea)
       removeDiv()
       $('#sendTestCampaign').hide()
@@ -74,6 +77,7 @@ class Campaign
     else
       removeDiv()
       $('.emailSubject').hide()
+      $('.sms-mms-sender-header').show()
       $('#select-images').val('')
       $('#new-image-previews').html('')
       $('#sendTestCampaign').hide()
@@ -172,6 +176,7 @@ $( document ).on 'ready page:load', ->
 
   if $('#campaign-channel').val() == '3'
     $('.emailSubject').show()
+    $('.sms-mms-sender-header').hide()
     $('.welcome-dash-content-container-header').show()
     $('#sendTestCampaign').show();
     new CustomTrumbowygPlugin('#trumbowyg')
@@ -180,10 +185,12 @@ $( document ).on 'ready page:load', ->
     $('#sendTestCampaign').hide();
     campaign.showFileBrowser()
     $('.emailSubject').hide()
+    $('.sms-mms-sender-header').show()
     campaign.textAreaEmojis()
   else if $('#campaign-channel').val() == '2'
     $('#sendTestCampaign').hide();
     $('.emailSubject').hide()
+    $('.sms-mms-sender-header').show()
     campaign.showFileBrowser()
     campaign.textAreaEmojis()
   else
@@ -191,6 +198,7 @@ $( document ).on 'ready page:load', ->
     campaign.textAreaEmojis()
     campaign.hideFileBrowser()
     $('.emailSubject').hide()
+    $('.sms-mms-sender-header').show()
     $('#select-images').val('')
     $('#new-image-previews').html('')
 

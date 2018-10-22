@@ -88,19 +88,43 @@
           <div class="w-clearfix w-col w-col-8 campaign-buttons-list">
             <%= f.submit 'Save campaign', class: 'button editor-buttons w-button campaign-button', id: 'send-campaign-users' %>
             <%= f.submit 'Send me a test', id: 'sendTestCampaign', class: 'alt button editor-buttons w-button campaign-button' %>
+            <div data-delay="0" class="dropdown merge-fields w-dropdown">
+              <div class="w-dropdown-toggle">
+                <div class="merge-field-icon w-icon-dropdown-toggle"></div>
+                <div class="merge-field-dropdown-text">Insert Merge Fields</div>
+              </div>
+              <nav class="dropdown-list merge-fields w-dropdown-list">
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{first_name}}'>First name</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{full_name}}'>Full name</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{phone_number}}'>Phone number</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{email}}'>Email address</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{merchant_org_number}}'>Your phone number</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{business_name}}'>Business name</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{merchant_address}}'>Your address</a>
+              </nav>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="editor-date"><%= todays_date %></div>
-    <div class="alt campaign-editor sub-nav-bar w-clearfix emailSubject">
+    <div class="alt campaign-editor sub-nav-bar w-clearfix">
+      <div>
+        <div class='form-group col-xs-6'>
+          <%= f.text_field :name, class: 'form-control email-subject text-field w-input', id: 'Campaign-name', placeholder: 'Campaign name'  %>
+          <div class="errorMessageContainer"></div>
+        </div>
+      </div>
+      <h4 class="sender sms-mms-sender-header">Sender: <%= current_user.full_name %></h4>
+    </div>
+    <div class="alt campaign-editor sub-nav-bar w-hidden w-clearfix emailSubject">
       <div>
         <div class='form-group col-xs-6'>
           <%= f.text_field :subject, class: "form-control email-subject text-field w-input", id: "campaign_subject", placeholder: 'Email subject'  %>
           <div class="errorMessageContainer"></div>
         </div>
       </div>
-      <h4 class="sender welcome-dash-content-container-header w-hidden"><%= current_user.user_title %></h4>
+      <h4 class="sender welcome-dash-content-container-header email-sender-header">Sender: <%= current_user.user_title %></h4>
     </div>
   </div>
   <% end %>
