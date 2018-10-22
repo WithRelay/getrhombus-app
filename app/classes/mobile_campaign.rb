@@ -85,7 +85,16 @@ class MobileCampaign
   end
 
   def send_by_mobile(customer, uid_type, uid, from)
-    Conversation.find_or_create_conversation_for_message_and_send(@merchant, uid_type, uid, @campaign.text, @channel, media_ary, 'campaign', from)
+    person = if @campaign.lists.first.customer?
+               conv.user
+             else
+               MerchantContact.find_by(merchant_id: @merchant.id, uid: uid, uid_type: uid_type)
+             end
+    campaign_text = CampaignHandlebar.new(person, @merchant).render(@campaign.text)
+    Conversation.find_or_create_conversation_for_message_and_send(
+      @merchant, uid_type, uid, campaign_text,
+      @channel, media_ary, 'campaign', from
+    )
   end
 
   def media_ary

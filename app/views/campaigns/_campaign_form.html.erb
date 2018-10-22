@@ -108,23 +108,14 @@
       </div>
     </div>
     <div class="editor-date"><%= todays_date %></div>
-    <div class="alt campaign-editor sub-nav-bar w-clearfix">
-      <div>
-        <div class='form-group col-xs-6'>
-          <%= f.text_field :name, class: 'form-control email-subject text-field w-input', id: 'Campaign-name', placeholder: 'Campaign name'  %>
-          <div class="errorMessageContainer"></div>
-        </div>
-      </div>
-      <h4 class="sender sms-mms-sender-header">Sender: <%= current_user.full_name %></h4>
-    </div>
-    <div class="alt campaign-editor sub-nav-bar w-hidden w-clearfix emailSubject">
+    <div class="alt campaign-editor sub-nav-bar w-clearfix emailSubject">
       <div>
         <div class='form-group col-xs-6'>
           <%= f.text_field :subject, class: "form-control email-subject text-field w-input", id: "campaign_subject", placeholder: 'Email subject'  %>
           <div class="errorMessageContainer"></div>
         </div>
       </div>
-      <h4 class="sender welcome-dash-content-container-header email-sender-header">Sender: <%= current_user.user_title %></h4>
+      <h4 class="sender welcome-dash-content-container-header w-hidden"><%= current_user.user_title %></h4>
     </div>
   </div>
   <% end %>

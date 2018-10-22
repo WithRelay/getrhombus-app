@@ -93,9 +93,9 @@ class Conversation < ActiveRecord::Base
         to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from.try(:page_access_token)) : customer.phone_number
         #to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : (customer.is_merchant? ? customer.rhombus_number : customer.phone_number)
       else
-        mc = MerchantContact.find_by(merchant_id: conv.merchant_id, uid: conv.uid, uid_type: conv.uid_type)
         to = conv.uid
         if channel == "FbMessage"
+          mc = MerchantContact.find_by(merchant_id: conv.merchant_id, uid: conv.uid, uid_type: conv.uid_type)
           to = nil unless mc.page_specific_id_valid?(team)
         end
       end
@@ -113,9 +113,7 @@ class Conversation < ActiveRecord::Base
         end
         msg_instance.image_ids = media_ids
       end
-      person = customer.presence || mc
-      campaign_text = CampaignHandlebar.new(person, team).render(@campaign.text)
-      if msg_instance.send_and_save_message(team, customer, from, to, campaign_text, media_urls)
+      if msg_instance.send_and_save_message(team, customer, from, to, msg, media_urls)
         re = find_or_create_conversation_for_message(team.id, conv.uid_type, conv.uid, msg_instance, false, source)
         msg_hash = message_hash(re[0], msg_instance, re[1])
         #Rails.logger.debug "DEBUG: we got this far at lesat success"
