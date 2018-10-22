@@ -18,10 +18,6 @@ class CampaignHandlebar < Mustache
     person.phone_number
   end
 
-  def email
-    person.email
-  end
-
   def merchant_org_number
     merchant.org_phone
   end

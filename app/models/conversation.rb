@@ -123,7 +123,7 @@ class Conversation < ActiveRecord::Base
         false
       end
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In conversations.rb send_message", env: Rails.env, conv: conv, team: team, msg: campaign_text, to: to })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In conversations.rb send_message", env: Rails.env, conv: conv, team: team, msg: msg, to: to })
       false
     end
   end
