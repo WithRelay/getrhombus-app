@@ -26,7 +26,7 @@ class MobileCampaign
           number = @number_send_count_hash.first.first unless number              # if no match above, grab first merchant number
         end
 
-        send_by_mobile(nil, r.uid_type, r.uid, number) 
+        send_by_mobile(nil, r.uid_type, r.uid, number)
 
         if @channel == 'Message'
           @number_send_count_hash[number] = @number_send_count_hash[number] + 1   # increase counter
@@ -39,8 +39,8 @@ class MobileCampaign
       end
     else
       @recipients = @recipients.to_a
-      customer_user_obj_list.each_with_index do |c, i| 
-     
+      customer_user_obj_list.each_with_index do |c, i|
+
         if @channel == 'Message'
           number = @number_area_code_hash.key(c.phone_number[1..3])                 # find number to use by area code of recipient number
           number = @number_send_count_hash.first.first unless number                # if no match above, grab first merchant number
@@ -65,11 +65,11 @@ class MobileCampaign
   def send_campaign
     if @campaign.lists.first.contact?
       @recipients.each do |r|
-        send_by_mobile(nil, r.uid_type, r.uid, @merchant_numbers.next) 
+        send_by_mobile(nil, r.uid_type, r.uid, @merchant_numbers.next)
       end
     else
       @recipients = @recipients.to_a
-      customer_user_obj_list.each_with_index do |c, i| 
+      customer_user_obj_list.each_with_index do |c, i|
         @failure_recipients.push(@recipients.delete_at(i)) unless send_by_mobile(c, 'user', c.id, @merchant_numbers.next)
       end
     end
