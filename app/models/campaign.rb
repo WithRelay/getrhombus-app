@@ -1,7 +1,7 @@
 class Campaign < ActiveRecord::Base
 
   attr_accessor :list_id
-  
+
   belongs_to :user
   has_many :messages
   has_many :user_lists, through: :lists
@@ -16,7 +16,7 @@ class Campaign < ActiveRecord::Base
   enum status: { active: 1, paused: 2, inactive: 3, test: 4 }
   enum campaign_type: { promo_campaign: 0, reminder_campaign: 1 }
   enum channel: { sms: 0, mms: 1, facebook_messenger: 2, email: 3 }
-  
+
   # validation of campaign attributes
   validates_presence_of :text
   validates_presence_of :name, :list_id, unless: lambda { reminder_campaign? }
@@ -24,15 +24,15 @@ class Campaign < ActiveRecord::Base
 
   # uncomment this for production
   #validate :validate_date_time, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
-  
+
   validate :total_image_size
-  validates_presence_of :subject, if: lambda { email? } 
-  validates_presence_of :repeat_days, if: lambda { recurring? }  
+  validates_presence_of :subject, if: lambda { email? }
+  validates_presence_of :repeat_days, if: lambda { recurring? }
   validates :name, uniqueness: { case_sensitive: false, scope: :user_id }, unless: lambda { reminder_campaign? }
-  
-  # scopes 
-  scope :check_campaign_uniqueness, -> (campaign_name) { where('lower(name) = ?', campaign_name.downcase) }  
-  scope :is_active_or_paused, -> { where(status: [Campaign.statuses[:active], Campaign.statuses[:paused]]) }  
+
+  # scopes
+  scope :check_campaign_uniqueness, -> (campaign_name) { where('lower(name) = ?', campaign_name.downcase) }
+  scope :is_active_or_paused, -> { where(status: [Campaign.statuses[:active], Campaign.statuses[:paused]]) }
 
   before_create :set_campaign_status
   before_save :update_next_send_at, if: lambda { (recurring? || (one_time? && !deliver_now?)) && date_time_changed? }

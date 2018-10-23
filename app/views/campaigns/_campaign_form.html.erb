@@ -88,6 +88,20 @@
           <div class="w-clearfix w-col w-col-8 campaign-buttons-list">
             <%= f.submit 'Save campaign', class: 'button editor-buttons w-button campaign-button', id: 'send-campaign-users' %>
             <%= f.submit 'Send me a test', id: 'sendTestCampaign', class: 'alt button editor-buttons w-button campaign-button' %>
+            <div data-delay="0" class="dropdown merge-fields w-dropdown">
+              <div class="w-dropdown-toggle">
+                <div class="merge-field-icon w-icon-dropdown-toggle"></div>
+                <div class="merge-field-dropdown-text">Insert Merge Fields</div>
+              </div>
+              <nav class="dropdown-list merge-fields w-dropdown-list">
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{first_name}}'>First name</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{full_name}}'>Full name</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{phone_number}}'>Phone number</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{merchant_org_number}}'>Your phone number</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{business_name}}'>Business name</a>
+                <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{merchant_address}}'>Your address</a>
+              </nav>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 class MerchantContact < ActiveRecord::Base
-  belongs_to :merchant, class_name: "User"
+  belongs_to :merchant, class_name: 'User'
   has_many :user_lists, as: :customer_contact
   scope :only_contact, -> { where(is_customer: false) }
 
@@ -21,5 +21,13 @@ class MerchantContact < ActiveRecord::Base
     return if team.blank?
     (team_page_id = team.fb_pages.subscribed.last.try(:id)) || return
     team_page_id == FbCred.find_by(page_specific_id: self.uid).try(:fb_page_id)
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def phone_number
+    uid
   end
 end
