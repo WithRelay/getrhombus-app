@@ -15,7 +15,7 @@ class MerchantContactsController < ApplicationController
 
   def show
     @merchant_contact = MerchantContact.find_by_id(params[:id])
-    @user_snapshot = get_user_snapshot(@merchant_contact.uid, @merchant_contact.uid_type, current_user.id)
+    @user_snapshot = get_user_snapshot(@merchant_contact.uid, @merchant_contact.uid_type, current_user.id, @merchant_contact)
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @merchant_contact.uid, @merchant_contact.uid_type)
     @recent_activity = recent_activity
   end
