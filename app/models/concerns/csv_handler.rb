@@ -41,12 +41,11 @@ module CSVHandler
   end
 
   def get_contact_csv_template
-    attributes = ['phone_number', 'group']
-    default_text = ['<redacted_phone_number>', '<redacted_phone_number>', 'Group A', 'Group B']
+    attributes = ['phone_number', 'group', 'first_name', 'last_name']
     CSV.generate(headers: true) do |csv|
       csv << attributes
-      csv << [default_text.first, default_text.third]
-      csv << [default_text.second, default_text.fourth]
+      csv << ['<redacted_phone_number>', 'Avengers', 'Tony', 'Stark']
+      csv << ['<redacted_phone_number>', 'Not Avengers', 'Doctor', 'Strange']
     end
   end
 
@@ -464,7 +463,7 @@ module CSVHandler
       # headers = [:phone_number, :first_name, :last_name, :organization, :email]
       #
 
-      headers = [:phone_number, :group]
+      headers = [:phone_number, :group, :first_name, :last_name]
       file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
       file_headers = file_data.headers
 
@@ -513,8 +512,8 @@ module CSVHandler
 
             if @customer.blank?
               begin
-                MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze)
-                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze)
+                MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze, row[:first_name], row[:last_name])
+                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze, row[:first_name], row[:last_name])
                 #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
                 self.create_list_and_user_list(row[:group], mc, 1)
               rescue StandardError => e

@@ -18,18 +18,22 @@ class CampaignHandlebar < Mustache
     person.phone_number
   end
 
-  def merchant_org_number
+  def org_number
     merchant.org_phone
   end
 
-  def business_name
+  def org_name
     merchant.org_name
   end
 
-  def merchant_address
+  def org_email
+    merchant.email
+  end
+
+  def org_address
     address = merchant.address
     if address
-      "#{address.street_address} #{address.suite} #{address.city}, #{address.state_province}, #{address.country}, #{address.postal_code}"
+      "#{address.street_address} #{address.suite}, #{address.city}, #{address.state_province}, #{address.postal_code}"
     else
       ''
     end
