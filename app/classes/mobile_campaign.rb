@@ -65,7 +65,7 @@ class MobileCampaign
   def send_campaign
     if @campaign.lists.first.contact?
       @recipients.each do |r|
-        send_by_mobile(nil, r.uid_type, r.uid, @merchant_numbers.next)
+        send_by_mobile(r, r.uid_type, r.uid, @merchant_numbers.next)
       end
     else
       @recipients = @recipients.to_a
@@ -84,12 +84,8 @@ class MobileCampaign
     User.where(id: user_ids)
   end
 
-  def send_by_mobile(customer, uid_type, uid, from)
-    person = if @campaign.lists.first.customer?
-               conv.user
-             else
-               MerchantContact.find_by(merchant_id: @merchant.id, uid: uid, uid_type: uid_type)
-             end
+  # person can be user or merchant contact object
+  def send_by_mobile(person, uid_type, uid, from)
     campaign_text = CampaignHandlebar.new(person, @merchant).render(@campaign.text)
     Conversation.find_or_create_conversation_for_message_and_send(
       @merchant, uid_type, uid, campaign_text,
