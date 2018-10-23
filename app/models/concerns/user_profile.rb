@@ -16,18 +16,12 @@ module UserProfile
         'Messenger Contact'
       else
         contact_name = "#{uid_obj.try(:first_name)} #{uid_obj.try(:last_name)}".squish
-        if contact_name.blank?
-          cus = OpenCnamData.find_by(phone_number: uid)
-          return cus.name if cus && cus.name.present?
-          'SMS Contact'
-        end
+        return contact_name if contact_name.present?
+        cus = OpenCnamData.find_by(phone_number: uid)
+        return cus.name if cus && cus.name.present?
+        'SMS Contact'
       end
     end
-  end
-
-  def yo
-    2
-    3 if false
   end
 
   def get_user_location(uid, uid_type, uid_obj=nil)
