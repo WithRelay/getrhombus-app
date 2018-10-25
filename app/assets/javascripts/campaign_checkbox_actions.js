@@ -54,7 +54,7 @@ $(document).ready(function() {
   }
 
   // used by campaign index
-  $(".get-campaign-data").click(function(e) {
+  $("#objlists").on("click", ".get-campaign-data", function(e) {
     e.preventDefault();
     var $this = $(this);
 
