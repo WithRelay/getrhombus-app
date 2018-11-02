@@ -6,7 +6,7 @@ task number_type_data: :environment do
     field && field.blank? ? nil : field.to_s.squish
   end
 
-  file_data = CSV.read('/home/taiwo/Downloads/Export_Job-2 number only.csv',
+  file_data = CSV.read('/home/taiwo/Downloads/2018-10-31 CoCO Text Universe.csv',
                         headers: true,
                         skip_blanks: true,
                         header_converters: :symbol,
