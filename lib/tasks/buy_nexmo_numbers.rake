@@ -288,16 +288,16 @@ task :buy_nexmo_numbers => :environment do
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [21406])             # <<<<-------------------
+  users = User.where(id: [22606])             # <<<<-------------------
   country = 'CA'
-  pattern = '1506'                             # <<<<-------------------
-  size = 100
+  pattern = '1905'                             # <<<<-------------------
+  size = 90
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 100                             # <<<<-------------------
+  max_total = 115                             # <<<<-------------------
   # index = 2
 
   users.each do |u|
-    u.numbers.delete_all
+    #u.numbers.delete_all
     total = u.numbers.count
 
     while total < max_total && User.find(1).email == "<redacted_email>"
@@ -309,13 +309,13 @@ task :buy_nexmo_numbers => :environment do
           if !(ary.include?(n['msisdn'].to_i)) && (total < max_total)
             puts n['msisdn'].inspect
             res = TextingService.buy_number_nexmo(n['country'], n['msisdn'])
-            default = i == 0 ? 1 : 0
-            #default = 0
+            #default = i == 0 ? 1 : 0
+            default = 0
 
             if res
               fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
               u.numbers.create(number: res, friendly_name: fn, country: n['country'], default: default, provider: 'nexmo', price: '210')
-              #TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
+              TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
             end
           end
         end
