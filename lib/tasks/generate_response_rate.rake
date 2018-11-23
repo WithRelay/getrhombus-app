@@ -307,16 +307,14 @@ task :generate_response_rates => :environment do
 =end
 
 #=begin
-  user_ids = [22421, 22422, 22423, 22424, 22425, 22426, 22427, 22476]
+  user_ids = [21405, 21407, 21406]
   user_ids.each do |user_id|
-    ary = Campaign.where(user_id: user_id).pluck(:id)
+    Campaign.where(user_id: user_id).find_each(batch_size: 6) do |c|
+      csv_string = CSV.generate do |csv|
+        csv << ['Campaign Name', 'Campaign Text', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
+        count = 0
 
-    csv_string = CSV.generate do |csv|
-      csv << ['Campaign Name', 'Campaign Text', 'Call Display', 'Phone Number', 'Outbound Text', 'Inbound Text', "Outbound Time (ET)", "Inbound Time (ET)", "Time Diff (Minutes)"]
-      count = 0
-
-      ary.each do |cid|
-        campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: cid)
+        campaign = Campaign.includes(user_lists: :customer_contact).find_by(id: c.id)
 
         if campaign.try(:user_lists).present? && campaign.user_lists.first.try(:customer_contact_type) == 'MerchantContact'
           campaign.user_lists.each do |ul|
@@ -336,10 +334,10 @@ task :generate_response_rates => :environment do
           end
         end
       end
-    end
 
-    attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "data.csv", type: "text/csv" } ] }
-    EmailingService.email_to_platform("See Attached data", 'RMG Data', attachment_hash)
+      attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "data.csv", type: "text/csv" } ] }
+      EmailingService.email_to_platform("See Attached for User ID #{user_id}", 'RMG Data', attachment_hash)
+    end
   end
 #=end
 
