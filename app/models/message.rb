@@ -136,7 +136,7 @@ class Message < ActiveRecord::Base
     end
   end
 
-
+=begin
   def y
     ary = [
       <redacted_phone_number>,
@@ -303,5 +303,6 @@ class Message < ActiveRecord::Base
 
     ary.each_with_index { |n, i| TextingService.release_number_nexmo(n, "US"); puts i; }
   end
+=end
 
 end
