@@ -136,7 +136,7 @@ class Message < ActiveRecord::Base
     end
   end
 
-=begin
+#=begin
   def y
     ary = [
       <redacted_phone_number>,
@@ -239,70 +239,13 @@ class Message < ActiveRecord::Base
       <redacted_phone_number>,
       <redacted_phone_number>,
       <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
-      <redacted_phone_number>,
       <redacted_phone_number>
+
     ]
 
-    ary.each_with_index { |n, i| TextingService.release_number_nexmo(n, "US"); puts i; }
+    #ary.each_with_index { |n, i| TextingService.release_number_nexmo(n, "US"); puts i; }
+    ary.each_with_index { |n, i| TextingService.release_number(n); puts i; }
   end
-=end
+#=end
 
 end
