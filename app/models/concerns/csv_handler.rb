@@ -464,7 +464,7 @@ module CSVHandler
       #
 
       headers = [:phone_number, :group, :first_name, :last_name]
-      file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+      file_data = CSV.read(file_path, encoding: 'ISO-8859-1', headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
       file_headers = file_data.headers
 
       file_data.each do |row|
