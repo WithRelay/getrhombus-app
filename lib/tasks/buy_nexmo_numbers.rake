@@ -288,9 +288,9 @@ task :buy_nexmo_numbers => :environment do
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [27152])             # <<<<-------------------
+  users = User.where(id: [27238])             # <<<<-------------------
   country = 'CA'
-  pattern = '1226'                             # <<<<-------------------
+  pattern = '1506'                             # <<<<-------------------
   size = 70
   type = 'mobile-lvn' #'landline-toll-free'
   max_total = 70                             # <<<<-------------------
