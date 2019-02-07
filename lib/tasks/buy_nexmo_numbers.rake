@@ -291,9 +291,9 @@ task :buy_nexmo_numbers => :environment do
   users = User.where(id: [13116])             # <<<<-------------------
   country = 'CA'
   pattern = '1403'                             # <<<<-------------------
-  size = 125
+  size = 10
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 125                             # <<<<-------------------
+  max_total = 10                             # <<<<-------------------
   # index = 2
 
   users.each do |u|
