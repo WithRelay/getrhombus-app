@@ -285,15 +285,16 @@ task :buy_nexmo_numbers => :environment do
     <redacted_phone_number>
   ]
 =end
+  # cpc - <redacted_phone_number>
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [13116])             # <<<<-------------------
+  users = User.where(id: [28681])             # <<<<-------------------
   country = 'CA'
-  pattern = '1403'                             # <<<<-------------------
-  size = 10
+  pattern = '1780'                             # <<<<-------------------
+  size = 70
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 10                             # <<<<-------------------
+  max_total = 70                             # <<<<-------------------
   # index = 2
 
   users.each do |u|
