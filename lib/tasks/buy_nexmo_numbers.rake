@@ -286,19 +286,20 @@ task :buy_nexmo_numbers => :environment do
   ]
 =end
   # cpc - <redacted_phone_number>
+  # # ucp voterid - <redacted_phone_number>
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [28681])             # <<<<-------------------
+  users = User.where(id: [13116])             # <<<<-------------------
   country = 'CA'
-  pattern = '1780'                             # <<<<-------------------
-  size = 70
+  pattern = '1403'                             # <<<<-------------------
+  size = 20
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 70                             # <<<<-------------------
+  max_total = 25                             # <<<<-------------------
   # index = 2
 
   users.each do |u|
-    u.numbers.delete_all
+    #u.numbers.delete_all
     total = u.numbers.count
 
     while total < max_total && User.find(1).email == "<redacted_email>"
@@ -310,8 +311,8 @@ task :buy_nexmo_numbers => :environment do
           if !(ary.include?(n['msisdn'].to_i)) && (total < max_total)
             puts n['msisdn'].inspect
             res = TextingService.buy_number_nexmo(n['country'], n['msisdn'])
-            default = i == 0 ? 1 : 0
-            #default = 0
+            #default = i == 0 ? 1 : 0
+            default = 0
 
             if res
               fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
