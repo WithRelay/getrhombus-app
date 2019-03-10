@@ -291,7 +291,8 @@ task :buy_nexmo_numbers => :environment do
   ary = []
   # toll free provisioning
   users = User.where(id: [21565])             # <<<<-------------------
-  #  13116, 21565
+  #  29590, 29591, 29592
+  #  <redacted_phone_number>
   country = 'CA'
   pattern = '1403'                             # <<<<-------------------
   size = 100

@@ -6,7 +6,7 @@ class ListsController < ApplicationController
   before_action :set_notifications, except: [:destroy, :add_member]
 
   def index
-    @lists = current_user.lists.includes(:user_lists, :campaign_lists).campaign.where(segment: nil).paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
+    @lists = current_user.lists.includes(:user_lists, :campaign_lists, :last_campaign_recipient).campaign.where(segment: nil).paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
     @lists.present? ? render_requested_format(@lists) : render(:no_lists)
   end
 
@@ -25,7 +25,7 @@ class ListsController < ApplicationController
 
   def show
     if @list
-      
+
       if params[:search].present? && params[:commit].to_s.casecmp('search').zero?
         @list_members = @list.search_members(params[:search], params[:page])
       else

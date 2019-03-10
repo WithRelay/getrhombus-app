@@ -7,6 +7,8 @@ class List < ActiveRecord::Base
 
   has_many :campaign_lists
   has_many :campaign_recipients
+  has_one :last_campaign_recipient, -> { order('id DESC').limit(1) }, class_name: 'CampaignRecipient'
+
   has_many :user_lists, dependent: :destroy
   has_many :campaigns, through: :campaign_lists
 
