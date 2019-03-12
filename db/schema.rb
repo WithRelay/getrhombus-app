@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190310143138) do
+ActiveRecord::Schema.define(version: 20190312055948) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -199,8 +199,8 @@ ActiveRecord::Schema.define(version: 20190310143138) do
     t.boolean  "is_resolved", limit: 1,   default: false
   end
 
+  add_index "conversations", ["merchant_id", "uid_type", "uid"], name: "index_conversations_on_merchant_id_and_uid_type_and_uid", using: :btree
   add_index "conversations", ["merchant_id"], name: "index_conversations_on_merchant_id", using: :btree
-  add_index "conversations", ["uid"], name: "index_conversations_on_uid", using: :btree
 
   create_table "coupons", force: :cascade do |t|
     t.integer  "user_id",            limit: 4
@@ -889,6 +889,7 @@ ActiveRecord::Schema.define(version: 20190310143138) do
     t.integer  "customer_contact_id",   limit: 4
   end
 
+  add_index "user_lists", ["customer_contact_id"], name: "index_user_lists_on_customer_contact_id", using: :btree
   add_index "user_lists", ["list_id"], name: "index_user_lists_on_list_id", using: :btree
 
   create_table "users", force: :cascade do |t|
