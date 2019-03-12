@@ -42,6 +42,9 @@ gem 'versionist'
 gem 'opencnam'
 gem 'fullcontact'
 
+gem 'activerecord-import'
+
+
 gem 'twitter'
 gem 'omniauth-twitter'
 
