@@ -13,16 +13,16 @@ class RealtimeStreamService
         if conv_ref.source == "customer"
           merchant_status = $redis_merchant_status.get(merchant_id) || "{}"
           merchant_status, sender_name, profile_pic = JSON.parse(merchant_status), nil, nil
-          
+
           unless merchant_status["on_conversation_page"] == 'true'
             sender_name = get_customer_name(customer, conversation.uid_type, msg.from)
             profile_pic = get_profile_url(customer)
 
-            notifications({ profile_pic: profile_pic, customer_name: sender_name, message: msg.text[0..15] + "...",
+            notifications({ profile_pic: profile_pic, customer_name: sender_name, message: (msg.text.present? ? msg.text[0..15] : '') + '...',
                             type: conv_ref.textable_type == 'Message' ? 'new_message_sms' : 'new_message_messenger' },
                             merchant_id)
           end
-            
+
           if merchant_status['status'] != 'online'
             merchant = conversation.merchant
             alert_obj = merchant.alert
@@ -30,8 +30,8 @@ class RealtimeStreamService
               sender_name = sender_name || get_customer_name(customer, conversation.uid_type, msg.from)
               profile_pic = profile_pic || get_profile_url(customer)
 
-              options = { merchant: merchant, message_time: msg.created_at.strftime("%A, %-I:%M%P"), 
-                          message: msg.text, sender_profile_url: profile_pic, sender_name: sender_name }          
+              options = { merchant: merchant, message_time: msg.created_at.strftime("%A, %-I:%M%P"),
+                          message: msg.text, sender_profile_url: profile_pic, sender_name: sender_name }
 
               # email alerts
               options[:sender_email] = customer.try(:email) || ""
@@ -48,7 +48,7 @@ class RealtimeStreamService
                   customer = User.find_by(phone_number: pn)
                   uid_type = customer ? 'user' : 'phone_number'
                   uid = customer.try(:id) || pn
-                  Conversation.find_or_create_conversation_for_message_and_send_publish(merchant, customer, uid_type, uid, msg_to_send)          
+                  Conversation.find_or_create_conversation_for_message_and_send_publish(merchant, customer, uid_type, uid, msg_to_send)
                 end
               end
             end

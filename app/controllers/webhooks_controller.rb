@@ -25,7 +25,11 @@ class WebhooksController < ApplicationController
   end
 
   def nexmo_events
-    NexmoEvent.new.process_event(params, @merchant)
+    if params[:to].is_a?(Hash) # Handle nexmo unofficial mms messages
+      NexmoMmsEvent.new.process_event(params, @merchant)
+    else
+      NexmoEvent.new.process_event(params, @merchant)
+    end
     render nothing: true
   end
 
@@ -46,30 +50,31 @@ class WebhooksController < ApplicationController
 
   private
 
-    def set_time_zone(&block)
-      if action_name == 'facebook_events'
-        @merchant = get_merchant if params['entry']
-      elsif action_name == 'stripe_events' || action_name == 'fibernetics_events'
-         @merchant = User.get_platform_acct_obj
-      elsif action_name == 'twilio_events'
-        #@merchant = User.includes(:sms_fee).find_by(rhombus_number: params[:To].gsub('+', ''))
-        @merchant = Number.includes(user: [:sms_fee, :rules]).find_by(number: params[:To].gsub('+', '')).try(:user)
-      elsif action_name == 'nexmo_events'
-        #@merchant = User.includes(:sms_fee).find_by(rhombus_number: params[:to])
+  def set_time_zone(&block)
+    if action_name == 'facebook_events'
+      @merchant = get_merchant if params['entry']
+    elsif action_name == 'stripe_events' || action_name == 'fibernetics_events'
+      @merchant = User.get_platform_acct_obj
+    elsif action_name == 'twilio_events'
+      @merchant = Number.includes(user: [:sms_fee, :rules]).find_by(number: params[:To].gsub('+', '')).try(:user)
+    elsif action_name == 'nexmo_events'
+      if params[:to].is_a?(Hash)
+        @merchant = Number.includes(user: [:sms_fee, :rules]).find_by(number: params[:to][:number]).try(:user)
+      else
         @merchant = Number.includes(user: [:sms_fee, :rules]).find_by(number: params[:to]).try(:user)
       end
-
-      ((render nothing: true) and return) if @merchant.blank? && params['hub.mode'].nil?
-      params['hub.mode'].present? ? Time.use_zone(Rails.application.config.time_zone, &block) : Time.use_zone(@merchant.time_zone, &block)
     end
 
-    def current_page
-      required_params = params['entry'].try(:last)
-      @current_page = FbPage.find_by_page_id required_params['id'] if required_params
-    end
+    ((render nothing: true) and return) if @merchant.blank? && params['hub.mode'].nil?
+    params['hub.mode'].present? ? Time.use_zone(Rails.application.config.time_zone, &block) : Time.use_zone(@merchant.time_zone, &block)
+  end
 
-    def get_merchant
-      @merchant = current_page.try(:user)
-    end
+  def current_page
+    required_params = params['entry'].try(:last)
+    @current_page = FbPage.find_by_page_id required_params['id'] if required_params
+  end
 
+  def get_merchant
+    @merchant = current_page.try(:user)
+  end
 end
