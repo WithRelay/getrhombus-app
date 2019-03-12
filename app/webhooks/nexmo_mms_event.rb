@@ -49,11 +49,11 @@ class NexmoMmsEvent
       # merchant.deduct_from_account_balance(sms_price * num_segments)
       RulesEngineJob.perform_later(@message.id) if @merchant.rules.present?
     rescue ActiveRecord::RecordNotUnique => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In save_message record not unique", env: Rails.env, params: @params })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In save_message record not unique", env: Rails.env, params: @params[:message_uuid] })
     rescue ActiveRecord::RecordInvalid => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In save_message record invalid", env: Rails.env, params: @params })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In save_message record invalid", env: Rails.env, params: @params[:message_uuid] })
     rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In save_message", env: Rails.env, params: @params })
+      ExceptionNotifier.notify_exception(exception, data: { message: "In save_message", env: Rails.env, params: @params[:message_uuid] })
     end
   end
 
