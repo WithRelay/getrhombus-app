@@ -85,7 +85,7 @@ class Conversation < ActiveRecord::Base
   def self.send_message(conv, team, msg, channel, source, media = [], from = nil)
     begin
       #from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
-      from = (channel == "FbMessage") ? team.get_page_access_token : from || conv.get_from_number
+      from = (channel == "FbMessage") ? team.get_page_access_token : conv.get_from_number(from)
 
       if conv.uid_type == "user"
         customer = conv.user
@@ -128,12 +128,22 @@ class Conversation < ActiveRecord::Base
     end
   end
 
+=begin
   def get_from_number
     team = self.merchant
     last_message = ConversationRef.includes(:textable).where(conversation_id: self.id).try(:textable)
     return team.rhombus_number unless last_message  # Ex. Merchant texting customer for the first time
     from = last_message.user_id == team.id ? last_message.from : last_message.to     # inbound/outbound logic
     Number.unscoped.exists?(user_id: team.id, number: from) ? from : team.rhombus_number    # check that merchant still owns the number else use default
+  end
+=end
+
+  def get_from_number(from_to_use)
+    team = self.merchant
+    last_message = ConversationRef.includes(:textable).where(conversation_id: self.id).last.try(:textable)
+    return (from_to_use || team.rhombus_number) unless last_message # Ex. Merchant texting customer/contact for the first time
+    from = last_message.user_id == team.id ? last_message.from : last_message.to # inbound/outbound logic
+    Number.unscoped.exists?(user_id: team.id, number: from) ? from : (from_to_use || team.rhombus_number) # check that merchant still owns the number else use default
   end
 
   # When sending by platform on behalf of platform or merchant FOR automated (platform triggered), 3rd party app messages (Slack) and configured messages (Rules)
