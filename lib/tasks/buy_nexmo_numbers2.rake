@@ -1,6 +1,7 @@
 desc "buy nexmo numbers"
 task :buy_nexmo_numbers2 => :environment do
 
+=begin
   ############### 1
   ary = []
   # toll free provisioning
@@ -212,7 +213,7 @@ task :buy_nexmo_numbers2 => :environment do
 
   ###########  2
 
-
+=end
 
  ############### 3
   ary = []
