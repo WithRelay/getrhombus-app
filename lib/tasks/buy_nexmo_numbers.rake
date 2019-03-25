@@ -629,10 +629,10 @@ task :buy_nexmo_numbers => :environment do
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [29925])             # <<<<-------------------
+  users = User.where(id: [29926])             # <<<<-------------------
   #  29860, 29544
   country = 'CA'
-  pattern = '1905'                             # <<<<-------------------
+  pattern = '1289'                             # <<<<-------------------
   size = 100
   type = 'mobile-lvn' #'landline-toll-free'
   max_total = 100                            # <<<<-------------------
@@ -669,10 +669,10 @@ task :buy_nexmo_numbers => :environment do
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [29925])             # <<<<-------------------
+  users = User.where(id: [29926])             # <<<<-------------------
   #  29860, 29544
   country = 'CA'
-  pattern = '1905'                             # <<<<-------------------
+  pattern = '1289'                             # <<<<-------------------
   size = 100
   type = 'mobile-lvn' #'landline-toll-free'
   max_total = 200                            # <<<<-------------------
@@ -709,13 +709,13 @@ task :buy_nexmo_numbers => :environment do
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [29925])             # <<<<-------------------
+  users = User.where(id: [29926])             # <<<<-------------------
   #  29860, 29544
   country = 'CA'
   pattern = '1905'                             # <<<<-------------------
-  size = 30
+  size = 35
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 230                            # <<<<-------------------
+  max_total = 235                            # <<<<-------------------
   # index = 2
 
   users.each do |u|
