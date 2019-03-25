@@ -712,7 +712,7 @@ task :buy_nexmo_numbers => :environment do
   users = User.where(id: [29926])             # <<<<-------------------
   #  29860, 29544
   country = 'CA'
-  pattern = '1905'                             # <<<<-------------------
+  pattern = '1289'                             # <<<<-------------------
   size = 35
   type = 'mobile-lvn' #'landline-toll-free'
   max_total = 235                            # <<<<-------------------
