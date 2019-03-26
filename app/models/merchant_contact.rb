@@ -3,13 +3,15 @@ class MerchantContact < ActiveRecord::Base
   has_many :user_lists, as: :customer_contact
   scope :only_contact, -> { where(is_customer: false) }
 
-  def self.add_or_update_merchant_contact(merchant_id, uid, uid_type, first_name = nil, last_name = nil)
+  # def self.add_or_update_merchant_contact(merchant_id, uid, uid_type, first_name = nil, last_name = nil)
+  def self.add_or_update_merchant_contact(merchant_id, uid, uid_type, data = {})
     begin
       if merchant_id.present? && uid.present?
         # Always update the updated_at field so we know the last time the contact interacted with the merchant
         re = find_or_create_by!(merchant_id: merchant_id, uid: uid, uid_type: uid_type)
         # this could unset an existing name
-        re.assign_attributes(first_name: first_name, last_name: last_name, updated_at: Time.now)
+        data = data.merge!(updated_at: Time.now)
+        re.assign_attributes(data)
         re.save!(validate: false)
         re
       end

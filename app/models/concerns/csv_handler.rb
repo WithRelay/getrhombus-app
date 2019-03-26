@@ -472,16 +472,17 @@ module CSVHandler
 
         # Validate headers
         if !headers_checked
-          if headers.length != file_headers.length
-            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the number of headers are incorrect. Please see template file."] }
-            break
-          end
+          unless IDS_TO_EXCLUDE.include? self.id
+            if headers.length != file_headers.length
+              error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the number of headers are incorrect. Please see template file."] }
+              break
+            end
 
-          if headers.to_set != file_headers.to_set
-            error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the headers are incorrect. Please see template file."] }
-            break
+            if headers.to_set != file_headers.to_set
+              error_hash['The File Headers'] = { linetype: '', errors: ["Unable to proceed because the headers are incorrect. Please see template file."] }
+              break
+            end
           end
-
           headers_checked = true
         end
 
@@ -512,9 +513,10 @@ module CSVHandler
 
             if @customer.blank?
               begin
-                MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze, row[:first_name], row[:last_name])
-                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze, row[:first_name], row[:last_name])
-                #OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
+                url_data = generate_contact_data(row)
+                MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze, url_data)
+                mc = MerchantContact.add_or_update_merchant_contact(self.id, row[:phone_number], 'phone_number'.freeze, url_data)
+                # OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
                 self.create_list_and_user_list(row[:group], mc, 1)
               rescue StandardError => e
                 error = true
@@ -524,6 +526,7 @@ module CSVHandler
             else
               MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
               mc = MerchantCustomer.add_or_update_merchant_customer(self, @customer)
+              @customer.update_columns(generate_customer_url_data(row))
               self.create_list_and_user_list(row[:group], mc, 0)
             end
             error_hash.delete(row[:phone_number]) unless error
@@ -556,4 +559,55 @@ module CSVHandler
     end
   end
 
+  def generate_contact_data(row)
+    {
+      first_name: row[:first_name],
+      last_name: row[:last_name],
+      url1: row[:url1],
+      url2: row[:url2],
+      url3: row[:url3],
+      url4: row[:url4],
+      url5: row[:url5],
+      url6: row[:url6],
+      url7: row[:url7],
+      url8: row[:url8],
+      url9: row[:url9],
+      url10: row[:url10],
+      url11: row[:url11],
+      url12: row[:url12],
+      url13: row[:url13],
+      url14: row[:url14],
+      url15: row[:url15],
+      url16: row[:url16],
+      url17: row[:url17],
+      url18: row[:url18],
+      url19: row[:url19],
+      url20: row[:url20]
+    }
+  end
+
+  def generate_customer_url_data(row)
+    {
+      url1: row[:url1],
+      url2: row[:url2],
+      url3: row[:url3],
+      url4: row[:url4],
+      url5: row[:url5],
+      url6: row[:url6],
+      url7: row[:url7],
+      url8: row[:url8],
+      url9: row[:url9],
+      url10: row[:url10],
+      url11: row[:url11],
+      url12: row[:url12],
+      url13: row[:url13],
+      url14: row[:url14],
+      url15: row[:url15],
+      url16: row[:url16],
+      url17: row[:url17],
+      url18: row[:url18],
+      url19: row[:url19],
+      url20: row[:url20]
+    }
+  end
 end

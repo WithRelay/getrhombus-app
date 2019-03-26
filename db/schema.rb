@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190312055948) do
+ActiveRecord::Schema.define(version: 20190326100544) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -504,6 +504,26 @@ ActiveRecord::Schema.define(version: 20190312055948) do
     t.string   "last_name",    limit: 191
     t.string   "organization", limit: 191
     t.string   "email",        limit: 191
+    t.string   "url1",         limit: 191
+    t.string   "url2",         limit: 191
+    t.string   "url3",         limit: 191
+    t.string   "url4",         limit: 191
+    t.string   "url5",         limit: 191
+    t.string   "url6",         limit: 191
+    t.string   "url7",         limit: 191
+    t.string   "url8",         limit: 191
+    t.string   "url9",         limit: 191
+    t.string   "url10",        limit: 191
+    t.string   "url11",        limit: 191
+    t.string   "url12",        limit: 191
+    t.string   "url13",        limit: 191
+    t.string   "url14",        limit: 191
+    t.string   "url15",        limit: 191
+    t.string   "url16",        limit: 191
+    t.string   "url17",        limit: 191
+    t.string   "url18",        limit: 191
+    t.string   "url19",        limit: 191
+    t.string   "url20",        limit: 191
   end
 
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
@@ -587,6 +607,7 @@ ActiveRecord::Schema.define(version: 20190312055948) do
   end
 
   add_index "numbers", ["number"], name: "index_numbers_on_number", using: :btree
+  add_index "numbers", ["user_id", "number"], name: "index_numbers_on_user_id_and_number", using: :btree
   add_index "numbers", ["user_id"], name: "index_numbers_on_user_id", using: :btree
 
   create_table "open_cnam_data", force: :cascade do |t|
@@ -940,6 +961,26 @@ ActiveRecord::Schema.define(version: 20190312055948) do
     t.integer  "auto_reload_amt",        limit: 4,                              default: 2000
     t.string   "relay_uid",              limit: 191
     t.boolean  "enable_payment",         limit: 1,                              default: true
+    t.string   "url1",                   limit: 191
+    t.string   "url2",                   limit: 191
+    t.string   "url3",                   limit: 191
+    t.string   "url4",                   limit: 191
+    t.string   "url5",                   limit: 191
+    t.string   "url6",                   limit: 191
+    t.string   "url7",                   limit: 191
+    t.string   "url8",                   limit: 191
+    t.string   "url9",                   limit: 191
+    t.string   "url10",                  limit: 191
+    t.string   "url11",                  limit: 191
+    t.string   "url12",                  limit: 191
+    t.string   "url13",                  limit: 191
+    t.string   "url14",                  limit: 191
+    t.string   "url15",                  limit: 191
+    t.string   "url16",                  limit: 191
+    t.string   "url17",                  limit: 191
+    t.string   "url18",                  limit: 191
+    t.string   "url19",                  limit: 191
+    t.string   "url20",                  limit: 191
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
