@@ -18,7 +18,7 @@ class AddUrlFieldsToMerchantContacts < ActiveRecord::Migration
     #add_column :merchant_contacts, :url16, :string
     #add_column :merchant_contacts, :url17, :string
     #add_column :merchant_contacts, :url18, :string
-    add_column :merchant_contacts, :url19, :string
+    #add_column :merchant_contacts, :url19, :string
     add_column :merchant_contacts, :url20, :string
 
     add_column :users, :url1, :string
