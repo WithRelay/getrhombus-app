@@ -1,23 +1,23 @@
 class AddUrlFieldsToMerchantContacts < ActiveRecord::Migration
   def change
-    add_column :merchant_contacts, :url1, :string
-    add_column :merchant_contacts, :url2, :string
-    add_column :merchant_contacts, :url3, :string
-    add_column :merchant_contacts, :url4, :string
-    add_column :merchant_contacts, :url5, :string
-    add_column :merchant_contacts, :url6, :string
-    add_column :merchant_contacts, :url7, :string
-    add_column :merchant_contacts, :url8, :string
-    add_column :merchant_contacts, :url9, :string
-    add_column :merchant_contacts, :url10, :string
-    add_column :merchant_contacts, :url11, :string
-    add_column :merchant_contacts, :url12, :string
-    add_column :merchant_contacts, :url13, :string
-    add_column :merchant_contacts, :url14, :string
-    add_column :merchant_contacts, :url15, :string
-    add_column :merchant_contacts, :url16, :string
-    add_column :merchant_contacts, :url17, :string
-    add_column :merchant_contacts, :url18, :string
+    #add_column :merchant_contacts, :url1, :string
+    #add_column :merchant_contacts, :url2, :string
+    #add_column :merchant_contacts, :url3, :string
+    #add_column :merchant_contacts, :url4, :string
+    #add_column :merchant_contacts, :url5, :string
+    #add_column :merchant_contacts, :url6, :string
+    #add_column :merchant_contacts, :url7, :string
+    #add_column :merchant_contacts, :url8, :string
+    #add_column :merchant_contacts, :url9, :string
+    #add_column :merchant_contacts, :url10, :string
+    #add_column :merchant_contacts, :url11, :string
+    #add_column :merchant_contacts, :url12, :string
+    #add_column :merchant_contacts, :url13, :string
+    #add_column :merchant_contacts, :url14, :string
+    #add_column :merchant_contacts, :url15, :string
+    #add_column :merchant_contacts, :url16, :string
+    #add_column :merchant_contacts, :url17, :string
+    #add_column :merchant_contacts, :url18, :string
     add_column :merchant_contacts, :url19, :string
     add_column :merchant_contacts, :url20, :string
 

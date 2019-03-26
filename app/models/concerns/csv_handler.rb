@@ -561,7 +561,7 @@ module CSVHandler
 
   def generate_contact_data(row)
     {
-      first_name: row[:first_name],
+      first_name: row[:first_name], # this can unset existing data
       last_name: row[:last_name],
       url1: row[:url1],
       url2: row[:url2],
