@@ -140,7 +140,7 @@ class Conversation < ActiveRecord::Base
 
   def get_from_number(from_to_use)
     team = self.merchant
-    last_message = ConversationRef.includes(:textable).where(conversation_id: self.id).last.try(:textable)
+    last_message = ConversationRef.includes(:textable).where(conversation_id: self.id).last.try(:textable)   # maybe do a direct messages search here???????????????
     return (from_to_use || team.rhombus_number) unless last_message # Ex. Merchant texting customer/contact for the first time
     from = last_message.user_id == team.id ? last_message.from : last_message.to # inbound/outbound logic
     Number.unscoped.exists?(user_id: team.id, number: from) ? from : (from_to_use || team.rhombus_number) # check that merchant still owns the number else use default

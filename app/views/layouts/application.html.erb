@@ -11,7 +11,7 @@
 
     <!--  favicon -->
     <%= favicon_link_tag '/favicon.ico', rel: 'icon' %>
-    
+
     <!--  CSS files -->
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true  %>
 
@@ -24,7 +24,7 @@
   </head>
 
   <body style="<%= dynamic_pages_overflow_hidden %>" class="<%= add_body_class %> <%= controller.controller_name %> <%= controller.action_name %>"> <%#= needed for conversations page body %>
-    <%= render 'shared/banner' if unauthenticate_controller %>
+    <%#= render 'shared/banner' if unauthenticate_controller %>
     <%#= render 'shared/appcues' if current_user.try(:is_merchant?) %>
     <%= render_header_partial %>
     <%= render 'shared/flash_messages' %>

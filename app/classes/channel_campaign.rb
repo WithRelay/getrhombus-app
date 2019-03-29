@@ -1,7 +1,6 @@
 # Class responsible for sending campaigns to a group of users by channel emails, mms/sms, facebook messenger
 module ChannelCampaign
   class SendCampaign
-
     def initialize(campaign)
       @campaign = campaign
     end
