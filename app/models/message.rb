@@ -139,63 +139,14 @@ class Message < ActiveRecord::Base
 #=begin
   def y
     ary = [
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>],
-      [<redacted_phone_number>]
+
     ]
 
     # nexmo
     ary.each_with_index { |n, i| TextingService.release_number_nexmo(n[0], "CA"); puts i; }
-    #ary.each_with_index { |n, i| TextingService.release_number_nexmo(n[0], n[1]); puts i; }
+    # ary.each_with_index { |n, i| TextingService.release_number_nexmo(n[0], n[1]); puts i; }
     # Twilio
-    #ary.each_with_index { |n, i| TextingService.release_number(n); puts i; }
+    # ary.each_with_index { |n, i| TextingService.release_number(n); puts i; }
   end
 
   def z
@@ -456,5 +407,4 @@ class Message < ActiveRecord::Base
     # ary.each_with_index { |n, i| TextingService.update_nexmo_number("CA", n, 'tel', "<redacted_phone_number>"); puts i; }
   end
 #=end
-
 end
