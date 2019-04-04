@@ -25,6 +25,8 @@ gem 'perfect-scrollbar-rails', '~> 0.6.10'
 gem 'exception_notification'
 gem 'slack-notifier'
 
+gem 'net-sftp', '~> 2.1', '>= 2.1.2'
+
 #gem 'cocoon'
 gem "stripe"
 gem 'omniauth-stripe-connect'

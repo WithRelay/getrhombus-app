@@ -33,12 +33,10 @@
 =end
 
     [21565, 21406].each do |user_id|
-
       csv_string = CSV.generate do |csv|
         count = 0
         csv << ['Phone Number', 'Response', 'Segment', 'Campaign', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID']
         #campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", (4617..4685).to_a, user_id)
-
 
         campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [5912, 5913, 5876, 5878, 5879, 5880, 5881, 5882, 5883, 5884, 5885, 5886], user_id)
 
@@ -62,5 +60,4 @@
       attachment_hash = { attachments: [ { content: Base64.encode64(csv_string), name: "file.csv", type: "text/csv" } ] }
       EmailingService.email_to_platform("See Attached for User ID #{user_id}", 'RMG Data', attachment_hash)
     end
-
   end
