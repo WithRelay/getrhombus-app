@@ -139,7 +139,16 @@ class Message < ActiveRecord::Base
 #=begin
   def y
     ary = [
-
+      [<redacted_phone_number>],
+      [<redacted_phone_number>],
+      [<redacted_phone_number>],
+      [<redacted_phone_number>],
+      [<redacted_phone_number>],
+      [<redacted_phone_number>],
+      [<redacted_phone_number>],
+      [<redacted_phone_number>],
+      [<redacted_phone_number>],
+      [<redacted_phone_number>]
     ]
 
     # nexmo
