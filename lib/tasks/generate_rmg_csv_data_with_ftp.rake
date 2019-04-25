@@ -14,16 +14,17 @@ task generate_rmg_csv_data_with_ftp: :environment do
 
   # .where(id: [10507]) #10731
   time = Time.now.to_i
-  Campaign.includes(user_lists: :customer_contact)
+  Campaign.includes(:user, user_lists: [:customer_contact])
           .where(user_id: [29590, 29591, 29592])
-          .find_in_batches(batch_size: 110)
+          .find_in_batches(batch_size: 45)
           .with_index do |campaigns, index|
     csv_string = CSV.generate do |csv|
       count = 0
-      csv << ['Phone Number', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID']
+      csv << ['Phone Number', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'Account', 'Campaign Sent (ET)']
       campaigns.each do |campaign|
         next if campaign.try(:user_lists).blank?
 
+        user = campaign.user
         user_id = campaign.user_id
         list = campaign.user_lists.first.try(:list)
         campaign.user_lists.each do |ul|
@@ -36,7 +37,7 @@ task generate_rmg_csv_data_with_ftp: :environment do
           end
 
           messages.each do |m|
-            csv << [m.from, m.text, list.try(:name), campaign.name, campaign.text, m.created_at.strftime('%Y-%m-%d %H:%M:%S'), m.id, list.try(:id), campaign.id]
+            csv << [m.from, m.text, list.try(:name), campaign.name, campaign.text, m.created_at.strftime('%Y-%m-%d %H:%M:%S'), m.id, list.try(:id), campaign.id, user.email, campaign.created_at.strftime('%Y-%m-%d %H:%M:%S')]
             count += 1
             puts count
           end
