@@ -15,7 +15,7 @@ task generate_rmg_csv_data_with_ftp: :environment do
   # .where(id: [10507]) #10731
   time = Time.now.to_i
   Campaign.includes(:user, user_lists: [:customer_contact])
-          .where(user_id: [29590, 29591, 29592])
+          .where(user_id: [29544, 29860, 29861])
           .find_in_batches(batch_size: 45)
           .with_index do |campaigns, index|
     csv_string = CSV.generate do |csv|
