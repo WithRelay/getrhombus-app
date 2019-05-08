@@ -41,11 +41,11 @@ module CSVHandler
   end
 
   def get_contact_csv_template
-    attributes = ['phone_number', 'group', 'first_name', 'last_name']
+    attributes = ['phone_number', 'group', 'first_name', 'last_name', 'van_id']
     CSV.generate(headers: true) do |csv|
       csv << attributes
-      csv << ['<redacted_phone_number>', 'Avengers', 'Tony', 'Stark']
-      csv << ['<redacted_phone_number>', 'Not Avengers', 'Doctor', 'Strange']
+      csv << ['<redacted_phone_number>', 'Avengers', 'Tony', 'Stark', 'abcd']
+      csv << ['<redacted_phone_number>', 'Not Avengers', 'Doctor', 'Strange', '1234']
     end
   end
 
@@ -463,7 +463,7 @@ module CSVHandler
       # headers = [:phone_number, :first_name, :last_name, :organization, :email]
       #
 
-      headers = [:phone_number, :group, :first_name, :last_name]
+      headers = [:phone_number, :group, :first_name, :last_name, :van_id]
       file_data = CSV.read(file_path, encoding: 'ISO-8859-1', headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
       file_headers = file_data.headers
 
@@ -582,7 +582,8 @@ module CSVHandler
       url17: row[:url17],
       url18: row[:url18],
       url19: row[:url19],
-      url20: row[:url20]
+      url20: row[:url20],
+      van_id: row[:van_id]
     }
   end
 

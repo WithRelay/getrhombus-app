@@ -242,13 +242,13 @@ class User < ActiveRecord::Base
     count > 0
   end
 
-  def create_fibernetics_subscriber
-    #re = TextingService.create_fibernetics_subscriber(self.rhombus_number)
-    #self.update_columns(fn_subscriber_id: re, rn_friendly_name: nil, rn_type: nil, rn_country: nil) if re
+  def create_fibernetics_subscriber(validate_carrier = true)
+    # re = TextingService.create_fibernetics_subscriber(self.rhombus_number)
+    # self.update_columns(fn_subscriber_id: re, rn_friendly_name: nil, rn_type: nil, rn_country: nil) if re
 
     user_numbers = self.numbers
     user_numbers.each do |un|
-      re = TextingService.create_fibernetics_subscriber(un.number)
+      re = TextingService.create_fibernetics_subscriber(un.number, validate_carrier)
       un.update_columns(fibernetics_subscriber_id: re) if re
     end
   end

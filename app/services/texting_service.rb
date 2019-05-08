@@ -142,15 +142,15 @@ class TextingService
       nil
     end
 
-    def create_fibernetics_subscriber(fn_num)
+    def create_fibernetics_subscriber(fn_num, validate_carrier = true)
       begin
-        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET], ["phone_number", fn_num] ])
-        re = HTTParty.post("https://smsadmin.fongo.com/CreateSubscriber.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
-        return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == "OK"
+        uri = URI.encode_www_form([['account_id', FIBERNETICS_API_KEY], ['auth_token', FIBERNETICS_API_SECRET], ['phone_number', fn_num], ['validate_carrier', validate_carrier]])
+        re = HTTParty.post("https://smsadmin.fongo.com/CreateSubscriber.ashx?#{uri}", headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
+        return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == 'OK'
       rescue Timeout::Error => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber timeout", fn_num: fn_num })
+        ExceptionNotifier.notify_exception(err, data: { message: 'In create_fibernetics_subscriber timeout', fn_num: fn_num })
       rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In create_fibernetics_subscriber", fn_num: fn_num })
+        ExceptionNotifier.notify_exception(err, data: { message: 'In create_fibernetics_subscriber', fn_num: fn_num })
       end
       nil
     end
