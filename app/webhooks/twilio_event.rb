@@ -18,7 +18,7 @@ class TwilioEvent
     Message.where(message_id: @params[:MessageSid])
       .update_all(message_timestamp: @data.date_sent,
         message_price: @data.price, status: @params[:MessageStatus], error_text: @data.error_message,
-        error_code: @data.error_code, num_segments: @data.num_segments, price_unit: @data.price_unit)
+        error_code: @data.error_code, num_segments: @data.num_segments)#, price_unit: @data.price_unit)
   end
 
   # when message is sent to rhombus
@@ -49,7 +49,7 @@ class TwilioEvent
         text: @params[:Body].strip,
         num_segments: num_segments,
         num_media: num_media,
-        price_unit: @data.price_unit,
+        #price_unit: @data.price_unit,
         message_timestamp: @data.date_updated,
         message_price: @data.price,
         relay_price: price,
