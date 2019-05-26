@@ -20,7 +20,7 @@ task generate_rmg_csv_data_with_ftp: :environment do
           .with_index do |campaigns, index|
     csv_string = CSV.generate do |csv|
       count = 0
-      csv << ['Phone Number', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'Account', 'Campaign Sent (ET)']
+      csv << ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'Account', 'Campaign Sent (ET)']
       campaigns.each do |campaign|
         next if campaign.try(:user_lists).blank?
 
@@ -37,7 +37,7 @@ task generate_rmg_csv_data_with_ftp: :environment do
           end
 
           messages.each do |m|
-            csv << [m.from, m.text, list.try(:name), campaign.name, campaign.text, m.created_at.strftime('%Y-%m-%d %H:%M:%S'), m.id, list.try(:id), campaign.id, user.email, campaign.created_at.strftime('%Y-%m-%d %H:%M:%S')]
+            csv << [m.from, m.to, m.text, list.try(:name), campaign.name, campaign.text, m.created_at.strftime('%Y-%m-%d %H:%M:%S'), m.id, list.try(:id), campaign.id, user.email, campaign.created_at.strftime('%Y-%m-%d %H:%M:%S')]
             count += 1
             puts count
           end

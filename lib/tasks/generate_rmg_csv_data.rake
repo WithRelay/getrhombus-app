@@ -35,7 +35,7 @@
     [21565, 21406].each do |user_id|
       csv_string = CSV.generate do |csv|
         count = 0
-        csv << ['Phone Number', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID']
+        csv << ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID']
         #campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", (4617..4685).to_a, user_id)
 
         campaigns = Campaign.includes(user_lists: :customer_contact).where("id in (?) and user_id = ?", [5912, 5913, 5876, 5878, 5879, 5880, 5881, 5882, 5883, 5884, 5885, 5886], user_id)
@@ -47,7 +47,7 @@
               if ul.customer_contact.present?
                 messages = Message.where("user_id_to = #{user_id} and `from` = #{ul.customer_contact.uid} and created_at > '#{campaign.created_at.to_s(:db)}'")
                 messages.each do |m|
-                  csv << [m.from, m.text, list.try(:name), campaign.name, campaign.text, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id, list.try(:id), campaign.id]
+                  csv << [m.from, m.to, m.text, list.try(:name), campaign.name, campaign.text, m.created_at.strftime("%Y-%m-%d %H:%M:%S"), m.id, list.try(:id), campaign.id]
                   count = count + 1
                   puts count
                 end
