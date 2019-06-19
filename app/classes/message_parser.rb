@@ -8,7 +8,7 @@ class MessageParser
   # customer can be nil
   def process_message(merchant, customer, uid, uid_type, received_msg, channel)
     begin
-      return if received_msg.text.blank?
+      return if received_msg.text.blank? || !merchant.enable_payment?
 
       # tested
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }

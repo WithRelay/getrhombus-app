@@ -501,6 +501,19 @@ class TextingService
       end
     end
 
+    def all
+      begin
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
+        client.incoming_phone_numbers.list.each { |n| puts n.phone_number.to_s.reverse[0...11].reverse }
+        true
+      rescue StandardError => err
+        ExceptionNotifier.notify_exception(err, data: { message: "In texting service release_number", num: num, env: Rails.env })
+        false
+      end
+    end
+
+
     # it fetches all message information since only limited message response we got from webhook for sent/received message
     def fetch_message_details(message_id)
       begin
