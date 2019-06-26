@@ -73,5 +73,5 @@ task generate_rmg_csv_data_with_ftp2: :environment do
     temp_file.close!
     puts 'exiting ftp'
   end
-  end
+
 end
