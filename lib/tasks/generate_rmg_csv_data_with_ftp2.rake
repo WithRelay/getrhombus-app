@@ -22,7 +22,7 @@ task generate_rmg_csv_data_with_ftp2: :environment do
   # .where("created_at > '2019-06-01 00:00:00'")
       #    .find_in_batches(batch_size: 20)
 
-  campaigns = Campaign.includes(:user, user_lists: [:customer_contact]).where(id: [12930,12931,12932,12921,12922,12892,12893,12894,12886,12887,12888,12889,12890,12891])
+  campaigns = Campaign.includes(:user, user_lists: [:customer_contact]).where(id: [12930,12931,12932])#,12921,12922,12892,12893,12894,12886,12887,12888,12889,12890,12891])
 
   campaigns.each do |campaign|
     next if campaign.try(:user_lists).blank?
@@ -72,5 +72,6 @@ task generate_rmg_csv_data_with_ftp2: :environment do
     end
     temp_file.close!
     puts 'exiting ftp'
+  end
   end
 end

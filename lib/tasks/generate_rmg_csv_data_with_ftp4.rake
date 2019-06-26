@@ -18,7 +18,7 @@ task generate_rmg_csv_data_with_ftp4: :environment do
   directory_created = false
 
   # WOULD BE GOOD TO KNOW THE TOTAL OR WHEN THIS IS DONE
-  campaigns = Campaign.includes(:user, user_lists: [:customer_contact]).where(id: [12936,12937,12938,12942,12943,12944,12898,12899,12900,12907,12908,12909,12910,12911,12912])
+  campaigns = Campaign.includes(:user, user_lists: [:customer_contact]).where(id: [12936,12937,12938])#,12942,12943,12944,12898,12899,12900,12907,12908,12909,12910,12911,12912])
 
 
     campaigns.each do |campaign|
