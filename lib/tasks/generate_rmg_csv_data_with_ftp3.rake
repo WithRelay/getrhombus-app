@@ -18,9 +18,8 @@ task generate_rmg_csv_data_with_ftp3: :environment do
   directory_created = false
 
   # WOULD BE GOOD TO KNOW THE TOTAL OR WHEN THIS IS DONE
-  Campaign.includes(:user, user_lists: [:customer_contact])
-          .where(id: [12933,12934,12935,12927,12928,12895,12896,12897,12901,12902,12903,12904,12905,12906])
-          .with_index do |campaigns, index|
+  campaigns = Campaign.includes(:user, user_lists: [:customer_contact]).where(id: [12933,12934,12935,12927,12928,12895,12896,12897,12901,12902,12903,12904,12905,12906])
+
 
     campaigns.each do |campaign|
       next if campaign.try(:user_lists).blank?
@@ -71,5 +70,5 @@ task generate_rmg_csv_data_with_ftp3: :environment do
       temp_file.close!
       puts 'exiting ftp'
     end
-  end
+
 end
