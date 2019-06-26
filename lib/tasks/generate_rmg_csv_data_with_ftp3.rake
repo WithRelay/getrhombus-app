@@ -19,9 +19,7 @@ task generate_rmg_csv_data_with_ftp3: :environment do
 
   # WOULD BE GOOD TO KNOW THE TOTAL OR WHEN THIS IS DONE
   Campaign.includes(:user, user_lists: [:customer_contact])
-          .where(user_id: [47941,47942])
-          .where("created_at > '2019-06-01 00:00:00'")
-          .find_in_batches(batch_size: 20)
+          .where(id: [12933,12934,12935,12927,12928,12895,12896,12897,12901,12902,12903,12904,12905,12906])
           .with_index do |campaigns, index|
 
     campaigns.each do |campaign|

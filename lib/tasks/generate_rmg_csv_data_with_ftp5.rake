@@ -1,5 +1,5 @@
 desc 'generate rmg csv data with ftp'
-task generate_rmg_csv_data_with_ftp4: :environment do
+task generate_rmg_csv_data_with_ftp5: :environment do
   require 'csv'
   require 'tempfile'
   require 'net/sftp'
@@ -19,7 +19,7 @@ task generate_rmg_csv_data_with_ftp4: :environment do
 
   # WOULD BE GOOD TO KNOW THE TOTAL OR WHEN THIS IS DONE
   Campaign.includes(:user, user_lists: [:customer_contact])
-          .where(id: [12936,12937,12938,12942,12943,12944,12898,12899,12900,12907,12908,12909,12910,12911,12912])
+          .where(id: [12939,12940,12941,12923,12929,12924,12925,12926,12913,12915,12916,12918,12919,12920])
           .with_index do |campaigns, index|
 
     campaigns.each do |campaign|
