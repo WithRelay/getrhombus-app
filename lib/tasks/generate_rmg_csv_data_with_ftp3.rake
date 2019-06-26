@@ -24,14 +24,15 @@ task generate_rmg_csv_data_with_ftp3: :environment do
           .find_in_batches(batch_size: 20)
           .with_index do |campaigns, index|
 
-    csv_string = CSV.generate do |csv|
-      count = 0
-      csv << ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'Account', 'Campaign Sent (ET)']
+    campaigns.each do |campaign|
+      next if campaign.try(:user_lists).blank?
 
-      campaigns.each do |campaign|
-        next if campaign.try(:user_lists).blank?
+      user = campaign.user
 
-        user = campaign.user
+      csv_string = CSV.generate do |csv|
+        count = 0
+        csv << ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'Account', 'Campaign Sent (ET)']
+
         user_id = campaign.user_id
         list = campaign.user_lists.first.try(:list)
 
@@ -50,27 +51,27 @@ task generate_rmg_csv_data_with_ftp3: :environment do
             puts count
           end
         end
-
-        # FTP Here
-        puts 'Creating file'
-        filename = "#{user.email} - #{campaign.name}.csv"
-        temp_file = Tempfile.new(filename)
-        temp_file.write(csv_string)
-        temp_file.close
-
-        puts 'connecting to ftp'
-        Net::SFTP.start(CONTENT_SERVER_DOMAIN_NAME, CONTENT_SERVER_FTP_LOGIN, { password: CONTENT_SERVER_FTP_PASSWORD, port: PORT }) do |sftp|
-          begin
-            sftp.mkdir!("/DataGoesHere/#{date}") unless directory_created
-            directory_created = true
-          rescue Net::SFTP::StatusException => e
-          end
-          # upload a file or directory to the remote host
-          sftp.upload!(temp_file.path, "/DataGoesHere/#{date}/#{filename}")
-        end
-        temp_file.close!
-        puts 'exiting ftp'
       end
+
+      # FTP Here
+      puts 'Creating file'
+      filename = "#{user.email} - #{campaign.name}.csv"
+      temp_file = Tempfile.new(filename)
+      temp_file.write(csv_string)
+      temp_file.close
+
+      puts 'connecting to ftp'
+      Net::SFTP.start(CONTENT_SERVER_DOMAIN_NAME, CONTENT_SERVER_FTP_LOGIN, { password: CONTENT_SERVER_FTP_PASSWORD, port: PORT }) do |sftp|
+        begin
+          sftp.mkdir!("/DataGoesHere/#{date}") unless directory_created
+          directory_created = true
+        rescue Net::SFTP::StatusException => e
+        end
+        # upload a file or directory to the remote host
+        sftp.upload!(temp_file.path, "/DataGoesHere/#{date}/#{filename}")
+      end
+      temp_file.close!
+      puts 'exiting ftp'
     end
   end
 end
