@@ -835,8 +835,6 @@ class Message < ActiveRecord::Base
     #b.find_all { |e| puts e if b.count(e) > 1 }
     nil
   end
-
-
 end
 
 

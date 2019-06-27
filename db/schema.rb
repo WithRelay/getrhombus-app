@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190326100544) do
+ActiveRecord::Schema.define(version: 20190508051909) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -524,6 +524,7 @@ ActiveRecord::Schema.define(version: 20190326100544) do
     t.string   "url18",        limit: 191
     t.string   "url19",        limit: 191
     t.string   "url20",        limit: 191
+    t.string   "van_id",       limit: 191
   end
 
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
