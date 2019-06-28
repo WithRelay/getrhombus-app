@@ -754,13 +754,13 @@ task :buy_nexmo_numbers => :environment do
 
   ary = []
   # toll free provisioning
-  users = User.where(id: [47942])             # <<<<-------------------
+  users = User.where(id: [47945])             # <<<<-------------------
   #  29860, 29544
   country = 'CA'
-  pattern = '1519'                             # <<<<-------------------
+  pattern = '1250'                             # <<<<-------------------
   size = 100
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 242                        # <<<<-------------------
+  max_total = 274                        # <<<<-------------------
   # index = 2
 
   users.each do |u|
@@ -782,7 +782,7 @@ task :buy_nexmo_numbers => :environment do
             if res
               fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
               u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: default, provider: 'nexmo', price: '210')
-              TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
+              #TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
             end
           end
         end
@@ -792,15 +792,16 @@ task :buy_nexmo_numbers => :environment do
     end
   end
 
-  ary = []
+
+ ary = []
   # toll free provisioning
-  users = User.where(id: [47942])             # <<<<-------------------
+  users = User.where(id: [47945])             # <<<<-------------------
   #  29860, 29544
   country = 'CA'
-  pattern = '1519'                             # <<<<-------------------
-  size = 20
+  pattern = '1250'                             # <<<<-------------------
+  size = 100
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 253                        # <<<<-------------------
+  max_total = 374                        # <<<<-------------------
   # index = 2
 
   users.each do |u|
@@ -822,7 +823,7 @@ task :buy_nexmo_numbers => :environment do
             if res
               fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
               u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: default, provider: 'nexmo', price: '210')
-              TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
+              #TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
             end
           end
         end
@@ -831,4 +832,8 @@ task :buy_nexmo_numbers => :environment do
       total = u.numbers.count
     end
   end
+
+
+
+
 end

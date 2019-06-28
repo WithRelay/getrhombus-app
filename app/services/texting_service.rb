@@ -208,11 +208,32 @@ class TextingService
         # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
 
-        client.api.available_phone_numbers('CA').local.list(area_code: '709').each_with_index do |n, i|
+        #client.api.available_phone_numbers('US').local.list(area_code: '415', page_size: 100, limit: 100).each_with_index do |n, i|
+        client.api.available_phone_numbers('CA').local.list(in_region: 'BC', limit: 100).each_with_index do |n, i|
           puts n.phone_number
           puts i
         end
 
+    end
+
+
+    def search_number2(params)
+      s = {}
+
+      40.times do
+      #begin
+        # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+
+        #client.api.available_phone_numbers('US').local.list(area_code: '415', page_size: 100, limit: 100).each_with_index do |n, i|
+        client.api.available_phone_numbers('CA').local.list(in_region: 'BC', page_size: 100, limit: 100).each_with_index do |n, i|
+          s[n.phone_number] = 1
+          #puts n.phone_number
+          #puts i
+        end
+      end
+
+      s.keys.length
     end
 
 
