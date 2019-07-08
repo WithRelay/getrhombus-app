@@ -752,15 +752,16 @@ task :buy_nexmo_numbers => :environment do
 
 #=end
 
+
   ary = []
   # toll free provisioning
-  users = User.where(id: [47945])             # <<<<-------------------
+  users = User.where(id: [48254])             # <<<<-------------------
   #  29860, 29544
   country = 'CA'
-  pattern = '1250'                             # <<<<-------------------
-  size = 100
+  pattern = '1306'                             # <<<<-------------------
+  size = 90
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 274                        # <<<<-------------------
+  max_total = 80                        # <<<<-------------------
   # index = 2
 
   users.each do |u|
@@ -782,7 +783,7 @@ task :buy_nexmo_numbers => :environment do
             if res
               fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
               u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: default, provider: 'nexmo', price: '210')
-              #TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
+              TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
             end
           end
         end
@@ -792,16 +793,15 @@ task :buy_nexmo_numbers => :environment do
     end
   end
 
-
- ary = []
+  ary = []
   # toll free provisioning
-  users = User.where(id: [47945])             # <<<<-------------------
+  users = User.where(id: [48253])             # <<<<-------------------
   #  29860, 29544
   country = 'CA'
-  pattern = '1250'                             # <<<<-------------------
-  size = 100
+  pattern = '1204'                             # <<<<-------------------
+  size = 91
   type = 'mobile-lvn' #'landline-toll-free'
-  max_total = 374                        # <<<<-------------------
+  max_total = 120                        # <<<<-------------------
   # index = 2
 
   users.each do |u|
@@ -823,7 +823,7 @@ task :buy_nexmo_numbers => :environment do
             if res
               fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
               u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: default, provider: 'nexmo', price: '210')
-              #TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
+              TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
             end
           end
         end
