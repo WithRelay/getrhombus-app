@@ -47,7 +47,7 @@ task generate_rmg_csv_data_with_ftp_new: :environment do
   directory_created = false
   since_date_time = (Time.now.utc - 24.hours).to_s(:db).freeze
   date = (DateTime.now - 24.hours).strftime("%b %d, %Y").freeze
-  remote_folder = "/DataGoesHere/test 1 Campaigns"
+  remote_folder = "/DataGoesHere/#{date} Campaigns"
   header = ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'VAN ID'].freeze
 
   users.each do |user|
