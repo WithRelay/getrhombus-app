@@ -1,5 +1,5 @@
 desc 'generate rmg csv data with ftp'
-task generate_rmg_csv_data_with_ftp_new2: :environment do
+task generate_rmg_csv_data_with_ftp_new4: :environment do
   require 'csv'
   require 'tempfile'
   require 'net/sftp'
@@ -30,7 +30,7 @@ task generate_rmg_csv_data_with_ftp_new2: :environment do
                     on mc.id = ul.customer_contact_id
                   inner join messages m
                     on m.from = mc.uid
-                  where c.user_id = ?
+                  where c.id = ?
                     and m.user_id_to = ?
                     and m.created_at > ?"
                     #and c.updated_at > ?"
@@ -79,26 +79,21 @@ task generate_rmg_csv_data_with_ftp_new2: :environment do
   #date = (DateTime.now - 24.hours).strftime("%b %d, %Y").freeze #(DateTime.now).strftime("%b %d, %Y").freeze
   remote_folder = "/DataGoesHere/Aug 28, 2019 Request 1" #{date} Funnel Campaigns - All Accounts"
   header = ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'VAN ID'].freeze
-  #header = ['Phone Number', 'Response', 'Campaign', 'Campaign Sent (ET)', 'Message ID'].freeze
 
   users.each_with_index do |user,i|
-    #puts "#{user.email} - #{i} of #{users.size}"
-    #first_campaign = Campaign.where(user_id: user.id).where("created_at > ?", since_date_time).order(id: :asc).limit(1).first
-    #first_campaign = Campaign.where(user_id: user.id).where("created_at > ? and created_at < ?", since_date_time, max_date_time).order(id: :asc).limit(1).first
-    #first_campaign = Campaign.where(user_id: user.id).order(id: :asc).limit(1).first
+    puts "#{user.email} - #{i} of #{users.size}"
+    messages = []
+    campaigns = Campaign.where(user_id: user.id).order(id: :asc)
 
-    if true #first_campaign.try(:created_at).present?
-      #messages = Message.find_by_sql([query_string, since_date_time, user.id, user.id, first_campaign.created_at.to_s(:db)])
-      #messages = Message.find_by_sql([query_string, since_date_time, max_date_time, user.id, user.id, first_campaign.created_at.to_s(:db)])
-      #messages = Message.find_by_sql([query_string, user.id, user.id, first_campaign.created_at.to_s(:db)])
-      #messages = Message.find_by_sql([query_string, user.id, user.id, '2019-08-09 20:28:23', '2019-08-09 20:28:23'])#, '2019-07-01 04:00:00'])
-      messages = Message.find_by_sql([query_string, user.id, user.id, '2019-08-09 20:28:23'])#, '2019-07-01 04:00:00'])
+    campaigns.each do |c|
+      puts "campaign  #{c.name}"
+      messages.concat(Message.find_by_sql([query_string, c.id, user.id, c.created_at.to_s(:db)]))
+    end
 
-
+    if messages.present?
       csv_string = CSV.generate do |csv|
         csv << header
         messages.each { |m| csv << [m[header[0]], m[header[1]], m[header[2]], m[header[3]], m[header[4]], m[header[5]], m[header[6]].to_time.strftime("%Y-%m-%d %H:%M:%S"), m[header[7]], m[header[8]], m[header[9]]] }
-        #messages.each { |m| csv << [m[header[0]], m[header[1]], m[header[2]], m[header[3]].to_time.strftime("%Y-%m-%d %H:%M:%S"), m[header[4]]] }
       end
 
       # FTP Here

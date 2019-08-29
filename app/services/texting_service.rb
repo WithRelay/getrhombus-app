@@ -16,6 +16,7 @@ class TextingService
   FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics["secret"]
 
   class << self
+    #TextingService.send_sms_nexmo("<redacted_phone_number>", "<redacted_phone_number>", "ᐃᓄᒃᑎᑐᑦ inatutuke", "")
 
     def send_sms_nexmo(from, to, message, client_ref)
       begin
@@ -23,7 +24,7 @@ class TextingService
         to = to[1..-1] if to.chr == "+"
 
         # encode the nexmo uri
-        uri = URI.encode_www_form([["api_key", NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message], ['client-ref', client_ref]])
+        uri = URI.encode_www_form([["api_key", NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message], ['client-ref', client_ref], ['type', 'text']])
         # ["status-report-req", 1]
         [true, HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})]
       rescue StandardError => err
