@@ -287,8 +287,24 @@ class Message < ActiveRecord::Base
   end
 
   def r
-    user = User.find_by(id: 12570)
+    user = User.find_by(id: 21405)
     ary = [
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
+      "<redacted_phone_number>",
       "<redacted_phone_number>",
       "<redacted_phone_number>",
       "<redacted_phone_number>",
@@ -299,8 +315,8 @@ class Message < ActiveRecord::Base
     ary.each_with_index do |n, i|
       n = n.to_s
       res = TextingService.buy_number_nexmo("CA", n)
-      #default = i == 0 ? 1 : 0
-      default = 0
+      default = i == 0 ? 1 : 0
+      #default = 0
       fn = '(' + n[1..3] + ') ' + n[4..6] + '-' + n[7..10]
       user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default, provider: 'nexmo', price: '210')
     end
