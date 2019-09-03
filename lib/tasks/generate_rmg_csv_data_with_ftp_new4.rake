@@ -18,6 +18,28 @@ task generate_rmg_csv_data_with_ftp_new4: :environment do
 "<redacted_email>",
 "<redacted_email>",
 "<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
+"<redacted_email>",
 "<redacted_email>"])
 
   query_string = "select
@@ -83,7 +105,7 @@ task generate_rmg_csv_data_with_ftp_new4: :environment do
   #since_date_time = (Time.now.utc - 40.hours).to_s(:db).freeze
   #max_date_time = '2019-07-06 01:57:49' #(Time.now.utc - 24.hours).to_s(:db).freeze
   #date = (DateTime.now - 24.hours).strftime("%b %d, %Y").freeze #(DateTime.now).strftime("%b %d, %Y").freeze
-  remote_folder = "/DataGoesHere/Aug 30, 2019 Request 2" #{date} Funnel Campaigns - All Accounts"
+  remote_folder = "/DataGoesHere/Sep 03, 2019 Request 1" #{date} Funnel Campaigns - All Accounts"
   header = ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'VAN ID'].freeze
 
   users.each_with_index do |user,i|
