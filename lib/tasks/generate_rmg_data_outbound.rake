@@ -9,82 +9,47 @@ task generate_rmg_data_outbound: :environment do
   CONTENT_SERVER_FTP_LOGIN = '<redacted_ftp_username>'.freeze
   PORT = 22
 
-  users = User.where(email: ['<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>'])
+  users = User.where(email: ["<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>",
+    "<redacted_email>"
+  ])
 
   filename = ''
   csv_string = ''
   temp_file = nil
   directory_created = false
-  remote_folder = "/DataGoesHere/Sep 17, 2019 Request 2" #{date} Funnel Campaigns - All Accounts"
+  remote_folder = "/DataGoesHere/Oct 09, 2019 Request 2" #{date} Funnel Campaigns - All Accounts"
   header = ['Phone Number', 'Datestamp'].freeze
 
   users.each_with_index do |user,i|
     puts "#{user.email} - #{i} of #{users.size}"
-    Message.select(:id, :created_at, :to).where(user_id: user.id).find_in_batches(batch_size: 999998).with_index do |messages, index|
+    Message.select(:id, :created_at, :to).where(user_id: user.id).where("`created_at` > '2019-09-03 04:00:00'").find_in_batches(batch_size: 999998).with_index do |messages, index|
       if messages.present?
         csv_string = CSV.generate do |csv|
           csv << header
