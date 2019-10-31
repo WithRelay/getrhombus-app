@@ -12,55 +12,55 @@ class DripCampaignJob
       if diff_in_days == 2
         EmailingService.send_proactive_support_email(user)
       elsif diff_in_days == 4
-        EmailingService.schedule_demo_email(user)
+        #EmailingService.schedule_demo_email(user)
       # Customer Import & Campaigns (5 days after sign-up)
       elsif diff_in_days == 5
-        EmailingService.customer_import_campaigns(user)
+        #EmailingService.customer_import_campaigns(user)
       elsif diff_in_days == 7
-        EmailingService.offer_to_help(user) unless user.is_active_merchant?
+        #EmailingService.offer_to_help(user) unless user.is_active_merchant?
       # Connect Facebook Messenger (9 days after sign-up)
       elsif diff_in_days == 9
-        EmailingService.connect_facebook_messenger(user)
+        #EmailingService.connect_facebook_messenger(user)
       # Add Bank Account (12 days after sign-up)
       elsif diff_in_days == 12
-        EmailingService.add_bank_account(user)
+        #EmailingService.add_bank_account(user)
       # Lists (18 days after sign-up)
       elsif diff_in_days == 18
-        EmailingService.lists(user)
+        #EmailingService.lists(user)
       # Customer Segmentation (24 days after sign-up)
       elsif diff_in_days == 24
-        EmailingService.customer_segmentation(user)
+        #EmailingService.customer_segmentation(user)
       # In-Chat Payments (30 days after sign-up)
       elsif diff_in_days == 30
-        EmailingService.in_chat_payments(user)
+        #EmailingService.in_chat_payments(user)
       elsif diff_in_days == 31
-        EmailingService.one_month_followup(user)
+        #EmailingService.one_month_followup(user)
       # Virtual Terminal - Charge/Pre-authorize Transactions (36 days after sign-up)
       elsif diff_in_days == 36
-        EmailingService.pre_authorize_transactions(user)
+        #EmailingService.pre_authorize_transactions(user)
       # Plans & Subscriptions (42 days after sign-up)
       elsif diff_in_days == 42
-        EmailingService.plans_and_subscriptions(user)
+        #EmailingService.plans_and_subscriptions(user)
       # Saved Replies (50 days)
       elsif diff_in_days == 50
-        EmailingService.saved_replies(user)
+        #EmailingService.saved_replies(user)
       # Message Reason (57 days)
       elsif diff_in_days == 57
-        EmailingService.message_reason(user)
+        #EmailingService.message_reason(user)
       # Campaign Templates (64 days)
       elsif diff_in_days == 64
-        EmailingService.campaign_templates(user)
+        #EmailingService.campaign_templates(user)
       # Set Customer Notifications (74 days)
       elsif diff_in_days == 74
-        EmailingService.set_customer_notifications(user)
+        #EmailingService.set_customer_notifications(user)
       # Hashtags/Keywords (84 days)
       elsif diff_in_days == 84
-        EmailingService.hashtag_keywords(user)
+        #EmailingService.hashtag_keywords(user)
       elsif diff_in_days == 91
-        EmailingService.three_month_followup(user)
+        #EmailingService.three_month_followup(user)
       # First-time Message Auto-response (100 days)
       elsif diff_in_days == 100
-        EmailingService.first_time_message_auto_response(user)
+        #EmailingService.first_time_message_auto_response(user)
       end
 
     end

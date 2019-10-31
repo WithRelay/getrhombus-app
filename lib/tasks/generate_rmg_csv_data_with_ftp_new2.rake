@@ -12,31 +12,7 @@ task generate_rmg_csv_data_with_ftp_new2: :environment do
   #users = User.where("email like ? or email like ?", "<redacted_email>", "<redacted_email>").where(user_level: 1).where.not(id: [12569, 12570, 21401, 13119, 22480, 13118, 13117, 26863, 26633])
   # users = User.where(id: [48162, 47945, 48188, 47943, 48175, 47942, 47944, 48186, 47941, 13912])
   #users = User.where(id: [49052])
-  users = User.where(email: ["<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
-    "<redacted_email>",
+  users = User.where(email: [
     "<redacted_email>",
     "<redacted_email>",
     "<redacted_email>",
@@ -60,8 +36,8 @@ task generate_rmg_csv_data_with_ftp_new2: :environment do
                   inner join messages m
                     on m.from = mc.uid
                   where c.user_id = ?
-                    and m.user_id_to = ?
-                    and m.created_at > ?"
+                    and m.user_id_to = ?"
+                    #and m.created_at > ?"
                     #and c.updated_at > ?"
 
                     #where c.updated_at > ?
@@ -106,7 +82,7 @@ task generate_rmg_csv_data_with_ftp_new2: :environment do
   #since_date_time = (Time.now.utc - 40.hours).to_s(:db).freeze
   #max_date_time = '2019-07-06 01:57:49' #(Time.now.utc - 24.hours).to_s(:db).freeze
   #date = (DateTime.now - 24.hours).strftime("%b %d, %Y").freeze #(DateTime.now).strftime("%b %d, %Y").freeze
-  remote_folder = "/DataGoesHere/Oct 09, 2019 Request 1" #{date} Funnel Campaigns - All Accounts"
+  remote_folder = "/DataGoesHere/Oct 31, 2019 Request 1" #{date} Funnel Campaigns - All Accounts"
   header = ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'VAN ID'].freeze
   #header = ['Phone Number', 'Response', 'Campaign', 'Campaign Sent (ET)', 'Message ID'].freeze
 
@@ -121,7 +97,8 @@ task generate_rmg_csv_data_with_ftp_new2: :environment do
       #messages = Message.find_by_sql([query_string, since_date_time, max_date_time, user.id, user.id, first_campaign.created_at.to_s(:db)])
       #messages = Message.find_by_sql([query_string, user.id, user.id, first_campaign.created_at.to_s(:db)])
       #messages = Message.find_by_sql([query_string, user.id, user.id, '2019-08-09 20:28:23', '2019-08-09 20:28:23'])#, '2019-07-01 04:00:00'])
-      messages = Message.find_by_sql([query_string, user.id, user.id, '2019-09-03 04:00:00'])#, '2019-07-01 04:00:00'])
+      #messages = Message.find_by_sql([query_string, user.id, user.id, '2017-09-03 04:00:00'])#, '2019-07-01 04:00:00'])
+      messages = Message.find_by_sql([query_string, user.id, user.id])
 
 
       csv_string = CSV.generate do |csv|
