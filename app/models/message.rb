@@ -178,12 +178,70 @@ class Message < ActiveRecord::Base
   end
 
   def yo1
-    emails = %w(<redacted_email> <redacted_email>)
+    #emails = %w(<redacted_email> <redacted_email>)
+    #5239 numbers
+    emails = ["<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>",
+      "<redacted_email>"
+    ]
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo', default: 0).each_with_index do |n, i|
+        #Number.where(user_id: u.id, provider: 'nexmo', default: 0).each_with_index do |n, i|
+        Number.where(user_id: u.id, provider: 'nexmo').each_with_index do |n, i|
           TextingService.release_number_nexmo(n.number, "CA");
           n.destroy
         end
