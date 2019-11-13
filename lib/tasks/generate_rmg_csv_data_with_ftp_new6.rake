@@ -9,10 +9,10 @@ task generate_rmg_csv_data_with_ftp_new6: :environment do
   CONTENT_SERVER_FTP_LOGIN = '<redacted_ftp_username>'.freeze
   PORT = 22
 
-  users = User.where("email like ? or email like ?", "<redacted_email>", "<redacted_email>").where(user_level: 1)#where.not(id: [12569, 12570, 21401, 13119, 22480, 13118, 13117, 26863, 26633])
+  #users = User.where("email like ? or email like ?", "<redacted_email>", "<redacted_email>").where(user_level: 1)#where.not(id: [12569, 12570, 21401, 13119, 22480, 13118, 13117, 26863, 26633])
   # users = User.where(id: [48162, 47945, 48188, 47943, 48175, 47942, 47944, 48186, 47941, 13912])
   #users = User.where(id: [49052])
-  #users = User.where(email: ['<redacted_email>'])
+  users = User.where(email: ['<redacted_email>', '<redacted_email>'])
 
   query_string = "select
                     c.name as 'Campaign Name',
@@ -96,7 +96,7 @@ task generate_rmg_csv_data_with_ftp_new6: :environment do
   #since_date_time = (Time.now.utc - 40.hours).to_s(:db).freeze
   #max_date_time = '2019-07-06 01:57:49' #(Time.now.utc - 24.hours).to_s(:db).freeze
   #date = (DateTime.now - 24.hours).strftime("%b %d, %Y").freeze #(DateTime.now).strftime("%b %d, %Y").freeze
-  remote_folder = "/DataGoesHere/Oct 23, 2019 Request 1" #{date} Funnel Campaigns - All Accounts"
+  remote_folder = "/DataGoesHere/Nov 12, 2019 Request 1" #{date} Funnel Campaigns - All Accounts"
   header = ['Total', 'Campaign Name', 'Date Sent', 'Email', 'Template', 'Unique Inbound Numbers', 'Total Inbound messages'].freeze
 
   csv_string = CSV.generate do |csv|
@@ -104,14 +104,14 @@ task generate_rmg_csv_data_with_ftp_new6: :environment do
     users.each_with_index do |user,i|
       puts "#{user.email} - #{i} of #{users.size}"
       messages = []
-      campaigns = Campaign.where(user_id: user.id).where("updated_at > '2019-10-01 03:59:59'").order(id: :asc)
+      campaigns = Campaign.where(user_id: user.id).where("updated_at > '2014-10-01 03:59:59'").order(id: :asc)
 
       if campaigns.present?
         campaigns.each_with_index do |c, i|
           puts "campaign  #{c.name}"
-          messages.concat(Message.find_by_sql([query_string, c.id, user.id, '2019-10-01 03:59:59']))
+          messages.concat(Message.find_by_sql([query_string, c.id, user.id, '2014-10-01 03:59:59']))
           total = CampaignList.find_by_sql([query_string2, c.id]).first['Total']
-          total_messages = Message.find_by_sql([query_string3, c.id, user.id, '2019-10-01 03:59:59']).first['Total']
+          total_messages = Message.find_by_sql([query_string3, c.id, user.id, '2014-10-01 03:59:59']).first['Total']
           csv << [total, c.name, c.updated_at.to_time.strftime("%Y-%m-%d"), user.email, c.text, messages.length, total_messages]
           messages = []
         end

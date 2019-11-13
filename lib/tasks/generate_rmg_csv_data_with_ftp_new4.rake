@@ -12,71 +12,7 @@ task generate_rmg_csv_data_with_ftp_new4: :environment do
   #users = User.where("email like ? or email like ?", "<redacted_email>", "<redacted_email>").where(user_level: 1).where.not(id: [12569, 12570, 21401, 13119, 22480, 13118, 13117, 26863, 26633])
   # users = User.where(id: [48162, 47945, 48188, 47943, 48175, 47942, 47944, 48186, 47941, 13912])
   #users = User.where(id: [49052])
-  users = User.where(email: ['<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>'])
+  users = User.where(email: ['<redacted_email>', '<redacted_email>'])
 
   query_string = "select
                     m.from as 'Phone Number', m.to as 'Call Display', m.text as 'Response',
@@ -161,7 +97,7 @@ task generate_rmg_csv_data_with_ftp_new4: :environment do
   #since_date_time = (Time.now.utc - 40.hours).to_s(:db).freeze
   #max_date_time = '2019-07-06 01:57:49' #(Time.now.utc - 24.hours).to_s(:db).freeze
   #date = (DateTime.now - 24.hours).strftime("%b %d, %Y").freeze #(DateTime.now).strftime("%b %d, %Y").freeze
-  remote_folder = "/DataGoesHere/Oct 31, 2019 Request 1" #{date} Funnel Campaigns - All Accounts"
+  remote_folder = "/DataGoesHere/Nov 11, 2019 Request 2" #{date} Funnel Campaigns - All Accounts"
   header = ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'VAN ID'].freeze
 
   users.each_with_index do |user,i|

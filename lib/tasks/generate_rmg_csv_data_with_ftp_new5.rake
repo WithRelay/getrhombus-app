@@ -9,43 +9,66 @@ task generate_rmg_csv_data_with_ftp_new5: :environment do
   CONTENT_SERVER_FTP_LOGIN = '<redacted_ftp_username>'.freeze
   PORT = 22
 
-  users = User.where(email: ['<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>', #### needs to be redone
-    '<redacted_email>',  #### needs to be redone
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>',
-    '<redacted_email>'
+  users = User.where(email: [
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>',
+'<redacted_email>'
+
   ])
 
   #users = User.where(email: ['<redacted_email>'])
@@ -59,7 +82,8 @@ task generate_rmg_csv_data_with_ftp_new5: :environment do
 
   users.each_with_index do |user,i|
     puts "#{user.email} - #{i} of #{users.size}"
-    Message.select(:id, :from, :to, :created_at, :text, :user_id, :user_id_to).where("created_at > '2019-10-11 03:59:59'").where("user_id = ? OR user_id_to = ?", user.id, user.id).find_in_batches(batch_size: 999998).with_index do |messages, index|
+    # .where("created_at > '2019-10-11 03:59:59'")
+    Message.select(:id, :from, :to, :created_at, :text, :user_id, :user_id_to).where("user_id = ? OR user_id_to = ?", user.id, user.id).find_in_batches(batch_size: 999998).with_index do |messages, index|
       if messages.present?
         puts "batch #{index + 1}"
         recipient = nil

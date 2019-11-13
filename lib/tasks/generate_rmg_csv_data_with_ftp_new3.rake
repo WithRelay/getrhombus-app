@@ -11,7 +11,7 @@ task generate_rmg_csv_data_with_ftp_new3: :environment do
 
   #users = User.where("email like ? or email like ?", "<redacted_email>", "<redacted_email>").where(user_level: 1).where.not(id: [12569, 12570, 21401, 13119, 22480, 13118, 13117, 26863, 26633])
   # users = User.where(id: [48162, 47945, 48188, 47943, 48175, 47942, 47944, 48186, 47941, 13912])
-  users = User.where(id: [48258])
+  users = User.where(email: ['<redacted_email>', '<redacted_email>'])
 
   query_string = "select
                     m.from as 'Phone Number', m.to as 'Call Display', m.text as 'Response',
