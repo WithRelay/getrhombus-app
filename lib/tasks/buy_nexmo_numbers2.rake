@@ -879,6 +879,7 @@ ary = [
 <redacted_phone_number>,
 <redacted_phone_number>,
 
+
 ]
 
   #country = "CA"
@@ -886,10 +887,10 @@ ary = [
   pattern = "1416"
   size = 100
   type = "mobile-lvn"
-  max_total = 48
+  max_total = 5
   numbers_ary = []
   u = true
-  #u = User.find_by(email: '<redacted_email>')
+  u = User.find_by(email: '<redacted_email>')
   puts u.inspect
   total = numbers_ary.length
 
@@ -900,16 +901,16 @@ ary = [
       if u && numbers
         numbers.each_with_index do |n, i|
           if ary.exclude?(n["msisdn"].to_i) && numbers_ary.exclude?(n["msisdn"]) && total < max_total
-            #res = TextingService.buy_number_nexmo(n['country'], n['msisdn'])
-            #if res
+            res = TextingService.buy_number_nexmo(n['country'], n['msisdn'])
+            if res
               puts n["msisdn"].inspect
               numbers_ary.push(n["msisdn"])
               total = numbers_ary.length
               puts "number #{total} !!!!!!!!!!!!!!!"
-              #fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
-              #u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: 0, provider: 'nexmo', price: '210')
-              #TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
-            #end
+              fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
+              u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: 0, provider: 'nexmo', price: '210')
+              TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
+            end
           end
         end
       end
