@@ -223,6 +223,12 @@ class StripeEvent
     end
   end
 
+  def to_fi(str)
+    x = str.to_i
+    y = str.to_f
+    x == y ? x : y
+  end
+
   def send_new_merchant_customer_subscription_email
     date = DateTime.strptime(@sbtn.start.to_s, '%s').in_time_zone(@team.time_zone)
     options = {
@@ -236,7 +242,7 @@ class StripeEvent
       description: @sbtn.description,
       currency: @sbtn.plan_currency,
       less_transaction_fees: @txn.txn_amount_less_fees,
-      amount: @txn.txn_amount - @sbtn.coupon_discount,
+      amount: to_fi(@txn.txn_amount.to_f - @sbtn.coupon_discount),
       currency_symbol: '$'
     }
     EmailingService.new_merchant_customer_subscription(options)
@@ -255,7 +261,7 @@ class StripeEvent
       description: @sbtn.description,
       currency: @sbtn.plan_currency,
       amount_less_fees: @txn.txn_amount_less_fees,
-      amount: @txn.txn_amount - @sbtn.coupon_discount,
+      amount: to_fi(<redacted_email>_amount.to_f - @sbtn.coupon_discount),
       currency_symbol: '$'
     }
     EmailingService.merchant_subscription_notification(options)

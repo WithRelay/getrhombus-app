@@ -65,12 +65,12 @@ class Transaction < ActiveRecord::Base
       else
         # This should only run for text based payments. Dashboard payments is handled differently.
         # if it is a card decline, we text only customers (text means customer initiated). Merchant might not have textable number on file.
-        if @source == 'text'          
-          if @stripe_res_ary[3] 
+        if @source == 'text'
+          if @stripe_res_ary[3]
             str = " because: #{@stripe_res_ary[2]}"
             err_reason = @stripe_res_ary[2]
-          else 
-            str = ". Please try again later." 
+          else
+            str = ". Please try again later."
             err_reason = "of a system error"
           end
           send_response("We're sorry your payment to #{merchant.org_name} failed" + str)
@@ -148,9 +148,9 @@ class Transaction < ActiveRecord::Base
     reason.slice!('your')
 
     EmailingService.charge_failure_notification(
-      merchant: @merchant, 
+      merchant: @merchant,
       customer: @customer,
-      message: @msg, reason: reason.strip, 
+      message: @msg, reason: reason.strip,
       currency_symbol: '$', amount: amt_in_decimal(amt),
       currency: @merchant.currency.try(:downcase) || 'usd',
     )

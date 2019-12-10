@@ -1,6 +1,6 @@
 class Person < ActiveRecord::Base
 
-  belongs_to :user  
+  belongs_to :user
   before_validation :the_titleizer
   before_create :set_representative
   has_one :image, through: :image_ref
@@ -29,7 +29,7 @@ class Person < ActiveRecord::Base
 
     # this should go away in v2. But for now an account has only one person and that person is a rep
     def set_representative
-      self.role = '0' 
+      self.role = '0'
     end
 
 

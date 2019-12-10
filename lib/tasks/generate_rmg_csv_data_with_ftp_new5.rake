@@ -13,62 +13,7 @@ task generate_rmg_csv_data_with_ftp_new5: :environment do
 '<redacted_email>',
 '<redacted_email>',
 '<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
 '<redacted_email>'
-
   ])
 
   #users = User.where(email: ['<redacted_email>'])
@@ -77,7 +22,7 @@ task generate_rmg_csv_data_with_ftp_new5: :environment do
   csv_string = ''
   temp_file = nil
   directory_created = false
-  remote_folder = "/DataGoesHere/Oct 18, 2019 Request 2"
+  remote_folder = "/DataGoesHere/Nov 19, 2019 Request 1"
   header = ['Message ID', 'Phone Number', 'Timestamp ET', 'Message', 'Direction'].freeze
 
   users.each_with_index do |user,i|
