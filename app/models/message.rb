@@ -211,7 +211,7 @@ class Message < ActiveRecord::Base
   end
 
   def z
-    emails = %w(<redacted_email>)
+    emails = %w(<redacted_email> <redacted_email>)
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
@@ -1401,31 +1401,7 @@ class Message < ActiveRecord::Base
         <redacted_phone_number>,
         <redacted_phone_number>,
         <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
-        <redacted_phone_number>,
+        <redacted_phone_number>
       ]
 
 
