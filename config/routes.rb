@@ -100,10 +100,12 @@ Rails.application.routes.draw  do
       get 'segments/:id' => 'lists#show', as: :segment
       resources :user_lists, only: [] { collection { delete 'remove_member' } }
       resources :lists, only: [:index, :show, :destroy] { member { post 'add_member' } }
-      get 'managed-accounts' => 'users#managed_acct'
-      get 'update-managed-acct' => 'users#managed_acct'
-      patch 'managed-accounts' => "users#create_managed_acct"
-      patch 'update-managed-acct' => 'users#update_managed_acct'
+
+      #get 'managed-accounts' => 'users#managed_acct'
+      #get 'update-managed-acct' => 'users#managed_acct'
+      #patch 'managed-accounts' => "users#create_managed_acct"
+      #patch 'update-managed-acct' => 'users#update_managed_acct'
+
       get 'api-cred' => 'api_creds#show'
       resource :api_creds, only: [:update]
       resource :numbers, only: [:create]

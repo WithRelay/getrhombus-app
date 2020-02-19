@@ -253,6 +253,28 @@ class User < ActiveRecord::Base
     end
   end
 
+  def x
+    StandaloneStripeCred.all.each do |x|
+      Stripe::Account.update(
+        x.account_id,
+          {
+            requested_capabilities: ['card_payments', 'transfers'],
+            stripe_version: '<redacted_phone_number>'
+          }
+      )
+    end
+
+    StripeCred.all.each do |x|
+      Stripe::Account.update(
+        x.account_id,
+          {
+            requested_capabilities: ['card_payments', 'transfers'],
+            stripe_version: '<redacted_phone_number>'
+          }
+      )
+    end
+  end
+
   private
 
   # Some users sign up with Relay numbers
