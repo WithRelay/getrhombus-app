@@ -269,7 +269,7 @@ class User < ActiveRecord::Base
     end
 
     StripeCred.all.each do |x|
-
+      begin
         Stripe::Account.update(
           x.account_id,
             {
