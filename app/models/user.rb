@@ -255,23 +255,31 @@ class User < ActiveRecord::Base
 
   def x
     StandaloneStripeCred.all.each do |x|
-      Stripe::Account.update(
-        x.account_id,
-          {
-            requested_capabilities: ['card_payments', 'transfers'],
-            stripe_version: '<redacted_phone_number>'
-          }
-      )
+      begin
+        Stripe::Account.update(
+          x.account_id,
+            {
+              requested_capabilities: ['card_payments', 'transfers'],
+              stripe_version: '<redacted_phone_number>'
+            }
+        )
+      rescue Exception => e
+        puts e.inspect
+      end
     end
 
     StripeCred.all.each do |x|
-      Stripe::Account.update(
-        x.account_id,
-          {
-            requested_capabilities: ['card_payments', 'transfers'],
-            stripe_version: '<redacted_phone_number>'
-          }
-      )
+
+        Stripe::Account.update(
+          x.account_id,
+            {
+              requested_capabilities: ['card_payments', 'transfers'],
+              stripe_version: '<redacted_phone_number>'
+            }
+        )
+      rescue Exception => e
+        puts e.inspect
+      end
     end
   end
 
