@@ -270,6 +270,27 @@ class User < ActiveRecord::Base
     end
   end
 
+
+  def q
+    begin
+      Stripe::Account.update(
+        "<redacted_stripe_account_id>",
+        {
+          settings: {
+            payments: { statement_descriptor: "xyzx1" },
+            card_payments: { statement_descriptor_prefix: "xyz" }
+          }
+        },
+        {
+          stripe_version: '<redacted_phone_number>'
+        }
+      )
+    rescue Exception => e
+      puts e.inspect
+    end
+  end
+
+
   def y
     last_id = nil
     more_data = true
