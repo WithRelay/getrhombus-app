@@ -253,32 +253,54 @@ class User < ActiveRecord::Base
     end
   end
 
-  def x
-    StandaloneStripeCred.all.each do |x|
-      begin
-        Stripe::Account.update(
-          x.account_id,
-            {
-              requested_capabilities: ['card_payments', 'transfers'],
-              stripe_version: '<redacted_phone_number>'
-            }
-        )
-      rescue Exception => e
-        puts e.inspect
-      end
+  def z
+    begin
+      Stripe::Account.update(
+        "<redacted_stripe_account_id>",
+        {
+          requested_capabilities: ['card_payments', 'transfers']
+        },
+        {
+          stripe_version: '<redacted_phone_number>',
+          stripe_account: "<redacted_stripe_account_id>"
+        }
+      )
+    rescue Exception => e
+      puts e.inspect
     end
+  end
 
-    StripeCred.all.each do |x|
-      begin
-        Stripe::Account.update(
-          x.account_id,
-            {
-              requested_capabilities: ['card_payments', 'transfers'],
-              stripe_version: '<redacted_phone_number>'
-            }
-        )
-      rescue Exception => e
-        puts e.inspect
+  def y
+    last_id = nil
+    more_data = true
+
+    while more_data
+      params = { limit: 100 }
+      params[:starting_after] = last_id if last_id
+
+      data = Stripe::Account.list(params)["data"]
+      last_id = data[data.size - 1].try(:[], "id")
+      more_data = false unless last_id
+
+      if last_id
+        data.each do |o|
+          begin
+            puts "Update #{o["id"]}"
+            Stripe::Account.update(
+              o["id"],
+                {
+                requested_capabilities: ['card_payments', 'transfers'],
+                stripe_account: o["id"]
+              },
+              {
+                stripe_version: '<redacted_phone_number>'
+              }
+            )
+          rescue Exception => e
+            puts e.inspect
+            puts "\n\n\n\n\n\n\n"
+          end
+        end
       end
     end
   end
