@@ -118,4 +118,16 @@ class CampaignHandlebar < Mustache
   def url20
     person.url20
   end
+
+  def text1
+    person.text1
+  end
+
+  def text2
+    person.text2
+  end
+
+  def text3
+    person.text3
+  end
 end

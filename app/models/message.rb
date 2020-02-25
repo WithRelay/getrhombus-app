@@ -334,7 +334,7 @@ class Message < ActiveRecord::Base
   end
 
   def z
-    emails = %w(<redacted_email> <redacted_email>)
+    emails = %w(<redacted_email>)
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
@@ -1793,19 +1793,6 @@ class Message < ActiveRecord::Base
 <redacted_phone_number>,
 <redacted_phone_number>,
 <redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-
-
 
     ]
 
@@ -1824,7 +1811,7 @@ class Message < ActiveRecord::Base
           default = 0
           fn = '(' + n[1..3] + ') ' + n[4..6] + '-' + n[7..10]
           user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default, provider: 'nexmo', price: '210')
-          TextingService.update_nexmo_number('CA', n, 'tel', '<redacted_phone_number>')
+          #TextingService.update_nexmo_number('CA', n, 'tel', '<redacted_phone_number>')
         else
           puts "CANT BUY #{n}"
         end

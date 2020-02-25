@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190508051909) do
+ActiveRecord::Schema.define(version: 20200225094735) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -499,7 +499,7 @@ ActiveRecord::Schema.define(version: 20190508051909) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "uid_type",     limit: 191
-    t.boolean  "is_customer",  limit: 1,   default: false
+    t.boolean  "is_customer",  limit: 1,     default: false
     t.string   "first_name",   limit: 191
     t.string   "last_name",    limit: 191
     t.string   "organization", limit: 191
@@ -525,6 +525,9 @@ ActiveRecord::Schema.define(version: 20190508051909) do
     t.string   "url19",        limit: 191
     t.string   "url20",        limit: 191
     t.string   "van_id",       limit: 191
+    t.text     "text1",        limit: 65535
+    t.text     "text2",        limit: 65535
+    t.text     "text3",        limit: 65535
   end
 
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
@@ -982,6 +985,9 @@ ActiveRecord::Schema.define(version: 20190508051909) do
     t.string   "url18",                  limit: 191
     t.string   "url19",                  limit: 191
     t.string   "url20",                  limit: 191
+    t.text     "text1",                  limit: 65535
+    t.text     "text2",                  limit: 65535
+    t.text     "text3",                  limit: 65535
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

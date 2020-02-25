@@ -583,6 +583,9 @@ module CSVHandler
       url18: row[:url18],
       url19: row[:url19],
       url20: row[:url20],
+      text1: row[:text1],
+      text2: row[:text2],
+      text3: row[:text3],
       van_id: row[:van_id]
     }
   end
@@ -608,7 +611,10 @@ module CSVHandler
       url17: row[:url17],
       url18: row[:url18],
       url19: row[:url19],
-      url20: row[:url20]
+      url20: row[:url20],
+      text1: row[:text1],
+      text2: row[:text2],
+      text3: row[:text3]
     }
   end
 end
