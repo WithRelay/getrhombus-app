@@ -1,51 +1,51 @@
-$(document).on('ready page:load', function() {
+$(document).on("ready page:load", function() {
   // checked
   var htmlContent =
     '<option value="0">SMS</option> <option value="1">MMS</option>'; // <option value="3">Email</option>';
 
   var contact_list_dropdown_option = {
-    sms: [['0', 'SMS'], ['1', 'MMS']],
-    messenger: [['2', 'Facebook Messenger']]
+    sms: [["0", "SMS"], ["1", "MMS"]],
+    messenger: [["2", "Facebook Messenger"]]
   }; //, 'email': ['3', 'Email'] }; // could with custom attrs?
 
   // For edit action, get lists data for preloading text input
   var ajax_data,
-    campaign_list_field = $('#campaign-list'),
-    campaign_list = campaign_list_field.data('list-data');
+    campaign_list_field = $("#campaign-list"),
+    campaign_list = campaign_list_field.data("list-data");
 
   // checked
-  $('#sendTestCampaign').click(function(e) {
+  $("#sendTestCampaign").click(function(e) {
     $(this)
-      .attr('active', 'true')
-      .attr('disabled', 'true');
+      .attr("active", "true")
+      .attr("disabled", "true");
     e.preventDefault();
-    $('form#campaignForm').submit();
+    $("form#campaignForm").submit();
   });
 
   // checked-ish
   // review all these event handlers
-  $('#trumbowyg').on('change', function(e) {
-    $('#campaignForm').formValidation('resetField', 'campaign[text]');
-    $('#campaignForm').formValidation('resetField', 'campaign[name]'); // is this needed?
+  $("#trumbowyg").on("change", function(e) {
+    $("#campaignForm").formValidation("resetField", "campaign[text]");
+    $("#campaignForm").formValidation("resetField", "campaign[name]"); // is this needed?
   });
 
   // checked-ish
-  $('#send-campaign-users').click(function() {
+  $("#send-campaign-users").click(function() {
     $(this)
-      .addClass('no-pointer-events')
-      .val('Saving...');
-    $('#campaignForm').formValidation('resetField', 'campaign[text]');
-    $('#campaignForm').formValidation('resetField', 'campaign[name]');
+      .addClass("no-pointer-events")
+      .val("Saving...");
+    $("#campaignForm").formValidation("resetField", "campaign[text]");
+    $("#campaignForm").formValidation("resetField", "campaign[name]");
   });
 
   // checked-ish
-  $('#campaign-channel').on('change', function(e) {
-    $('#campaignForm').formValidation('resetField', 'campaign[name]');
-    $('#campaignForm').formValidation('resetField', 'campaign[subject]');
+  $("#campaign-channel").on("change", function(e) {
+    $("#campaignForm").formValidation("resetField", "campaign[name]");
+    $("#campaignForm").formValidation("resetField", "campaign[subject]");
   });
 
   function is_campaign_saved() {
-    return $('#campaignForm').data('persisted');
+    return $("#campaignForm").data("persisted");
   }
 
   function current_campaign_list_type() {
@@ -53,7 +53,7 @@ $(document).on('ready page:load', function() {
   }
 
   function current_campaign_channel_is_email() {
-    return $('#campaignForm').data('channel') == 'email';
+    return $("#campaignForm").data("channel") == "email";
   }
 
   // checked
@@ -61,9 +61,9 @@ $(document).on('ready page:load', function() {
   // Can be undefined for new action
   campaign_list = campaign_list ? campaign_list : [];
   var lists_selectize = campaign_list_field.selectize({
-    valueField: 'id',
-    labelField: 'name',
-    searchField: 'name',
+    valueField: "id",
+    labelField: "name",
+    searchField: "name",
     openOnFocus: false,
     maxOptions: 5,
     maxItems: 1,
@@ -73,7 +73,7 @@ $(document).on('ready page:load', function() {
     render: {
       item: function(item, escape) {
         return (
-          '<div> <span class="name">' + escape(item.name) + '</span></div>'
+          '<div> <span class="name">' + escape(item.name) + "</span></div>"
         );
       }
     },
@@ -95,18 +95,18 @@ $(document).on('ready page:load', function() {
       $.ajax({
         url:
           window.location.protocol +
-          '//' +
+          "//" +
           window.location.host +
-          '/v1/lists.json',
+          "/v1/lists.json",
         data: ajax_data,
         success: function(res) {
-          callback(res['lists']);
+          callback(res["lists"]);
           console.log(res);
         },
         error: function() {
           FlashHandler.setFlashMessage(
-            'Something went wrong...Unable to find your lists',
-            'error'
+            "Something went wrong...Unable to find your lists",
+            "error"
           );
           callback();
         }
@@ -114,8 +114,8 @@ $(document).on('ready page:load', function() {
     }
   });
 
-  $('#campaign-list-selectized').on('focus', function() {
-    $('#campaignForm').formValidation('resetField', 'campaign[list_id]');
+  $("#campaign-list-selectized").on("focus", function() {
+    $("#campaignForm").formValidation("resetField", "campaign[list_id]");
   });
 
   // checked
@@ -134,29 +134,29 @@ $(document).on('ready page:load', function() {
       // } else {
       //   return $('#campaign-channel').html(htmlContent);
       // }
-      var value = $('#campaign-channel').val();
-      $('#campaign-channel').html(htmlContent);
-      $('#campaign-channel').val(value);
+      var value = $("#campaign-channel").val();
+      $("#campaign-channel").html(htmlContent);
+      $("#campaign-channel").val(value);
     }
-    $('#campaign-channel').change();
+    $("#campaign-channel").change();
   }
 
   // checked
   // prefill form with previous lists
   $.each(campaign_list, function(index, val) {
-    lists_selectize[0].selectize.addItem(val['id']);
+    lists_selectize[0].selectize.addItem(val["id"]);
   });
 
-  $('.handlebar-content').on('click', function() {
-    if ($('#campaign-channel').val() == 3) {
-      $('.trumbowyg-editor').append($(this).attr('data-value'));
-      $('textarea.message-editor').val(
-        $('textarea.message-editor').val() + $(this).attr('data-value')
+  $(".handlebar-content").on("click", function() {
+    if ($("#campaign-channel").val() == 3) {
+      $(".trumbowyg-editor").append($(this).attr("data-value"));
+      $("textarea.message-editor").val(
+        $("textarea.message-editor").val() + $(this).attr("data-value")
       );
     } else {
-      $('.emojionearea-editor').append($(this).attr('data-value'));
-      $('textarea.message-editor').val(
-        $('textarea.message-editor').val() + $(this).attr('data-value')
+      $(".emojionearea-editor").append($(this).attr("data-value"));
+      $("textarea.message-editor").val(
+        $("textarea.message-editor").val() + $(this).attr("data-value")
       );
     }
   });

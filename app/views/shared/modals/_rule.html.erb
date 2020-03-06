@@ -12,6 +12,48 @@
       <div class='form-group col-xs-6' id='message-length-box' style='display:none'>
         <%= f.text_field :message_length, id: "message-length", class: "form-control text-field w-input", placeholder: "Length", data: { name: 'Rule Message Length' } %>
       </div>
+      <div class="form-group col-xs-6" style="display: flex;">
+        <div data-delay="0" class="dropdown merge-fields w-dropdown merge-fields-dd" style="float: none; margin-right: 0px; margin-left: 10%;">
+          <div class="w-dropdown-toggle merge-fields-text">
+            <div class="merge-field-icon w-icon-dropdown-toggle"></div>
+            <div class="merge-field-dropdown-text">Insert Merge Fields</div>
+          </div>
+          <nav class="dropdown-list merge-fields w-dropdown-list">
+            <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{first_name}}'>First name</a>
+            <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{full_name}}'>Full name</a>
+            <%#<a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{phone_number}}'>Phone number</a>%>
+            <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{org_name}}'>Org name</a>
+            <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{org_email}}'>Org email</a>
+            <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{org_number}}'>Org number</a>
+            <% if IDS_TO_EXCLUDE.include? current_user.id  %>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url1}}'>Url 1</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url2}}'>Url 2</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url3}}'>Url 3</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url4}}'>Url 4</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url5}}'>Url 5</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url6}}'>Url 6</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url7}}'>Url 7</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url8}}'>Url 8</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url9}}'>Url 9</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url10}}'>Url 10</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url11}}'>Url 11</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url12}}'>Url 12</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url13}}'>Url 13</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url14}}'>Url 14</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url15}}'>Url 15</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url16}}'>Url 16</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url17}}'>Url 17</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url18}}'>Url 18</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url19}}'>Url 19</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{url20}}'>Url 20</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{text1}}'>Text 1</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{text2}}'>Text 2</a>
+              <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{text3}}'>Text 3</a>
+            <% end %>
+            <%#<a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content-rule" data-value='{{merchant_address}}'>Org address</a>%>
+          </nav>
+        </div>
+      </div>
       <div class="form-group col-xs-6">
         <%= f.text_area :response, placeholder: 'Set response' , id: 'rule-response', class: 'form-control text-field w-input', data: { name: 'Rule Response' } %>
       </div>

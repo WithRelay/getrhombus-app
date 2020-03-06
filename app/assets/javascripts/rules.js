@@ -1,90 +1,95 @@
 $(document).ready(function() {
   function create_rule(formData) {
     $.ajax({
-      url: window.location.origin + '/v1/rules',
-      method: 'POST',
+      url: window.location.origin + "/v1/rules",
+      method: "POST",
       data: formData,
-      dataType: 'json'
+      dataType: "json"
     })
       .done(function(res) {
-        FlashHandler.setFlashMessage(res.notice, 'notice');
+        FlashHandler.setFlashMessage(res.notice, "notice");
         location.reload();
       })
       .error(function(res) {
-        FlashHandler.setFlashMessage(res.error, 'error');
+        FlashHandler.setFlashMessage(res.error, "error");
       });
   }
 
-  if ($('#rule-form').length > 0) {
-    $('#rule-form')
+  if ($("#rule-form").length > 0) {
+    $("#rule-form")
       .formValidation({
-        framework: 'bootstrap',
-        live: 'disabled',
+        framework: "bootstrap",
+        live: "disabled",
         err: {
           container: function($field, validator) {
-            return $field.parent().find('.messageContainer');
+            return $field.parent().find(".messageContainer");
           }
         },
         fields: {
-          'rule[text]': {
+          "rule[text]": {
             validators: {
               notEmpty: {
-                message: 'This field is required'
+                message: "This field is required"
               }
             }
           },
-          'rule[response]': {
+          "rule[response]": {
             validators: {
               notEmpty: {
-                message: 'This field is required'
+                message: "This field is required"
               }
             }
           },
-          'rule[message_length]': {
+          "rule[message_length]": {
             verbose: false,
-            selector: '#message-length',
+            selector: "#message-length",
             validators: {
               notEmpty: {
-                message: 'Message length is required'
+                message: "Message length is required"
               },
               regexp: {
                 regexp: /^\d+$/,
-                message: 'Invalid Message Length'
+                message: "Invalid Message Length"
               }
             }
           }
         }
       })
-      .on('success.form.fv', function(e, data) {
+      .on("success.form.fv", function(e, data) {
         e.preventDefault();
         create_rule($(this).serialize());
       });
   }
 
-  $('#rule-type').on('change', function() {
+  $("#rule-type").on("change", function() {
     var rule = $(this).val();
-    if (rule === 'contains_text_and_length_is_less_than_x' || rule === "starts_with_text_and_length_is_less_than_x") {
-      $('#message-length-box').show();
+    if (
+      rule === "contains_text_and_length_is_less_than_x" ||
+      rule === "starts_with_text_and_length_is_less_than_x"
+    ) {
+      $("#message-length-box").show();
     } else {
-      $('#message-length-box').hide();
-      $('#message-length').val('');
+      $("#message-length-box").hide();
+      $("#message-length").val("");
     }
   });
 
-  $('.delete-rule').click(function(evt) {
-    var selector = '.' + evt.target.classList[evt.target.classList.length - 1];
-    if (!$(selector).attr('isDestroy')) {
+  $(".delete-rule").click(function(evt) {
+    var selector = "." + evt.target.classList[evt.target.classList.length - 1];
+    if (!$(selector).attr("isDestroy")) {
       evt.stopImmediatePropagation();
       FlashHandler.setConfirmationDialog(
         selector,
-        'Are you sure you want to delete rule?',
-        'Delete Rule',
-        'isDestroy'
+        "Are you sure you want to delete rule?",
+        "Delete Rule",
+        "isDestroy"
       );
       return false;
     }
   });
 
-
-
+  $(".handlebar-content-rule").on("click", function() {
+    var input = $("#rule-response");
+    input.val(input.val() + $(this).attr("data-value"));
+  });
 });

@@ -12,7 +12,7 @@ class RulesEngineJob < ApplicationJob
       return if message_text.blank?
 
       @merchant = User.find_by(id: @message.user_id_to)
-      rules = @merchant.rules      
+      rules = @merchant.rules
       return if rules.blank?
 
       rules.each do |rule|
@@ -75,13 +75,16 @@ class RulesEngineJob < ApplicationJob
   def send_response(response_text)
     # while rules soon after an inbound message. It might be better to search for user by phone number instead of id.
     customer = @message.user
+    person = customer
     if customer.present?
       uid = customer.id
       uid_type = 'user'
     else
       uid = @message.from
       uid_type = 'phone_number'
+      person = MerchantContact.find_by(merchant_id: @merchant.id, uid: uid, uid_type: uid_type)
     end
+    response_text = CampaignHandlebar.new(person, @merchant).render(response_text) if person.present? && @merchant.present?
     Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, customer, uid_type, uid, response_text, 'Message', [], 'platform', @message.to)
   end
 end
