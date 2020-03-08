@@ -337,44 +337,16 @@ ary = [
 <redacted_phone_number>,
 <redacted_phone_number>,
 <redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
-<redacted_phone_number>,
 
 
 ]
 
   #country = "CA"
   country = "CA"
-  pattern = "1604"
+  pattern = "1514"
   size = 100
   type = "mobile-lvn"
-  max_total = 20
+  max_total = 70
   numbers_ary = []
   u = true
   u = User.find_by(email: "<redacted_email>".downcase)
