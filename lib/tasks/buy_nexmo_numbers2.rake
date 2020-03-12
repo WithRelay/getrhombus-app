@@ -338,7 +338,6 @@ ary = [
 <redacted_phone_number>,
 <redacted_phone_number>,
 
-
 ]
 
   #country = "CA"
@@ -346,7 +345,7 @@ ary = [
   pattern = "1514"
   size = 100
   type = "mobile-lvn"
-  max_total = 70
+  max_total = 10
   numbers_ary = []
   u = true
   u = User.find_by(email: "<redacted_email>".downcase)
