@@ -30,7 +30,7 @@ class MessageParser
 
       if !@amt_ary[0] && @amt_ary[1].present?  #tested
         # puts 'invalid payment intent'
-        send_response('We noticed you tried to send a payment. Please resend it in this format: +Amount followed by item name. Ex. +5 #Pizza.')
+        send_response('We noticed you tried to send a payment. Please resend it in this format: +Amount followed by item name. Ex. +5 #donation.')
         return
       end
 
@@ -80,14 +80,14 @@ class MessageParser
         elsif @merchant.alert && @merchant.alert.enable_welcome? && @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
           ### Taking this out for now.
           #first_name_str = '' #(@merchant.first_name.present?) ? "my name is #{@merchant.first_name}, " : ''
-          #custom_welcome = "Hi there, " + first_name_str + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #pizza"
+          #custom_welcome = "Hi there, " + first_name_str + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donation"
           #custom_welcome = @merchant.custom_welcome unless @merchant.custom_welcome.blank?
           #send_response(custom_welcome)
         end
       elsif @customer.present? && is_signup?                     # tested
         re = @customer.has_valid_card?
         if re[:valid]
-          send_response("You are all set up, just text the amount and description to complete your payment. Ex: $20 for #pizza.")
+          send_response("You are all set up, just text the amount and description to complete your payment. Ex: $20 for #donation.")
         else
           url = sign_in_link(false)
           if re[:type] == 'no_source'
@@ -254,8 +254,8 @@ class MessageParser
 
   #def send_deprecation_warning
     #send_response("Relay tips: We've improved your payment experience with Relay by replacing the $ sign with a + tag. You can now text +10 instead of $10 to make a payment to a local business or non-profit.")
-    #send_response('Relay tips: With the + tag, you can now place the amount anywhere in the message. Ex. "pizza & broccoli +8 yay!" instead of "$8 pizza & broccoli')
-    #send_response("Relay tips: Hashtags are awesome! You can now use hashtags to specify the item you're paying for or the campaign you're donating towards. Ex. +5 #pizza or +20 #ReliefFund. This helps the organization know exactly what you are paying for.")
+    #send_response('Relay tips: With the + tag, you can now place the amount anywhere in the message. Ex. "donation & broccoli +8 yay!" instead of "$8 donation & broccoli')
+    #send_response("Relay tips: Hashtags are awesome! You can now use hashtags to specify the item you're paying for or the campaign you're donating towards. Ex. +5 #donation or +20 #ReliefFund. This helps the organization know exactly what you are paying for.")
   #end
 
   # tested
