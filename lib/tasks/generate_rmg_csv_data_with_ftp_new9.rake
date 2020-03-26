@@ -9,80 +9,11 @@ task generate_rmg_csv_data_with_ftp_new9: :environment do
   CONTENT_SERVER_FTP_LOGIN = '<redacted_ftp_username>'.freeze
   PORT = 22
 
-  users = User.where(email: [
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
-'<redacted_email>',
+  # users = User.where(email: [
 
+  # ]).map(&:downcase)).pluck(:id, :email).to_h
 
-  ].map(&:downcase)).pluck(:id, :email).to_h
+  users = User.where("email like ? or email like ?", "<redacted_email>", "<redacted_email>").where(user_level: 1).pluck(:id, :email).to_h
 
   ids = users.keys
 
@@ -90,11 +21,11 @@ task generate_rmg_csv_data_with_ftp_new9: :environment do
   csv_string = ''
   temp_file = nil
   directory_created = false
-  remote_folder = "/DataGoesHere/Feb 17, 2020 Request 1"
+  remote_folder = "/DataGoesHere/Mar 24, 2020 Request 1"
   header = ['Message ID', 'Phone Number', 'Timestamp ET', 'Message', 'Direction', 'Email'].freeze
 
   Message.select(:id, :from, :to, :created_at, :text, :user_id, :user_id_to)
-  .where("user_id in (?) OR user_id_to in (?)", ids, ids).where("created_at < ?", "2020-01-17 03:59:59")#.where("created_at < ?", "2019-09-01 04:00:00")
+  .where("user_id in (?) OR user_id_to in (?)", ids, ids).where("created_at > ?", "2020-01-01 03:59:59")#.where("created_at < ?", "2019-09-01 04:00:00")
   .find_in_batches(batch_size: 999998).with_index do |messages, index|
     if messages.present?
       puts "batch #{index + 1}"
@@ -119,7 +50,7 @@ task generate_rmg_csv_data_with_ftp_new9: :environment do
 
       # FTP Here
       puts 'Creating file'.freeze
-      filename = "/home/taiwo/Desktop/Files/All data Up to Jan 17th.csv File #{index + 1}"
+      filename = "/home/taiwo/Desktop/Files/All Data Since Jan 1st 2020 File #{index + 1}.csv"
       #temp_file = Tempfile.new(filename)
       #temp_file.write(csv_string)
       #temp_file.close
