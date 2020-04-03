@@ -1308,11 +1308,11 @@ ary = [
 ]
 
   #country = "CA"
-  country = "CA"
-  pattern = "1613"
+  country = "US"
+  pattern = "1619"
   size = 100
   type = "mobile-lvn"
-  max_total = 5
+  max_total = 20
   numbers_ary = []
   u = true
   u = User.find_by(email: "<redacted_email>".downcase)

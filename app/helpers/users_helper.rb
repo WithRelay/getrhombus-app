@@ -68,7 +68,7 @@ module UsersHelper
     Chartkick.options = {
       colors: ["rgba(74, 144, 226, .3)", 'rgb(7, 46, 91)']
     }
-    
+
     if @dashboard_messages_data[:msg_30_days][:chart_data].empty?
       htm = '<div class= "no-chart-data graph">
       <p class="empty-view-short-paragraph">No data. '
@@ -117,7 +117,7 @@ module UsersHelper
   def transactions_graph
     if current_user.get_stripe_cred[:type].nil?
       htm = '<div class="no-chart-data transactions"><p class="empty-view-short-paragraph">No data. '
-      htm += link_to('Connect your bank account', user_managed_accounts_path(current_user), class: "links").to_s
+      #htm += link_to('Connect your bank account', user_managed_accounts_path(current_user), class: "links").to_s
       htm += '&nbsp;to view chart activity</p></div>'
       htm.html_safe
     elsif @dashboard_transactions[:tranc_chart_data].empty?
