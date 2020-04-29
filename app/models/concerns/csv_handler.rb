@@ -456,7 +456,7 @@ module CSVHandler
       headers_checked, error_hash = false, {}
 
       CSV::Converters[:blank_to_nil] = lambda do |field|
-        field && field.blank? ? nil : field.to_s.squish
+        field && field.blank? ? nil : field.to_s.strip
       end
 
       # for brian
