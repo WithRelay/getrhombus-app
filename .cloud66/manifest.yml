@@ -1,8 +1,14 @@
-production:  
+production:
+  rails:
+    configuration:
+      ruby_version: 2.3.0
   load_balancer:
     configuration:
       httpchk: /lb-ping
 development:
+  rails:
+    configuration:
+      ruby_version: 2.3.0
   mysql:
     configuration:
       #version: 5.6
