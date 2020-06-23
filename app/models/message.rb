@@ -190,51 +190,7 @@ class Message < ActiveRecord::Base
       '<redacted_email>',
       '<redacted_email>',
       '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
+      '<redacted_email>'
     ]
 
     emails.each do |e|
@@ -348,8 +304,7 @@ class Message < ActiveRecord::Base
   end
 
    def z1
-    emails = %w(<redacted_email>)
-
+    emails = %w(<redacted_email> <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u

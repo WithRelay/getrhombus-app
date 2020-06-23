@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  #config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  config.action_mailer.default_url_options = { host: Rails.application.secrets.app["url"] }
+  # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: Rails.application.secrets.app['url'] }
 
   # added
   # ActionMailer Config
@@ -10,9 +12,9 @@ Rails.application.configure do
   # change to true to allow email to be sent during development
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default :charset => "utf-8"
+  config.action_mailer.default charset: 'utf-8'
 
-  #config.action_mailer.smtp_settings = { address: '127.0.0.1', port: 1025 }
+  # config.action_mailer.smtp_settings = { address: '127.0.0.1', port: 1025 }
   config.action_mailer.smtp_settings = {
     address: 'smtp.mandrillapp.com',
     authentication: :plain,
@@ -22,14 +24,14 @@ Rails.application.configure do
     port: '587',
     user_name: <redacted_username>
   }
-  
+
   config.paperclip_defaults = {
-    :storage => :s3,
-    :s3_region => 'us-east-1',
-    :s3_credentials => {
-      :bucket: <redacted_s3_bucket>
-      :access_key_id: <redacted_access_key_id>
-      :secret_access_key: <redacted_secret_access_key>
+    storage: :s3,
+    s3_region: 'us-east-1',
+    s3_credentials: {
+      bucket: <redacted_s3_bucket>
+      access_key_id: <redacted_access_key_id>
+      secret_access_key: <redacted_secret_access_key>
     }
   }
   ### added
