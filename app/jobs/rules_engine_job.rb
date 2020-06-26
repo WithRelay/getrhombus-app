@@ -13,7 +13,7 @@ class RulesEngineJob < ApplicationJob
     return if message_text.blank?
 
     @merchant = User.find_by(id: @message.user_id_to)
-    rules = @merchant.rules.pluck(:text, :response, :rule_type, :message_length, :id)
+    rules = @merchant.rules.order(id: :asc).pluck(:text, :response, :rule_type, :message_length, :id)
     return if rules.blank?
 
     rules.each do |rule|
