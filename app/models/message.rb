@@ -184,6 +184,20 @@ class Message < ActiveRecord::Base
       '<redacted_email>',
       '<redacted_email>',
       '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
       '<redacted_email>'
     ]
 
