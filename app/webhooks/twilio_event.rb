@@ -1,10 +1,11 @@
-class TwilioEvent
+# frozen_string_literal: true
 
+class TwilioEvent
   def process_event(params, merchant)
     @params = params
     @merchant = merchant
-    @data = TextingService.fetch_message_details(@params[:MessageSid])         # fetch additional message data
-    if (@data && @data.direction == "outbound-api") || (!@data && !["received", "receiving"].include?(@params[:SmsStatus]))
+    @data = TextingService.fetch_message_details(@params[:MessageSid]) # fetch additional message data
+    if (@data && @data.direction == 'outbound-api') || (!@data && !%w[received receiving].include?(@params[:SmsStatus]))
       update_sent_message
     elsif @params[:SmsStatus] == 'received'
       save_received_message
@@ -16,75 +17,76 @@ class TwilioEvent
   # when message is sent from rhombus
   def update_sent_message
     Message.where(message_id: @params[:MessageSid])
-      .update_all(message_timestamp: @data.date_sent,
-        message_price: @data.price, status: @params[:MessageStatus], error_text: @data.error_message,
-        error_code: @data.error_code, num_segments: @data.num_segments)#, price_unit: @data.price_unit)
+           .update_all(message_timestamp: @data.date_sent,
+                       message_price: @data.price, status: @params[:MessageStatus], error_text: @data.error_message,
+                       error_code: @data.error_code, num_segments: @data.num_segments) # , price_unit: @data.price_unit)
   end
 
   # when message is sent to rhombus
   def save_received_message
-    begin
-      num_media = @params[:NumMedia].to_i
-      num_segments = @params[:NumSegments].to_i
+    num_media = @params[:NumMedia].to_i
+    num_segments = @params[:NumSegments].to_i
 
-      if num_media > 0
-        mms_price = @merchant.sms_fee.inbound_mms
-        price, price_multiplier = mms_price, mms_price * num_media
-      else
-        sms_price = @merchant.sms_fee.inbound_sms
-        price, price_multiplier = sms_price, sms_price * num_segments
-      end
-
-      @phone_number = @params[:From].gsub('+', '')
-      user = get_user
-      @message_id = @params[:MessageSid]
-
-      @message = Message.create!(
-        to: @params[:To].gsub('+', ''),
-        from: @phone_number,
-        status: @params[:SmsStatus],
-        user_id: user.try(:id),
-        user_id_to: @merchant.id,
-        message_id: @message_id,
-        text: @params[:Body].strip,
-        num_segments: num_segments,
-        num_media: num_media,
-        #price_unit: @data.price_unit,
-        message_timestamp: @data.date_updated,
-        message_price: @data.price,
-        relay_price: price,
-        error_text: @data.error_message,
-        error_code: @data.error_code
-      )
-
-      # save user info on twilio_number_data
-      add_or_update_twilio_number_data
-      # save media/mms if present
-      save_media if num_media > 0
-
-      # create or add to existing conversation, send to real time service
-      if user.present?
-        uid, uid_type = user.id, 'user'
-        MerchantCustomer.add_or_update_merchant_customer(@merchant, user) #unless user.is_platform?
-      else
-        uid, uid_type = @phone_number, 'phone_number'
-        MerchantContact.add_or_update_merchant_contact(@merchant.id, uid, uid_type)
-        #OpenCnamData.find_record_or_get_intelligence_data(uid)
-      end
-
-      Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
-      @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
-      MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
-      #@merchant.deduct_from_account_balance(price_multiplier)
-      RulesEngineJob.perform_later(@message.id) if @merchant.rules.present?
-
-    rescue ActiveRecord::RecordNotUnique => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In twilio save_received_message record not unique", env: Rails.env, params: @params })
-    rescue ActiveRecord::RecordInvalid => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In twilio save_received_message record invalid", env: Rails.env, params: @params })
-    rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In twilio save_received_message", env: Rails.env, params: @params })
+    if num_media > 0
+      mms_price = @merchant.sms_fee.inbound_mms
+      price = mms_price
+      price_multiplier = mms_price * num_media
+    else
+      sms_price = @merchant.sms_fee.inbound_sms
+      price = sms_price
+      price_multiplier = sms_price * num_segments
     end
+
+    @phone_number = @params[:From].gsub('+', '')
+    user = get_user
+    @message_id = @params[:MessageSid]
+
+    @message = Message.create!(
+      to: @params[:To].gsub('+', ''),
+      from: @phone_number,
+      status: @params[:SmsStatus],
+      user_id: user.try(:id),
+      user_id_to: @merchant.id,
+      message_id: @message_id,
+      text: @params[:Body].strip,
+      num_segments: num_segments,
+      num_media: num_media,
+      # price_unit: @data.price_unit,
+      message_timestamp: @data.date_updated,
+      message_price: @data.price,
+      relay_price: price,
+      error_text: @data.error_message,
+      error_code: @data.error_code
+    )
+
+    # save user info on twilio_number_data
+    add_or_update_twilio_number_data
+    # save media/mms if present
+    save_media if num_media > 0
+
+    # create or add to existing conversation, send to real time service
+    if user.present?
+      uid = user.id
+      uid_type = 'user'
+      MerchantCustomer.add_or_update_merchant_customer(@merchant, user) # unless user.is_platform?
+    else
+      uid = @phone_number
+      uid_type = 'phone_number'
+      MerchantContact.add_or_update_merchant_contact(@merchant.id, uid, uid_type)
+      # OpenCnamData.find_record_or_get_intelligence_data(uid)
+    end
+
+    Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
+    @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, 'Message')
+    MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
+    # @merchant.deduct_from_account_balance(price_multiplier)
+    RulesEngineJob.perform_later(@message.id) if @merchant.rules.exists?
+  rescue ActiveRecord::RecordNotUnique => e
+    ExceptionNotifier.notify_exception(e, data: { message: 'In twilio save_received_message record not unique', env: Rails.env, params: @params })
+  rescue ActiveRecord::RecordInvalid => e
+    ExceptionNotifier.notify_exception(e, data: { message: 'In twilio save_received_message record invalid', env: Rails.env, params: @params })
+  rescue StandardError => e
+    ExceptionNotifier.notify_exception(e, data: { message: 'In twilio save_received_message', env: Rails.env, params: @params })
   end
 
   def add_or_update_twilio_number_data
@@ -106,14 +108,13 @@ class TwilioEvent
     images_ary = []
     num_media.times do |i|
       media_url = @params["MediaUrl#{i}"]
-      if %w{image/jpeg image/png image/gif}.include?( @params["MediaContentType#{i}"])
-        image = Image.new
-        image.avatar_for_twilio_media(media_url)
-        images_ary << image
-      end
+      next unless %w[image/jpeg image/png image/gif].include?(@params["MediaContentType#{i}"])
+
+      image = Image.new
+      image.avatar_for_twilio_media(media_url)
+      images_ary << image
     end
 
     @message.images = images_ary if images_ary.present?
   end
-
 end
