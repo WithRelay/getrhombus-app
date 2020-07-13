@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
   around_action :set_time_zone
@@ -5,15 +7,15 @@ class WebhooksController < ApplicationController
   def stripe_events
     begin
       # Verify the event by fetching it from Stripe
-      #if PaymentService.retrieve_charge(type=='platform', ) params[:id] == event[:id]
+      # if PaymentService.retrieve_charge(type=='platform', ) params[:id] == event[:id]
 
-      #Parameters: {"id"=>"evt_1BQKYz20Ob4OYBly52WgQpDE", "object"=>"event", "account"=>"<redacted_stripe_account_id>",
-      #type = (request.original_fullpath.include? 'platform') ? 'platform' : 'connect'
-      type = (request.original_fullpath.include? 'platform' || params[:account] == "<redacted_stripe_account_id>") ? 'platform' : 'connect'
+      # Parameters: {"id"=>"evt_1BQKYz20Ob4OYBly52WgQpDE", "object"=>"event", "account"=>"<redacted_stripe_account_id>",
+      # type = (request.original_fullpath.include? 'platform') ? 'platform' : 'connect'
+      type = (request.original_fullpath.include? 'platform' || params[:account] == '<redacted_stripe_account_id>') ? 'platform' : 'connect'
       StripeEvent.new.process_event(params, type)
-      #end
-    rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In webhooks controller stripe_events", env: Rails.env })
+      # end
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: 'In webhooks controller stripe_events', env: Rails.env })
     end
     render nothing: true
   end
@@ -37,8 +39,8 @@ class WebhooksController < ApplicationController
     res = {}
     begin
       res = FacebookEvent.new.process_event(params, @current_page, @merchant)
-    rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In webhooks controller facebook_events", env: Rails.env })
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, env: request.env, data: { message: 'In webhooks controller facebook_events', env: Rails.env })
     end
     render json: res
   end
@@ -58,11 +60,11 @@ class WebhooksController < ApplicationController
     elsif action_name == 'twilio_events'
       @merchant = Number.includes(user: [:sms_fee]).find_by(number: params[:To].gsub('+', '')).try(:user)
     elsif action_name == 'nexmo_events'
-      if params[:to].is_a?(Hash)
-        @merchant = Number.includes(user: [:sms_fee]).find_by(number: params[:to][:number]).try(:user)
-      else
-        @merchant = Number.includes(user: [:sms_fee]).find_by(number: params[:to]).try(:user)
-      end
+      @merchant = if params[:to].is_a?(Hash)
+                    Number.includes(user: [:sms_fee]).find_by(number: params[:to][:number]).try(:user)
+                  else
+                    Number.includes(user: [:sms_fee]).find_by(number: params[:to]).try(:user)
+                  end
     end
 
     ((render nothing: true) and return) if @merchant.blank? && params['hub.mode'].nil?

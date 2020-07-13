@@ -278,7 +278,7 @@ task buy_nexmo_numbers2: :environment do
       puts "number #{total} !!!!!!!!!!!!!!!"
       fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
       u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: 0, provider: 'nexmo', price: '210')
-      # TextingService.update_nexmo_number(n["country"], n["msisdn"], 'tel', "<redacted_phone_number>")
+      TextingService.update_nexmo_number(n['country'], n['msisdn'], 'tel', '<redacted_phone_number>')
       # <redacted_phone_number>
     end
   end
