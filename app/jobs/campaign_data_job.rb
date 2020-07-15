@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CampaignDataJob < ApplicationJob
   require 'csv'
   queue_as :campaign_data
@@ -14,7 +16,7 @@ class CampaignDataJob < ApplicationJob
                         l.name as 'Segment', c.name as 'Campaign',
                         c.text as 'Template', m.created_at as 'Timestamp (ET)',
                         m.id as 'Message ID', l.id as 'Segment ID', c.id as 'Campaign ID'
-                        #{first_customer_contact.try(:customer_contact_type) == 'MerchantCustomer' ? '' : ", mc.van_id as 'VAN ID'" }
+                        #{first_customer_contact.try(:customer_contact_type) == 'MerchantCustomer' ? '' : ", mc.van_id as 'VAN ID'"}
                       from campaigns c
                       inner join campaign_lists cl
                         on c.id = cl.campaign_id
@@ -24,9 +26,9 @@ class CampaignDataJob < ApplicationJob
                         on ul.list_id = cl.list_id
                       inner join #{first_customer_contact.try(:customer_contact_type) == 'MerchantCustomer' ? 'merchant_customers' : 'merchant_contacts'} mc
                         on mc.id = ul.customer_contact_id
-                      #{first_customer_contact.try(:customer_contact_type) == 'MerchantCustomer' ? 'inner join users u on mc.customer_id = u.id ' : '' }
+                      #{first_customer_contact.try(:customer_contact_type) == 'MerchantCustomer' ? 'inner join users u on mc.customer_id = u.id ' : ''}
                       inner join messages m
-                        on m.from = #{first_customer_contact.try(:customer_contact_type) == 'MerchantCustomer' ? 'u.phone_number' : 'mc.uid' }
+                        on m.from = #{first_customer_contact.try(:customer_contact_type) == 'MerchantCustomer' ? 'u.phone_number' : 'mc.uid'}
                       where c.id = ?
                         and m.user_id_to = ?
                         and m.created_at > ?"
@@ -35,12 +37,12 @@ class CampaignDataJob < ApplicationJob
 
       csv_string = CSV.generate do |csv|
         csv << header
-        messages.each { |m| csv << [m[header[0]], m[header[1]], m[header[2]], m[header[3]], m[header[4]], m[header[5]], m[header[6]].to_time.strftime("%Y-%m-%d %H:%M:%S"), m[header[7]], m[header[8]], m[header[9]], m[header[10]]] }
+        messages.each { |m| csv << [m[header[0]], m[header[1]], m[header[2]], m[header[3]], m[header[4]], m[header[5]], m[header[6]].to_time.strftime('%Y-%m-%d %H:%M:%S'), m[header[7]], m[header[8]], m[header[9]], m[header[10]]] }
       end
 
       emails = campaign.user.try(:alert).try(:emails)
       emails = emails.present? ? emails : [campaign.user.email]
-      attachment_hash = { attachments: [{ content: Base64.encode64(csv_string), name: 'file.csv', type: 'text/csv' }] }
+      attachment_hash = { attachments: [{ content: Base64.encode64(csv_string), name: "#{campaign.name}.csv", type: 'text/csv' }] }
       emails.each do |e|
         EmailingService.email_to_platform("See Attached File for account - #{campaign.user.email} and campaign - #{campaign.name}.", 'Campaign CSV Data', attachment_hash, e)
       end
