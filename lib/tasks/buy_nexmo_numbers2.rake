@@ -245,6 +245,41 @@ task buy_nexmo_numbers2: :environment do
     <redacted_phone_number>
     <redacted_phone_number>
     <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
   ]
 
   country = 'CA'
