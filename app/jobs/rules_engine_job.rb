@@ -3,9 +3,11 @@
 class RulesEngineJob < ApplicationJob
   queue_as :rules
 
+  EXCLUSIONS = ['<redacted_phone_number>'].freeze
+
   def perform(message_id)
     @message = Message.includes(:user).find_by(id: message_id)
-    run_rules
+    run_rules if @message && EXCLUSIONS.exclude?(@message.from)
   end
 
   def run_rules

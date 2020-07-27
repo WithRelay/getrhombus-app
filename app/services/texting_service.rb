@@ -1,102 +1,98 @@
+# frozen_string_literal: true
+
 require 'uri'
 
-  # help thorough implementation needed per doc above
+# help thorough implementation needed per doc above
 
 class TextingService
+  NEXMO_API_KEY = Rails.application.secrets.nexmo['key']
+  NEXMO_API_SECRET = Rails.application.secrets.nexmo['secret']
 
-  NEXMO_API_KEY = Rails.application.secrets.nexmo["key"]
-  NEXMO_API_SECRET = Rails.application.secrets.nexmo["secret"]
+  TWILIO_API_KEY = Rails.application.secrets.twilio['key']
+  TWILIO_API_SECRET = Rails.application.secrets.twilio['secret']
+  TWILIO_RELAY_APP_SID = Rails.application.secrets.twilio['relay_app_sid']
 
-  TWILIO_API_KEY = Rails.application.secrets.twilio["key"]
-  TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
-  TWILIO_RELAY_APP_SID = Rails.application.secrets.twilio["relay_app_sid"]
-
-  #FIBERNETICS_PN = "<redacted_phone_number>" # For GetRhombus key
-  FIBERNETICS_API_KEY = Rails.application.secrets.fibernetics["key"]
-  FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics["secret"]
+  # FIBERNETICS_PN = "<redacted_phone_number>" # For GetRhombus key
+  FIBERNETICS_API_KEY = Rails.application.secrets.fibernetics['key']
+  FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics['secret']
 
   class << self
-    #TextingService.send_sms_nexmo("<redacted_phone_number>", "<redacted_phone_number>", "ᐃᓄᒃᑎᑐᑦ inatutuke", "")
+    # TextingService.send_sms_nexmo("<redacted_phone_number>", "<redacted_phone_number>", "ᐃᓄᒃᑎᑐᑦ inatutuke", "")
 
     def send_sms_nexmo(from, to, message, client_ref)
-      begin
-        from = from[1..-1] if from.chr == "+"
-        to = to[1..-1] if to.chr == "+"
+      from = from[1..-1] if from.chr == '+'
+      to = to[1..-1] if to.chr == '+'
 
-        # encode the nexmo uri
-        uri = URI.encode_www_form([["api_key", NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message], ['client-ref', client_ref], ['type', 'text']])
-        # ["status-report-req", 1]
-        [true, HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})]
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In texting service send_sms_nexmo", from: from, to: to, body: body, env: Rails.env })
-        [false, err]
-      end
+      # encode the nexmo uri
+      uri = URI.encode_www_form([['api_key', NEXMO_API_KEY], ['api_secret', NEXMO_API_SECRET], ['from', from], ['to', to], ['text', message], ['client-ref', client_ref], %w[type text]])
+      # ["status-report-req", 1]
+      [true, HTTParty.post('https://rest.nexmo.com/sms/json?' + uri, headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })]
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service send_sms_nexmo', from: from, to: to, body: body, env: Rails.env })
+      [false, e]
     end
 
     def list_numbers_nexmo
-      HTTParty.get('https://rest.nexmo.com/account/numbers/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/")
+      HTTParty.get('https://rest.nexmo.com/account/numbers/' + NEXMO_API_KEY + '/' + NEXMO_API_SECRET + '/')
     end
 
     def release_number_nexmo(msisdn, country)
-      uri = URI.encode_www_form([["api_key", NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["msisdn", msisdn], ['country', country]])
-      HTTParty.post('https://rest.nexmo.com/number/cancel?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})
+      uri = URI.encode_www_form([['api_key', NEXMO_API_KEY], ['api_secret', NEXMO_API_SECRET], ['msisdn', msisdn], ['country', country]])
+      HTTParty.post('https://rest.nexmo.com/number/cancel?' + uri, headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
     end
 
     def search_number_nexmo(country, pattern, size = 1, type = 'mobile-lvn', features = 'SMS,VOICE')
       # search for a number on nexmo
-      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" +
-                                NEXMO_API_SECRET + "/" + country + "?features=#{features}&pattern=#{pattern}&size=#{size}&type=#{type}&search_pattern=0")
+      response = HTTParty.get('https://rest.nexmo.com/number/search/' + NEXMO_API_KEY + '/' +
+                                NEXMO_API_SECRET + '/' + country + "?features=#{features}&pattern=#{pattern}&size=#{size}&type=#{type}&search_pattern=0")
       # check the response
-      response.code == 200 && response["numbers"] ? response["numbers"] : nil
+      response.code == 200 && response['numbers'] ? response['numbers'] : nil
     end
 
     def buy_number_nexmo(country, msisdn)
-      response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "/" + msisdn)
+      response = HTTParty.post('https://rest.nexmo.com/number/buy/' + NEXMO_API_KEY + '/' + NEXMO_API_SECRET + '/' + country + '/' + msisdn)
       response.code == 200 ? msisdn : nil
     end
 
     def search_and_buy_number_nexmo(country, pattern)
       # search for a number on nexmo
-      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" +
-                                NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&size=1&pattern=#{pattern}")
+      response = HTTParty.get('https://rest.nexmo.com/number/search/' + NEXMO_API_KEY + '/' +
+                                NEXMO_API_SECRET + '/' + country + "?features=SMS,VOICE&size=1&pattern=#{pattern}")
       # check the response
-      if response.code == 200 && response["numbers"] != nil #.first["msisdn"] != ""
-        msisdn = response["numbers"].first["msisdn"]
-        response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "/" + msisdn)
+      if response.code == 200 && !response['numbers'].nil? # .first["msisdn"] != ""
+        msisdn = response['numbers'].first['msisdn']
+        response = HTTParty.post('https://rest.nexmo.com/number/buy/' + NEXMO_API_KEY + '/' + NEXMO_API_SECRET + '/' + country + '/' + msisdn)
 
         # check response
         if response.code == 200
-          return msisdn
+          msisdn
         else
           # Notify marketplace owner of failure
-          Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number purchase failed with response code #{response.code}").deliver_now
-          return "-"
+          Notification.text_failure_notification(response, from = '', to = '', message = "Rhombus number purchase failed with response code #{response.code}").deliver_now
+          '-'
         end
       else
         # Notify marketplace owner of failure
-        Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number search failed").deliver_now
-        return "-"
+        Notification.text_failure_notification(response, from = '', to = '', message = 'Rhombus number search failed').deliver_now
+        '-'
       end
     end
 
     def update_nexmo_number(country, msisdn, voice_callback_type, voice_callback_value)
-      begin
-        client = Nexmo::Client.new(
-          api_key: NEXMO_API_KEY, api_secret: NEXMO_API_SECRET
-        )
-        client.numbers.update(
-          country: country, msisdn: msisdn,
-          voice_callback_type: voice_callback_type, # sip, tel, or app
-          voice_callback_value: voice_callback_value # A SIP URI, telephone number or Application ID
-        )
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err,
-          data: {
-            message: 'In texting service update_nexmo_number',
-            msisdn: msisdn, env: Rails.env
-          }
-        )
-      end
+      client = Nexmo::Client.new(
+        api_key: NEXMO_API_KEY, api_secret: NEXMO_API_SECRET
+      )
+      client.numbers.update(
+        country: country, msisdn: msisdn,
+        voice_callback_type: voice_callback_type, # sip, tel, or app
+        voice_callback_value: voice_callback_value # A SIP URI, telephone number or Application ID
+      )
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e,
+                                         data: {
+                                           message: 'In texting service update_nexmo_number',
+                                           msisdn: msisdn, env: Rails.env
+                                         })
     end
 
     def send_sms(from, to, body, media_ary = [])
@@ -110,35 +106,35 @@ class TextingService
         data[:media_url] = media_ary if media_ary.present?
         # https://www.twilio.com/docs/api/rest/message
         return [true, client.api.messages.create(data)]
-      rescue Twilio::REST::TwilioError => err
-      rescue StandardError => err
+      rescue Twilio::REST::TwilioError => e
+      rescue StandardError => e
       end
-      ExceptionNotifier.notify_exception(err, data: { message: "In texting service send_sms", from: from, to: to, body: body, media_ary: media_ary, env: Rails.env })
+      ExceptionNotifier.notify_exception(err, data: { message: 'In texting service send_sms', from: from, to: to, body: body, media_ary: media_ary, env: Rails.env })
       [false, err]
     end
 
     def send_sms_fibernetics(from, to, body, subscriber_id)
       begin
-        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET],
-                                    ["phone_number", from], ["to", to], ["message", body], ['subscriber_id', subscriber_id] ])
-        return HTTParty.post("https://smssend.fongo.com/Send.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
-      rescue Timeout::Error => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In send_sms_fibernetics timeout", from: from, to: to, body: body, env: Rails.env })
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In send_sms_fibernetics", from: from, to: to, body: body, env: Rails.env })
+        uri = URI.encode_www_form([['account_id', FIBERNETICS_API_KEY], ['auth_token', FIBERNETICS_API_SECRET],
+                                   ['phone_number', from], ['to', to], ['message', body], ['subscriber_id', subscriber_id]])
+        return HTTParty.post("https://smssend.fongo.com/Send.ashx?#{uri}", headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
+      rescue Timeout::Error => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In send_sms_fibernetics timeout', from: from, to: to, body: body, env: Rails.env })
+      rescue StandardError => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In send_sms_fibernetics', from: from, to: to, body: body, env: Rails.env })
       end
       nil
     end
 
     def get_sms_fibernetics(phone_number, since_id, subscriber_id)
       begin
-        uri = URI.encode_www_form([ ["account_id", FIBERNETICS_API_KEY], ["auth_token", FIBERNETICS_API_SECRET],
-                                    ["phone_number", phone_number], ["since_id", since_id], ['subscriber_id', subscriber_id] ])
-        return HTTParty.post("https://smsfetch.fongo.com/FetchMessageHandler.ashx?#{uri}", headers: { "Content-Type" => "application/x-www-form-urlencoded" })
-      rescue Timeout::Error => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In get_sms_fibernetics timeout", phone_number: phone_number })
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In get_sms_fibernetics", phone_number: phone_number })
+        uri = URI.encode_www_form([['account_id', FIBERNETICS_API_KEY], ['auth_token', FIBERNETICS_API_SECRET],
+                                   ['phone_number', phone_number], ['since_id', since_id], ['subscriber_id', subscriber_id]])
+        return HTTParty.post("https://smsfetch.fongo.com/FetchMessageHandler.ashx?#{uri}", headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
+      rescue Timeout::Error => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In get_sms_fibernetics timeout', phone_number: phone_number })
+      rescue StandardError => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In get_sms_fibernetics', phone_number: phone_number })
       end
       nil
     end
@@ -148,10 +144,10 @@ class TextingService
         uri = URI.encode_www_form([['account_id', FIBERNETICS_API_KEY], ['auth_token', FIBERNETICS_API_SECRET], ['phone_number', fn_num], ['validate_carrier', validate_carrier]])
         re = HTTParty.post("https://smsadmin.fongo.com/CreateSubscriber.ashx?#{uri}", headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
         return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == 'OK'
-      rescue Timeout::Error => err
-        ExceptionNotifier.notify_exception(err, data: { message: 'In create_fibernetics_subscriber timeout', fn_num: fn_num })
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: 'In create_fibernetics_subscriber', fn_num: fn_num })
+      rescue Timeout::Error => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In create_fibernetics_subscriber timeout', fn_num: fn_num })
+      rescue StandardError => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In create_fibernetics_subscriber', fn_num: fn_num })
       end
       nil
     end
@@ -163,80 +159,75 @@ class TextingService
         if re[:number].present?
           # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
           re = client.incoming_phone_numbers.create(phone_number: re[:number], voice_application_sid: TWILIO_RELAY_APP_SID,
-                sms_application_sid: TWILIO_RELAY_APP_SID)
+                                                    sms_application_sid: TWILIO_RELAY_APP_SID)
           return re.phone_number.gsub('+', ''), re.friendly_name
         end
-      rescue Twilio::REST::TwilioError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In texting service buy_number", params: params, env: Rails.env })
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In texting service buy_number", params: params, env: Rails.env })
+      rescue Twilio::REST::TwilioError => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In texting service buy_number', params: params, env: Rails.env })
+      rescue StandardError => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In texting service buy_number', params: params, env: Rails.env })
       end
       false
     end
 
     def search_number(params)
-      begin
-        # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
-        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+      # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
+      client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
 
-        search_params = {}
-        search_params[ ((['US', 'CA'].include? params[:country]) ? 'area_code' : 'contains').to_sym ] = params[:query]
-        data = twilio_list[params[:country].to_sym][:types][params[:type].to_sym]
-        data[:capabilities].each { |c| search_params[(c + '_enabled').to_sym] = "true" }
-        search_params[:exclude_all_address_required] = "true" if data[:address_required] == ""
+      search_params = {}
+      search_params[((%w[US CA].include? params[:country]) ? 'area_code' : 'contains').to_sym] = params[:query]
+      data = twilio_list[params[:country].to_sym][:types][params[:type].to_sym]
+      data[:capabilities].each { |c| search_params[(c + '_enabled').to_sym] = 'true' }
+      search_params[:exclude_all_address_required] = 'true' if data[:address_required] == ''
 
-        if params[:type] == 'local'
-          # https://www.twilio.com/docs/api/rest/available-phone-numbers
-          number = client.api.available_phone_numbers(params[:country]).local.list(search_params).first
-        elsif params[:type] == 'toll_free'
-          number = client.api.available_phone_numbers(params[:country]).toll_free.list(search_params).first
-        elsif params[:type] == 'mobile'
-          number = client.api.available_phone_numbers(params[:country]).mobile.list(search_params).first
-        end
+      if params[:type] == 'local'
+        # https://www.twilio.com/docs/api/rest/available-phone-numbers
+        number = client.api.available_phone_numbers(params[:country]).local.list(search_params).first
+      elsif params[:type] == 'toll_free'
+        number = client.api.available_phone_numbers(params[:country]).toll_free.list(search_params).first
+      elsif params[:type] == 'mobile'
+        number = client.api.available_phone_numbers(params[:country]).mobile.list(search_params).first
+      end
 
-        { number: number.nil? ? '' : number.phone_number  }
-      rescue Twilio::REST::TwilioError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In texting service search_number", params: params, env: Rails.env })
-        { error: "Twilio cannot provision the number." }
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In texting service search_number", params: params, env: Rails.env })
-        { error: err.message }
+      { number: number.nil? ? '' : number.phone_number }
+    rescue Twilio::REST::TwilioError => e
+      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service search_number', params: params, env: Rails.env })
+      { error: 'Twilio cannot provision the number.' }
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service search_number', params: params, env: Rails.env })
+      { error: e.message }
+    end
+
+    def search_number1(_params)
+      # begin
+      # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
+      client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+
+      # client.api.available_phone_numbers('US').local.list(area_code: '415', page_size: 100, limit: 100).each_with_index do |n, i|
+      client.api.available_phone_numbers('CA').local.list(in_region: 'BC', limit: 100).each_with_index do |n, i|
+        puts n.phone_number
+        puts i
       end
     end
 
-    def search_number1(params)
-      #begin
-        # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
-        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-
-        #client.api.available_phone_numbers('US').local.list(area_code: '415', page_size: 100, limit: 100).each_with_index do |n, i|
-        client.api.available_phone_numbers('CA').local.list(in_region: 'BC', limit: 100).each_with_index do |n, i|
-          puts n.phone_number
-          puts i
-        end
-
-    end
-
-
-    def search_number2(params)
+    def search_number2(_params)
       s = {}
 
       40.times do
-      #begin
+        # begin
         # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
 
-        #client.api.available_phone_numbers('US').local.list(area_code: '415', page_size: 100, limit: 100).each_with_index do |n, i|
-        client.api.available_phone_numbers('CA').local.list(in_region: 'BC', page_size: 100, limit: 100).each_with_index do |n, i|
+        # client.api.available_phone_numbers('US').local.list(area_code: '415', page_size: 100, limit: 100).each_with_index do |n, i|
+        client.api.available_phone_numbers('CA').local.list(in_region: 'BC', page_size: 100, limit: 100).each_with_index do |n, _i|
           s[n.phone_number] = 1
-          #puts n.phone_number
-          #puts i
+          # puts n.phone_number
+          # puts i
         end
       end
 
       s.keys.length
     end
-
 
     def number_lookup(num, with_carrier = false)
       begin
@@ -244,318 +235,307 @@ class TextingService
         with_carrier = with_carrier ? { type: 'carrier' } : {}
         number = client.lookups.v1.phone_numbers(num).fetch(with_carrier)
         puts number.inspect
-        return [number.phone_number[1..-1], number.country_code, number.national_format, number.try(:carrier).try(:[], "type")]
-      rescue Twilio::REST::TwilioError => err
-      rescue Exception => err
+        return [number.phone_number[1..-1], number.country_code, number.national_format, number.try(:carrier).try(:[], 'type')]
+      rescue Twilio::REST::TwilioError => e
+      rescue Exception => e
       end
-      #puts err.inspect
-      ExceptionNotifier.notify_exception(err, data: { message: "In texting service number_lookup", num: num, env: Rails.env, info: err.try(:message) })
+      # puts err.inspect
+      ExceptionNotifier.notify_exception(err, data: { message: 'In texting service number_lookup', num: num, env: Rails.env, info: err.try(:message) })
       false
     end
 
     def twilio_list
       {
-=begin
-        AU: {
-          name: "Australia",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-         },
-        AT: {
-          name: 'Austria',
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        BE: {
-          name: "Belgium",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-=end
+        #         AU: {
+        #           name: "Australia",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #          },
+        #         AT: {
+        #           name: 'Austria',
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         BE: {
+        #           name: "Belgium",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
         CA: {
-          name: "Canada",
+          name: 'Canada',
           types: {
-           local: {
-              capabilities: ["sms", "mms", "voice"],
-              reach: "global",
-              address_required: ""
+            local: {
+              capabilities: %w[sms mms voice],
+              reach: 'global',
+              address_required: ''
             },
             toll_free: {
-              capabilities: ["sms", "voice"],
-              reach: "domestic",
-              address_required: ""
-            },
+              capabilities: %w[sms voice],
+              reach: 'domestic',
+              address_required: ''
+            }
           }
         },
-=begin
-        CL: {
-          name: "Chile",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "domestic",
-              address_required: ""
-            },
-          }
-        },
-        CZ: {
-          name: "Czech Republic",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "domestic",
-              address_required: ""
-            },
-          }
-        },
-        EE: {
-          name: "Estonia",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        FI: {
-          name: "Finland",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        FR: {
-          name: "France",
-          types: {
-            mobile: {
-              capabilities: ["sms", "voice"],
-              reach: "domestic",
-              address_required: "any address"
-            },
-          }
-        },
-        DE: {
-          name: "Germany",
-          types: {
-            mobile: {
-              capabilities: ["sms", "voice"],
-              reach: "global",
-              address_required: "any address"
-            },
-          }
-        },
-        HK: {
-          name: "Hong Kong",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "domestic",
-              address_required: ""
-            },
-          }
-        },
-        HU: {
-          name: "Hungary",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        IE: {
-          name: "Ireland",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        IL: {
-          name: "Israel",
-          types: {
-            mobile: {
-              capabilities: ["sms", 'voice'],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        LT: {
-          name: "Lithuania",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "domestic",
-              address_required: ""
-            },
-          }
-        },
-        MY: {
-          name: "Malaysia",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "domestic",
-              address_required: ""
-            },
-          }
-        },
-        NL: {
-          name: "Netherlands",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: "any address"
-            },
-          }
-        },
-        NO: {
-          name: "Norway",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        PL: {
-          name: "Poland",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        PR: {
-          name: "Puerto Rico",
-          types: {
-            local: {
-              capabilities: ["sms", "voice"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        SE: {
-          name: "Sweden",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        CH: {
-          name: "Switzerland",
-          types: {
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        GB: {
-          name: "United Kingdom",
-          types: {
-            local: {
-              capabilities: ["sms", "voice"],
-              reach: "domestic",
-              address_required: ""
-            },
-          }
-        },
-=end
+        #         CL: {
+        #           name: "Chile",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "domestic",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         CZ: {
+        #           name: "Czech Republic",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "domestic",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         EE: {
+        #           name: "Estonia",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         FI: {
+        #           name: "Finland",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         FR: {
+        #           name: "France",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms", "voice"],
+        #               reach: "domestic",
+        #               address_required: "any address"
+        #             },
+        #           }
+        #         },
+        #         DE: {
+        #           name: "Germany",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms", "voice"],
+        #               reach: "global",
+        #               address_required: "any address"
+        #             },
+        #           }
+        #         },
+        #         HK: {
+        #           name: "Hong Kong",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "domestic",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         HU: {
+        #           name: "Hungary",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         IE: {
+        #           name: "Ireland",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         IL: {
+        #           name: "Israel",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms", 'voice'],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         LT: {
+        #           name: "Lithuania",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "domestic",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         MY: {
+        #           name: "Malaysia",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "domestic",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         NL: {
+        #           name: "Netherlands",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: "any address"
+        #             },
+        #           }
+        #         },
+        #         NO: {
+        #           name: "Norway",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         PL: {
+        #           name: "Poland",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         PR: {
+        #           name: "Puerto Rico",
+        #           types: {
+        #             local: {
+        #               capabilities: ["sms", "voice"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         SE: {
+        #           name: "Sweden",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         CH: {
+        #           name: "Switzerland",
+        #           types: {
+        #             mobile: {
+        #               capabilities: ["sms"],
+        #               reach: "global",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
+        #         GB: {
+        #           name: "United Kingdom",
+        #           types: {
+        #             local: {
+        #               capabilities: ["sms", "voice"],
+        #               reach: "domestic",
+        #               address_required: ""
+        #             },
+        #           }
+        #         },
         US: {
-          name: "United States",
+          name: 'United States',
           types: {
             local: {
-              capabilities: ["sms", "mms", "voice"],
-              reach: "global",
-              address_required: ""
+              capabilities: %w[sms mms voice],
+              reach: 'global',
+              address_required: ''
             },
             toll_free: {
-              capabilities: ["sms", "voice"],
-              reach: "domestic",
-              address_required: ""
-            },
+              capabilities: %w[sms voice],
+              reach: 'domestic',
+              address_required: ''
+            }
           }
-        },
+        }
       }
     end
 
     def release_number(num)
-      begin
-        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
-        client.incoming_phone_numbers.list({phone_number: num}).each { |n| n.delete }
-        true
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In texting service release_number", num: num, env: Rails.env })
-        false
-      end
+      client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+      # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
+      client.incoming_phone_numbers.list({ phone_number: num }).each(&:delete)
+      true
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service release_number', num: num, env: Rails.env })
+      false
     end
 
     def all
-      begin
-        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
-        client.incoming_phone_numbers.list.each { |n| puts n.phone_number.to_s.reverse[0...11].reverse }
-        true
-      rescue StandardError => err
-        ExceptionNotifier.notify_exception(err, data: { message: "In texting service release_number", num: num, env: Rails.env })
-        false
-      end
+      client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+      # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
+      client.incoming_phone_numbers.list.each { |n| puts n.phone_number.to_s.reverse[0...11].reverse }
+      true
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service release_number', num: num, env: Rails.env })
+      false
     end
-
 
     # it fetches all message information since only limited message response we got from webhook for sent/received message
     def fetch_message_details(message_id)
-      begin
-        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        # https://www.twilio.com/docs/api/rest/message
-        client.api.messages(message_id).fetch
-      rescue StandardError => e
-        false
-      end
+      client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+      # https://www.twilio.com/docs/api/rest/message
+      client.api.messages(message_id).fetch
+    rescue StandardError => e
+      false
     end
 
     def receive_call
       response = Twilio::TwiML::Response.new do |r|
         # Should be your Twilio Number or a verified Caller ID
-        r.Dial :callerId => '+<redacted_phone_number>' do |d|
-            d.Client 'rho-jenny'
+        r.Dial callerId: '+<redacted_phone_number>' do |d|
+          d.Client 'rho-jenny'
         end
       end
-      return response
+      response
     end
 
     def get_twilio_capibility_token
@@ -563,10 +543,9 @@ class TextingService
       demo_app_sid = '<redacted_twilio_app_sid>'
       capability = Twilio::Util::Capability.new TWILIO_API_KEY, TWILIO_API_SECRET
       capability.allow_client_outgoing '<redacted_twilio_app_sid>'
-      capability.allow_client_incoming "rho-jenny"
+      capability.allow_client_incoming 'rho-jenny'
       token = capability.generate
-      return token
+      token
     end
-
   end
 end
