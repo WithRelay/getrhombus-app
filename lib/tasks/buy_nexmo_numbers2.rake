@@ -288,7 +288,7 @@ task buy_nexmo_numbers2: :environment do
   pattern = '1306'
   size = 100
   type = 'mobile-lvn'
-  max_total = 30
+  max_total = 50
   numbers_ary = []
   u = true
   u = User.find_by(email: '<redacted_email>'.downcase)

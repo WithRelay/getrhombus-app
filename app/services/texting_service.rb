@@ -109,8 +109,8 @@ class TextingService
       rescue Twilio::REST::TwilioError => e
       rescue StandardError => e
       end
-      ExceptionNotifier.notify_exception(err, data: { message: 'In texting service send_sms', from: from, to: to, body: body, media_ary: media_ary, env: Rails.env })
-      [false, err]
+      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service send_sms', from: from, to: to, body: body, media_ary: media_ary, env: Rails.env })
+      [false, e]
     end
 
     def send_sms_fibernetics(from, to, body, subscriber_id)
@@ -240,7 +240,7 @@ class TextingService
       rescue Exception => e
       end
       # puts err.inspect
-      ExceptionNotifier.notify_exception(err, data: { message: 'In texting service number_lookup', num: num, env: Rails.env, info: err.try(:message) })
+      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service number_lookup', num: num, env: Rails.env, info: e.try(:message) })
       false
     end
 
