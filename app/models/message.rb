@@ -2179,4 +2179,69 @@ class Message < ActiveRecord::Base
       Rule.import(data, validate: false) if data.present?
     end
   end
+
+  def sss
+    r = [
+      'no.',
+      'N',
+      'sorry no',
+      'never',
+      'fuck no',
+      'hell freez',
+      'Never Conservative',
+      'Absolutely no',
+      'Hell No',
+      'no!',
+      'agree',
+      'disagree'
+    ]
+
+    Rule.where(text: r, rule_type: 'contains_only_text', user_id: 123_807)
+  end
+
+  def run_rules
+    message_text = text.downcase.strip
+    return if message_text.blank?
+
+    @merchant = User.find_by(id: user_id_to)
+    rules = @merchant.rules.order(id: :asc).pluck(:text, :response, :rule_type, :message_length, :id)
+    return if rules.blank?
+
+    rules.each do |rule|
+      rule_text = rule.first.downcase.strip
+      response = rule.second
+
+      case rule.third
+      when 'starts_with_text'
+        if message_text.starts_with?(rule_text)
+          puts 1
+          break
+        end
+      when 'starts_with_text_and_length_is_less_than_x'
+        if message_text.starts_with?(rule_text) && message_text.size < (rule.fourth + 1)
+          puts 2
+          break
+        end
+      when 'contains_text'
+        if message_text.include?(rule_text)
+          puts rule_text
+          puts message_text
+          puts @merchant.id
+          puts rule.inspect
+          puts 3
+          break
+        end
+      when 'contains_only_text'
+        if message_text == rule_text
+          puts 4
+          break
+        end
+      when 'contains_text_and_length_is_less_than_x'
+        if message_text.include?(rule_text) && message_text.size < (rule.fourth + 1)
+          puts 5
+          break
+        end
+      end
+    end
+  end
 end
