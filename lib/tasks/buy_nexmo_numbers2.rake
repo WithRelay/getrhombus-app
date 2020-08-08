@@ -1430,15 +1430,75 @@ task buy_nexmo_numbers2: :environment do
     <redacted_phone_number>
     <redacted_phone_number>
     <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
 
   ]
 
   country = 'CA'
   # country = "US"
-  pattern = '1613'
+  pattern = '1587'
   size = 100
   type = 'mobile-lvn'
-  max_total = 4
+  max_total = 15
   numbers_ary = []
   u = true
   u = User.find_by(email: '<redacted_email>'.downcase)
