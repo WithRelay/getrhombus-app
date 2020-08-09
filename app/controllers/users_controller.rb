@@ -48,11 +48,11 @@ class UsersController < ApplicationController
     nested_user_params
   end
 
+  # address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country],
   def user_params
     params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description, :tos_acceptance,
                                  bank_accounts_attributes: %i[id routing_number country currency account_number institution_number],
-                                 people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy]
-                                   # address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country],
+                                 people_attributes: %i[id gender business_name full_name dob last4 role _destroy],
                                  address_attributes: %i[street_address suite id city state_province postal_code country],
                                  stripe_creds_attributes: %i[id charges_enabled payouts_enabled])
   end
