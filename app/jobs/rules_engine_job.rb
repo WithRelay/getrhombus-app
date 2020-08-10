@@ -3,7 +3,7 @@
 class RulesEngineJob < ApplicationJob
   queue_as :rules
 
-  EXCLUSIONS = %w[<redacted_phone_number> <redacted_phone_number> <redacted_phone_number> <redacted_phone_number> <redacted_phone_number> <redacted_phone_number>].freeze
+  EXCLUSIONS = %w[<redacted_phone_number> <redacted_phone_number> <redacted_phone_number> <redacted_phone_number> <redacted_phone_number> <redacted_phone_number> <redacted_phone_number>].freeze
 
   def perform(message_id)
     @message = Message.includes(:user).find_by(id: message_id)
