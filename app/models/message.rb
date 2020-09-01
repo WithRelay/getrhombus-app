@@ -2299,14 +2299,14 @@ class Message < ActiveRecord::Base
   end
 
   def wq3
-    rules = Rule.where(user_id: 123_811).pluck(:text, :rule_type, :response)
+    rules = Rule.where(user_id: 123_807).pluck(:text, :rule_type, :response, :message_length)
 
     %w[<redacted_email> <redacted_email>].each do |e|
       user = User.find_by(email: e.downcase)
 
       data = []
       rules.each do |r|
-        data << { user_id: user.id, text: r.first, rule_type: r.second, response: r.third }
+        data << { user_id: user.id, text: r.first, rule_type: r.second, response: r.third, message_length: r.fourth }
         if data.length == 10_000
           Rule.import data, validate: false
           data.clear
