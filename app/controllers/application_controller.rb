@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   include CheckUserProfile
 
@@ -9,14 +11,14 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
   before_action :check_current_user_and_path
   around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
-  #before_filter :set_cache_headers
+  # before_filter :set_cache_headers
 
-  def after_sign_in_path_for(resource)
+  def after_sign_in_path_for(_resource)
     check_user_redirect || root_path
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "CanCan AccessDenied", env: Rails.env })
+    ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: 'CanCan AccessDenied', env: Rails.env })
     redirect_to_404(exception.message)
   end
 
@@ -36,12 +38,13 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_in) { |u| u.permit(:email, :password) }
     devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:email, :phone_number, :password, :user_level) }
-    devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:email, :current_password, :password,
-      :password_confirmation, :last4, :exp_month,  :exp_year, :card_name, :card_type, :team_size,
-      :use_rhombus_for, :phone_number, :card_id, :org_name, :org_category, :org_phone, :currency,
-      :tax_percent, :url, :custom_welcome, :livemode, :time_zone, :org_type, people_attributes: [:id, :full_name, :role],
-      address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country]
-    )}
+    devise_parameter_sanitizer.permit(:account_update) do |u|
+      u.permit(:email, :current_password, :password,
+               :password_confirmation, :last4, :exp_month, :exp_year, :card_name, :card_type, :team_size,
+               :use_rhombus_for, :phone_number, :card_id, :org_name, :org_category, :org_phone, :currency,
+               :tax_percent, :url, :custom_welcome, :livemode, :time_zone, :org_type, people_attributes: %i[id full_name role],
+                                                                                      address_attributes: %i[street_address suite id city state_province postal_code country])
+    end
   end
 
   private
@@ -52,15 +55,15 @@ class ApplicationController < ActionController::Base
 
   # for pinging states. Should avoid loading current_user
   def not_ping_controller_actions?
-    ['offline_check', 'update_merchant_status'].exclude?(action_name)
+    %w[offline_check update_merchant_status].exclude?(action_name)
   end
 
   def check_current_user_and_path
     if not_ping_controller_actions? && !devise_controller?
       # Avoid js or api json requests, forms, static pages and guest user
-      if request.format.html? == true && request.get? && ['static_pages', 'knowledge_base_categories', 'knowledge_bases'].exclude?(controller_name) && current_user.present?
+      if request.format.html? == true && request.get? && %w[static_pages knowledge_base_categories knowledge_bases].exclude?(controller_name) && current_user.present?
         # target only pages users actually see.
-        if params[:user_id].present? && current_user.id != params[:user_id].to_i
+        if current_user.user_level == 2 || (params[:user_id].present? && current_user.id != params[:user_id].to_i)
           redirect_to_404('Forbidden. That simple.')
         else
           redirect_path = check_user_redirect(false)
@@ -75,13 +78,13 @@ class ApplicationController < ActionController::Base
   end
 
   def prepare_exception_notifier
-    request.env["exception_notifier.exception_data"] = {
+    request.env['exception_notifier.exception_data'] = {
       current_user: current_user
     }
   end
 
   def set_cache_headers
-    response.headers["Cache-Control"] = "no-cache, no-store"
-    response.headers["Pragma"] = "no-cache"
+    response.headers['Cache-Control'] = 'no-cache, no-store'
+    response.headers['Pragma'] = 'no-cache'
   end
 end

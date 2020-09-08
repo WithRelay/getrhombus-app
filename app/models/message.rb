@@ -303,7 +303,7 @@ class Message < ActiveRecord::Base
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 15_064_064_809); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 18_003_230_350); puts i; }
       end
     end
 
@@ -2284,12 +2284,12 @@ class Message < ActiveRecord::Base
     end
 
     # Rule.create(user_id: 123_807, text: HERE, rule_type: 'contains_text', response: 'Thanks for your time. Stay well.')
-    file_data = CSV.read('/home/taiwo/Downloads/50K First Names for Relay.csv', encoding: 'ISO-8859-1', headers: true, skip_blanks: true, header_converters: :symbol, converters: %i[all blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+    file_data = CSV.read('/home/taiwo/Downloads/Sep 4 rules for Taiwo (1).csv', encoding: 'ISO-8859-1', headers: true, skip_blanks: true, header_converters: :symbol, converters: %i[all blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
 
     data = []
     file_data.each do |row|
       row = row.to_hash
-      data << { user_id: 123_807, text: row[:text], rule_type: 'contains_text', response: 'Thanks for your time. Stay well.' }
+      data << { user_id: 123_807, text: row[:text], rule_type: row[:rule_type], response: row[:response] }
       if data.length == 5000
         Rule.import data, validate: false
         data.clear
