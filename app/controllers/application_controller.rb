@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
       # Avoid js or api json requests, forms, static pages and guest user
       if request.format.html? == true && request.get? && %w[static_pages knowledge_base_categories knowledge_bases].exclude?(controller_name) && current_user.present?
         # target only pages users actually see.
-        if current_user.status == 2 || (params[:user_id].present? && current_user.id != params[:user_id].to_i)
+        if current_user.fraudulent? || (params[:user_id].present? && current_user.id != params[:user_id].to_i)
           redirect_to_404('Forbidden. That simple.')
         else
           redirect_path = check_user_redirect(false)
