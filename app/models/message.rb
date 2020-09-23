@@ -175,29 +175,6 @@ class Message < ActiveRecord::Base
     # emails = %w(<redacted_email> <redacted_email>)
     # 5239 numbers
     emails = [
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
       '<redacted_email>'
     ]
 
