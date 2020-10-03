@@ -133,39 +133,34 @@ class Message < ActiveRecord::Base
   #=begin
   def y
     ary = [
-      14_189_341_583,
-      14_189_221_171,
-      14_189_146_079,
-      14_189_145_955,
-      14_189_143_723,
-      14_189_143_236,
-      14_189_143_074,
-      14_189_142_515,
-      14_189_141_879,
-      14_189_055_141,
-      14_188_775_951,
-      14_188_729_467,
-      14_188_726_645,
-      14_188_722_968,
-      14_188_717_633,
-      14_188_618_675,
-      14_188_219_946,
-      14_187_804_444,
-      14_186_922_961,
-      14_186_884_472,
-      14_186_875_128,
-      14_186_830_239,
-      14_186_830_223,
-      14_186_829_833,
-      14_186_829_812,
-      14_186_825_290,
-      14_186_820_113,
-      14_186_817_742,
-      14_186_817_158
+      13_062_057_991,
+      13_062_058_032,
+      13_062_058_055,
+      13_062_058_108,
+      13_062_058_139,
+      13_062_051_518,
+      13_062_053_974,
+      13_062_054_154,
+      13_062_054_489,
+      13_062_055_899,
+      16_132_169_491,
+      16_132_169_670,
+      16_134_343_111,
+      16_134_676_027,
+      16_134_816_191,
+      16_132_100_821,
+      16_132_162_080,
+      16_132_162_106,
+      16_132_162_107,
+      16_132_162_608
     ]
 
     # nexmo
-    ary.each_with_index { |n, i| TextingService.release_number_nexmo(n, 'CA'); puts i; }
+    Number.where(number: ary, provider: 'nexmo').each do |n|
+      TextingService.release_number_nexmo(n.number, 'CA')
+      n.destroy
+    end
+    # ary.each_with_index { |n, i| TextingService.release_number_nexmo(n, 'CA'); puts i; }
     # ary.each_with_index { |n, i| TextingService.release_number_nexmo(n[0], n[1]); puts i; }
     # Twilio
     # ary.each_with_index { |n, i| TextingService.release_number(n); puts i; }
@@ -175,6 +170,27 @@ class Message < ActiveRecord::Base
     # emails = %w(<redacted_email> <redacted_email>)
     # 5239 numbers
     emails = [
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
+      '<redacted_email>',
       '<redacted_email>'
     ]
 
@@ -275,12 +291,12 @@ class Message < ActiveRecord::Base
   end
 
   def z
-    emails = %w[<redacted_email>] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
+    emails = %w[<redacted_email> <redacted_email>] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 18_003_230_350); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 13_065_003_398); puts i; }
       end
     end
 

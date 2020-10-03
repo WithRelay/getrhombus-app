@@ -440,14 +440,15 @@ task buy_nexmo_numbers2: :environment do
     <redacted_phone_number>
     <redacted_phone_number>
     <redacted_phone_number>
+
   ]
 
   country = 'CA'
   # country = "US"
-  pattern = '1306'
+  pattern = '1613'
   size = 100
   type = 'mobile-lvn'
-  max_total = 5
+  max_total = 10
   numbers_ary = []
   u = true
   u = User.find_by(email: '<redacted_email>'.downcase)
