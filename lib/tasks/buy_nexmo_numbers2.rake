@@ -1403,10 +1403,10 @@ task buy_nexmo_numbers2: :environment do
 
   country = 'CA'
   # country = "US"
-  pattern = '1437'
+  pattern = '1647'
   size = 100
   type = 'mobile-lvn'
-  max_total = 1
+  max_total = 25
   numbers_ary = []
   u = true
   u = User.find_by(email: '<redacted_email>'.downcase)
