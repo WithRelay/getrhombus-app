@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Conversation < ActiveRecord::Base
   include PrettyDate
 
@@ -8,70 +10,72 @@ class Conversation < ActiveRecord::Base
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
 
   def user # the user texting this merchant
-    User.find_by(id: self.uid)
+    User.find_by(id: uid)
   end
 
   def self.get_open_conversations_count(merchant_id)
-  	where(merchant_id: merchant_id, is_resolved: false).count
+    where(merchant_id: merchant_id, is_resolved: false).count
   end
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
-  	convs = where(merchant_id: merchant_id, is_resolved: false).paginate(page: page, per_page: 10).order(updated_at: :desc, id: :desc)
-  	convs.map { |conv| conv.conversation_hash }
+    convs = where(merchant_id: merchant_id, is_resolved: false).paginate(page: page, per_page: 10).order(updated_at: :desc, id: :desc)
+    convs.map(&:conversation_hash)
 
     # this is for test.
-    #x = convs.map { |conv| conv.conversation_hash }
-  	#x.first[:profile_image] = { type: 'image', value: 'http://lorempixel.com/400/200/' } if x.present?
-    #x
-	end
+    # x = convs.map { |conv| conv.conversation_hash }
+    # x.first[:profile_image] = { type: 'image', value: 'http://lorempixel.com/400/200/' } if x.present?
+    # x
+  end
 
   def conversation_hash
-    last_message = ConversationRef.where(conversation_id: self.id).last
+    last_message = ConversationRef.where(conversation_id: id).last
 
     if last_message.present?
       last_message = last_message.textable
-      last_message.text = 'image attached' if last_message.present? && last_message.text.blank? && last_message.images.exists?
+      if last_message.present? && last_message.text.blank? && last_message.images.exists?
+        last_message.text = 'image attached'
+      end
     end
 
-    if self.uid_type == 'user'
-      mc = MerchantCustomer.find_by(merchant_id: self.merchant_id, customer_id: self.uid)
-      #has_messenger = self.user.try(:get_customer_page_specific_id, self.merchant.get_page_access_token) && true
-    else
-      mc = MerchantContact.find_by(merchant_id: self.merchant_id, uid: self.uid, uid_type: self.uid_type)
-      #has_messenger = mc.try(:page_specific_id_valid?)
-    end
+    mc = if uid_type == 'user'
+           MerchantCustomer.find_by(merchant_id: merchant_id, customer_id: uid)
+         # has_messenger = self.user.try(:get_customer_page_specific_id, self.merchant.get_page_access_token) && true
+         else
+           MerchantContact.find_by(merchant_id: merchant_id, uid: uid, uid_type: uid_type)
+           # has_messenger = mc.try(:page_specific_id_valid?)
+         end
 
     {
-      id: self.id,
-      uid: self.uid,
-      uid_type: self.uid_type,
-      #has_messenger: has_messenger,
+      id: id,
+      uid: uid,
+      uid_type: uid_type,
+      # has_messenger: has_messenger,
       mc_id: mc.try(:id).try(:to_s),
       mc_type: mc ? mc.class.name : nil,
       profile_image: User.check_profile_picture(user),
       last_message: last_message ? last_message.text : '',
       last_message_ts: last_message.try(:created_at).to_i,
-      last_message_type: last_message ? last_message.class.name : nil,  # channel
-      full_name: User.get_conversation_display_name(self.uid, self.uid_type),
+      last_message_type: last_message ? last_message.class.name : nil, # channel
+      full_name: User.get_conversation_display_name(uid, uid_type),
       ago: last_message ? time_in_relative_form(last_message.created_at, 'short_format') : '',
-      unread_count: ConversationRef.where(conversation_id: self.id, unread: true, source: ConversationRef.sources[:customer]).count
+      unread_count: ConversationRef.where(conversation_id: id, unread: true, source: ConversationRef.sources[:customer]).count
     }
   end
 
-	def self.get_conversation_messages(conv, conv_ref_id)
+  def self.get_conversation_messages(conv, conv_ref_id)
     where_str = conv_ref_id.present? ? 'conversation_refs.id < ?' : ''
-		convs_refs = conv.conversation_refs.where(where_str, conv_ref_id).includes(textable: [:images]).order(created_at: :desc, id: :desc).limit(10)
+    convs_refs = conv.conversation_refs.where(where_str, conv_ref_id).includes(textable: [:images]).order(created_at: :desc, id: :desc).limit(10)
     convs_refs.map { |cr| message_hash(conv, cr.textable, cr) }
-	end
+  end
 
-	def self.message_hash(conv, msg, conv_ref)
+  def self.message_hash(conv, msg, conv_ref)
     {
       id: msg.id,
       conv_ref_id: conv_ref.id,
-      source: msg.user_id == conv.merchant_id ? "merchant" : 'customer',  # or conv_ref.source
-      text: (msg.text) ? msg.text : '',
-      ts_day_of_the_week: msg.created_at.strftime("%B") + " " + msg.created_at.strftime("%d").to_i.ordinalize,
+      source: msg.user_id == conv.merchant_id ? 'merchant' : 'customer', # or conv_ref.source
+      text: msg.text || '',
+      ts_day_of_the_week: msg.created_at.strftime('%B') + ' ' + msg.created_at.strftime('%d').to_i.ordinalize,
       ts_time: msg.created_at.strftime('%l:%M %P'),
       ts: msg.created_at.to_i,
       ago: Conversation.new.time_in_relative_form(msg.created_at, 'short_format'),
@@ -79,69 +83,69 @@ class Conversation < ActiveRecord::Base
       images: msg.images.map { |i| { id: i.id, url: i.avatar.url } },
       channel: msg.class.name
     }
-	end
+  end
 
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, source, media = [], from = nil)
-    begin
-      #from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
-      from = (channel == "FbMessage") ? team.get_page_access_token : conv.get_from_number(from)
+    # from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
+    from = channel == 'FbMessage' ? team.get_page_access_token : conv.get_from_number(from)
 
-      if conv.uid_type == "user"
-        customer = conv.user
-        # supports merchant dashboard chat
-        to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from.try(:page_access_token)) : customer.phone_number
-        #to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : (customer.is_merchant? ? customer.rhombus_number : customer.phone_number)
-      else
-        to = conv.uid
-        if channel == "FbMessage"
-          mc = MerchantContact.find_by(merchant_id: conv.merchant_id, uid: conv.uid, uid_type: conv.uid_type)
-          to = nil unless mc.page_specific_id_valid?(team)
-        end
+    if conv.uid_type == 'user'
+      customer = conv.user
+      # supports merchant dashboard chat
+      to = channel == 'FbMessage' ? customer.get_customer_page_specific_id(from.try(:page_access_token)) : customer.phone_number
+      # to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : (customer.is_merchant? ? customer.rhombus_number : customer.phone_number)
+    else
+      to = conv.uid
+      if channel == 'FbMessage'
+        mc = MerchantContact.find_by(merchant_id: conv.merchant_id, uid: conv.uid, uid_type: conv.uid_type)
+        to = nil unless mc.page_specific_id_valid?(team)
       end
+    end
 
-      return false unless from.present? && to.present?
-      msg_instance = channel.constantize.new
+    return false unless from.present? && to.present?
 
-      # Relate message to files
-      media_urls = []
-      if media.present?
-        media_ids = []
-        media.each do |m|
-          media_ids.push(m.id)
-          media_urls.push(m.avatar.url)
-        end
-        msg_instance.image_ids = media_ids
+    msg_instance = channel.constantize.new
+
+    # Relate message to files
+    media_urls = []
+    if media.present?
+      media_ids = []
+      media.each do |m|
+        media_ids.push(m.id)
+        media_urls.push(m.avatar.url)
       end
-      if msg_instance.send_and_save_message(team, customer, from, to, msg, media_urls)
-        re = find_or_create_conversation_for_message(team.id, conv.uid_type, conv.uid, msg_instance, false, source)
-        msg_hash = message_hash(re[0], msg_instance, re[1])
-        #Rails.logger.debug "DEBUG: we got this far at lesat success"
-        [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
-      else
-        #Rails.logger.debug "DEBUG: we got this far at lesat fail"
-        false
-      end
-    rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In conversations.rb send_message", env: Rails.env, conv: conv, team: team, msg: msg, to: to })
+      msg_instance.image_ids = media_ids
+    end
+    if msg_instance.send_and_save_message(team, customer, from, to, msg, media_urls)
+      re = find_or_create_conversation_for_message(team.id, conv.uid_type, conv.uid, msg_instance, false, source)
+      msg_hash = message_hash(re[0], msg_instance, re[1])
+      # Rails.logger.debug "DEBUG: we got this far at lesat success"
+      [msg_hash, msg_instance, re.second] # message hash, instance and message conv ref are needed
+    else
+      # Rails.logger.debug "DEBUG: we got this far at lesat fail"
       false
     end
+  rescue StandardError => e
+    ExceptionNotifier.notify_exception(e, data: { message: 'In conversations.rb send_message', env: Rails.env, conv: conv, team: team, msg: msg, to: to })
+    false
   end
 
-=begin
-  def get_from_number
-    team = self.merchant
-    last_message = ConversationRef.includes(:textable).where(conversation_id: self.id).try(:textable)
-    return team.rhombus_number unless last_message  # Ex. Merchant texting customer for the first time
-    from = last_message.user_id == team.id ? last_message.from : last_message.to     # inbound/outbound logic
-    Number.unscoped.exists?(user_id: team.id, number: from) ? from : team.rhombus_number    # check that merchant still owns the number else use default
-  end
-=end
+  #   def get_from_number
+  #     team = self.merchant
+  #     last_message = ConversationRef.includes(:textable).where(conversation_id: self.id).try(:textable)
+  #     return team.rhombus_number unless last_message  # Ex. Merchant texting customer for the first time
+  #     from = last_message.user_id == team.id ? last_message.from : last_message.to     # inbound/outbound logic
+  #     Number.unscoped.exists?(user_id: team.id, number: from) ? from : team.rhombus_number    # check that merchant still owns the number else use default
+  #   end
 
   def get_from_number(from_to_use)
-    team = self.merchant
-    last_message = ConversationRef.includes(:textable).where(conversation_id: self.id).last.try(:textable)   # maybe do a direct messages search here???????????????
-    return (from_to_use || team.rhombus_number) unless last_message # Ex. Merchant texting customer/contact for the first time
+    team = merchant
+    last_message = ConversationRef.includes(:textable).where(conversation_id: id).last.try(:textable) # maybe do a direct messages search here???????????????
+    unless last_message
+      return (from_to_use || team.rhombus_number)
+    end # Ex. Merchant texting customer/contact for the first time
+
     from = last_message.user_id == team.id ? last_message.from : last_message.to # inbound/outbound logic
     Number.unscoped.exists?(user_id: team.id, number: from) ? from : (from_to_use || team.rhombus_number) # check that merchant still owns the number else use default
   end
@@ -184,7 +188,7 @@ class Conversation < ActiveRecord::Base
     # Campaign should leave as is or close if it creates the convesation
     if ['campaign'].include?(source) && is_new_conv
       conv.update(is_resolved: true, updated_at: conv_ref.created_at)
-    elsif ['customer', 'merchant', 'platform'].include?(source)
+    elsif %w[customer merchant platform].include?(source)
       conv.update(is_resolved: false, updated_at: conv_ref.created_at)
     end
 
@@ -198,7 +202,7 @@ class Conversation < ActiveRecord::Base
     conv_res.update_attributes(key => conv_ref_id, merchant_id: team_id, conversation_id: conv_id)
   end
 
-	# find the conversation or create one
+  # find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
     Conversation.includes(:merchant).find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
@@ -208,7 +212,7 @@ class Conversation < ActiveRecord::Base
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
                   on c.id = cr.conversation_id where cr.unread = 1 and c.is_resolved is false
                   and c.merchant_id = ? and cr.created_at >= ? and source = #{ConversationRef.sources[:customer]}", merchant_id, date])
-                .first.count
+      .first.count
   end
 
   # get the last message from the last 5 conversations a merchant has had on or after a date

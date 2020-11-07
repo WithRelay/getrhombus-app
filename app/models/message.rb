@@ -931,7 +931,7 @@ class Message < ActiveRecord::Base
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 12_508_690_531); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_162_388_372); puts i; }
       end
     end
 

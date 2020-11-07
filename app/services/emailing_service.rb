@@ -169,6 +169,20 @@ class EmailingService
       end
     end
 
+    def notify_admins(msg)
+      payload = {
+        html: msg,
+        subject: 'New Signup to Verify',
+        from_email: '<redacted_email>',
+        to: [{ email: '<redacted_email>' }, { email: '<redacted_email>' }]
+      }
+      async = true
+      MANDRILL.messages.send(payload, async)
+    rescue Mandrill::Error => e # Mandrill errors are thrown as exceptions
+      puts "A mandrill error occurred: #{e.class} - #{e.message}"
+    rescue StandardError => e
+    end
+
     # Proactive Support Email (2 days after sign-up)
     def send_proactive_support_email(user)
       begin
