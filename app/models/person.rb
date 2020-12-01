@@ -1,5 +1,6 @@
-class Person < ActiveRecord::Base
+# frozen_string_literal: true
 
+class Person < ActiveRecord::Base
   belongs_to :user
   before_validation :the_titleizer
   before_create :set_representative
@@ -7,30 +8,28 @@ class Person < ActiveRecord::Base
   has_one :image_ref, as: :imageable, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
 
-  accepts_nested_attributes_for :address#, reject_if: :all_blank
+  accepts_nested_attributes_for :address # , reject_if: :all_blank
   enum role: { representative: '0', owner: '1' }
 
   def full_name=(params_value)
-    full_name = (params_value.present? ? params_value.strip : '').strip.split(" ", 2)
+    full_name = (params_value.present? ? params_value.strip : '').strip.split(' ', 2)
     write_attribute(:first_name, full_name[0])
     write_attribute(:last_name, full_name[1])
   end
 
   def full_name
-    "#{self.first_name} #{self.last_name}".squish
+    "#{first_name} #{last_name}".squish
   end
 
   private
 
-    def the_titleizer       #remove leading and trailing whitespaces
-      self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
-      self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
-    end
+  def the_titleizer # remove leading and trailing whitespaces
+    self.first_name = first_name.strip.titleize unless first_name.blank?
+    self.last_name = last_name.strip.titleize unless last_name.blank?
+  end
 
-    # this should go away in v2. But for now an account has only one person and that person is a rep
-    def set_representative
-      self.role = '0'
-    end
-
-
+  # this should go away in v2. But for now an account has only one person and that person is a rep
+  def set_representative
+    self.role = '0'
+  end
 end
