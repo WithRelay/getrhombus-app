@@ -41,10 +41,10 @@ class TextingService
       HTTParty.post('https://rest.nexmo.com/number/cancel?' + uri, headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
     end
 
-    def search_number_nexmo(country, pattern, size = 1, type = 'mobile-lvn', features = 'SMS,VOICE')
+    def search_number_nexmo(country, pattern, size = 1, type = 'mobile-lvn', features = 'SMS,VOICE', index = 1)
       # search for a number on nexmo
       response = HTTParty.get('https://rest.nexmo.com/number/search/' + NEXMO_API_KEY + '/' +
-                                NEXMO_API_SECRET + '/' + country + "?features=#{features}&pattern=#{pattern}&size=#{size}&type=#{type}&search_pattern=0")
+                                NEXMO_API_SECRET + '/' + country + "?features=#{features}&pattern=#{pattern}&size=#{size}&type=#{type}&search_pattern=0&index=#{index}")
       # check the response
       response.code == 200 && response['numbers'] ? response['numbers'] : nil
     end
