@@ -506,20 +506,33 @@ task buy_nexmo_numbers2: :environment do
     <redacted_phone_number>
     <redacted_phone_number>
     <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+
   ]
 
   country = 'CA'
   # country = "US"
-  pattern = '1604'
+  pattern = '1519'
   size = 100
   type = 'mobile-lvn'
-  max_total = 14
+  max_total = 4
   numbers_ary = []
   u = true
   u = User.find_by(email: '<redacted_email>'.downcase)
   puts u.inspect
   total = numbers_ary.length
-
+  # 204111,
+  # 204110
+  # 204109
   5.times do
     next unless total < max_total
 
@@ -539,7 +552,7 @@ task buy_nexmo_numbers2: :environment do
       puts "number #{total} !!!!!!!!!!!!!!!"
       fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
       u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: 0, provider: 'nexmo', price: '210')
-      TextingService.update_nexmo_number(n['country'], n['msisdn'], 'tel', '<redacted_phone_number>')
+      # TextingService.update_nexmo_number(n['country'], n['msisdn'], 'tel', '<redacted_phone_number>')
       # <redacted_phone_number>
     end
   end

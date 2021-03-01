@@ -178,40 +178,37 @@ class Message < ActiveRecord::Base
   def yo1
     # emails = %w(<redacted_email> <redacted_email>)
     # 5239 numbers
-    emails = [
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>'
-    ]
+    emails = ['<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>',
+              '<redacted_email>']
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       next unless u
 
+      count = 0
+
       Number.where(user_id: u.id, provider: 'nexmo').each_with_index do |n, _i|
         # Number.where(user_id: u.id, provider: 'twilio').each_with_index do |n, i|
-        TextingService.release_number_nexmo(n.number, 'CA')
         # TextingService.release_number(n)
+        r = TextingService.release_number_nexmo(n.number, 'CA')
+        puts r.inspect
+        sleep 1
         n.destroy
+        count += 1
+        puts n.number.inspect, count, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
       end
     end
   end
@@ -220,12 +217,6 @@ class Message < ActiveRecord::Base
     # emails = %w(<redacted_email> <redacted_email>)
     # 651 numbers
     emails = [
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
-      '<redacted_email>',
       '<redacted_email>'
     ]
 
@@ -251,10 +242,10 @@ class Message < ActiveRecord::Base
 
   def q
     ary = []
-    ary = Number.where(user_id: 51_630, provider: 'nexmo') # .order(id: :desc)#.limit(40)
+    ary = Number.where(user_id: 198_518, provider: 'nexmo') # .order(id: :desc)#.limit(40)
 
     # nexmo
-    ary.each_with_index { |n, i| TextingService.release_number_nexmo(n.number, 'US'); puts i; }
+    ary.each_with_index { |n, i| TextingService.release_number_nexmo(n.number, 'CA'); puts i; }
     # ary.each_with_index { |n, i| TextingService.release_number_nexmo(n[0], n[1]); puts i; }
     # Twilio
     # ary.each_with_index { |n, i| TextingService.release_number(n); puts i; }
