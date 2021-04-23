@@ -936,17 +936,300 @@ task buy_nexmo_numbers2: :environment do
     <redacted_phone_number>
     <redacted_phone_number>
     <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
+    <redacted_phone_number>
   ]
 
   country = 'CA'
   # country = 'US'
-  pattern = '1416'
+  pattern = '1905'
   size = 100
   type = 'mobile-lvn'
-  max_total = 23
+  max_total = 1
   numbers_ary = []
   u = true
   u = User.find_by(email: '<redacted_email>'.downcase)
+  # u = User.find_by(email: '<redacted_email>'.downcase)
   puts u.inspect
   total = numbers_ary.length
   # 204111,
@@ -955,7 +1238,7 @@ task buy_nexmo_numbers2: :environment do
   5.times do
     next unless total < max_total
 
-    numbers = TextingService.search_number_nexmo(country, pattern, size, type, 'SMS', 1)
+    numbers = TextingService.search_number_nexmo(country, pattern, size, type, 'SMS', 2)
 
     next unless u && numbers
 
@@ -978,6 +1261,8 @@ task buy_nexmo_numbers2: :environment do
 
   puts numbers_ary.length
 end
+
+# Test Campaign 10
 
 # <redacted_phone_number>   <redacted_phone_number> TWILIO TO REMOVE
 
