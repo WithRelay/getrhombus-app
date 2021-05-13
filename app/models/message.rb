@@ -143,7 +143,17 @@ class Message < ActiveRecord::Base
       # <redacted_phone_number> # did not go through
       # 16_474_777_422 # did not go though
       # 19_054_632_690 # Did not go though
-      19_052_310_601
+      # 19_052_310_601
+      16_472_472_658,
+      16_473_403_538,
+      16_473_403_990,
+      16_473_410_300,
+      16_473_414_919,
+      16_473_417_688,
+      16_473_424_667,
+      16_473_425_024,
+      16_473_432_639,
+      16_473_438_083
     ]
 
     # Number.where(number: ary, provider: 'nexmo').delete_all
@@ -238,7 +248,7 @@ class Message < ActiveRecord::Base
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_164_214_306); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 16_132_098_440); puts i; }
       end
     end
 
@@ -282,6 +292,7 @@ class Message < ActiveRecord::Base
   end
 
   # <redacted_phone_number> through <redacted_phone_number>
+  # 16_476_703_711
   def p
     ary = [
       16_476_703_702,
@@ -296,7 +307,7 @@ class Message < ActiveRecord::Base
       16_476_703_711
     ]
 
-    user = User.find_by(id: 210_929)
+    user = User.find_by(id: 210_928)
     ary.each_with_index do |n, _i|
       n = n.to_s
       # default = i == 0 ? 1 : 0
