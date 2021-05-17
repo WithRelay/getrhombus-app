@@ -257,11 +257,18 @@ class Message < ActiveRecord::Base
   end
 
   def z1
-    emails = %w[<redacted_email>]
+    emails = %w[
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+    ]
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 17_098_001_574); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', <redacted_phone_number>); puts i; }
       end
     end
 
