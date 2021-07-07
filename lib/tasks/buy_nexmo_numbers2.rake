@@ -18359,7 +18359,7 @@ task buy_nexmo_numbers2: :environment do
 
   country = 'CA'
   # country = 'US'
-  pattern = '1416'
+  pattern = '1905'
   size = 100
   type = 'mobile-lvn'
   max_total = 25
