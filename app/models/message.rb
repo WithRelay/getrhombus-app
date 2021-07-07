@@ -243,7 +243,12 @@ class Message < ActiveRecord::Base
   end
 
   def z
-    emails = %w[<redacted_email>] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
+    emails = %w[<redacted_email>
+                <redacted_email>
+                <redacted_email>
+                <redacted_email>
+                <redacted_email>
+                <redacted_email>] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
@@ -255,6 +260,22 @@ class Message < ActiveRecord::Base
     # ary.each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', <redacted_phone_number>); puts i; }
     # ary.each_with_index { |n, i| TextingService.update_nexmo_number("CA", n, 'tel', "<redacted_phone_number>"); puts i; }
   end
+
+  def zz
+    emails = [210_950, 210_948, 210_949, 210_929, 210_961, 210_962, 210_964, 210_966]
+
+    emails.each do |e|
+      u = User.find_by(id: e)
+      if u
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 16_132_098_440); puts i; }
+      end
+    end
+
+    # ary.each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', <redacted_phone_number>); puts i; }
+    # ary.each_with_index { |n, i| TextingService.update_nexmo_number("CA", n, 'tel', "<redacted_phone_number>"); puts i; }
+  end
+
+  # 210950, 210948, 210949, 210929, 210961, 210962, 210964, 210966
 
   def z1
     emails = %w[
