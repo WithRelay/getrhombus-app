@@ -229,12 +229,45 @@ class Message < ActiveRecord::Base
   end
 
   def z
-    emails = %w[<redacted_email> <redacted_email>] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
+    emails = %w[
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+      # <redacted_email>
+    ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 16_132_098_440); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i; }
       end
     end
 
