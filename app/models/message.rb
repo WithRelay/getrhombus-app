@@ -232,36 +232,6 @@ class Message < ActiveRecord::Base
     emails = %w[
       <redacted_email>
       <redacted_email>
-      <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
-      # <redacted_email>
     ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     emails.each do |e|
@@ -276,7 +246,7 @@ class Message < ActiveRecord::Base
   end
 
   def zz
-    emails = [211_187, 211_194, 211_231, 211_232]
+    emails = [210_965, 210_963]
 
     emails.each do |e|
       u = User.find_by(id: e)
@@ -294,16 +264,11 @@ class Message < ActiveRecord::Base
   def z1
     emails = %w[
       <redacted_email>
-      <redacted_email>
-      <redacted_email>
-      <redacted_email>
-      <redacted_email>
-      <redacted_email>
     ]
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 16_132_098_440); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i; }
       end
     end
 
