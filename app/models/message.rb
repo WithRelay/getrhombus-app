@@ -193,8 +193,34 @@ class Message < ActiveRecord::Base
   def yo2
     # emails = %w(<redacted_email> <redacted_email>)
     # 651 numbers
-    emails = [
-      '<redacted_email>'
+    emails = %w[
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
     ]
 
     # u = User.where(email: emails.map(&:downcase)).pluck(:id)
@@ -263,6 +289,11 @@ class Message < ActiveRecord::Base
 
   def z1
     emails = %w[
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
       <redacted_email>
     ]
     emails.each do |e|
