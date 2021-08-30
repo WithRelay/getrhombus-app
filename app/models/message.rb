@@ -1339,29 +1339,9 @@ class Message < ActiveRecord::Base
   end
 
   def wq3
-    rules = Rule.where(user_id: 48_897).pluck(:text, :rule_type, :response, :message_length)
+    rules = Rule.where(user_id: 220_257).pluck(:text, :rule_type, :response, :message_length)
 
-    %w[<redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>
-       <redacted_email>].each do |e|
+    %w[<redacted_email>].each do |e|
       user = User.find_by(email: e.downcase)
 
       data = []
