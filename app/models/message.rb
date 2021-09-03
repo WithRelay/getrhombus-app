@@ -240,7 +240,7 @@ class Message < ActiveRecord::Base
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', <redacted_phone_number>); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i; }
       end
     end
 
@@ -1300,13 +1300,38 @@ class Message < ActiveRecord::Base
       field && field.blank? ? nil : field
     end
 
+    emails = %w[
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+    ].map(&:downcase)
+
+    user_ids = User.where(email: emails).pluck(:id)
     # Rule.create(user_id: 123_807, text: HERE, rule_type: 'contains_text', response: 'Thanks for your time. Stay well.')
-    file_data = CSV.read('/home/taiwo/Downloads/Sep 4 rules for Taiwo (1).csv', encoding: 'ISO-8859-1', headers: true, skip_blanks: true, header_converters: :symbol, converters: %i[all blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+    file_data = CSV.read('/home/taiwo/Downloads/Rules to add to funnel accounts - Sep 2.csv', encoding: 'ISO-8859-1', headers: true, skip_blanks: true, header_converters: :symbol, converters: %i[all blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
 
     data = []
     file_data.each do |row|
       row = row.to_hash
-      data << { user_id: 123_807, text: row[:text], rule_type: row[:rule_type], response: row[:response] }
+      user_ids.each { |uid| data << { user_id: uid, text: row[:text], rule_type: row[:rule_type], response: row[:response] } }
       if data.length == 5000
         Rule.import data, validate: false
         data.clear
@@ -1316,9 +1341,12 @@ class Message < ActiveRecord::Base
   end
 
   def wq3
-    rules = Rule.where(user_id: 220_257).pluck(:text, :rule_type, :response, :message_length)
+    rules = Rule.where(user_id: 220_260).pluck(:text, :rule_type, :response, :message_length)
 
-    %w[<redacted_email>].each do |e|
+    %w[
+      <redacted_email>
+      <redacted_email>
+    ].each do |e|
       user = User.find_by(email: e.downcase)
 
       data = []
