@@ -233,8 +233,10 @@ class Message < ActiveRecord::Base
 
   def z
     emails = %w[
+
       <redacted_email>
       <redacted_email>
+
     ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     emails.each do |e|

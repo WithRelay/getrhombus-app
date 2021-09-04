@@ -19,6 +19,7 @@ class RulesEngineJob < ApplicationJob
     <redacted_phone_number>
     <redacted_phone_number>
     <redacted_phone_number>
+    <redacted_phone_number>
   ].freeze
 
   def perform(message_id)
