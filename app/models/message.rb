@@ -233,15 +233,13 @@ class Message < ActiveRecord::Base
 
   def z
     emails = %w[
-
       <redacted_email>
-
     ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_797_597); puts i; }
+        Number.where('id > 32168').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_797_597); puts i; }
       end
     end
 
@@ -251,12 +249,12 @@ class Message < ActiveRecord::Base
 
   def zz
     # 29544
-    emails = [221_910, 221_909]
+    emails = [13_912]
 
     emails.each do |e|
       u = User.find_by(id: e)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_182_100_175); puts i; }
+        Number.where('id > 32168').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_184_783_418); puts i; }
       end
     end
 
