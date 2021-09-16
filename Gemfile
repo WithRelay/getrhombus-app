@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -12,27 +14,29 @@ gem 'nexmo'
 gem 'devise'
 
 # resque
-gem 'resque', :require => "resque/server"
-gem 'resque-scheduler', :require => "resque/scheduler/server"
 gem 'ar_after_transaction'
+gem 'resque', require: 'resque/server'
+gem 'resque-scheduler', require: 'resque/scheduler/server'
 
 # For Authorization
 gem 'cancancan', '~> 2.0'
 
-#perfect scrollbar
+# perfect scrollbar
 gem 'perfect-scrollbar-rails', '~> 0.6.10'
 
 gem 'exception_notification'
 gem 'slack-notifier'
 
+gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
+
 gem 'net-sftp', '~> 2.1', '>= 2.1.2'
 
-#gem 'cocoon'
-gem "stripe"
+# gem 'cocoon'
 gem 'omniauth-stripe-connect'
+gem 'stripe'
 
-gem "paperclip", "~> 5.0.0"
 gem 'aws-sdk'
+gem 'paperclip', '~> 5.0.0'
 
 # url shortner
 gem 'bitly'
@@ -41,17 +45,16 @@ gem 'bitly'
 gem 'versionist'
 
 # number and email intelligence apis
-gem 'opencnam'
 gem 'fullcontact'
+gem 'opencnam'
 
 gem 'activerecord-import'
 
-
-gem 'twitter'
 gem 'omniauth-twitter'
+gem 'twitter'
 
-#chart generating
-gem "chartkick"
+# chart generating
+gem 'chartkick'
 
 # sending email
 gem 'mandrill-api'
@@ -60,20 +63,20 @@ gem 'mandrill-api'
 gem 'newrelic_rpm'
 
 gem 'will_paginate', '~> 3.0.6'
-#gem 'bootstrap-will_paginate'
+# gem 'bootstrap-will_paginate'
 
 gem 'responders', '~> 2.0'
 
-#OmniAuth Facebook
+# OmniAuth Facebook
 gem 'omniauth-facebook'
 
 # Accessing Facebook Graph API
-gem "koala"
+gem 'koala'
 
-#gem 'friendly_id', '~> 5.1.0'
+# gem 'friendly_id', '~> 5.1.0'
 
 group :production do
-  gem "passenger"
+  gem 'passenger'
 end
 
 # Use SCSS for stylesheets
@@ -105,7 +108,7 @@ gem 'angular-rails-templates', '~> 1.0', '>= 1.0.2'
 # Pubnub
 gem 'pubnub', '= 4.0.23'
 
-#Twilio
+# Twilio
 gem 'twilio-ruby', '~> 5.3.0'
 
 # Use ActiveModel has_secure_password
@@ -118,7 +121,7 @@ gem 'twilio-ruby', '~> 5.3.0'
 # gem 'capistrano-rails', group: :development
 
 # Logic-less Ruby templates. http://mustache.github.io/
-gem "mustache"
+gem 'mustache'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -130,10 +133,10 @@ group :development, :test do
   # debugging
   gem 'pry'
   # for tests
-  gem 'rspec-rails', '~> 3.5'
-  gem 'ffaker'
-  gem 'factory_girl_rails'
   gem 'database_cleaner'
+  gem 'factory_girl_rails'
+  gem 'ffaker'
+  gem 'rspec-rails', '~> 3.5'
 end
 
-#ruby "2.2.3"
+# ruby "2.2.3"

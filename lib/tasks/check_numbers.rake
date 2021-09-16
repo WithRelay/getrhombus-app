@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-desc 'buy nexmo numbers'
-task buy_nexmo_numbers2: :environment do
+desc 'check numbers'
+task check_numbers: :environment do
   ary = %w[
     <redacted_phone_number>
     <redacted_phone_number>
@@ -20768,47 +20768,26 @@ task buy_nexmo_numbers2: :environment do
 
   # <redacted_phone_number> through <redacted_phone_number>
 
+  codes = %w[1604 1250 1778 1236 1672]
   country = 'CA'
-  # country = 'US'
-  pattern = '1416'
   size = 100
   type = 'mobile-lvn'
-  # 200
-  # next 100
-  max_total = 4
-  numbers_ary = []
-  u = true
-  u = User.find_by(email: '<redacted_email>'.downcase)
-  puts u.inspect
-  total = numbers_ary.length
-  # 204111,
-  # 204110
-  # 204109
-  5.times do
-    next unless total < max_total
+  codes.each do |code|
+    count = 0
+    numbers_ary = []
 
-    numbers = TextingService.search_number_nexmo(country, pattern, size, type, 'SMS', 1)
+    20.times do |num|
+      numbers = TextingService.search_number_nexmo(country, code, size, type, 'SMS', num + 1)
+      numbers.try(:each) do |n|
+        next unless ary.exclude?(n['msisdn']) && numbers_ary.exclude?(n['msisdn'])
 
-    next unless u && numbers
-
-    numbers.each_with_index do |n, _i|
-      next unless ary.exclude?(n['msisdn']) && numbers_ary.exclude?(n['msisdn']) && total < max_total
-
-      res = TextingService.buy_number_nexmo(n['country'], n['msisdn'])
-      next unless res
-
-      puts n['msisdn'].inspect
-      numbers_ary.push(n['msisdn'])
-      total = numbers_ary.length
-      puts "number #{total} !!!!!!!!!!!!!!!"
-      fn = '(' + res[1..3] + ') ' + res[4..6] + '-' + res[7..10]
-      u.numbers.create(user_id: u.id, number: res, friendly_name: fn, country: n['country'], default: 0, provider: 'nexmo', price: '210')
-      # TextingService.update_nexmo_number(n['country'], n['msisdn'], 'tel', '<redacted_phone_number>')
-      # <redacted_phone_number>
+        numbers_ary.push(n['msisdn'])
+        count += 1
+      end
+      break if numbers && numbers.size < 100
     end
+    puts "#{code} #{count}"
   end
-
-  puts numbers_ary.length
 end
 
 # D34ctiv8ed
