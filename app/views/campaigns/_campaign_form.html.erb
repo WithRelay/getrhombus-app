@@ -100,7 +100,7 @@
                 <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{org_name}}'>Org name</a>
                 <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{org_email}}'>Org email</a>
                 <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{org_number}}'>Org number</a>
-                <% if IDS_TO_EXCLUDE.include? current_user.id  %>
+                <% if current_user.imkgp?  %>
                   <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{url1}}'>Url 1</a>
                   <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{url2}}'>Url 2</a>
                   <a href="#" class="dropdown-link merge-field-links w-dropdown-link handlebar-content" data-value='{{url3}}'>Url 3</a>

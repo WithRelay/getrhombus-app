@@ -27,8 +27,6 @@ gem 'perfect-scrollbar-rails', '~> 0.6.10'
 gem 'exception_notification'
 gem 'slack-notifier'
 
-gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
-
 gem 'net-sftp', '~> 2.1', '>= 2.1.2'
 
 # gem 'cocoon'

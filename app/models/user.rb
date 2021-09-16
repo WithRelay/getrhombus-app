@@ -173,6 +173,10 @@ class User < ActiveRecord::Base
     decrement!(:account_balance, amt.to_f)
   end
 
+  def imkgp?
+    email.end_with?('@rmgsite.com') || email.end_with?('@imkgp.com') || is_platform?
+  end
+
   # def friendly_relay_number; self.rn_friendly_name.present? ? self.rn_friendly_name : self.rhombus_number end
   # A default number must always exists for active accounts
   def rhombus_number

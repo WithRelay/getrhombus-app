@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CSVHandler
   extend ActiveSupport::Concern
 
@@ -467,7 +469,7 @@ module CSVHandler
       # Validate headers
       unless headers_checked
         puts file_headers.inspect
-        unless IDS_TO_EXCLUDE.include? id
+        unless imkgp?
           if headers.length != file_headers.length
             error_hash['The File Headers'] = { linetype: '', errors: ['Unable to proceed because the number of headers are incorrect. Please see template file.'] }
             break
@@ -484,10 +486,13 @@ module CSVHandler
       row = row.to_hash
 
       # if you need to temporarily disable twilio validation
-      valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
-      # row_num = row[:phone_number].to_s.gsub(/\D/, '')
-      # row_num = "1" + row_num if row_num.chr != "1"
-      # valid_num = [row_num]
+      if imkgp?
+        row_num = row[:phone_number].to_s.gsub(/\D/, '')
+        row_num = "1#{row_num}" if row_num.chr != '1'
+        valid_num = [row_num]
+      else
+        valid_num = TextingService.number_lookup(row[:phone_number].to_s.gsub(/\D/, ''))
+      end
 
       # disable number type check
       # linetype = nil
@@ -509,8 +514,8 @@ module CSVHandler
           if @customer.blank?
             begin
               url_data = generate_contact_data(row)
-              MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number'.freeze, url_data)
-              mc = MerchantContact.add_or_update_merchant_contact(id, row[:phone_number], 'phone_number'.freeze, url_data)
+              MerchantContact.add_or_update_merchant_contact(User.get_platform_acct_obj.id, row[:phone_number], 'phone_number', url_data)
+              mc = MerchantContact.add_or_update_merchant_contact(id, row[:phone_number], 'phone_number', url_data)
               # OpenCnamData.find_record_or_get_intelligence_data(row[:phone_number])
               create_list_and_user_list(row[:group], mc, 1)
             rescue StandardError => e

@@ -1,10 +1,3 @@
-GIT
-  remote: git://github.com/mimemagicrb/mimemagic.git
-  revision: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
-  ref: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
-  specs:
-    mimemagic (0.3.5)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -208,6 +201,7 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
+    mimemagic (0.3.2)
     mini_portile2 (2.1.0)
     minitest (5.10.1)
     mono_logger (1.1.0)
@@ -433,7 +427,6 @@ DEPENDENCIES
   jquery-rails
   koala
   mandrill-api
-  mimemagic!
   mustache
   mysql2 (~> 0.3.18)
   net-sftp (~> 2.1, >= 2.1.2)
