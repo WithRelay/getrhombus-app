@@ -234,12 +234,13 @@ class Message < ActiveRecord::Base
   def z
     emails = %w[
       <redacted_email>
+      <redacted_email>
     ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where('id > 32168').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_797_597); puts i; }
+        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i; }
       end
     end
 
@@ -1341,10 +1342,9 @@ class Message < ActiveRecord::Base
   end
 
   def wq3
-    rules = Rule.where(user_id: 220_260).pluck(:text, :rule_type, :response, :message_length)
+    rules = Rule.where(user_id: 220253).pluck(:text, :rule_type, :response, :message_length)
 
     %w[
-      <redacted_email>
       <redacted_email>
     ].each do |e|
       user = User.find_by(email: e.downcase)

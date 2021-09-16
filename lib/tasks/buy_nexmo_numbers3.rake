@@ -20770,13 +20770,16 @@ task buy_nexmo_numbers3: :environment do
 
   country = 'CA'
   # country = 'US'
-  pattern = '1581'
+  pattern = '1250'
   size = 100
   type = 'mobile-lvn'
-  # 100
-  # next 100
-  # next 100 - here
-  max_total = 50
+  # 500
+  # first 100
+  # second 100
+  # third 100
+  # fourth 100
+  # fifth 100
+  max_total = 100
   numbers_ary = []
   u = true
   u = User.find_by(email: '<redacted_email>'.downcase)
@@ -20788,7 +20791,7 @@ task buy_nexmo_numbers3: :environment do
   5.times do
     next unless total < max_total
 
-    numbers = TextingService.search_number_nexmo(country, pattern, size, type, 'SMS', 1)
+    numbers = TextingService.search_number_nexmo(country, pattern, size, type, 'SMS', 2)
 
     next unless u && numbers
 
