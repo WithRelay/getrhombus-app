@@ -20768,7 +20768,7 @@ task check_numbers: :environment do
 
   # <redacted_phone_number> through <redacted_phone_number>
 
-  codes = %w[1604 1250 1778 1236 1672]
+  codes = %w[1613]
   country = 'CA'
   size = 100
   type = 'mobile-lvn'

@@ -234,13 +234,13 @@ class Message < ActiveRecord::Base
   def z
     emails = %w[
       <redacted_email>
-      <redacted_email>
     ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
+    puts 14_184_783_418
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i; }
+        Number.where('id > 32227').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_184_783_418); puts i; }
       end
     end
 
@@ -1342,7 +1342,7 @@ class Message < ActiveRecord::Base
   end
 
   def wq3
-    rules = Rule.where(user_id: 220253).pluck(:text, :rule_type, :response, :message_length)
+    rules = Rule.where(user_id: 220_253).pluck(:text, :rule_type, :response, :message_length)
 
     %w[
       <redacted_email>
@@ -1424,5 +1424,47 @@ class Message < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def move_numbers
+    [
+      { from: ['<redacted_email>', '<redacted_email>'], to: '<redacted_email>' },
+      { from: ['<redacted_email>'], to: '<redacted_email>' },
+      { from: ['<redacted_email>'], to: '<redacted_email>' },
+      { from: ['<redacted_email>'], to: '<redacted_email>' },
+      { from: ['<redacted_email>', '<redacted_email>'], to: '<redacted_email>' }
+    ].each do |arr|
+      to = User.find_by_email(arr[:to])
+      next if to.blank?
+
+      # puts to.email, Number.where(user_id: to.id).count
+      puts "to ---->>>>>>>>>>>>>>>>>>>> #{to.id}"
+
+      arr[:from].each do |email|
+        from = User.find_by_email(email)
+        next if from.blank?
+
+        puts "from #{from.email}"
+        # puts from.email, Number.where(user_id: from.id).count
+        # Number.where(user_id: from.id).update_all(user_id: to.id)
+      end
+    end
+  end
+
+  def delete_rule
+    arr = %w[
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+    ]
+
+    user_ids = User.where(email: arr).pluck(:id)
+    Rule.where(user_id: user_ids).delete_all
   end
 end
