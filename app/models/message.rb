@@ -169,7 +169,7 @@ class Message < ActiveRecord::Base
   def yo1
     # emails = %w(<redacted_email> <redacted_email>)
     # 5239 numbers
-    emails = ['<redacted_email>']
+    emails = ['<redacted_email>', '<redacted_email>']
 
     emails.each do |e|
       u = User.find_by(email: e.downcase)
@@ -177,10 +177,10 @@ class Message < ActiveRecord::Base
 
       count = 0
 
-      Number.where(user_id: u.id, provider: 'nexmo').each_with_index do |n, _i|
+      Number.where(user_id: u.id, provider: 'nexmo').where('id < 36154').each_with_index do |n, _i|
         # Number.where(user_id: u.id, provider: 'twilio').each_with_index do |n, i|
         # TextingService.release_number(n)
-        r = TextingService.release_number_nexmo(n.number, 'US')
+        r = TextingService.release_number_nexmo(n.number, 'CA')
         puts r.inspect
         sleep 1
         n.destroy
@@ -198,6 +198,45 @@ class Message < ActiveRecord::Base
       <redacted_email>
       <redacted_email>
       <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
     ]
 
     # u = User.where(email: emails.map(&:downcase)).pluck(:id)
@@ -208,12 +247,17 @@ class Message < ActiveRecord::Base
       u = User.find_by(email: e.downcase)
       next unless u
 
-      Number.where(user_id: u.id).each_with_index do |n, _i|
-        # TextingService.release_number(n.number)
-        r = TextingService.release_number_nexmo(n.number, 'CA')
-        puts r.inspect
-        sleep 1
-        n.destroy
+      Number.where(user_id: u.id).each do |n|
+        if n.provider == 'nexmo'
+          r = TextingService.release_number_nexmo(n.number, 'CA')
+          puts r.inspect
+          n.destroy
+          sleep 1
+        elsif n.provider == 'twilio'
+          r = TextingService.release_number(n.number)
+          puts r.inspect
+          n.destroy if r
+        end
         count += 1
         puts n.number.inspect, count, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
       end
@@ -234,13 +278,14 @@ class Message < ActiveRecord::Base
   def z
     emails = %w[
       <redacted_email>
+      <redacted_email>
     ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     puts 14_184_783_418
     emails.each do |e|
       u = User.find_by(email: e.downcase)
       if u
-        Number.where('id > 32227').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_184_783_418); puts i; }
+        Number.where('id > 32227').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i; }
       end
     end
 
