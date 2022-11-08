@@ -9,10 +9,11 @@ task generate_rmg_csv_data_with_ftp_new10: :environment do
   CONTENT_SERVER_DOMAIN_NAME = '<redacted_ftp_domain>'
   CONTENT_SERVER_FTP_PASSWORD = '<redacted_password>'
   CONTENT_SERVER_FTP_LOGIN = '<redacted_ftp_username>'
-  PORT = 22
+  PORT = 2202
 
   users = User.where('email like ? or email like ?', '<redacted_email>', '<redacted_email>')
-              .where(user_level: 1).where.not(id: [12_569, 12_570, 21_401, 13_119, 22_480, 13_118, 13_117, 26_863, 26_633])
+              .where(user_level: 1).where.not(id: [12_569, 12_570, 21_401, 13_119, 22_480, 13_118, 13_117, 26_863,
+                                                   26_633])
               .pluck(:id, :email).to_h
 
   # users = User.where(id: 61982).pluck(:id, :email).to_h
@@ -62,7 +63,8 @@ task generate_rmg_csv_data_with_ftp_new10: :environment do
       temp_file.close
 
       puts 'connecting to ftp'
-      Net::SFTP.start(CONTENT_SERVER_DOMAIN_NAME, CONTENT_SERVER_FTP_LOGIN, { password: CONTENT_SERVER_FTP_PASSWORD, port: PORT }) do |sftp|
+      Net::SFTP.start(CONTENT_SERVER_DOMAIN_NAME, CONTENT_SERVER_FTP_LOGIN,
+                      password: CONTENT_SERVER_FTP_PASSWORD, port: PORT) do |sftp|
         begin
           sftp.mkdir!(remote_folder) unless directory_created
           directory_created = true

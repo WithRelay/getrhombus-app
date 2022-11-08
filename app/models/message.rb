@@ -36,7 +36,9 @@ class Message < ActiveRecord::Base
                           message_price: response.price, error_code: response.error_code, error_text: response.error_message,
                           price_unit: response.price_unit, num_segments: num_segments, num_media: response.num_media, relay_price: price)
       else
-        ExceptionNotifier.notify_exception(StandardError.new, data: { message: 'From send_and_save_message, unable to send message', from: from, to: to, text: message, env: Rails.env, response: response })
+        ExceptionNotifier.notify_exception(StandardError.new,
+                                           data: { message: 'From send_and_save_message, unable to send message', from: from, to: to, text: message,
+                                                   env: Rails.env, response: response })
         false
       end
     # elsif merchant.fn_subscriber_id.present?   #  fibernetics
@@ -47,7 +49,9 @@ class Message < ActiveRecord::Base
         merchant.deduct_from_account_balance(sms_price * num_segments)
         update_attributes(status: 'OK', num_segments: num_segments, relay_price: sms_price)
       else
-        ExceptionNotifier.notify_exception(StandardError.new, data: { message: 'From send_and_save_message, unable to send message', from: from, to: to, text: message, env: Rails.env, response: response })
+        ExceptionNotifier.notify_exception(StandardError.new,
+                                           data: { message: 'From send_and_save_message, unable to send message', from: from, to: to, text: message,
+                                                   env: Rails.env, response: response })
         false
       end
     else # nexmo
@@ -60,12 +64,16 @@ class Message < ActiveRecord::Base
                           message_id: response['messages'].first['message-id'], error_text: response['error-text'],
                           message_price: response['messages'].first['message-price'])
       else
-        ExceptionNotifier.notify_exception(StandardError.new, data: { message: 'From send_and_save_message, unable to send message', from: from, to: to, text: message, env: Rails.env, response: response })
+        ExceptionNotifier.notify_exception(StandardError.new,
+                                           data: { message: 'From send_and_save_message, unable to send message', from: from, to: to, text: message,
+                                                   env: Rails.env, response: response })
         false
       end
     end
   rescue Exception => e
-    ExceptionNotifier.notify_exception(e, data: { message: 'From send_and_save_message, unable to send message', from: from, to: to, text: message, env: Rails.env })
+    ExceptionNotifier.notify_exception(e,
+                                       data: { message: 'From send_and_save_message, unable to send message', from: from, to: to, text: message,
+                                               env: Rails.env })
     false
   end
 
@@ -84,16 +92,20 @@ class Message < ActiveRecord::Base
   def self.api_send(msg = nil)
     msg = msg.present? ? msg : 'Trios number test'
     webhook_url: '<redacted_webhook_url>'
-    body = { key: 'wdJobH3wLOafkjPn3Yn5TQtt', secret: 'XyQjmW19Jf3cCNyesqEHmQtt', to: '<redacted_phone_number>',<redacted_phone_number>', body: msg }
+    body = { key: 'wdJobH3wLOafkjPn3Yn5TQtt', secret: 'XyQjmW19Jf3cCNyesqEHmQtt', to: '<redacted_phone_number>',<redacted_phone_number>',
+             body: msg }
     options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
     HTTParty.post(webhook_url, options)
   rescue StandardError => e
-    ExceptionNotifier.notify_exception(e, data: { message: 'In post_message_for_api_user', env: Rails.env, options: options })
+    ExceptionNotifier.notify_exception(e,
+                                       data: { message: 'In post_message_for_api_user', env: Rails.env,
+                                               options: options })
   end
 
   def self.api_send_local
     webhook_url: '<redacted_webhook_url>'
-    body = { key: 'QBy6xmWxUkvCndzJmw1LcAtt', secret: '80O4jUQVdYSP3zrnPyYMMgtt', to: '<redacted_phone_number>',<redacted_phone_number>', body: 'Api send test' }
+    body = { key: 'QBy6xmWxUkvCndzJmw1LcAtt', secret: '80O4jUQVdYSP3zrnPyYMMgtt', to: '<redacted_phone_number>',<redacted_phone_number>',
+             body: 'Api send test' }
     options = { body: body.to_json, headers: { 'Content-Type' => 'application/json' } }
     HTTParty.post(webhook_url, options)
   rescue StandardError => e
@@ -237,6 +249,14 @@ class Message < ActiveRecord::Base
       <redacted_email>
       <redacted_email>
       <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
+      <redacted_email>
     ]
 
     # u = User.where(email: emails.map(&:downcase)).pluck(:id)
@@ -278,14 +298,16 @@ class Message < ActiveRecord::Base
   def z
     emails = %w[
       <redacted_email>
-      <redacted_email>
     ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     puts 14_184_783_418
     emails.each do |e|
       u = User.find_by(email: e.downcase)
-      if u
-        Number.where('id > 32227').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i; }
+      next unless u
+
+      Number.where('id > 32227').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index do |n, i|
+        TextingService.update_nexmo_number('CA', n, 'tel', 18_003_461_912)
+        puts i
       end
     end
 
@@ -299,8 +321,11 @@ class Message < ActiveRecord::Base
 
     emails.each do |e|
       u = User.find_by(id: e)
-      if u
-        Number.where('id > 32168').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_184_783_418); puts i; }
+      next unless u
+
+      Number.where('id > 32168').where(user_id: u.id,
+                                       provider: 'nexmo').pluck(:number).each_with_index do |n, i|
+        TextingService.update_nexmo_number('CA', n, 'tel', 14_184_783_418); puts i
       end
     end
 
@@ -321,8 +346,10 @@ class Message < ActiveRecord::Base
     ]
     emails.each do |e|
       u = User.find_by(email: e.downcase)
-      if u
-        Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index { |n, i| TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i; }
+      next unless u
+
+      Number.where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index do |n, i|
+        TextingService.update_nexmo_number('CA', n, 'tel', 14_038_000_656); puts i
       end
     end
 
@@ -344,7 +371,8 @@ class Message < ActiveRecord::Base
         # default = i == 0 ? 1 : 0
         default = 0
         fn = '(' + n[1..3] + ') ' + n[4..6] + '-' + n[7..10]
-        user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default, provider: 'nexmo', price: '210')
+        user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default,
+                            provider: 'nexmo', price: '210')
         # TextingService.update_nexmo_number('CA', n, 'tel', '<redacted_phone_number>')
       else
         puts "CANT BUY #{n}"
@@ -374,7 +402,8 @@ class Message < ActiveRecord::Base
       # default = i == 0 ? 1 : 0
       default = 0
       fn = '(' + n[1..3] + ') ' + n[4..6] + '-' + n[7..10]
-      user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default, provider: 'nexmo', price: '210')
+      user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default,
+                          provider: 'nexmo', price: '210')
     end
   end
   #=end
@@ -1230,7 +1259,8 @@ class Message < ActiveRecord::Base
         default = i == 0 ? 1 : 0
         # default = 0
         fn = '(' + n[1..3] + ') ' + n[4..6] + '-' + n[7..10]
-        user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default, provider: 'nexmo', price: '210')
+        user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default,
+                            provider: 'nexmo', price: '210')
         # TextingService.update_nexmo_number('CA', n, 'tel', '<redacted_phone_number>')
       else
         puts "CANT BUY #{n}"
@@ -1285,7 +1315,8 @@ class Message < ActiveRecord::Base
         # default = i == 0 ? 1 : 0
         default = 0
         fn = '(' + n[1..3] + ') ' + n[4..6] + '-' + n[7..10]
-        user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default, provider: 'nexmo', price: '210')
+        user.numbers.create(user_id: user.id, number: n, friendly_name: fn, country: 'CA', default: default,
+                            provider: 'nexmo', price: '210')
         TextingService.update_nexmo_number('CA', n, 'tel', '<redacted_phone_number>')
       else
         puts "CANT BUY #{n}"
@@ -1297,7 +1328,8 @@ class Message < ActiveRecord::Base
     user_id = 51_630
     phone_numbers = Message.where(user_id_to: user_id).pluck(:from)
     mcids = MerchantContact.where(merchant_id: user_id, uid: phone_numbers).pluck(:id)
-    s = UserList.where(customer_contact_id: mcids, customer_contact_type: 'MerchantContact').where('created_at > ?', Time.now - 10.days)
+    s = UserList.where(customer_contact_id: mcids, customer_contact_type: 'MerchantContact').where('created_at > ?',
+                                                                                                   Time.now - 10.days)
 
     puts phone_numbers.length.inspect
     puts mcids.length.inspect
@@ -1306,7 +1338,8 @@ class Message < ActiveRecord::Base
   end
 
   def wq
-    emails = %w[<redacted_email> <redacted_email> <redacted_email> <redacted_email> <redacted_email> <redacted_email>]
+    emails = %w[<redacted_email> <redacted_email> <redacted_email> <redacted_email>
+                <redacted_email> <redacted_email>]
     rules = Rule.where(user_id: 48_784).where('response like ?', '%first and last name?%')
     puts "Rules count #{rules.size}"
     rules.each do |r|
@@ -1372,12 +1405,15 @@ class Message < ActiveRecord::Base
 
     user_ids = User.where(email: emails).pluck(:id)
     # Rule.create(user_id: 123_807, text: HERE, rule_type: 'contains_text', response: 'Thanks for your time. Stay well.')
-    file_data = CSV.read('/home/taiwo/Downloads/Rules to add to funnel accounts - Sep 2.csv', encoding: 'ISO-8859-1', headers: true, skip_blanks: true, header_converters: :symbol, converters: %i[all blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+    file_data = CSV.read('/home/taiwo/Downloads/Rules to add to funnel accounts - Sep 2.csv', encoding: 'ISO-8859-1',
+                                                                                              headers: true, skip_blanks: true, header_converters: :symbol, converters: %i[all blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
 
     data = []
     file_data.each do |row|
       row = row.to_hash
-      user_ids.each { |uid| data << { user_id: uid, text: row[:text], rule_type: row[:rule_type], response: row[:response] } }
+      user_ids.each do |uid|
+        data << { user_id: uid, text: row[:text], rule_type: row[:rule_type], response: row[:response] }
+      end
       if data.length == 5000
         Rule.import data, validate: false
         data.clear
@@ -1473,11 +1509,13 @@ class Message < ActiveRecord::Base
 
   def move_numbers
     [
-      { from: ['<redacted_email>', '<redacted_email>'], to: '<redacted_email>' },
+      { from: ['<redacted_email>', '<redacted_email>'],
+        to: '<redacted_email>' },
       { from: ['<redacted_email>'], to: '<redacted_email>' },
       { from: ['<redacted_email>'], to: '<redacted_email>' },
       { from: ['<redacted_email>'], to: '<redacted_email>' },
-      { from: ['<redacted_email>', '<redacted_email>'], to: '<redacted_email>' }
+      { from: ['<redacted_email>', '<redacted_email>'],
+        to: '<redacted_email>' }
     ].each do |arr|
       to = User.find_by_email(arr[:to])
       next if to.blank?

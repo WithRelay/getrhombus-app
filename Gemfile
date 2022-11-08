@@ -5,7 +5,10 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 
-gem 'mysql2', '~> 0.3.18'
+# https://makandracards.com/makandra/486428-installing-old-versions-of-mysql2-on-ubuntu-20-04+
+gem 'mysql2', git: 'https://github.com/makandra/mysql2', branch: '0.3.x-lts'
+
+gem 'mimemagic', '0.3.9'
 
 gem 'httparty'
 gem 'nexmo'
@@ -28,6 +31,10 @@ gem 'exception_notification'
 gem 'slack-notifier'
 
 gem 'net-sftp', '~> 2.1', '>= 2.1.2'
+
+gem 'bcrypt_pbkdf', '< 2.0', require: false
+gem 'rbnacl', '< 5.0', require: false
+gem 'rbnacl-libsodium', require: false
 
 # gem 'cocoon'
 gem 'omniauth-stripe-connect'

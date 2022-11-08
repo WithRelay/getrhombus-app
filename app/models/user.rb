@@ -6,9 +6,9 @@ class User < ActiveRecord::Base
   include AddTokenToUser
   include Transactionable
 
-  attr_accessor :phone, :msg_id, :captured_amt, :referrer
-  attr_accessor :channel, :referrer_uid, :tos_acceptance, :customer_source
-  attr_accessor :card_token, :page_specific_id
+  attr_accessor :phone, :msg_id, :captured_amt, :referrer, :channel, :referrer_uid, :tos_acceptance, :customer_source,
+                :card_token, :page_specific_id
+
   # attr_accessor :area_code, :rn_country, :rn_type # These accessors aren't needed anymore
 
   NUMBER_PRICE = 1
@@ -38,7 +38,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :phone_number, allow_nil: true, if: -> { is_customer? }
 
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: %i[facebook twitter stripe_connect]
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable,
+         :omniauthable, omniauth_providers: %i[facebook twitter stripe_connect]
 
   has_many :customer_transactions, class_name: 'Transaction', foreign_key: 'user_id'
   has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
@@ -96,7 +97,9 @@ class User < ActiveRecord::Base
   has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
 
   has_many :coupons
-  has_many :saas_invoices, -> { where team_id: User.get_platform_acct_obj.id }, class_name: :Invoice, foreign_key: :customer_id
+  has_many :saas_invoices, lambda {
+                             where team_id: User.get_platform_acct_obj.id
+                           }, class_name: :Invoice, foreign_key: :customer_id
   # LEAVE THIS FOR LATER
   # has_many :next_plans
 
@@ -247,7 +250,8 @@ class User < ActiveRecord::Base
   end
 
   def buy_number(params, default = true, with_uid = true)
-    number = TextingService.buy_number({ query: params['area_code'] || '', country: params['rn_country'], type: params['rn_type'] })
+    number = TextingService.buy_number({ query: params['area_code'] || '', country: params['rn_country'],
+                                         type: params['rn_type'] })
     EmailingService.hosted_sms_progress_notice(self, number.try(:second)) if hosted_sms.present?
     return false unless number
 
@@ -258,7 +262,8 @@ class User < ActiveRecord::Base
       update(relay_uid: uid, short_url: url)
     end
 
-    numbers.create(number: number[0], friendly_name: number[1], number_type: params['rn_type'], country: params['rn_country'], default: default)
+    numbers.create(number: number[0], friendly_name: number[1], number_type: params['rn_type'],
+                   country: params['rn_country'], default: default)
 
     # deduct_from_account_balance(NUMBER_PRICE)
 
@@ -306,72 +311,70 @@ class User < ActiveRecord::Base
     end
   end
 
-  def z
-    Stripe::Account.update(
-      '<redacted_stripe_account_id>',
-      {
-        requested_capabilities: %w[card_payments transfers]
-      },
-      {
-        stripe_version: '<redacted_phone_number>',
-        stripe_account: '<redacted_stripe_account_id>'
-      }
-    )
-  rescue Exception => e
-    puts e.inspect
-  end
+  # def z
+  #   Stripe::Account.update(
+  #     '<redacted_stripe_account_id>',
+  #     {
+  #       requested_capabilities: %w[card_payments transfers]
+  #     },
+  #     {
+  #       stripe_version: '<redacted_phone_number>',
+  #       stripe_account: '<redacted_stripe_account_id>'
+  #     }
+  #   )
+  # rescue Exception => e
+  #   puts e.inspect
+  # end
 
-  def q
-    Stripe::Account.update(
-      '<redacted_stripe_account_id>',
-      {
-        settings: {
-          payments: { statement_descriptor: 'xyzx1' },
-          card_payments: { statement_descriptor_prefix: 'xyz' }
-        }
-      },
-      {
-        stripe_version: '<redacted_phone_number>'
-      }
-    )
-  rescue Exception => e
-    puts e.inspect
-  end
+  # def q
+  #   Stripe::Account.update(
+  #     '<redacted_stripe_account_id>',
+  #     {
+  #       settings: {
+  #         payments: { statement_descriptor: 'xyzx1' },
+  #         card_payments: { statement_descriptor_prefix: 'xyz' }
+  #       }
+  #     },
+  #     {
+  #       stripe_version: '<redacted_phone_number>'
+  #     }
+  #   )
+  # rescue Exception => e
+  #   puts e.inspect
+  # end
 
-  def y
-    last_id = nil
-    more_data = true
+  # def y
+  #   last_id = nil
+  #   more_data = true
 
-    while more_data
-      params = { limit: 100 }
-      params[:starting_after] = last_id if last_id
+  #   while more_data
+  #     params = { limit: 100 }
+  #     params[:starting_after] = last_id if last_id
 
-      data = Stripe::Account.list(params)['data']
-      last_id = data[data.size - 1].try(:[], 'id')
-      more_data = false unless last_id
+  #     data = Stripe::Account.list(params)['data']
+  #     last_id = data[data.size - 1].try(:[], 'id')
+  #     more_data = false unless last_id
 
-      next unless last_id
+  #     next unless last_id
 
-      data.each do |o|
-        begin
-          puts "Update #{o['id']}"
-          Stripe::Account.update(
-            o['id'],
-            {
-              requested_capabilities: %w[card_payments transfers],
-              stripe_account: o['id']
-            },
-            {
-              stripe_version: '<redacted_phone_number>'
-            }
-          )
-        rescue Exception => e
-          puts e.inspect
-          puts "\n\n\n\n\n\n\n"
-        end
-      end
-    end
-  end
+  #     data.each do |o|
+  #       puts "Update #{o['id']}"
+  #       Stripe::Account.update(
+  #         o['id'],
+  #         {
+  #           requested_capabilities: %w[card_payments transfers],
+  #           stripe_account: o['id']
+  #         },
+  #         {
+  #           stripe_version: '<redacted_phone_number>'
+  #         }
+  #       )
+  #     rescue Exception => e
+  #       puts e.inspect
+  #       puts "\n\n\n\n\n\n\n"
+  #     end
+  #   end
+  # end
 
   private
 
@@ -403,7 +406,8 @@ class User < ActiveRecord::Base
       List.new.create_default_segments(self)
       GetIntelligenceDataJob.perform_later(org_phone, 'OpenCNAM')
       IncompleteSignupJob.set(wait: INCOMPLETE_SIGNUP_EMAIL_DELAY.seconds).perform_later(self)
-      AwayMessage.find_or_create_by(user_id: id, response: "We're away at the moment and will get back to you when we return :).")
+      AwayMessage.find_or_create_by(user_id: id,
+                                    response: "We're away at the moment and will get back to you when we return :).")
     end
 
     GetIntelligenceDataJob.perform_later(email, 'FullContact')
