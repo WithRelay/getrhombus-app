@@ -25,7 +25,7 @@
   </head>
 
   <body style="<%= dynamic_pages_overflow_hidden %>" class="<%= add_body_class %> <%= controller.controller_name %> <%= controller.action_name %>"> <%#= needed for conversations page body %>
-    <%#= render 'shared/banner' if unauthenticate_controller %>
+    <%= render 'shared/banner' if unauthenticate_controller %>
     <%#= render 'shared/appcues' if current_user.try(:is_merchant?) %>
     <%= render_header_partial %>
     <%= render 'shared/flash_messages' %>
@@ -40,7 +40,8 @@
     <% end %>
   </body>
 
-  <script type="text/javascript" async src="https://distrobird-assets.s3.amazonaws.com/analytics/distrobird_widget.js" data-widget-uid="359fa3b2-06f1-466c-a9ae-2013c14b7ce3"></script>
+
+  <%# <script type="text/javascript" async src="https://distrobird-assets.s3.amazonaws.com/analytics/distrobird_widget.js" data-widget-uid="359fa3b2-06f1-466c-a9ae-2013c14b7ce3"></script> %>
   <script type="text/javascript">
     $(window).load(function() {
         $('#loading-placeholder').fadeOut(800, function() {

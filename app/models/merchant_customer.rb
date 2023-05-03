@@ -1,5 +1,4 @@
 class MerchantCustomer < ActiveRecord::Base
-
   # platform_stripe_customer_id is the shared id between the platform and merchant standalone account
   # managed_stripe_customer_id is for the merchant managed account
 
@@ -25,7 +24,7 @@ class MerchantCustomer < ActiveRecord::Base
         if cus.try(:phone_number).present?
           merch.merchant_contacts.where(uid_type: 'phone_number', uid: cus.phone_number).update_all(is_customer: 1)
         end
-        
+
         if cus.try(:id)
           # check for page_specific_ids and set is_customer
           creds = FbCred.where(user_id: cus.id).pluck(:page_specific_id)
@@ -34,21 +33,20 @@ class MerchantCustomer < ActiveRecord::Base
           # add as customer if necessary
           platform = merch.is_platform? ? 0 : 1
           mc = find_by(merchant_id: merch.id, customer_id: cus.id, is_platform: platform)
-          if mc 
-            mc.touch 
-          else 
+          if mc
+            mc.touch
+          else
             mc = create!(merchant_id: merch.id, customer_id: cus.id, is_platform: platform)
           end
 
           return mc
         end
       end
-    rescue StandardError => exception
-      ExceptionNotifier.notify_exception(exception, data: { message: "In add_or_update_merchant_customer", merchant: merch,
-                                                            env: Rails.env, customer: cus })
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e, data: { message: 'In add_or_update_merchant_customer', merchant: merch,
+                                                    env: Rails.env, customer: cus })
     end
 
     false
   end
-
 end

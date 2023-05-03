@@ -1,5 +1,4 @@
 class Campaign < ActiveRecord::Base
-
   attr_accessor :list_id
 
   belongs_to :user
@@ -19,49 +18,49 @@ class Campaign < ActiveRecord::Base
 
   # validation of campaign attributes
   validates_presence_of :text
-  validates_presence_of :name, :list_id, unless: lambda { reminder_campaign? }
+  validates_presence_of :name, :list_id, unless: -> { reminder_campaign? }
   validate :channel_text_validate, if: proc { |c| c.text.present? && !c.email? }
 
   # uncomment this for production
-  #validate :validate_date_time, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
+  # validate :validate_date_time, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
 
   validate :total_image_size
-  validates_presence_of :subject, if: lambda { email? }
-  validates_presence_of :repeat_days, if: lambda { recurring? }
-  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }, unless: lambda { reminder_campaign? }
+  validates_presence_of :subject, if: -> { email? }
+  validates_presence_of :repeat_days, if: -> { recurring? }
+  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }, unless: -> { reminder_campaign? }
 
   # scopes
-  scope :check_campaign_uniqueness, -> (campaign_name) { where('lower(name) = ?', campaign_name.downcase) }
+  scope :check_campaign_uniqueness, ->(campaign_name) { where('lower(name) = ?', campaign_name.downcase) }
   scope :is_active_or_paused, -> { where(status: [Campaign.statuses[:active], Campaign.statuses[:paused]]) }
 
   before_create :set_campaign_status
-  before_save :update_next_send_at, if: lambda { (recurring? || (one_time? && !deliver_now?)) && date_time_changed? }
+  before_save :update_next_send_at, if: -> { (recurring? || (one_time? && !deliver_now?)) && date_time_changed? }
 
   def update_attributes(*args)
     campaign_lists.delete_all
     args[0][:list_id].split(',').each { |lid| campaign_lists.build(list_id: lid).save }
     # creates records for attachment images associating with campaign
-    images.build(avatar: args[1][:avatar], uploaded_as: 1) if (!sms? && args[1][:avatar].present?)
+    images.build(avatar: args[1][:avatar], uploaded_as: 1) if !sms? && args[1][:avatar].present?
     # creates records for inline images associating with campaign
     create_image_refs(args[1]) if args[1][:image_id].present?
     # super calls a parent class update_attributes function and updates campaign attributes
     super(args[0])
   end
 
-  def create_image_refs(campaign_image)
+  def create_image_refs(_campaign_image)
     args[1][:image_id].each do |avatar_id|
       image_refs.build(image_id: avatar_id).save
     end
   end
 
   def reminder_campaign?
-    self.is_a?(Reminder)
+    is_a?(Reminder)
   end
 
   def destroy_campaign_jobs
-    Resque::Job.destroy(send_now_queue, SendNowCampaignJob, self.id)
-    Resque::Job.destroy(pending_queue, PendingCampaignsHandlerJob, self.id)
-    Resque.remove_delayed_selection(PendingCampaignsHandlerJob) { |args| args[0] == self.id }
+    Resque::Job.destroy(send_now_queue, SendNowCampaignJob, id)
+    Resque::Job.destroy(pending_queue, PendingCampaignsHandlerJob, id)
+    Resque.remove_delayed_selection(PendingCampaignsHandlerJob) { |args| args[0] == id }
   end
 
   def change_campaign_job
@@ -70,7 +69,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def enqueue_jobs
-    if self.active? || self.test?
+    if active? || test?
       rescue_job_queue if is_todays_campaign?
       send_now_campaign if deliver_now?
     end
@@ -79,7 +78,7 @@ class Campaign < ActiveRecord::Base
   def change_job_status
     destroy_campaign_jobs
     # after reactivating campaign, put back in queue if campaign is today and upcoming. no need to consider deliver now
-    rescue_job_queue if self.active? && is_todays_campaign?
+    rescue_job_queue if active? && is_todays_campaign?
   end
 
   def rescue_job_queue
@@ -91,33 +90,33 @@ class Campaign < ActiveRecord::Base
   end
 
   def send_now_campaign
-    SendNowCampaignJob.set(queue: send_now_queue).perform_later(self.id) if !reminder_campaign?
-    SendNowCampaignJob.set(queue: send_now_queue).perform_later(self.id) if reminder_campaign?
+    SendNowCampaignJob.set(queue: send_now_queue).perform_later(id) unless reminder_campaign?
+    SendNowCampaignJob.set(queue: send_now_queue).perform_later(id) if reminder_campaign?
   end
 
   def pending_queue
     if reminder_campaign?
-      self.recurring? ? 'recurring_reminders' : 'one_time_reminders'
+      recurring? ? 'recurring_reminders' : 'one_time_reminders'
     else
-      self.recurring? ? 'recurring_campaigns' : 'one_time_campaigns'
+      recurring? ? 'recurring_campaigns' : 'one_time_campaigns'
     end
   end
 
   def send_now_queue
-    reminder_campaign? ? "send_now_reminders" : "send_now_campaigns"
+    reminder_campaign? ? 'send_now_reminders' : 'send_now_campaigns'
   end
 
   private
 
   def update_next_send_at
-    self.next_send_at = self.date_time
+    self.next_send_at = date_time
   end
 
   def is_todays_campaign?
     if date_time.present?
       now = Time.current.to_i
       tomorrow = Time.current.tomorrow.beginning_of_day.to_i
-      return date_time.to_i > now && date_time.to_i < tomorrow
+      date_time.to_i > now && date_time.to_i < tomorrow
     end
   end
 
@@ -128,19 +127,20 @@ class Campaign < ActiveRecord::Base
   end
 
   def total_image_size
-    total_size = self.images.inject(0) { |sum, image| sum += image.avatar_file_size }
-    channel_max_image_upload = { 'email' => 20.megabytes, 'mms' => (4.5).megabytes }
-    get_total_allowed_size = channel_max_image_upload[self.channel]
-    unless get_total_allowed_size.nil?
-      errors.add(:images, "size not be greater than #{get_total_allowed_size/1_048_576} MB") if total_size > get_total_allowed_size
+    total_size = images.inject(0) { |sum, image| sum += image.avatar_file_size }
+    channel_max_image_upload = { 'email' => 20.megabytes, 'mms' => 4.5.megabytes }
+    get_total_allowed_size = channel_max_image_upload[channel]
+    if !get_total_allowed_size.nil? && (total_size > get_total_allowed_size)
+      errors.add(:images,
+                 "size not be greater than #{get_total_allowed_size / 1_048_576} MB")
     end
   end
 
   # sets campaign status as inactive because merchant do not have facebook messenger associated
   def set_campaign_status
-    if !self.user.get_page_access_token.present? && self.facebook_messenger? && !self.test?
+    if !user.get_page_access_token.present? && facebook_messenger? && !test?
       self.status = Campaign.statuses[:inactive]
-    elsif !self.test?
+    elsif !test?
       self.status = Campaign.statuses[:active]
     end
   end

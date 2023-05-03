@@ -1,5 +1,4 @@
 class Api::V1::DemosController < Api::V1::BaseController
-
   def create
     Demo.create(demo_params)
     render json: { response: 'Thank you! Your submission has been received!' }, status: 200
@@ -8,6 +7,6 @@ class Api::V1::DemosController < Api::V1::BaseController
   private
 
   def demo_params
-   params.require(:demo).permit(:full_name, :company, :email, :phone, :employee_count)
+    params.require(:demo).permit(:full_name, :company, :email, :phone, :employee_count)
   end
 end

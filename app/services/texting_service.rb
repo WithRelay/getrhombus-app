@@ -24,11 +24,16 @@ class TextingService
       to = to[1..-1] if to.chr == '+'
 
       # encode the nexmo uri
-      uri = URI.encode_www_form([['api_key', NEXMO_API_KEY], ['api_secret', NEXMO_API_SECRET], ['from', from], ['to', to], ['text', message], ['client-ref', client_ref], %w[type text]])
+      uri = URI.encode_www_form([['api_key', NEXMO_API_KEY], ['api_secret', NEXMO_API_SECRET], ['from', from],
+                                 ['to', to], ['text', message], ['client-ref', client_ref], %w[type text]])
       # ["status-report-req", 1]
-      [true, HTTParty.post('https://rest.nexmo.com/sms/json?' + uri, headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })]
+      [true,
+       HTTParty.post('https://rest.nexmo.com/sms/json?' + uri,
+                     headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })]
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service send_sms_nexmo', from: from, to: to, body: body, env: Rails.env })
+      ExceptionNotifier.notify_exception(e,
+                                         data: { message: 'In texting service send_sms_nexmo', from: from, to: to,
+                                                 body: body, env: Rails.env })
       [false, e]
     end
 
@@ -37,8 +42,10 @@ class TextingService
     end
 
     def release_number_nexmo(msisdn, country)
-      uri = URI.encode_www_form([['api_key', NEXMO_API_KEY], ['api_secret', NEXMO_API_SECRET], ['msisdn', msisdn], ['country', country]])
-      HTTParty.post('https://rest.nexmo.com/number/cancel?' + uri, headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
+      uri = URI.encode_www_form([['api_key', NEXMO_API_KEY], ['api_secret', NEXMO_API_SECRET], ['msisdn', msisdn],
+                                 ['country', country]])
+      HTTParty.post('https://rest.nexmo.com/number/cancel?' + uri,
+                    headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
     end
 
     def search_number_nexmo(country, pattern, size = 1, type = 'mobile-lvn', features = 'SMS,VOICE', index = 1)
@@ -68,12 +75,14 @@ class TextingService
           msisdn
         else
           # Notify marketplace owner of failure
-          Notification.text_failure_notification(response, from = '', to = '', message = "Rhombus number purchase failed with response code #{response.code}").deliver_now
+          Notification.text_failure_notification(response, from = '', to = '',
+                                                 message = "Rhombus number purchase failed with response code #{response.code}").deliver_now
           '-'
         end
       else
         # Notify marketplace owner of failure
-        Notification.text_failure_notification(response, from = '', to = '', message = 'Rhombus number search failed').deliver_now
+        Notification.text_failure_notification(response, from = '', to = '',
+                                               message = 'Rhombus number search failed').deliver_now
         '-'
       end
     end
@@ -109,7 +118,9 @@ class TextingService
       rescue Twilio::REST::TwilioError => e
       rescue StandardError => e
       end
-      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service send_sms', from: from, to: to, body: body, media_ary: media_ary, env: Rails.env })
+      ExceptionNotifier.notify_exception(e,
+                                         data: { message: 'In texting service send_sms', from: from, to: to,
+                                                 body: body, media_ary: media_ary, env: Rails.env })
       [false, e]
     end
 
@@ -117,11 +128,16 @@ class TextingService
       begin
         uri = URI.encode_www_form([['account_id', FIBERNETICS_API_KEY], ['auth_token', FIBERNETICS_API_SECRET],
                                    ['phone_number', from], ['to', to], ['message', body], ['subscriber_id', subscriber_id]])
-        return HTTParty.post("https://smssend.fongo.com/Send.ashx?#{uri}", headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
+        return HTTParty.post("https://smssend.fongo.com/Send.ashx?#{uri}",
+                             headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
       rescue Timeout::Error => e
-        ExceptionNotifier.notify_exception(e, data: { message: 'In send_sms_fibernetics timeout', from: from, to: to, body: body, env: Rails.env })
+        ExceptionNotifier.notify_exception(e,
+                                           data: { message: 'In send_sms_fibernetics timeout', from: from, to: to,
+                                                   body: body, env: Rails.env })
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, data: { message: 'In send_sms_fibernetics', from: from, to: to, body: body, env: Rails.env })
+        ExceptionNotifier.notify_exception(e,
+                                           data: { message: 'In send_sms_fibernetics', from: from, to: to, body: body,
+                                                   env: Rails.env })
       end
       nil
     end
@@ -130,9 +146,12 @@ class TextingService
       begin
         uri = URI.encode_www_form([['account_id', FIBERNETICS_API_KEY], ['auth_token', FIBERNETICS_API_SECRET],
                                    ['phone_number', phone_number], ['since_id', since_id], ['subscriber_id', subscriber_id]])
-        return HTTParty.post("https://smsfetch.fongo.com/FetchMessageHandler.ashx?#{uri}", headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
+        return HTTParty.post("https://smsfetch.fongo.com/FetchMessageHandler.ashx?#{uri}",
+                             headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
       rescue Timeout::Error => e
-        ExceptionNotifier.notify_exception(e, data: { message: 'In get_sms_fibernetics timeout', phone_number: phone_number })
+        ExceptionNotifier.notify_exception(e,
+                                           data: { message: 'In get_sms_fibernetics timeout',
+                                                   phone_number: phone_number })
       rescue StandardError => e
         ExceptionNotifier.notify_exception(e, data: { message: 'In get_sms_fibernetics', phone_number: phone_number })
       end
@@ -141,11 +160,15 @@ class TextingService
 
     def create_fibernetics_subscriber(fn_num, validate_carrier = true)
       begin
-        uri = URI.encode_www_form([['account_id', FIBERNETICS_API_KEY], ['auth_token', FIBERNETICS_API_SECRET], ['phone_number', fn_num], ['validate_carrier', validate_carrier]])
-        re = HTTParty.post("https://smsadmin.fongo.com/CreateSubscriber.ashx?#{uri}", headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
+        uri = URI.encode_www_form([['account_id', FIBERNETICS_API_KEY], ['auth_token', FIBERNETICS_API_SECRET],
+                                   ['phone_number', fn_num], ['validate_carrier', validate_carrier]])
+        re = HTTParty.post("https://smsadmin.fongo.com/CreateSubscriber.ashx?#{uri}",
+                           headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
         return re['response']['account']['account_id'] if re.code == 200 && re['response']['status'] == 'OK'
       rescue Timeout::Error => e
-        ExceptionNotifier.notify_exception(e, data: { message: 'In create_fibernetics_subscriber timeout', fn_num: fn_num })
+        ExceptionNotifier.notify_exception(e,
+                                           data: { message: 'In create_fibernetics_subscriber timeout',
+                                                   fn_num: fn_num })
       rescue StandardError => e
         ExceptionNotifier.notify_exception(e, data: { message: 'In create_fibernetics_subscriber', fn_num: fn_num })
       end
@@ -156,6 +179,7 @@ class TextingService
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         re = search_number(params)
+        puts re.inspect
         if re[:number].present?
           # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
           re = client.incoming_phone_numbers.create(phone_number: re[:number], voice_application_sid: TWILIO_RELAY_APP_SID,
@@ -163,9 +187,13 @@ class TextingService
           return re.phone_number.gsub('+', ''), re.friendly_name
         end
       rescue Twilio::REST::TwilioError => e
-        ExceptionNotifier.notify_exception(e, data: { message: 'In texting service buy_number', params: params, env: Rails.env })
+        ExceptionNotifier.notify_exception(e,
+                                           data: { message: 'In texting service buy_number', params: params,
+                                                   env: Rails.env })
       rescue StandardError => e
-        ExceptionNotifier.notify_exception(e, data: { message: 'In texting service buy_number', params: params, env: Rails.env })
+        ExceptionNotifier.notify_exception(e,
+                                           data: { message: 'In texting service buy_number', params: params,
+                                                   env: Rails.env })
       end
       false
     end
@@ -191,10 +219,14 @@ class TextingService
 
       { number: number.nil? ? '' : number.phone_number }
     rescue Twilio::REST::TwilioError => e
-      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service search_number', params: params, env: Rails.env })
+      ExceptionNotifier.notify_exception(e,
+                                         data: { message: 'In texting service search_number', params: params,
+                                                 env: Rails.env })
       { error: 'Twilio cannot provision the number.' }
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service search_number', params: params, env: Rails.env })
+      ExceptionNotifier.notify_exception(e,
+                                         data: { message: 'In texting service search_number', params: params,
+                                                 env: Rails.env })
       { error: e.message }
     end
 
@@ -219,7 +251,8 @@ class TextingService
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
 
         # client.api.available_phone_numbers('US').local.list(area_code: '415', page_size: 100, limit: 100).each_with_index do |n, i|
-        client.api.available_phone_numbers('CA').local.list(in_region: 'BC', page_size: 100, limit: 100).each_with_index do |n, _i|
+        client.api.available_phone_numbers('CA').local.list(in_region: 'BC', page_size: 100,
+                                                            limit: 100).each_with_index do |n, _i|
           s[n.phone_number] = 1
           # puts n.phone_number
           # puts i
@@ -235,12 +268,15 @@ class TextingService
         with_carrier = with_carrier ? { type: 'carrier' } : {}
         number = client.lookups.v1.phone_numbers(num).fetch(with_carrier)
         puts number.inspect
-        return [number.phone_number[1..-1], number.country_code, number.national_format, number.try(:carrier).try(:[], 'type')]
+        return [number.phone_number[1..-1], number.country_code, number.national_format,
+                number.try(:carrier).try(:[], 'type')]
       rescue Twilio::REST::TwilioError => e
       rescue Exception => e
       end
       # puts err.inspect
-      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service number_lookup', num: num, env: Rails.env, info: e.try(:message) })
+      ExceptionNotifier.notify_exception(e,
+                                         data: { message: 'In texting service number_lookup', num: num, env: Rails.env,
+                                                 info: e.try(:message) })
       false
     end
 
@@ -505,7 +541,9 @@ class TextingService
       client.incoming_phone_numbers.list({ phone_number: num }).each(&:delete)
       true
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service release_number', num: num, env: Rails.env })
+      ExceptionNotifier.notify_exception(e,
+                                         data: { message: 'In texting service release_number', num: num,
+                                                 env: Rails.env })
       false
     end
 
@@ -515,7 +553,9 @@ class TextingService
       client.incoming_phone_numbers.list.each { |n| puts n.phone_number.to_s.reverse[0...11].reverse }
       true
     rescue StandardError => e
-      ExceptionNotifier.notify_exception(e, data: { message: 'In texting service release_number', num: num, env: Rails.env })
+      ExceptionNotifier.notify_exception(e,
+                                         data: { message: 'In texting service release_number', num: num,
+                                                 env: Rails.env })
       false
     end
 
@@ -529,13 +569,12 @@ class TextingService
     end
 
     def receive_call
-      response = Twilio::TwiML::Response.new do |r|
+      Twilio::TwiML::Response.new do |r|
         # Should be your Twilio Number or a verified Caller ID
         r.Dial callerId: '+<redacted_phone_number>' do |d|
           d.Client 'rho-jenny'
         end
       end
-      response
     end
 
     def get_twilio_capibility_token
@@ -544,8 +583,7 @@ class TextingService
       capability = Twilio::Util::Capability.new TWILIO_API_KEY, TWILIO_API_SECRET
       capability.allow_client_outgoing '<redacted_twilio_app_sid>'
       capability.allow_client_incoming 'rho-jenny'
-      token = capability.generate
-      token
+      capability.generate
     end
   end
 end

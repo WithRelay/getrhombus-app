@@ -1,26 +1,26 @@
 class RemindersController < ApplicationController
   include DashboardNotification
   before_action :set_notifications, only: [:index]
-  before_action :set_reminder, only: [ :change_status , :destroy ]
+  before_action :set_reminder, only: %i[change_status destroy]
 
   def index
     @reminders_tomorrow = current_user.reminders.includes(user_lists: [:customer_contact])
-                            .where("next_send_at >= ? and next_send_at < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
-                            .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
+                                      .where('next_send_at >= ? and next_send_at < ?', Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
+                                      .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
     @reminders_upcoming = current_user.reminders.includes(user_lists: [:customer_contact])
-                            .where("next_send_at >= ?", Time.current.beginning_of_day + 2.days)
-                            .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
+                                      .where('next_send_at >= ?', Time.current.beginning_of_day + 2.days)
+                                      .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
     @reminders_today = current_user.reminders.includes(user_lists: [:customer_contact])
-                            .where("next_send_at >= ? and next_send_at < ?",Time.current, Time.current.beginning_of_day + 1.days)
-                            .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
-    
-    unless @reminders_today.present? || @reminders_tomorrow.present? || @reminders_upcoming.present?
-      render 'empty_reminder'
-    else
+                                   .where('next_send_at >= ? and next_send_at < ?', Time.current, Time.current.beginning_of_day + 1.days)
+                                   .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
+
+    if @reminders_today.present? || @reminders_tomorrow.present? || @reminders_upcoming.present?
       respond_to do |format|
         format.js { render partial: 'index.js.erb' }
         format.html
       end
+    else
+      render 'empty_reminder'
     end
   end
 
@@ -46,7 +46,7 @@ class RemindersController < ApplicationController
       end
     else
       flash[:error] = 'Reminder does not exist'
-    end  
+    end
     redirect_to user_reminders_path(current_user)
   end
 
@@ -55,5 +55,4 @@ class RemindersController < ApplicationController
   def set_reminder
     @reminder = current_user.reminders.find_by(id: params[:id])
   end
-
 end
