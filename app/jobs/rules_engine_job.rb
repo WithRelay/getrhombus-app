@@ -22,6 +22,7 @@ class RulesEngineJob < ApplicationJob
     <redacted_phone_number>
     <redacted_phone_number>
     <redacted_phone_number>
+    <redacted_phone_number>
   ].freeze
 
   def perform(message_id)
@@ -106,6 +107,7 @@ class RulesEngineJob < ApplicationJob
     if person.present? && @merchant.present?
       response_text = CampaignHandlebar.new(person, @merchant).render(response_text)
     end
-    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, customer, uid_type, uid, response_text, 'Message', [], 'platform', @message.to)
+    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, customer, uid_type, uid,
+                                                                          response_text, 'Message', [], 'platform', @message.to)
   end
 end

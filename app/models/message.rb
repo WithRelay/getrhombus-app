@@ -252,7 +252,7 @@ class Message < ActiveRecord::Base
   def z
     emails = %w[
       <redacted_email>
-      <redacted_email>
+
     ] # <redacted_email> <redacted_email> <redacted_email> <redacted_email>)
 
     puts 14_184_783_418
@@ -261,7 +261,7 @@ class Message < ActiveRecord::Base
       next unless u
 
       Number.where('id > 32227').where(user_id: u.id, provider: 'nexmo').pluck(:number).each_with_index do |n, i|
-        TextingService.update_nexmo_number('CA', n, 'tel', 12_044_104_317)
+        TextingService.update_nexmo_number('CA', n, 'tel', 14_378_005_572)
         puts i
       end
     end
