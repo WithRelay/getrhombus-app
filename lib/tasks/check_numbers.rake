@@ -53,7 +53,7 @@ task check_numbers: :environment do
   size = 100
   type = 'mobile-lvn'
 
-  CSV.open('/home/taiwo/Downloads/area_code_inventory.csv', 'wb') do |csv|
+  CSV.open('', 'wb') do |csv|
     csv << %w[area_code total]
     codes.each do |code|
       count = 0

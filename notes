@@ -29,7 +29,7 @@ Bhishma
 
 
 
-s = TextingService('<redacted_phone_number>', '<redacted_phone_number>', 'test message', "FSGe31457817363405091af6158c716089e")
+s = TextingService('', '', 'test message', "")
 
 
 
@@ -74,12 +74,3 @@ https://davidwalsh.name/combining-js-arrays
 107eeb3
 a65a463
 6329033
-
-
-
-
-
-
-
-
-

@@ -17,7 +17,7 @@ class TextingService
   FIBERNETICS_API_SECRET = Rails.application.secrets.fibernetics['secret']
 
   class << self
-    # TextingService.send_sms_nexmo("<redacted_phone_number>", "<redacted_phone_number>", "ᐃᓄᒃᑎᑐᑦ inatutuke", "")
+
 
     def send_sms_nexmo(from, to, message, client_ref)
       from = from[1..-1] if from.chr == '+'
@@ -38,7 +38,9 @@ class TextingService
     end
 
     def list_numbers_nexmo
-      HTTParty.get('https://rest.nexmo.com/account/numbers/' + NEXMO_API_KEY + '/' + NEXMO_API_SECRET + '/')
+      auth = Base64.encode64("#{NEXMO_API_KEY}:#{NEXMO_API_SECRET}")
+      HTTParty.get('https://rest.nexmo.com/account/numbers?size=100',
+                   headers: { 'Authorization' => "Basic #{auth}" })
     end
 
     def release_number_nexmo(msisdn, country)
@@ -177,15 +179,9 @@ class TextingService
 
     def buy_number(params)
       begin
-        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         re = search_number(params)
         puts re.inspect
-        if re[:number].present?
-          # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
-          re = client.incoming_phone_numbers.create(phone_number: re[:number], voice_application_sid: TWILIO_RELAY_APP_SID,
-                                                    sms_application_sid: TWILIO_RELAY_APP_SID)
-          return re.phone_number.gsub('+', ''), re.friendly_name
-        end
+        buy_twilio_number(re)
       rescue Twilio::REST::TwilioError => e
         ExceptionNotifier.notify_exception(e,
                                            data: { message: 'In texting service buy_number', params: params,
@@ -194,6 +190,23 @@ class TextingService
         ExceptionNotifier.notify_exception(e,
                                            data: { message: 'In texting service buy_number', params: params,
                                                    env: Rails.env })
+      end
+      false
+    end
+
+    def buy_twilio_number(re)
+      begin
+        if re[:number].present?
+          client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+          # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
+          re = client.incoming_phone_numbers.create(phone_number: re[:number], voice_application_sid: TWILIO_RELAY_APP_SID,
+                                                    sms_application_sid: TWILIO_RELAY_APP_SID)
+          return re.phone_number.gsub('+', ''), re.friendly_name
+        end
+      rescue Twilio::REST::TwilioError => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In texting service buy_twilio_number', env: Rails.env })
+      rescue StandardError => e
+        ExceptionNotifier.notify_exception(e, data: { message: 'In texting service buy_twilio_number', env: Rails.env })
       end
       false
     end
@@ -571,18 +584,18 @@ class TextingService
     def receive_call
       Twilio::TwiML::Response.new do |r|
         # Should be your Twilio Number or a verified Caller ID
-        r.Dial callerId: '+<redacted_phone_number>' do |d|
-          d.Client 'rho-jenny'
+        r.Dial callerId: '' do |d|
+          d.Client ''
         end
       end
     end
 
     def get_twilio_capibility_token
       # This application sid will play a Welcome Message.
-      demo_app_sid = '<redacted_twilio_app_sid>'
+      demo_app_sid = ''
       capability = Twilio::Util::Capability.new TWILIO_API_KEY, TWILIO_API_SECRET
-      capability.allow_client_outgoing '<redacted_twilio_app_sid>'
-      capability.allow_client_incoming 'rho-jenny'
+      capability.allow_client_outgoing ''
+      capability.allow_client_incoming ''
       capability.generate
     end
   end

@@ -4,9 +4,7 @@ task generate_number_dist: :environment do
   require 'tempfile'
   require 'net/sftp'
 
-  CONTENT_SERVER_DOMAIN_NAME = '<redacted_ftp_domain>'.freeze
-  CONTENT_SERVER_FTP_LOGIN = '<redacted_ftp_username>'.freeze
-  CONTENT_SERVER_FTP_PASSWORD = '<redacted_password>'.freeze
+
   PORT = 22
   remote_folder = "/DataGoesHere/Oct 1, 2019 Request 1"
   directory_created = false

@@ -20,7 +20,7 @@ Rails.application.configure do
     authentication: :plain,
     domain: 'withrelay.com',
     enable_starttls_auto: true,
-    password: '<redacted_password>',
+    password: '',
     port: '587',
     user_name: <redacted_username>
   }

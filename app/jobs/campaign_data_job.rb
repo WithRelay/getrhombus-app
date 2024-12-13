@@ -5,7 +5,8 @@ class CampaignDataJob < ApplicationJob
   queue_as :campaign_data
 
   def perform(campaign_id)
-    header = ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)', 'Message ID', 'Segment ID', 'Campaign ID', 'VAN ID'].freeze
+    header = ['Phone Number', 'Call Display', 'Response', 'Segment', 'Campaign', 'Template', 'Timestamp (ET)',
+              'Message ID', 'Segment ID', 'Campaign ID', 'VAN ID'].freeze
     campaign = Campaign.includes(user: :alert).find_by(id: campaign_id)
     # check customer_contact type
     first_customer_contact = campaign.user_lists.first
@@ -37,14 +38,20 @@ class CampaignDataJob < ApplicationJob
 
       csv_string = CSV.generate do |csv|
         csv << header
-        messages.each { |m| csv << [m[header[0]], m[header[1]], m[header[2]], m[header[3]], m[header[4]], m[header[5]], m[header[6]].to_time.strftime('%Y-%m-%d %H:%M:%S'), m[header[7]], m[header[8]], m[header[9]], m[header[10]]] }
+        messages.each do |m|
+          csv << [m[header[0]], m[header[1]], m[header[2]], m[header[3]], m[header[4]], m[header[5]],
+                  m[header[6]].to_time.strftime('%Y-%m-%d %H:%M:%S'), m[header[7]], m[header[8]], m[header[9]], m[header[10]]]
+        end
       end
 
       emails = campaign.user.try(:alert).try(:emails)
       emails = emails.present? ? emails : [campaign.user.email]
-      attachment_hash = { attachments: [{ content: Base64.encode64(csv_string), name: "#{campaign.name}.csv", type: 'text/csv' }] }
+      attachment_hash = { attachments: [{ content: Base64.encode64(csv_string), name: "#{campaign.name}.csv",
+                                          type: 'text/csv' }] }
       emails.each do |e|
-        EmailingService.email_to_platform("See Attached File for account - #{campaign.user.email} and campaign - #{campaign.name}.", 'Campaign CSV Data', attachment_hash, e)
+        EmailingService.email_to_platform(
+          "See Attached File for account - #{campaign.user.email} and campaign - #{campaign.name}.", 'Campaign CSV Data', attachment_hash, e
+        )
       end
     end
   rescue StandardError => e

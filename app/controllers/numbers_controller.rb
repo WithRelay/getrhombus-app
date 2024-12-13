@@ -8,9 +8,10 @@ class NumbersController < ApplicationController
     if re
       msg_to_send = "Hi, this is Taiwo. Info is #{current_user.email}, #{current_user.card_name}, #{current_user.org_name}. To disable the account, cancel subscription in Stripe but also notify me so I can close the account."
       @merchant = User.find(1)
-      %w[<redacted_phone_number> <redacted_phone_number>].each do |num|
+      %w[].each do |num|
         @customer = User.find_by(phone_number: num)
-        Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send)
+        Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user',
+                                                                              @customer.id, msg_to_send)
       end
       EmailingService.notify_admins(msg_to_send)
 

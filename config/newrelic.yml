@@ -7,7 +7,6 @@
 #
 # This configuration file is custom generated for Rhombus Payments Inc
 
-
 # Here are the settings that are common to all environments
 common: &default_settings
   # ============================== LICENSE KEY ===============================
@@ -81,9 +80,9 @@ common: &default_settings
   # your users' browsers to download and render your web pages by injecting a small amount
   # of JavaScript code into the header and footer of each page.
   browser_monitoring:
-      # By default the agent automatically injects the monitoring JavaScript
-      # into web pages. Set this attribute to false to turn off this behavior.
-      auto_instrument: true
+    # By default the agent automatically injects the monitoring JavaScript
+    # into web pages. Set this attribute to false to turn off this behavior.
+    auto_instrument: true
 
   # Proxy settings for connecting to the New Relic server.
   #
@@ -116,7 +115,6 @@ common: &default_settings
   # minute. Included in the transaction is the exact call sequence of
   # the transactions including any SQL statements issued.
   transaction_tracer:
-
     # Transaction tracer is enabled by default. Set this to false to
     # turn it off. This feature is only available at the Professional
     # and above product levels.
@@ -154,7 +152,6 @@ common: &default_settings
   # Error collector captures information about uncaught exceptions and
   # sends them to New Relic for viewing
   error_collector:
-
     # Error collector is enabled by default. Set this to false to turn
     # it off. This feature is only available at the Professional and above
     # product levels.

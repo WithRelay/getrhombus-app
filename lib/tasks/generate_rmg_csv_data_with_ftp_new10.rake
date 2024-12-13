@@ -6,9 +6,6 @@ task generate_rmg_csv_data_with_ftp_new10: :environment do
   require 'tempfile'
   require 'net/sftp'
 
-  CONTENT_SERVER_DOMAIN_NAME = '<redacted_ftp_domain>'
-  CONTENT_SERVER_FTP_PASSWORD = '<redacted_password>'
-  CONTENT_SERVER_FTP_LOGIN = '<redacted_ftp_username>'
   PORT = 2202
 
   users = User.where('email like ? or email like ?', '<redacted_email>', '<redacted_email>')

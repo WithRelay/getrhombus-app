@@ -4,9 +4,6 @@ task generate_rmg_csv_data_with_ftp_new8: :environment do
   require 'tempfile'
   require 'net/sftp'
 
-  CONTENT_SERVER_DOMAIN_NAME = '<redacted_ftp_domain>'.freeze
-  CONTENT_SERVER_FTP_PASSWORD = '<redacted_password>'.freeze
-  CONTENT_SERVER_FTP_LOGIN = '<redacted_ftp_username>'.freeze
   PORT = 22
 
   users = User.where(email: ['<redacted_email>'])
@@ -27,16 +24,16 @@ task generate_rmg_csv_data_with_ftp_new8: :environment do
   temp_file = nil
   first_campaign = ''
   directory_created = false
-  #since_date_time = '2019-07-05 00:46:50'
-  #since_date_time = (Time.now.utc - 40.hours).to_s(:db).freeze
-  #max_date_time = '2019-07-06 01:57:49' #(Time.now.utc - 24.hours).to_s(:db).freeze
-  #date = (DateTime.now - 24.hours).strftime("%b %d, %Y").freeze #(DateTime.now).strftime("%b %d, %Y").freeze
-  remote_folder = "/DataGoesHere/Oct 23, 2019 Request 2" #{date} Funnel Campaigns - All Accounts"
+  # since_date_time = '2019-07-05 00:46:50'
+  # since_date_time = (Time.now.utc - 40.hours).to_s(:db).freeze
+  # max_date_time = '2019-07-06 01:57:49' #(Time.now.utc - 24.hours).to_s(:db).freeze
+  # date = (DateTime.now - 24.hours).strftime("%b %d, %Y").freeze #(DateTime.now).strftime("%b %d, %Y").freeze
+  remote_folder = '/DataGoesHere/Oct 23, 2019 Request 2' # {date} Funnel Campaigns - All Accounts"
   header = ['Account', 'Outbound Messages (since Sep11)', 'Inbound Messages (Since Sep11)'].freeze
 
   csv_string = CSV.generate do |csv|
     csv << header
-    users.each_with_index do |user,i|
+    users.each_with_index do |user, i|
       puts "#{user.email} - #{i} of #{users.size}"
       total_outbound = Message.find_by_sql([query_string, user.id, '2019-09-11 03:59:59']).first['Total']
       total_inbound = Message.find_by_sql([query_string2, user.id, '2019-09-11 03:59:59']).first['Total']
@@ -46,13 +43,14 @@ task generate_rmg_csv_data_with_ftp_new8: :environment do
 
   # FTP Here
   puts 'Creating file'.freeze
-  filename = "Strong Data.csv" #{user.email}.csv"
+  filename = 'Strong Data.csv' # {user.email}.csv"
   temp_file = Tempfile.new(filename)
   temp_file.write(csv_string)
   temp_file.close
 
   puts 'connecting to ftp'.freeze
-  Net::SFTP.start(CONTENT_SERVER_DOMAIN_NAME, CONTENT_SERVER_FTP_LOGIN, { password: CONTENT_SERVER_FTP_PASSWORD, port: PORT }) do |sftp|
+  Net::SFTP.start(CONTENT_SERVER_DOMAIN_NAME, CONTENT_SERVER_FTP_LOGIN,
+                  { password: CONTENT_SERVER_FTP_PASSWORD, port: PORT }) do |sftp|
     begin
       sftp.mkdir!(remote_folder) unless directory_created
       directory_created = true

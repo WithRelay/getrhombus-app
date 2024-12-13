@@ -16,8 +16,6 @@ class FiberneticsEvent
   #   #<HTTParty::Response:0xb5120b0
   #   parsed_response={"response"=>{"status"=>"OK", "last_server_message_id"=>"203556561",
   #   "messages"=>{"message"=>
-  #   [{"id"=>"203554682", "to"=>"+<redacted_phone_number>", "from"=>"+<redacted_phone_number>", "body"=>"Hello", "timestamp"=>"2017-10-17 04:16:08.000 UTC"},
-  #   {"id"=>"203556560", "to"=>"+<redacted_phone_number>", "from"=>"+<redacted_phone_number>", "body"=>"Yes", "timestamp"=>"2017-10-17 04:41:52.000 UTC"}]
   #   }}},
   #   @response=#<Net::HTTPOK 200 OK readbody=true>,
   #   @headers={"cache-control"=>["private"], "content-length"=>["544"], "content-type"=>["text/xml"], "server"=>["Microsoft-IIS/7.5"],
